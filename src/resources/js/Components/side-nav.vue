@@ -3,7 +3,6 @@ import { MetisMenu } from "metismenujs";
 
 import { menuItems } from "./menu";
 import { router } from "@inertiajs/vue3";
-import IsUserAdmin from "../Composables/IsUserAdmin.js";
 import { usePage } from "@inertiajs/vue3";
 
 /**
@@ -11,7 +10,7 @@ import { usePage } from "@inertiajs/vue3";
  */
 export default {
     setup() {
-        const isCurrentUserAdmin = IsUserAdmin();
+        const isCurrentUserAdmin = false;
         return {
             isCurrentUserAdmin,
             usePage,
@@ -161,7 +160,7 @@ export default {
                     <span :class="usePage().url == '/userregister' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterRegister">Users</span>
                 </a>
             </li>
-          
+
             <li class="" role="button" >
                 <a>
                     <i class="bx bx-user-pin" style="color: #fff"></i>
