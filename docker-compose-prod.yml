@@ -15,7 +15,7 @@ services:
   #   volumes:
   #     - ./budde-db:/var/lib/mysql
   
-  php:
+  php_frontrow:
     build: 
       context: .
       dockerfile: php.prod.dockerfile
@@ -23,6 +23,8 @@ services:
       - 9003:9000
     volumes:
       - ./src:/var/www/html
+    networks:
+      - frontrow_network
     
   
   composer:
@@ -32,6 +34,8 @@ services:
     volumes:
       - ./src:/var/www/html
     working_dir: /var/www/html
+    networks:
+      - frontrow_network
  
   
   npm:
@@ -40,6 +44,8 @@ services:
       - ./src:/var/www/html
     entrypoint: ["npm"]
     working_dir: /var/www/html
+    networks:
+      - frontrow_network
 
   artisan:
     build: 
@@ -47,9 +53,14 @@ services:
       dockerfile: php.prod.dockerfile
     volumes:
       - ./src:/var/www/html
+    networks:
+      - frontrow_network
 
     entrypoint: ["php", "/var/www/html/artisan"]
 
+networks:
+  frontrow_network:
+    driver: bridge
 
 
 
