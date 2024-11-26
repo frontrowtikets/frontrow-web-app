@@ -1,0 +1,27 @@
+.location-picker-icon {
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #1f6fb2;
+    color: #1f6fb2;
+    border-radius: 50%;
+    line-height: 100px;
+    font-size: 48px;
+    text-align: center;
+
+    &.small {
+        text-align: center;
+        width: 38px;
+        height: 38px;
+        line-height: 38px;
+        font-size: 20px;
+    }
+}
+
+/*Map dialog */
+.pac-container {
+    background-color: #fff;
+    z-index: 2000 !important;
+    position: fixed;
+    display: inline-block;
+}

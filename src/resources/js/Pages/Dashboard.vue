@@ -1,0 +1,642 @@
+<script setup>
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import Layout from "@/js/Layouts/vertical.vue";
+import PageHeader from "@/js/Components/page-header.vue";
+import { reactive, onMounted } from "vue";
+import simplebar from "simplebar-vue";
+import icondata from "@/images/icondata.png";
+import axios from "axios";
+// import 'simplebar-vue/dist/simplebar.min.css';
+import WalletBalance from "./wallet-balance.vue";
+import Overview from "./overview.vue";
+
+import { walletRadialChart, overviewChart, transactionsData, bitconinChart, ethereumChart, litecoinChart } from "./data";
+
+const props = defineProps(["incidentCount"]);
+const state = reactive({
+    items: [
+        {
+            text: "Dashboard",
+            href: "/",
+        },
+        {
+            text: "Home",
+            active: true,
+        },
+    ],
+    markCenter: { lat: 0.363889, lng: 32.528611 },
+    forecastData: [
+        {
+            date: "",
+            avgTemperature: 0,
+            avgHumidity: 0,
+            totalPrecipitation: 0,
+        },
+    ],
+});
+
+onMounted(() => {
+    fetchForecastWeather();
+});
+async function fetchForecastWeather() {
+    const API_KEY = "a233ac050e0ae77b44ea0868ab090373";
+    const lat = state.markCenter.lat;
+    const lon = state.markCenter.lng;
+
+    try {
+        // Fetch forecast data
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        // Group forecast data by day
+        const dailyForecast = {};
+
+        data.list.forEach((forecast) => {
+            const date = forecast.dt_txt.split(" ")[0]; // Extract the date part from dt_txt (format: "YYYY-MM-DD HH:MM:SS")
+
+            if (!dailyForecast[date]) {
+                dailyForecast[date] = {
+                    temperatureSum: 0,
+                    humiditySum: 0,
+                    precipitationSum: 0,
+                    count: 0,
+                };
+            }
+
+            // Add forecast data to daily summary
+            dailyForecast[date].temperatureSum += forecast.main.temp;
+            dailyForecast[date].humiditySum += forecast.main.humidity;
+            dailyForecast[date].precipitationSum += forecast.rain ? forecast.rain["3h"] : 0;
+            dailyForecast[date].count += 1;
+        });
+
+        // Calculate daily averages and totals
+        const dailySummaries = Object.keys(dailyForecast).map((date) => {
+            const day = dailyForecast[date];
+            return {
+                date: date,
+                avgTemperature: (day.temperatureSum / day.count).toFixed(2), // Average temperature
+                avgHumidity: (day.humiditySum / day.count).toFixed(2), // Average humidity
+                totalPrecipitation: day.precipitationSum.toFixed(2), // Total precipitation
+            };
+        });
+
+        console.log("current forecasts", dailySummaries);
+
+        // Return the daily summaries for further use in your Vue component
+        state.forecastData = dailySummaries;
+
+        //saveDetails in database
+        saveWeatherMetrics();
+    } catch (err) {
+        console.error(err.message);
+    }
+}
+
+function saveWeatherMetrics() {
+    const todayForeCast = state.forecastData[0];
+    let formData = new FormData();
+    formData.append("avgTemp", Number(todayForeCast.avgTemperature));
+    formData.append("avgHumdity", Number(todayForeCast.avgHumidity));
+    formData.append("avgPrecipitaion", Number(todayForeCast.totalPrecipitation));
+
+    const config = {
+        headers: {
+            "content-type": "multipart/form-data",
+            Authorization: `Bearer ${usePage().props.auth.user.api_token}`,
+        },
+    };
+
+    axios
+        .post("/api/metrics/saveMetrics", formData, config)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((error) => {
+            app.isProcessing = false;
+            console.log({ error });
+            Swal.fire({
+                title: "Something Went Wrong",
+                icon: "error",
+                html: `<p style="font-size: 14px">There is something that went wrong and it is not your fault. Please, reach out to ICT for help.</p>`,
+                showCloseButton: false,
+                showCancelButton: false,
+                focusConfirm: true,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#43ad60",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                closeOnClickOutside: false,
+            }).then((result) => {
+                if (result.value) {
+                    Swal.close();
+                    router.visit("/weatherMaps");
+                }
+            });
+        });
+}
+</script>
+<template>
+    <Head title="Dashboard" />
+    <Layout>
+        <PageHeader title="Dashboard" :items="state.items" />
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <!-- <img class="rounded-circle header-profile-user" :src="avatar1" alt="Header Avatar" /> -->
+                            <img :src="usePage().props.auth.user.profile_photo_url" :alt="'p'" class="rounded-circle header-profile-user object-fit-cover" />
+                        </div>
+                    </div>
+
+                    <div class="card-body border-top">
+                        <div class="row">
+                            <div class="col-sm-6 mt-4">
+                                <div class="pb-5">
+                                    <p class="fw-medium">Incidents Reported</p>
+                                    <h4>{{ props.incidentCount }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-sm-6"></div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-top mb-3">
+                        <Link :href="route('CreateIncident')">
+                            <div class="text-center" @click="reportIncident">
+                                <div class="btn btn-primary me-2 w-md">Report Incident</div>
+                            </div></Link
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-8">
+                <div class="card">
+                    <div>
+                        <div class="row">
+                            <div class="col-lg-9 col-sm-8">
+                                <div class="p-4">
+                                    <h5 class="text-primary">Welcome Back !</h5>
+                                    <p>FRONTROW Application Platform</p>
+
+                                    <div class="text-muted">
+                                        <p class="mb-1">
+                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            Report Environmental Encroachment Incidents
+                                        </p>
+                                        <p class="mb-1">
+                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            Recieve Weather Reports & Notifications
+                                        </p>
+                                        <p class="mb-0">
+                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            Get Location-Based Weather Insights, and so much more.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-sm-4 align-self-center">
+                                <div>
+                                    <img src="@/images/profile-img.png" alt class="img-fluid d-block" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-muted mb-4">Today's Avg. Humidity</p>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div>
+                                            <h5>{{ state.forecastData[0].avgHumidity }}%</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="bitconinChart.series" :options="bitconinChart.chartOptions"></apexchart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-muted mb-4">
+                                    <!-- <i class="mdi mdi-ethereum h2 text-primary align-middle mb-0 me-3"></i> -->
+                                    Today's Avg. Precipitation
+                                </p>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div>
+                                            <h5>{{ state.forecastData[0].totalPrecipitation }}mm</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="ethereumChart.series" :options="ethereumChart.chartOptions"></apexchart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-muted mb-4">
+                                    <!-- <i class="mdi mdi-litecoin h2 text-info align-middle mb-0 me-3"></i> -->
+                                    Today's Avg. Temperature
+                                </p>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div>
+                                            <h5>{{ state.forecastData[0].avgTemperature }} &degc</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="litecoinChart.series" :options="litecoinChart.chartOptions"></apexchart>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-xl-8">
+                <WalletBalance />
+            </div>
+            <div class="col-xl-4">
+                <Overview />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Incident Reports</h4>
+                        <b-tabs pills nav-class="bg-light rounded" content-class="mt-4">
+                            <b-tab title="All" active>
+                                <b-card-text>
+                                    <!-- <simpleBar style="max-height: 100vh"> -->
+                                    <!-- <table class="table table-centered table-nowrap align-middle">
+                                             <tbody>
+                                                <tr v-for="data of transactionsData" :key="data.icon">
+                                                    <td style="width: 50px">
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <h5 class="font-size-14 mb-1">{{ data.name }}</h5>
+                                                            <p class="text-muted mb-0">{{ data.date }}</p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="font-size-14 mb-0">{{ data.text }}</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                                {{ data.price }}
+                                                            </h5>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> -->
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                        <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                                        <div>No Incidents Yet.</div>
+                                    </div>
+                                    <!-- </simpleBar> -->
+                                </b-card-text>
+                            </b-tab>
+                            <b-tab title="Work In Progress">
+                                <b-card-text>
+                                    <!-- <simpleBar style="max-height: 330px"> -->
+                                    <!-- <table class="table table-centered table-nowrap align-middle">
+                                            <tbody>
+                                                <tr v-for="data of transactionsData" :key="data.id">
+                                                    <td style="width: 50px">
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <h5 class="font-size-14 mb-1">{{ data.name }}</h5>
+                                                            <p class="text-muted mb-0">{{ data.date }}</p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="font-size-14 mb-0">{{ data.text }}</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                                {{ data.price }}
+                                                            </h5>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> -->
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                        <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                                        <div>No Incidents Yet.</div>
+                                    </div>
+                                    <!-- </simpleBar> -->
+                                </b-card-text>
+                            </b-tab>
+                            <b-tab title="Closed">
+                                <b-card-text>
+                                    <!-- <simpleBar style="max-height: 330px"> -->
+                                    <!-- <table class="table table-centered table-nowrap align-middle">
+                                            <tbody>
+                                                <tr v-for="data of transactionsData" :key="data.id">
+                                                    <td style="width: 50px">
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <h5 class="font-size-14 mb-1">{{ data.name }}</h5>
+                                                            <p class="text-muted mb-0">{{ data.date }}</p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="font-size-14 mb-0">{{ data.text }}</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                                {{ data.price }}
+                                                            </h5>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> -->
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                        <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                                        <div>No Incidents Yet.</div>
+                                    </div>
+                                    <!-- </simpleBar> -->
+                                </b-card-text>
+                            </b-tab>
+                        </b-tabs>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Notifications</h4>
+                        <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                            <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                            <div>No Notifications Yet.</div>
+                        </div>
+                        <!-- <ul class="list-group">
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex">
+                                        <div class="avatar-xs me-3">
+                                            <span class="avatar-title rounded-circle bg-light">
+                                                <img src="@/images/companies/img-1.png" alt height="18" />
+                                            </span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="font-size-14">Donec vitae sapien ut</h5>
+                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
+
+                                            <div class="float-end">
+                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Joseph</p>
+                                            </div>
+                                            <p class="text-muted mb-0">12 Mar, 2020</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex">
+                                        <div class="avatar-xs me-3">
+                                            <span class="avatar-title rounded-circle bg-light">
+                                                <img src="@/images/companies/img-2.png" alt height="18" />
+                                            </span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="font-size-14">Cras ultricies mi eu turpis</h5>
+                                            <p class="text-muted">To an English person, it will seem like simplified English, as a skeptical cambridge</p>
+
+                                            <div class="float-end">
+                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Jerry</p>
+                                            </div>
+                                            <p class="text-muted mb-0">13 Mar, 2020</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex">
+                                        <div class="avatar-xs me-3">
+                                            <span class="avatar-title rounded-circle bg-light">
+                                                <img src="@/images/companies/img-3.png" alt height="18" />
+                                            </span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="font-size-14">Duis arcu tortor suscipit</h5>
+                                            <p class="text-muted">It va esser tam simplic quam occidental in fact, it va esser occidental.</p>
+
+                                            <div class="float-end">
+                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Calvin</p>
+                                            </div>
+                                            <p class="text-muted mb-0">14 Mar, 2020</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0">
+                                    <div class="d-flex">
+                                        <div class="avatar-xs me-3">
+                                            <span class="avatar-title rounded-circle bg-light">
+                                                <img src="@/images/companies/img-1.png" alt height="18" />
+                                            </span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="font-size-14">Donec vitae sapien ut</h5>
+                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
+
+                                            <div class="float-end">
+                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Joseph</p>
+                                            </div>
+                                            <p class="text-muted mb-0">12 Mar, 2020</p>
+                                        </div>
+                                    </div>
+                                </li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Current Weather Metrics</h4>
+                        <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                            <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                            <div>No Metrics Yet.</div>
+                        </div>
+                        <!-- <b-tabs pills nav-class="bg-light rounded" content-class="mt-4">
+                            <b-tab title="Buy" active>
+                                <b-card-text>
+                                    <div class="float-end ms-2">
+                                        <h5 class="font-size-14">
+                                            <i class="bx bx-wallet text-primary font-size-16 align-middle me-1"></i>
+                                            $4235.23
+                                        </h5>
+                                    </div>
+                                    <h5 class="font-size-14 mb-4">Buy Coin</h5>
+
+                                    <div>
+                                        <div class="form-group mb-3">
+                                            <label>Payment method :</label>
+                                            <select class="form-select">
+                                                <option>Credit / Debit Card</option>
+                                                <option>Paypal</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label>Add Amount :</label>
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text">Amount</label>
+                                                <select class="form-select" style="max-width: 90px">
+                                                    <option value="BT" selected>BTC</option>
+                                                    <option value="ET">ETH</option>
+                                                    <option value="LT">LTC</option>
+                                                </select>
+                                                <input type="text" class="form-control" />
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text">Price</label>
+                                                </div>
+                                                <input type="text" class="form-control" />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text">$</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text">Total</label>
+                                                </div>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-success w-md">Buy Coin</button>
+                                        </div>
+                                    </div>
+                                </b-card-text>
+                            </b-tab>
+                            <b-tab title="Sell">
+                                <b-card-text>
+                                    <div class="float-end ms-2">
+                                        <h5 class="font-size-14">
+                                            <i class="bx bx-wallet text-primary font-size-16 align-middle me-1"></i>
+                                            $4235.23
+                                        </h5>
+                                    </div>
+                                    <h5 class="font-size-14 mb-4">Sell Coin</h5>
+
+                                    <div>
+                                        <div class="form-group mb-3">
+                                            <label>Email :</label>
+                                            <input type="email" class="form-control" />
+                                        </div>
+                                        <div>
+                                            <label>Add Amount :</label>
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text">Amount</label>
+
+                                                <select class="form-select" style="max-width: 90px">
+                                                    <option value="BT" selected>BTC</option>
+                                                    <option value="ET">ETH</option>
+                                                    <option value="LT">LTC</option>
+                                                </select>
+                                                <input type="text" class="form-control" />
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text">Price</label>
+                                                </div>
+                                                <input type="text" class="form-control" />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text">$</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text">Total</label>
+                                                </div>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-danger w-md">Sell Coin</button>
+                                        </div>
+                                    </div>
+                                </b-card-text>
+                            </b-tab>
+                        </b-tabs> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Layout>
+</template>

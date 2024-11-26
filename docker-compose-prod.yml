@@ -1,0 +1,61 @@
+services:
+
+  # superbase to be used
+  # mysql:
+  #   image: mariadb:11.5.2
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - 3307:3306
+  #   environment:
+  #     MYSQL_DATABASE: "${buddeDB}"
+  #     MYSQL_ROOT_PASSWORD: "${buddeDB_Password}"
+  #     MYSQL_USER: "${mysql_user}"
+  #     MYSQL_PASSWORD: "${mysql_password}"
+  #   volumes:
+  #     - ./budde-db:/var/lib/mysql
+  
+  php:
+    build: 
+      context: .
+      dockerfile: php.prod.dockerfile
+    ports:
+      - 9002:9000
+    volumes:
+      - ./src:/var/www/html
+    
+  
+  composer:
+    build: 
+      context: .
+      dockerfile: composer.dockerfile
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+ 
+  
+  npm:
+    image: node:18.20.3-alpine3.19
+    volumes:
+      - ./src:/var/www/html
+    entrypoint: ["npm"]
+    working_dir: /var/www/html
+
+  artisan:
+    build: 
+      context: .
+      dockerfile: php.prod.dockerfile
+    volumes:
+      - ./src:/var/www/html
+
+    entrypoint: ["php", "/var/www/html/artisan"]
+
+
+
+
+  
+
+
+
+
+    
