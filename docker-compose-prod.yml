@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: php.prod.dockerfile
     ports:
-      - 9002:9000
+      - 9003:9000
     volumes:
       - ./src:/var/www/html
     
