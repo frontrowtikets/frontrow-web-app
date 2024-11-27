@@ -10,7 +10,13 @@ RUN sed -i "s/group = www-data/group = ${PHPGROUP}/g" /usr/local/etc/php-fpm.d/w
 
 RUN mkdir -p /var/www/html/public
 
-RUN docker-php-ext-install pdo pdo_mysql opcache php-pgsql php-pdo-pgsql
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
+
+RUN docker-php-ext-enable pdo_pgsql pgsql
+
+RUN docker-php-ext-install  opcache
 
 RUN apk add --no-cache libjpeg-turbo-dev libpng-dev
 
