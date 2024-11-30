@@ -16,7 +16,9 @@ class UserEventTicket extends Model
         'quantity',
         'total_amount',
         'ticket_status',
-        'booking_date'
-
+        'booking_date',
+         'user_email',
+        'ticket_id',
+        'booking_id',
     ];
 }

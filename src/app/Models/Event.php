@@ -23,7 +23,6 @@ class Event extends Model
         'status',
         'start_date',
         'end_date',
-        'ticket_price',
         'thumbnail_url',
         'currency',
     ];

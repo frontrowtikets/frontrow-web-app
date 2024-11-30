@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('user_email');
             $table->index('user_email');
             $table->string('ticket_id')->unique();
-            $table->string('booking_id');
+            $table->string('booking_id')->nullable();
         });
     }
 
