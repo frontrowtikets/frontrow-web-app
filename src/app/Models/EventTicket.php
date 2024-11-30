@@ -20,7 +20,7 @@ class EventTicket extends Model
         'category',
         'price',
         'ticket_thumbnail_url',
-        'available_qunatity'
+        'available_quantity'
 
     ];
 }

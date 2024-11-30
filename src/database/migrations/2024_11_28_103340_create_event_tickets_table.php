@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('category');
             $table->decimal('price',total:12);
             $table->string('ticket_thumbnail_url')->nullable();
-            $table->integer('available_qunatity');
+            $table->integer('available_quantity');
             $table->timestamps();
             $table->softDeletes();
         });
