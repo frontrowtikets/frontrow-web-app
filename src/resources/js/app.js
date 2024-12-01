@@ -4,10 +4,10 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
-import VueApexCharts from "vue3-apexcharts";
 import helper from "./mixins/layouts.mixin";
 import Vuelidate from "vuelidate";
 import vSelect from "vue-select";
+import { MotionPlugin } from "@vueuse/motion";
 
 import Vue3Signature from "vue3-signature";
 
@@ -42,21 +42,9 @@ createInertiaApp({
 
         const options = {};
 
-        return app
-            .use(Toast, options)
-            .use(plugin)
-            .use(store)
-            .use(ZiggyVue)
-            .use(vSelect)
-            .use(Vuelidate)
-            .use(vSelect)
-            .use(Vue3Signature)
-            .use(VueApexCharts)
-            .use(BootstrapVueNext)
-            .use(CKEditor)
-            .mount(el);
+        return app.use(Toast, options).use(MotionPlugin).use(plugin).use(store).use(ZiggyVue).use(vSelect).use(Vuelidate).use(vSelect).use(Vue3Signature).use(BootstrapVueNext).use(CKEditor).mount(el);
     },
     progress: {
-        color: "#90EE90",
+        color: "#01B3BD",
     },
 });

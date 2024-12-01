@@ -327,7 +327,7 @@ export default {
                     v-show="lgAndSmaller"
                     id="vertical-menu-btn "
                     type="button"
-                    class="btn btn-sm px-3 font-size-16 header-item mobilehumburgeMenu"
+                    class="px-3 btn btn-sm font-size-16 header-item mobilehumburgeMenu"
                     @click="toggleMenu"
                 >
                     <i class="fa fa-fw fa-bars"></i>
@@ -340,7 +340,7 @@ export default {
                             type="text"
                             class="form-control"
                             id="searched_place"
-                            :placeholder="'Search Weather'"
+                            :placeholder="'Search '"
                         />
                         <span class="bx bx-search-alt"></span>
                     </div>
@@ -349,9 +349,9 @@ export default {
 
             <div class="d-flex" style="color: #f3f3f9">
                 <b-dropdown
-                    class="d-inline-block d-lg-none ml-2"
+                    class="ml-2 d-inline-block d-lg-none"
                     variant="black"
-                    menu-class="dropdown-menu-lg p-0 dropdown-menu-end"
+                    menu-class="p-0 dropdown-menu-lg dropdown-menu-end"
                     toggle-class="header-item noti-icon"
                     right
                 >
@@ -360,7 +360,7 @@ export default {
                     </template>
 
                     <form class="p-3">
-                        <div class="form-group m-0">
+                        <div class="m-0 form-group">
                             <div class="input-group">
                                 <input
                                     type="text"
@@ -381,7 +381,7 @@ export default {
                     </form>
                 </b-dropdown>
 
-                <div class="dropdown d-none d-lg-inline-block ml-1">
+                <div class="ml-1 dropdown d-none d-lg-inline-block">
                     <button
                         type="button"
                         class="btn header-item noti-icon"
@@ -393,7 +393,7 @@ export default {
 
                 <b-dropdown
                     right
-                    menu-class="dropdown-menu-lg p-0 dropdown-menu-end"
+                    menu-class="p-0 dropdown-menu-lg dropdown-menu-end"
                     toggle-class="header-item noti-icon"
                     variant="black"
                 >
@@ -485,11 +485,11 @@ export default {
                                 </a>
                             </div>
                         </simplebar>
-                        <div class="text-center mt-5 mb-5" v-else>
+                        <div class="mt-5 mb-5 text-center" v-else>
                             You have no Notifications
                         </div>
                         <!-- <div class="p-2 border-top d-grid" v-if="currentUser.notifications.length > 0">
-                            <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                            <a class="text-center btn btn-sm btn-link font-size-14" href="javascript:void(0)">
                                 <i class="mdi mdi-arrow-down-circle me-1"></i>
                                 <span key="t-view-more">
                                     {{ $t("navbar.dropdown.notification.button") }}
@@ -524,7 +524,7 @@ export default {
                     <Link :href="route('profile.show')">
                         <b-dropdown-item>
                             <i
-                                class="bx bx-user font-size-16 align-middle me-1 p-1"
+                                class="p-1 align-middle bx bx-user font-size-16 me-1"
                                 style="
                                     color: #639099;
                                     background-color: #e0e8f1;
@@ -538,7 +538,7 @@ export default {
                     </Link>
                     <b-dropdown-item href="javascript: void(0);">
                         <i
-                            class="bx bx bxs-report font-size-16 align-middle me-1 p-1"
+                            class="p-1 align-middle bx bxs-report font-size-16 me-1"
                             style="
                                 color: #639099;
                                 background-color: #e0e8f1;
@@ -551,7 +551,7 @@ export default {
                     <Link :href="route('landing')">
                         <b-dropdown-item href="javascript: void(0);">
                             <i
-                                class="bx bx bxs-home font-size-16 align-middle me-1 p-1"
+                                class="p-1 align-middle bx bxs-home font-size-16 me-1"
                                 style="
                                     color: #639099;
                                     background-color: #e0e8f1;
@@ -566,7 +566,7 @@ export default {
                     <Link>
                         <b-dropdown-item @click="downloadApk">
                             <i
-                                class="bx bx bx-mobile font-size-16 align-middle me-1 p-1"
+                                class="p-1 align-middle bx bx-mobile font-size-16 me-1"
                                 style="
                                     color: #639099;
                                     background-color: #e0e8f1;
@@ -585,7 +585,7 @@ export default {
                         role="button"
                     >
                         <i
-                            class="mdi mdi-login-variant font-size-16 align-middle me-1 text-danger p-1"
+                            class="p-1 align-middle mdi mdi-login-variant font-size-16 me-1 text-danger"
                         ></i>
                         Logout
                     </a>

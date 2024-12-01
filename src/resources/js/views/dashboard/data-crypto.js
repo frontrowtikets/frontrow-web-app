@@ -1,9 +1,138 @@
-const walletRadialChart = {
+const SparklineChart1 = {
+    series: [
+        {
+            name: "BTC",
+            data: [12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14]
+        }
+    ],
+    chartOptions: {
+        chart: {
+            type: "area",
+            height: 40,
+            sparkline: {
+                enabled: true
+            }
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2
+        },
+        colors: ["#f1b44c"],
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                inverseColors: false,
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [25, 100, 100, 100]
+            }
+        },
+        tooltip: {
+            fixed: {
+                enabled: false
+            },
+            x: {
+                show: false
+            },
+            marker: {
+                show: false
+            }
+        }
+    }
+};
+const SparklineChart2 = {
+    series: [
+        {
+            name: "ETH",
+            data: [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54]
+        }
+    ],
+    chartOptions: {
+        chart: {
+            type: "area",
+            height: 40,
+            sparkline: {
+                enabled: true
+            }
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2
+        },
+        colors: ["#3452e1"],
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                inverseColors: false,
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [25, 100, 100, 100]
+            }
+        },
+        tooltip: {
+            fixed: {
+                enabled: false
+            },
+            x: {
+                show: false
+            },
+            marker: {
+                show: false
+            }
+        }
+    }
+};
+const SparklineChart3 = {
+    series: [
+        {
+            name: "LTC",
+            data: [35, 53, 93, 47, 54, 24, 47, 75, 65, 19, 14]
+        }
+    ],
+    chartOptions: {
+        chart: {
+            type: "area",
+            height: 40,
+            sparkline: {
+                enabled: true
+            }
+        },
+        stroke: {
+            curve: "smooth",
+            width: 2
+        },
+        colors: ["#50a5f1"],
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                inverseColors: false,
+                opacityFrom: 0.45,
+                opacityTo: 0.05,
+                stops: [25, 100, 100, 100]
+            }
+        },
+        tooltip: {
+            fixed: {
+                enabled: false
+            },
+            x: {
+                show: false
+            },
+            marker: {
+                show: false
+            }
+        }
+    }
+};
+const WalletBalanceChart = {
     series: [76, 67, 61],
     chartOptions: {
         chart: {
-            height: 300,
-            type: "radialBar",
+            height: 280,
+            type: "radialBar"
         },
         plotOptions: {
             radialBar: {
@@ -14,7 +143,7 @@ const walletRadialChart = {
                     margin: 5,
                     size: "35%",
                     background: "transparent",
-                    image: undefined,
+                    image: undefined
                 },
                 track: {
                     show: true,
@@ -29,23 +158,23 @@ const walletRadialChart = {
                         top: 0,
                         left: 0,
                         blur: 3,
-                        opacity: 0.5,
-                    },
+                        opacity: 0.5
+                    }
                 },
                 dataLabels: {
                     name: {
                         show: true,
                         fontSize: "16px",
                         fontWeight: 600,
-                        offsetY: -10,
+                        offsetY: -10
                     },
                     value: {
                         show: true,
                         fontSize: "14px",
                         offsetY: 4,
-                        formatter: function (val) {
+                        formatter: function(val) {
                             return val + "%";
-                        },
+                        }
                     },
                     total: {
                         show: true,
@@ -54,29 +183,28 @@ const walletRadialChart = {
                         fontSize: "16px",
                         fontFamily: undefined,
                         fontWeight: 600,
-                        formatter: function (w) {
+                        formatter: function(w) {
                             return (
-                                w.globals.seriesTotals.reduce(function (a, b) {
+                                w.globals.seriesTotals.reduce(function(a, b) {
                                     return a + b;
                                 }, 0) + "%"
                             );
-                        },
-                    },
-                },
-            },
+                        }
+                    }
+                }
+            }
         },
         stroke: {
-            lineCap: "round",
+            lineCap: "round"
         },
         colors: ["#3452e1", "#f1b44c", "#50a5f1"],
         labels: ["Ethereum", "Bitcoin", "Ethereum"],
         legend: {
-            show: false,
-        },
-    },
+            show: false
+        }
+    }
 };
-
-const overviewChart = {
+const OverviewChart = {
     series: [
         {
             name: "BTC",
@@ -355,36 +483,36 @@ const overviewChart = {
                 [1361487600000, 38.55],
                 [1361746800000, 38.11],
                 [1361833200000, 38.59],
-                [1361919600000, 39.6],
-            ],
-        },
+                [1361919600000, 39.6]
+            ]
+        }
     ],
     chartOptions: {
         chart: {
             type: "area",
             height: 240,
-            toolbar: "false",
+            toolbar: "false"
         },
         dataLabels: {
-            enabled: false,
+            enabled: false
         },
         stroke: {
             curve: "smooth",
-            width: 2,
+            width: 2
         },
         markers: {
             size: 0,
-            style: "hollow",
+            style: "hollow"
         },
         xaxis: {
             type: "datetime",
             min: new Date("01 Mar 2012").getTime(),
-            tickAmount: 6,
+            tickAmount: 6
         },
         tooltip: {
             x: {
-                format: "dd MMM yyyy",
-            },
+                format: "dd MMM yyyy"
+            }
         },
         colors: ["#f1b44c"],
         fill: {
@@ -393,201 +521,77 @@ const overviewChart = {
                 shadeIntensity: 1,
                 opacityFrom: 0.6,
                 opacityTo: 0.05,
-                stops: [42, 100, 100, 100],
-            },
-        },
-    },
+                stops: [42, 100, 100, 100]
+            }
+        }
+    }
 };
 
-const bitconinChart = {
-    series: [
-        {
-            name: "Humidity",
-            data: [12, 14, 2, 47, 42, 15, 47, 75, 65, 19, 14],
-        },
-    ],
-    chartOptions: {
-        chart: {
-            type: "area",
-            height: 40,
-            sparkline: {
-                enabled: true,
-            },
-        },
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        colors: ["#f1b44c"],
-        fill: {
-            type: "gradient",
-            gradient: {
-                shadeIntensity: 1,
-                inverseColors: false,
-                opacityFrom: 0.45,
-                opacityTo: 0.05,
-                stops: [25, 100, 100, 100],
-            },
-        },
-        tooltip: {
-            fixed: {
-                enabled: false,
-            },
-            x: {
-                show: false,
-            },
-            marker: {
-                show: false,
-            },
-        },
-    },
-};
-
-const ethereumChart = {
-    series: [
-        {
-            name: "Precipitation",
-            data: [25, 66, 41, 89, 63, 25, 44, 12, 36, 9, 54],
-        },
-    ],
-    chartOptions: {
-        chart: {
-            type: "area",
-            height: 40,
-            sparkline: {
-                enabled: true,
-            },
-        },
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        colors: ["#3452e1"],
-        fill: {
-            type: "gradient",
-            gradient: {
-                shadeIntensity: 1,
-                inverseColors: false,
-                opacityFrom: 0.45,
-                opacityTo: 0.05,
-                stops: [25, 100, 100, 100],
-            },
-        },
-        tooltip: {
-            fixed: {
-                enabled: false,
-            },
-            x: {
-                show: false,
-            },
-            marker: {
-                show: false,
-            },
-        },
-    },
-};
-
-const litecoinChart = {
-    series: [
-        {
-            name: "Temperature",
-            data: [35, 53, 93, 47, 54, 24, 47, 75, 65, 19, 14],
-        },
-    ],
-    chartOptions: {
-        chart: {
-            type: "area",
-            height: 40,
-            sparkline: {
-                enabled: true,
-            },
-        },
-        stroke: {
-            curve: "smooth",
-            width: 2,
-        },
-        colors: ["#50a5f1"],
-        fill: {
-            type: "gradient",
-            gradient: {
-                shadeIntensity: 1,
-                inverseColors: false,
-                opacityFrom: 0.45,
-                opacityTo: 0.05,
-                stops: [25, 100, 100, 100],
-            },
-        },
-        tooltip: {
-            fixed: {
-                enabled: false,
-            },
-            x: {
-                show: false,
-            },
-            marker: {
-                show: false,
-            },
-        },
-    },
-};
 
 const transactionsData = [
     {
         id: 1,
-        color: "primary",
-        name: "Buy BTC",
-        date: "14 Mar, 2020",
-        text: "0.016 BTC",
-        price: "$125.20",
+        color: 'primary',
+        name: 'Buy BTC',
+        date: '14 Mar, 2020',
+        text: '0.016 BTC',
+        price: '$125.20',
     },
     {
         id: 2,
-        color: "danger",
-        name: "Sell ETH",
-        date: "15 Mar, 2020",
-        text: "0.56 ETH",
-        price: "$112.34",
+        color: 'danger',
+        name: 'Sell ETH',
+        date: '15 Mar, 2020',
+        text: '0.56 ETH',
+        price: '$112.34',
     },
     {
         id: 3,
-        color: "primary",
-        name: "Buy LTC",
-        date: "16 Mar, 2020",
-        text: "1.88 LTC",
-        price: "$94.22",
+        color: 'primary',
+        name: 'Buy LTC',
+        date: '16 Mar, 2020',
+        text: '1.88 LTC',
+        price: '$94.22',
     },
     {
         id: 4,
-        color: "primary",
-        name: "Buy ETH",
-        date: "17 Mar, 2020",
-        text: "0.42 ETH",
-        price: "$84.32",
+        color: 'primary',
+        name: 'Buy ETH',
+        date: '17 Mar, 2020',
+        text: '0.42 ETH',
+        price: '$84.32',
     },
     {
         id: 5,
-        color: "danger",
-        name: "Sell BTC",
-        date: "18 Mar, 2020",
-        text: "0.018 BTC",
-        price: "$145.80",
+        color: 'danger',
+        name: 'Sell BTC',
+        date: '18 Mar, 2020',
+        text: '0.018 BTC',
+        price: '$145.80',
     },
     {
         id: 6,
-        color: "primary",
-        name: "Buy BTC",
-        date: "14 Mar, 2020",
-        text: "0.016 BTC",
-        price: "$125.20",
+        color: 'primary',
+        name: 'Buy BTC',
+        date: '14 Mar, 2020',
+        text: '0.016 BTC',
+        price: '$125.20',
     },
     {
         id: 7,
-        color: "danger",
-        name: "Sell ETH",
-        date: "14 Mar, 2020",
-        text: "0.56 ETH",
-        price: "$112.34",
+        color: 'danger',
+        name: 'Sell ETH',
+        date: '14 Mar, 2020',
+        text: '0.56 ETH',
+        price: '$112.34',
     },
 ];
 
-export { walletRadialChart, overviewChart, bitconinChart, ethereumChart, litecoinChart, transactionsData };
+export default {
+    SparklineChart1,
+    SparklineChart2,
+    SparklineChart3,
+    WalletBalanceChart,
+    OverviewChart,
+    transactionsData
+};

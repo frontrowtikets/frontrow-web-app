@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "@/js/Layouts/auth.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import { onMounted, reactive, onBeforeMount, ref } from "vue";
 import InputError from "@/js/Components/InputError.vue";
 import { computed } from "vue";
@@ -43,6 +43,10 @@ const submit = () => {
         },
     });
 };
+
+function backHome(){
+     router.visit("/");
+}
 </script>
 
 <template>
@@ -51,8 +55,8 @@ const submit = () => {
     <Layout>
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6 col-xl-5">
-                <div class="overflow-hidden card">
-                    <div class="bg-soft bg-success">
+                <div class="overflow-hidden card" style="position: relative">
+                    <div class="bg-soft bg-primary">
                         <div class="row">
                             <div class="col-7">
                                 <div class="p-4 text-primary">
@@ -65,15 +69,29 @@ const submit = () => {
                             </div>
                         </div>
                     </div>
+                    <div style="position: absolute; right: 0; top: 25%">
+
+                        <button @click="backHome">
+                            <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
+                                <path
+                                    d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"
+                                ></path>
+                            </svg>
+                            <span>Home</span>
+                        </button>
+
+                    </div>
                     <div class="pt-0 card-body">
-                        <div>
-                            <Link :href="route('landing')">
-                                <div class="mb-4 avatar-md profile-user-wid">
-                                    <span class="avatar-title rounded-circle bg-light">
-                                        <img src="@/images/FRONTROWLogo.svg" alt height="65" />
-                                    </span>
-                                </div>
-                            </Link>
+                        <div calss="">
+                            <div>
+                                <Link :href="route('landing')">
+                                    <div class="mb-4 avatar-md profile-user-wid">
+                                        <span class="avatar-title rounded-circle bg-light">
+                                            <!-- <img src="@/images/FRONTROWLogo.svg" alt height="65" /> -->
+                                        </span>
+                                    </div>
+                                </Link>
+                            </div>
                         </div>
 
                         <div class="mt-4">
@@ -152,3 +170,36 @@ const submit = () => {
         <!-- end row -->
     </Layout>
 </template>
+<style scopped>
+button {
+    display: flex;
+    height: 3em;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    background-color: #eeeeee4b;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    border: none;
+    background: #fff;
+}
+
+button > svg {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 20px;
+    transition: all 0.4s ease-in;
+}
+
+button:hover > svg {
+    font-size: 1.2em;
+    transform: translateX(-5px);
+}
+
+button:hover {
+    box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+    transform: translateY(-2px);
+}
+</style>

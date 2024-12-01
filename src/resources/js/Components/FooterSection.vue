@@ -1,4 +1,7 @@
 <script setup>
+
+import { Head, Link, useForm,router } from "@inertiajs/vue3";
+
 function downloadApk() {
     const fileUrl = `/FRONTROW_V1.0.1.apk`;
 
@@ -10,11 +13,18 @@ function downloadApk() {
     URL.revokeObjectURL(fileURL);
     document.body.removeChild(a);
 }
+
+function toLogin(){
+     router.visit("/login");
+}
+function toRegister(){
+     router.visit("/register");
+}
 </script>
 
 <template>
     <!-- Footer start -->
-    <footer class="landing-footer">
+    <footer class="landing-footer bg-primary">
         <b-container>
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
@@ -22,16 +32,16 @@ function downloadApk() {
                         <h5 class="mb-3 footer-list-title">Platform</h5>
                         <ul class="list-unstyled footer-list-menu">
                             <li>
-                                <a href="#">About Us</a>
+                                <a href="#">Buy Tickets</a>
                             </li>
                             <li>
-                                <a href="#">Features</a>
+                                <a href="#">Create Event</a>
                             </li>
                             <li>
-                                <a href="#">Team</a>
+                                <a href="#">Events</a>
                             </li>
                             <li>
-                                <a href="#">FAQs</a>
+                                <a href="#">Cinemas</a>
                             </li>
                         </ul>
                     </div>
@@ -41,11 +51,11 @@ function downloadApk() {
                     <div class="mb-4 mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Links</h5>
                         <ul class="list-unstyled footer-list-menu">
-                            <li>
-                                <a href="#">Create Account</a>
+                            <li @click="toRegister" role="button">
+                                <a >Create Account</a>
                             </li>
-                            <li>
-                                <a href="#">Sign in </a>
+                            <li @click="toLogin" role="button">
+                                <a >Sign in </a>
                             </li>
                             <li>
                                 <a href="#">Go to Dashboard</a>
@@ -54,18 +64,12 @@ function downloadApk() {
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="mb-4 mb-lg-0">
-                        <h5 class="mb-3 footer-list-title">
-                            Mobile Application
+                    <div class=" mb-lg-0">
+                        <h5 class=" footer-list-title">
+                            Download Our Application
                         </h5>
                         <div class="blog-post">
-                            <div
-                                class="badge badge-soft-success font-size-11"
-                                @click="downloadApk"
-                                role="button"
-                            >
-                                Download FRONTROW App on Playstore
-                            </div>
+
                             <div class="flex-row gap-5 d-flex">
                                 <div @click="downloadApk" role="button">
                                     <img

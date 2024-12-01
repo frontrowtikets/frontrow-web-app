@@ -10,7 +10,6 @@ import axios from "axios";
 import WalletBalance from "./wallet-balance.vue";
 import Overview from "./overview.vue";
 
-import { walletRadialChart, overviewChart, transactionsData, bitconinChart, ethereumChart, litecoinChart } from "./data";
 
 const props = defineProps(["incidentCount"]);
 const state = reactive({
@@ -157,7 +156,7 @@ function saveWeatherMetrics() {
 
                     <div class="card-body border-top">
                         <div class="row">
-                            <div class="col-sm-6 mt-4">
+                            <div class="mt-4 col-sm-6">
                                 <div class="pb-5">
                                     <p class="fw-medium">Incidents Reported</p>
                                     <h4>{{ props.incidentCount }}</h4>
@@ -167,7 +166,7 @@ function saveWeatherMetrics() {
                         </div>
                     </div>
 
-                    <div class="card-footer bg-transparent border-top mb-3">
+                    <div class="mb-3 bg-transparent card-footer border-top">
                         <Link :href="route('CreateIncident')">
                             <div class="text-center" @click="reportIncident">
                                 <div class="btn btn-primary me-2 w-md">Report Incident</div>
@@ -188,15 +187,15 @@ function saveWeatherMetrics() {
 
                                     <div class="text-muted">
                                         <p class="mb-1">
-                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
                                             Report Environmental Encroachment Incidents
                                         </p>
                                         <p class="mb-1">
-                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
                                             Recieve Weather Reports & Notifications
                                         </p>
                                         <p class="mb-0">
-                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
                                             Get Location-Based Weather Insights, and so much more.
                                         </p>
                                     </div>
@@ -214,7 +213,7 @@ function saveWeatherMetrics() {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="text-muted mb-4">Today's Avg. Humidity</p>
+                                <p class="mb-4 text-muted">Today's Avg. Humidity</p>
 
                                 <div class="row">
                                     <div class="col-6">
@@ -224,7 +223,7 @@ function saveWeatherMetrics() {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="bitconinChart.series" :options="bitconinChart.chartOptions"></apexchart>
+                                            <!-- <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="bitconinChart.series" :options="bitconinChart.chartOptions"></apexchart> -->
                                         </div>
                                     </div>
                                 </div>
@@ -234,8 +233,8 @@ function saveWeatherMetrics() {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="text-muted mb-4">
-                                    <!-- <i class="mdi mdi-ethereum h2 text-primary align-middle mb-0 me-3"></i> -->
+                                <p class="mb-4 text-muted">
+                                    <!-- <i class="mb-0 align-middle mdi mdi-ethereum h2 text-primary me-3"></i> -->
                                     Today's Avg. Precipitation
                                 </p>
 
@@ -247,7 +246,7 @@ function saveWeatherMetrics() {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="ethereumChart.series" :options="ethereumChart.chartOptions"></apexchart>
+                                            <!-- <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="ethereumChart.series" :options="ethereumChart.chartOptions"></apexchart> -->
                                         </div>
                                     </div>
                                 </div>
@@ -257,8 +256,8 @@ function saveWeatherMetrics() {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="text-muted mb-4">
-                                    <!-- <i class="mdi mdi-litecoin h2 text-info align-middle mb-0 me-3"></i> -->
+                                <p class="mb-4 text-muted">
+                                    <!-- <i class="mb-0 align-middle mdi mdi-litecoin h2 text-info me-3"></i> -->
                                     Today's Avg. Temperature
                                 </p>
 
@@ -270,7 +269,7 @@ function saveWeatherMetrics() {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="litecoinChart.series" :options="litecoinChart.chartOptions"></apexchart>
+                                            <!-- <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="litecoinChart.series" :options="litecoinChart.chartOptions"></apexchart> -->
                                         </div>
                                     </div>
                                 </div>
@@ -294,12 +293,12 @@ function saveWeatherMetrics() {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Incident Reports</h4>
-                        <b-tabs pills nav-class="bg-light rounded" content-class="mt-4">
+                        <h4 class="mb-4 card-title">Incident Reports</h4>
+                        <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="All" active>
                                 <b-card-text>
                                     <!-- <simpleBar style="max-height: 100vh"> -->
-                                    <!-- <table class="table table-centered table-nowrap align-middle">
+                                    <!-- <table class="table align-middle table-centered table-nowrap">
                                              <tbody>
                                                 <tr v-for="data of transactionsData" :key="data.icon">
                                                     <td style="width: 50px">
@@ -314,18 +313,18 @@ function saveWeatherMetrics() {
                                                     </td>
                                                     <td>
                                                         <div>
-                                                            <h5 class="font-size-14 mb-1">{{ data.name }}</h5>
-                                                            <p class="text-muted mb-0">{{ data.date }}</p>
+                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
+                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 mb-0">{{ data.text }}</h5>
+                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
                                                                 {{ data.price }}
                                                             </h5>
                                                         </div>
@@ -334,7 +333,7 @@ function saveWeatherMetrics() {
                                             </tbody>
                                         </table> -->
                                     <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                        <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                         <div>No Incidents Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
@@ -343,7 +342,7 @@ function saveWeatherMetrics() {
                             <b-tab title="Work In Progress">
                                 <b-card-text>
                                     <!-- <simpleBar style="max-height: 330px"> -->
-                                    <!-- <table class="table table-centered table-nowrap align-middle">
+                                    <!-- <table class="table align-middle table-centered table-nowrap">
                                             <tbody>
                                                 <tr v-for="data of transactionsData" :key="data.id">
                                                     <td style="width: 50px">
@@ -358,18 +357,18 @@ function saveWeatherMetrics() {
                                                     </td>
                                                     <td>
                                                         <div>
-                                                            <h5 class="font-size-14 mb-1">{{ data.name }}</h5>
-                                                            <p class="text-muted mb-0">{{ data.date }}</p>
+                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
+                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 mb-0">{{ data.text }}</h5>
+                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
                                                                 {{ data.price }}
                                                             </h5>
                                                         </div>
@@ -378,7 +377,7 @@ function saveWeatherMetrics() {
                                             </tbody>
                                         </table> -->
                                     <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                        <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                         <div>No Incidents Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
@@ -387,7 +386,7 @@ function saveWeatherMetrics() {
                             <b-tab title="Closed">
                                 <b-card-text>
                                     <!-- <simpleBar style="max-height: 330px"> -->
-                                    <!-- <table class="table table-centered table-nowrap align-middle">
+                                    <!-- <table class="table align-middle table-centered table-nowrap">
                                             <tbody>
                                                 <tr v-for="data of transactionsData" :key="data.id">
                                                     <td style="width: 50px">
@@ -402,18 +401,18 @@ function saveWeatherMetrics() {
                                                     </td>
                                                     <td>
                                                         <div>
-                                                            <h5 class="font-size-14 mb-1">{{ data.name }}</h5>
-                                                            <p class="text-muted mb-0">{{ data.date }}</p>
+                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
+                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 mb-0">{{ data.text }}</h5>
+                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
                                                                 {{ data.price }}
                                                             </h5>
                                                         </div>
@@ -422,7 +421,7 @@ function saveWeatherMetrics() {
                                             </tbody>
                                         </table> -->
                                     <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                        <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                         <div>No Incidents Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
@@ -435,13 +434,13 @@ function saveWeatherMetrics() {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Notifications</h4>
+                        <h4 class="mb-4 card-title">Notifications</h4>
                         <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                            <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                             <div>No Notifications Yet.</div>
                         </div>
                         <!-- <ul class="list-group">
-                                <li class="list-group-item border-0">
+                                <li class="border-0 list-group-item">
                                     <div class="d-flex">
                                         <div class="avatar-xs me-3">
                                             <span class="avatar-title rounded-circle bg-light">
@@ -453,13 +452,13 @@ function saveWeatherMetrics() {
                                             <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Joseph</p>
+                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Joseph</p>
                                             </div>
-                                            <p class="text-muted mb-0">12 Mar, 2020</p>
+                                            <p class="mb-0 text-muted">12 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item border-0">
+                                <li class="border-0 list-group-item">
                                     <div class="d-flex">
                                         <div class="avatar-xs me-3">
                                             <span class="avatar-title rounded-circle bg-light">
@@ -471,13 +470,13 @@ function saveWeatherMetrics() {
                                             <p class="text-muted">To an English person, it will seem like simplified English, as a skeptical cambridge</p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Jerry</p>
+                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Jerry</p>
                                             </div>
-                                            <p class="text-muted mb-0">13 Mar, 2020</p>
+                                            <p class="mb-0 text-muted">13 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item border-0">
+                                <li class="border-0 list-group-item">
                                     <div class="d-flex">
                                         <div class="avatar-xs me-3">
                                             <span class="avatar-title rounded-circle bg-light">
@@ -489,13 +488,13 @@ function saveWeatherMetrics() {
                                             <p class="text-muted">It va esser tam simplic quam occidental in fact, it va esser occidental.</p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Calvin</p>
+                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Calvin</p>
                                             </div>
-                                            <p class="text-muted mb-0">14 Mar, 2020</p>
+                                            <p class="mb-0 text-muted">14 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item border-0">
+                                <li class="border-0 list-group-item">
                                     <div class="d-flex">
                                         <div class="avatar-xs me-3">
                                             <span class="avatar-title rounded-circle bg-light">
@@ -507,9 +506,9 @@ function saveWeatherMetrics() {
                                             <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0"><i class="mdi mdi-account me-1"></i> Joseph</p>
+                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Joseph</p>
                                             </div>
-                                            <p class="text-muted mb-0">12 Mar, 2020</p>
+                                            <p class="mb-0 text-muted">12 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
@@ -520,24 +519,24 @@ function saveWeatherMetrics() {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Current Weather Metrics</h4>
+                        <h4 class="mb-4 card-title">Current Weather Metrics</h4>
                         <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                            <div class="mb-4 pt-5"><img :src="icondata" :height="80" /></div>
+                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                             <div>No Metrics Yet.</div>
                         </div>
-                        <!-- <b-tabs pills nav-class="bg-light rounded" content-class="mt-4">
+                        <!-- <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="Buy" active>
                                 <b-card-text>
                                     <div class="float-end ms-2">
                                         <h5 class="font-size-14">
-                                            <i class="bx bx-wallet text-primary font-size-16 align-middle me-1"></i>
+                                            <i class="align-middle bx bx-wallet text-primary font-size-16 me-1"></i>
                                             $4235.23
                                         </h5>
                                     </div>
-                                    <h5 class="font-size-14 mb-4">Buy Coin</h5>
+                                    <h5 class="mb-4 font-size-14">Buy Coin</h5>
 
                                     <div>
-                                        <div class="form-group mb-3">
+                                        <div class="mb-3 form-group">
                                             <label>Payment method :</label>
                                             <select class="form-select">
                                                 <option>Credit / Debit Card</option>
@@ -547,7 +546,7 @@ function saveWeatherMetrics() {
 
                                         <div>
                                             <label>Add Amount :</label>
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <label class="input-group-text">Amount</label>
                                                 <select class="form-select" style="max-width: 90px">
                                                     <option value="BT" selected>BTC</option>
@@ -557,7 +556,7 @@ function saveWeatherMetrics() {
                                                 <input type="text" class="form-control" />
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Price</label>
                                                 </div>
@@ -567,7 +566,7 @@ function saveWeatherMetrics() {
                                                 </div>
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Total</label>
                                                 </div>
@@ -585,20 +584,20 @@ function saveWeatherMetrics() {
                                 <b-card-text>
                                     <div class="float-end ms-2">
                                         <h5 class="font-size-14">
-                                            <i class="bx bx-wallet text-primary font-size-16 align-middle me-1"></i>
+                                            <i class="align-middle bx bx-wallet text-primary font-size-16 me-1"></i>
                                             $4235.23
                                         </h5>
                                     </div>
-                                    <h5 class="font-size-14 mb-4">Sell Coin</h5>
+                                    <h5 class="mb-4 font-size-14">Sell Coin</h5>
 
                                     <div>
-                                        <div class="form-group mb-3">
+                                        <div class="mb-3 form-group">
                                             <label>Email :</label>
                                             <input type="email" class="form-control" />
                                         </div>
                                         <div>
                                             <label>Add Amount :</label>
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <label class="input-group-text">Amount</label>
 
                                                 <select class="form-select" style="max-width: 90px">
@@ -609,7 +608,7 @@ function saveWeatherMetrics() {
                                                 <input type="text" class="form-control" />
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Price</label>
                                                 </div>
@@ -619,7 +618,7 @@ function saveWeatherMetrics() {
                                                 </div>
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Total</label>
                                                 </div>
