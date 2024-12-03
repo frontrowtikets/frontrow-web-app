@@ -78,8 +78,11 @@ class PaymentService
      */
     protected function setApiKey()
     {
-        $key = env('BEYONIC_API_KEY', 'cd60c22a5371740724e87c61471e576326880d08');
+        $key = env('BEYONIC_API_KEY', '');
 
+        if (!$key) {
+            throw new \Exception('Beyonic API Key is not set. Please set it in the .env file');
+        }
         return Beyonic::setApiKey($key);
     }
 
