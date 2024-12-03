@@ -7,6 +7,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "africastalking/africastalking": "^3.0",
+        "beyonic/beyonic-php": "^0.0.16",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.31",
         "laravel/jetstream": "^5.3",
