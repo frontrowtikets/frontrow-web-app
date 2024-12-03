@@ -27,6 +27,8 @@ class PaymentService
     protected static $max_attempts = 3;
     protected static $is_wallet = false;
     protected static $collection_prams = array();
+    // success message 
+    protected static $success_message;
 
     /**
      * Number to attempts to retry collecting the payments in case of failure
@@ -40,6 +42,11 @@ class PaymentService
     }
 
 
+    public function on_success($message)
+    {
+        self::$success_message = $message;
+        return $this;
+    }
     /**
      * Log the transaction and proceed with the request
      *
@@ -202,6 +209,10 @@ class PaymentService
 
         array_push($metadata, self::$collection_prams['meta']);
 
+        $formatted_amount = number_format($amount, 2);
+        if (!self::$success_message) {
+            self::$success_message = self::$is_wallet ? "Wallet Topup of $formatted_amount was successful" : "Ticket Purchase of $formatted_amount was successful";
+        }
         $collection =   [
             "phonenumber" => $phone,
             "amount" => $amount,
@@ -211,7 +222,8 @@ class PaymentService
             "reason" => self::$is_wallet ? "Wallet Topup" : "Ticket Purchase",
             "metadata" => $metadata,
             "send_instructions" => True,
-            "max_attempts" => self::$max_attempts
+            "max_attempts" => self::$max_attempts,
+            "success_message" => self::$success_message
         ];
 
         self::$collection_intent = $collection;
