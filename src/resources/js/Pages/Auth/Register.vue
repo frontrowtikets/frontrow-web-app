@@ -1,19 +1,29 @@
 <script setup>
 import { Head, Link, useForm,router } from "@inertiajs/vue3";
 import Layout from "@/js/Layouts/auth.vue";
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, ref , computed} from "vue";
 import { forIn } from "lodash";
 
 //data
+
+
+const registerAsEventsManager =  ref(false);
+
 const form = useForm({
     name: "",
     email: "",
-    vendor_number: "",
+    asEventsManager:false,
     password: "",
+    phone:"",
     password_confirmation: "",
     terms: true,
     division: "",
 });
+
+const asEventsManager = computed(()=>{
+    form.asEventsManager = registerAsEventsManager.value
+
+})
 
 //data
 const state = reactive({
@@ -21,7 +31,6 @@ const state = reactive({
     sliding: null,
 });
 
-const coutryOffice = import.meta.env.VITE_COUNTRY_OFFICE;
 
 //methods
 
@@ -103,7 +112,7 @@ function backHome(){
 
                                 <div class="mb-3">
                                     <label for="email"> Phone Number</label>
-                                    <input style="font-size: 13px" type="email" class="form-control" id="phone" required autocomplete="username" placeholder="Phone NO." v-model="form.email" />
+                                    <input style="font-size: 13px" type="text" class="form-control" id="phone" required  placeholder="Phone NO." v-model="form.phone" />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.email" />
                                 </div>
 
@@ -137,14 +146,14 @@ function backHome(){
                                 </div>
 
                                 <div>
-                                    <b-form-checkbox id="customControlInline" name="remember" value="accepted" v-model:checked="form.remember" unchecked-value="not_accepted">
+                                    <b-form-checkbox id="customControlInline" name="remember" value="true" v-model="registerAsEventsManager" unchecked-value="false">
                                         Signup as Events Manager
                                     </b-form-checkbox>
                                 </div>
 
                                 <div class="mt-5 d-grid">
                                     <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" @click="submit" :disabled="form.processing">
-                                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i>Register
+                                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i><span>Register</span>
                                     </button>
                                 </div>
 
