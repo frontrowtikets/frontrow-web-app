@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('event_tickets', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->id('id');
+            $table->unsignedBigInteger('event_id');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->string('category');
             $table->decimal('price',total:12);
             $table->string('ticket_thumbnail_url')->nullable();

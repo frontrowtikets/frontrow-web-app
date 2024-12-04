@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
-    use HasUuids;
     use SoftDeletes;
+    use HasRoles;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use HasProfilePhoto;
@@ -35,7 +36,8 @@ class User extends Authenticatable
         'phone_number',
         'user_type',
         'user_platform',
-        'active'
+        'active',
+        'api_token'
     ];
 
     /**
@@ -57,6 +59,10 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'directPermissions',
+        'permissionsViaRoles',
+        'allPermissions',
+        'roles',
     ];
 
     /**
@@ -70,5 +76,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function getdirectPermissionsAttribute()
+    {
+        $directPermissions = $this->getDirectPermissions()->pluck('name')->all();
+        return $directPermissions;
+    }
+    public function getpermissionsViaRolesAttribute()
+    {
+        $permissionsViaRoles = $this->getPermissionsViaRoles()->pluck('name')->all();
+        return $permissionsViaRoles;
+    }
+    public function getallPermissionsAttribute()
+    {
+        $allPermissions = $this->getAllPermissions()->pluck('name')->all();
+        return $allPermissions;
+    }
+    public function getrolesAttribute()
+    {
+        $roles = $this->roles()->get();
+        return $roles;
     }
 }

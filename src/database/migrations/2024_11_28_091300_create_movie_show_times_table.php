@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('movie_show_times', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('movie_id')->references('id')->on('movies')->onDelete('cascade');
+            $table->id('id');
+            $table->unsignedBigInteger('movie_id');
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
             $table->string('theatre');
             $table->date('screening_date')->nullable();
             $table->time('start_time', precision: 0);

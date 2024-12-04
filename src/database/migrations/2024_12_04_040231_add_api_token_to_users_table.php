@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('phone_number')->unique();
-            $table->string('user_type', 100);
-            $table->string('user_platform', 100)->nullable();
-            $table->boolean('active')->default(true);
-            $table->softDeletes();
+            $table->string('api_token', 80)->unique()->nullable()->default(null);
         });
     }
 
@@ -26,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['phone_number', 'user_type', 'user_platform', 'active']);
+            $table->dropColumn('api_token');
         });
     }
 };

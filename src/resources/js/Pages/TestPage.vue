@@ -1,5 +1,5 @@
 <script setup >
-import Products from "../views/icons/materialdesign.vue";
+import Products from "../views/dashboard/crypto.vue";
 </script>
 <template>
 

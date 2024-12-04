@@ -42,8 +42,8 @@ const state = reactive({
                                         <th></th>
                                         <th>Name</th>
                                         <th class="text-center">Email</th>
-                                        <th class="text-center">Division</th>
-                                        <th class="text-center">Role</th>
+                                        <th class="text-center">Type</th>
+                                        <th class="text-center">Permissions</th>
                                         <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
@@ -59,16 +59,23 @@ const state = reactive({
                                         <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.division }}</td>
                                         <td :style="{ backgroundColor: '#fff' }" class="text-center">
                                             <div v-if="user.allPermissions.includes('admin')">
-                                                <span class="badge text-bg-warning">Administrator</span>
+                                                <span class="badge text-bg-secondary">Administrator</span>
                                             </div>
-                                            <div>
-                                                <span class="badge text-bg-success">Normal User</span>
+                                            <div v-if="user.allPermissions.includes('ticket_buyer')">
+                                                <span class="badge text-bg-success">Ticket Buyer</span>
                                             </div>
+                                            <div v-if="user.allPermissions.includes('beneficiary')">
+                                                <span class="badge text-bg-primary">Beneficiary</span>
+                                            </div>
+                                            <div v-if="user.allPermissions.includes('s_admin')">
+                                                <span class="badge text-bg-warning">Super Admin</span>
+                                            </div>
+
                                         </td>
 
                                         <td :style="{ backgroundColor: '#fff' }" class="text-end">
                                             <div class="d-flex justify-content-end">
-                                                <div class="list-unstyled hstack gap-1 mb-0">
+                                                <div class="gap-1 mb-0 list-unstyled hstack">
                                                     <div data-bs-toggle="tooltip" data-bs-placement="top" aria-label="View" @click="viewUserDetails(user.id)">
                                                         <div class="btn btn-sm btn-soft-primary"><i class="mdi mdi-eye-outline"></i></div>
                                                     </div>

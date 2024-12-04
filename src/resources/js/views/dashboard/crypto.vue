@@ -1,8 +1,8 @@
 <script>
 import simplebar from "simplebar-vue";
 
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 import ChartData from "./data-crypto";
 
 import img1 from '../../../images/crypto/features-img/img-1.png';
@@ -658,7 +658,7 @@ export default {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <div class="float-end dropdown ml-2">
+                        <div class="ml-2 float-end dropdown">
                             <a class="text-muted dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 <i class="mdi mdi-dots-horizontal font-size-18"></i>
@@ -677,10 +677,10 @@ export default {
 
                             <div>
                                 <h5>Henry Wells</h5>
-                                <p class="text-muted mb-1">
+                                <p class="mb-1 text-muted">
                                     henrywells@abc.com
                                 </p>
-                                <p class="text-muted mb-0">Id no: #SK0234</p>
+                                <p class="mb-0 text-muted">Id no: #SK0234</p>
                             </div>
                         </div>
                     </div>
@@ -689,14 +689,14 @@ export default {
                         <div class="row">
                             <div class="col-sm-6">
                                 <div>
-                                    <p class="fw-medium mb-2">Balance :</p>
+                                    <p class="mb-2 fw-medium">Balance :</p>
                                     <h4>$ 6134.39</h4>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="mt-4 mt-sm-0">
-                                    <p class="fw-medium mb-2">Coin :</p>
-                                    <div class="d-inline-flex align-items-center mt-1">
+                                    <p class="mb-2 fw-medium">Coin :</p>
+                                    <div class="mt-1 d-inline-flex align-items-center">
                                         <a href="javascript: void(0);" class="m-1" data-toggle="tooltip"
                                             data-placement="top" title="Bitcoin">
                                             <div class="avatar-xs">
@@ -730,7 +730,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="card-footer bg-transparent border-top">
+                    <div class="bg-transparent card-footer border-top">
                         <div class="text-center">
                             <a href="#" class="btn btn-outline-light me-2 w-md">Deposit</a>
                             <a href="#" class="btn btn-primary me-2 w-md">Buy / Sell</a>
@@ -750,15 +750,15 @@ export default {
 
                                     <div class="text-muted">
                                         <p class="mb-1">
-                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
                                             If several languages coalesce
                                         </p>
                                         <p class="mb-1">
-                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
                                             Sed ut perspiciatis unde
                                         </p>
                                         <p class="mb-0">
-                                            <i class="mdi mdi-circle-medium align-middle text-primary me-1"></i>
+                                            <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
                                             It would be necessary
                                         </p>
                                     </div>
@@ -776,8 +776,8 @@ export default {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="text-muted mb-4">
-                                    <i class="mdi mdi-bitcoin h2 text-warning align-middle mb-0 me-3"></i>
+                                <p class="mb-4 text-muted">
+                                    <i class="mb-0 align-middle mdi mdi-bitcoin h2 text-warning me-3"></i>
                                     Bitcoin
                                 </p>
 
@@ -785,9 +785,9 @@ export default {
                                     <div class="col-6">
                                         <div>
                                             <h5>$ 9134.39</h5>
-                                            <p class="text-muted text-truncate mb-0">
+                                            <p class="mb-0 text-muted text-truncate">
                                                 + 0.0012 ( 0.2 % )
-                                                <i class="mdi mdi-arrow-up ml-1 text-success"></i>
+                                                <i class="ml-1 mdi mdi-arrow-up text-success"></i>
                                             </p>
                                         </div>
                                     </div>
@@ -809,8 +809,8 @@ export default {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="text-muted mb-4">
-                                    <i class="mdi mdi-ethereum h2 text-primary align-middle mb-0 me-3"></i>
+                                <p class="mb-4 text-muted">
+                                    <i class="mb-0 align-middle mdi mdi-ethereum h2 text-primary me-3"></i>
                                     Ethereum
                                 </p>
 
@@ -818,9 +818,9 @@ export default {
                                     <div class="col-6">
                                         <div>
                                             <h5>$ 245.44</h5>
-                                            <p class="text-muted text-truncate mb-0">
+                                            <p class="mb-0 text-muted text-truncate">
                                                 - 4.102 ( 0.1 % )
-                                                <i class="mdi mdi-arrow-down ml-1 text-danger"></i>
+                                                <i class="ml-1 mdi mdi-arrow-down text-danger"></i>
                                             </p>
                                         </div>
                                     </div>
@@ -842,8 +842,8 @@ export default {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="text-muted mb-4">
-                                    <i class="mdi mdi-litecoin h2 text-info align-middle mb-0 me-3"></i>
+                                <p class="mb-4 text-muted">
+                                    <i class="mb-0 align-middle mdi mdi-litecoin h2 text-info me-3"></i>
                                     litecoin
                                 </p>
 
@@ -851,9 +851,9 @@ export default {
                                     <div class="col-6">
                                         <div>
                                             <h5>$ 63.61</h5>
-                                            <p class="text-muted text-truncate mb-0">
+                                            <p class="mb-0 text-muted text-truncate">
                                                 + 1.792 ( 0.1 % )
-                                                <i class="mdi mdi-arrow-up ml-1 text-success"></i>
+                                                <i class="ml-1 mdi mdi-arrow-up text-success"></i>
                                             </p>
                                         </div>
                                     </div>
@@ -889,7 +889,7 @@ export default {
                                 <option value="december">December</option>
                             </select>
                         </div>
-                        <h4 class="card-title mb-3">{{ data.title }}</h4>
+                        <h4 class="mb-3 card-title">{{ data.title }}</h4>
 
                         <div class="row">
                             <div class="col-lg-4">
@@ -897,7 +897,7 @@ export default {
                                     <p>{{ data.text }}</p>
                                     <h4>{{ data.amount }}</h4>
 
-                                    <p class="text-muted mb-4">
+                                    <p class="mb-4 text-muted">
                                         {{ data.subamount }}
                                         <i class="mdi mdi-arrow-up ms-1 text-success"></i>
                                     </p>
@@ -932,15 +932,9 @@ export default {
                             </div>
 
                             <div class="col-lg-4 col-sm-6 align-self-center">
-                                <div v-for="(data, i) of data.balancelist" :key="i" class="mt-4 pt-2">
+                                <div v-for="(data, i) of data.balancelist" :key="i" class="pt-2 mt-4">
                                     <p class="mb-2">
-                                        <i class="
-                        mdi mdi-circle
-                        align-middle
-                        font-size-10
-                        me-2
-                        text-primary
-                      "></i>
+                                        <i class="align-middle mdi mdi-circle font-size-10 me-2 text-primary"></i>
                                         {{ data.text }}
                                     </p>
                                     <h5>
@@ -959,11 +953,11 @@ export default {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-3">Overview</h4>
+                        <h4 class="mb-3 card-title">Overview</h4>
 
                         <div>
                             <div id="overview-chart" class="apex-charts" dir="ltr">
-                                <div class="toolbar button-items text-center">
+                                <div class="text-center toolbar button-items">
                                     <button id="one_month" class="btn btn-light btn-sm" @click="updateData('one_month')"
                                         :class="{
                                             active: selection === 'one_month'
@@ -1004,13 +998,13 @@ export default {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Transactions</h4>
+                        <h4 class="mb-4 card-title">Transactions</h4>
 
-                        <b-tabs pills nav-class="bg-light rounded" content-class="mt-4">
+                        <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="All" active>
                                 <b-card-text>
                                     <simplebar style="max-height: 330px">
-                                        <table class="table table-centered table-nowrap align-middle">
+                                        <table class="table align-middle table-centered table-nowrap">
                                             <tbody>
                                                 <tr v-for="data of ChartData.transactionsData" :key="data.icon">
                                                     <td style="width: 50px">
@@ -1029,24 +1023,24 @@ export default {
                                                     </td>
                                                     <td>
                                                         <div>
-                                                            <h5 class="font-size-14 mb-1">
+                                                            <h5 class="mb-1 font-size-14">
                                                                 {{ data.name }}
                                                             </h5>
-                                                            <p class="text-muted mb-0">
+                                                            <p class="mb-0 text-muted">
                                                                 {{ data.date }}
                                                             </p>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 mb-0">
+                                                            <h5 class="mb-0 font-size-14">
                                                                 {{ data.text }}
                                                             </h5>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
                                                                 {{ data.price }}
                                                             </h5>
                                                         </div>
@@ -1060,7 +1054,7 @@ export default {
                             <b-tab title="Buy">
                                 <b-card-text>
                                     <simplebar style="max-height: 330px">
-                                        <table class="table table-centered table-nowrap align-middle">
+                                        <table class="table align-middle table-centered table-nowrap">
                                             <tbody>
                                                 <tr v-for="data of ChartData.transactionsData" :key="data.id">
                                                     <td style="width: 50px">
@@ -1079,24 +1073,24 @@ export default {
                                                     </td>
                                                     <td>
                                                         <div>
-                                                            <h5 class="font-size-14 mb-1">
+                                                            <h5 class="mb-1 font-size-14">
                                                                 {{ data.name }}
                                                             </h5>
-                                                            <p class="text-muted mb-0">
+                                                            <p class="mb-0 text-muted">
                                                                 {{ data.date }}
                                                             </p>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 mb-0">
+                                                            <h5 class="mb-0 font-size-14">
                                                                 {{ data.text }}
                                                             </h5>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
                                                                 {{ data.price }}
                                                             </h5>
                                                         </div>
@@ -1110,7 +1104,7 @@ export default {
                             <b-tab title="Sell">
                                 <b-card-text>
                                     <simplebar style="max-height: 330px">
-                                        <table class="table table-centered table-nowrap align-middle">
+                                        <table class="table align-middle table-centered table-nowrap">
                                             <tbody>
                                                 <tr v-for="data of ChartData.transactionsData" :key="data.id">
                                                     <td style="width: 50px">
@@ -1129,24 +1123,24 @@ export default {
                                                     </td>
                                                     <td>
                                                         <div>
-                                                            <h5 class="font-size-14 mb-1">
+                                                            <h5 class="mb-1 font-size-14">
                                                                 {{ data.name }}
                                                             </h5>
-                                                            <p class="text-muted mb-0">
+                                                            <p class="mb-0 text-muted">
                                                                 {{ data.date }}
                                                             </p>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 mb-0">
+                                                            <h5 class="mb-0 font-size-14">
                                                                 {{ data.text }}
                                                             </h5>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="text-end">
-                                                            <h5 class="font-size-14 text-muted mb-0">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
                                                                 {{ data.price }}
                                                             </h5>
                                                         </div>
@@ -1165,7 +1159,7 @@ export default {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Notifications</h4>
+                        <h4 class="mb-4 card-title">Notifications</h4>
                         <simplebar style="max-height: 390px">
                             <ul class="list-group" style="max-height: 390px">
                                 <li class="list-group-item">
@@ -1185,12 +1179,12 @@ export default {
                                             </p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0">
+                                                <p class="mb-0 text-muted">
                                                     <i class="mdi mdi-account me-1"></i>
                                                     Joseph
                                                 </p>
                                             </div>
-                                            <p class="text-muted mb-0">
+                                            <p class="mb-0 text-muted">
                                                 12 Mar, 2020
                                             </p>
                                         </div>
@@ -1214,12 +1208,12 @@ export default {
                                             </p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0">
+                                                <p class="mb-0 text-muted">
                                                     <i class="mdi mdi-account me-1"></i>
                                                     Jerry
                                                 </p>
                                             </div>
-                                            <p class="text-muted mb-0">
+                                            <p class="mb-0 text-muted">
                                                 13 Mar, 2020
                                             </p>
                                         </div>
@@ -1243,12 +1237,12 @@ export default {
                                             </p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0">
+                                                <p class="mb-0 text-muted">
                                                     <i class="mdi mdi-account me-1"></i>
                                                     Calvin
                                                 </p>
                                             </div>
-                                            <p class="text-muted mb-0">
+                                            <p class="mb-0 text-muted">
                                                 14 Mar, 2020
                                             </p>
                                         </div>
@@ -1271,12 +1265,12 @@ export default {
                                             </p>
 
                                             <div class="float-end">
-                                                <p class="text-muted mb-0">
+                                                <p class="mb-0 text-muted">
                                                     <i class="mdi mdi-account me-1"></i>
                                                     Joseph
                                                 </p>
                                             </div>
-                                            <p class="text-muted mb-0">
+                                            <p class="mb-0 text-muted">
                                                 12 Mar, 2020
                                             </p>
                                         </div>
@@ -1291,21 +1285,21 @@ export default {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Buy / Sell</h4>
+                        <h4 class="mb-4 card-title">Buy / Sell</h4>
 
-                        <b-tabs pills nav-class="bg-light rounded" content-class="mt-4">
+                        <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="Buy" active>
                                 <b-card-text>
                                     <div class="float-end ms-2">
                                         <h5 class="font-size-14">
-                                            <i class="bx bx-wallet text-primary font-size-16 align-middle me-1"></i>
+                                            <i class="align-middle bx bx-wallet text-primary font-size-16 me-1"></i>
                                             $4235.23
                                         </h5>
                                     </div>
-                                    <h5 class="font-size-14 mb-4">Buy Coin</h5>
+                                    <h5 class="mb-4 font-size-14">Buy Coin</h5>
 
                                     <div>
-                                        <div class="form-group mb-3">
+                                        <div class="mb-3 form-group">
                                             <label>Payment method :</label>
                                             <select class="form-select">
                                                 <option>Credit / Debit Card</option>
@@ -1315,7 +1309,7 @@ export default {
 
                                         <div>
                                             <label>Add Amount :</label>
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <label class="input-group-text">Amount</label>
                                                 <select class="form-select" style="max-width: 90px">
                                                     <option value="BT" selected>BTC</option>
@@ -1325,7 +1319,7 @@ export default {
                                                 <input type="text" class="form-control" />
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Price</label>
                                                 </div>
@@ -1335,7 +1329,7 @@ export default {
                                                 </div>
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Total</label>
                                                 </div>
@@ -1355,20 +1349,20 @@ export default {
                                 <b-card-text>
                                     <div class="float-end ms-2">
                                         <h5 class="font-size-14">
-                                            <i class="bx bx-wallet text-primary font-size-16 align-middle me-1"></i>
+                                            <i class="align-middle bx bx-wallet text-primary font-size-16 me-1"></i>
                                             $4235.23
                                         </h5>
                                     </div>
-                                    <h5 class="font-size-14 mb-4">Sell Coin</h5>
+                                    <h5 class="mb-4 font-size-14">Sell Coin</h5>
 
                                     <div>
-                                        <div class="form-group mb-3">
+                                        <div class="mb-3 form-group">
                                             <label>Email :</label>
                                             <input type="email" class="form-control" />
                                         </div>
                                         <div>
                                             <label>Add Amount :</label>
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <label class="input-group-text">Amount</label>
 
                                                 <select class="form-select" style="max-width: 90px">
@@ -1379,7 +1373,7 @@ export default {
                                                 <input type="text" class="form-control" />
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Price</label>
                                                 </div>
@@ -1389,7 +1383,7 @@ export default {
                                                 </div>
                                             </div>
 
-                                            <div class="input-group mb-3">
+                                            <div class="mb-3 input-group">
                                                 <div class="input-group-prepend">
                                                     <label class="input-group-text">Total</label>
                                                 </div>

@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_event_tickets', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignUuid('event_id')->references('id')->on('events')->onDelete('cascade');
-            $table->integer('quantity');
+            $table->id('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('event_id');
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->decimal('total_amount', total: 12);
-            $table->string('ticket_status',100)->nullable();
+            $table->string('ticket_status', 100)->nullable();
             $table->date('booking_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
