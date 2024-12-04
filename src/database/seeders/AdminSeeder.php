@@ -18,6 +18,8 @@ class AdminSeeder extends Seeder
                 "name" => "Admin User",
                 "email" => "admin@frontrow.com",
                 'email_verified_at' => date("Y-m-d H:i:s"),
+                "phone_number" => '07000000000',
+                "user_type" => 'admin',
                 "password" => bcrypt("frontrow@123"),
             ]
         );
