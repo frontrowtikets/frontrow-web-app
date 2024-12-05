@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payment_transactions', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
+            $table->id('id');
             $table->string('txn_ref', 100);
             $table->string('mfscode', 100);
             $table->string('txn_type', 50)->default('ticket_purchase');
@@ -23,7 +22,7 @@ return new class extends Migration
             $table->string('currency', 5)->default("UGX");
             $table->string('reason');
             $table->string('phone_number', 14);
-            $table->foreignUuid('user_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->string('txn_hash', 64);
             $table->timestamps();
             $table->softDeletes();
