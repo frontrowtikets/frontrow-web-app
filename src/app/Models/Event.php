@@ -23,5 +23,6 @@ class Event extends Model
         'end_date',
         'thumbnail_url',
         'currency',
+        'access_type',
     ];
 }

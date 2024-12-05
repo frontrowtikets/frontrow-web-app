@@ -1,6 +1,6 @@
 <script setup>
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
+import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, onMounted } from "vue";
 import simplebar from "simplebar-vue";
@@ -8,13 +8,14 @@ import icondata from "@/images/icondata.png";
 import axios from "axios";
 // import 'simplebar-vue/dist/simplebar.min.css';
 
-defineOptions({ layout: DashboardLayout });
+// defineOptions({ layout: DashboardLayout });
 const props = defineProps(["incidentCount"]);
 const state = reactive({});
 </script>
 <template>
-    <div>
-        <Head title="Dashboard" />
+    <Head title="Dashboard" />
+
+    <DashboardLayout>
         <PageHeader title="Dashboard" :items="state.items" />
         <div class="row">
             <div class="col-xl-4">
@@ -150,14 +151,14 @@ const state = reactive({});
             </div>
         </div>
         <!-- end row -->
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-xl-8">
                 <WalletBalance />
             </div>
             <div class="col-xl-4">
                 <Overview />
             </div>
-        </div>
+        </div> -->
 
         <div class="row">
             <div class="col-xl-4">
@@ -551,5 +552,5 @@ const state = reactive({});
                 </div>
             </div>
         </div>
-    </div>
+    </DashboardLayout>
 </template>

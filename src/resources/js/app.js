@@ -16,6 +16,9 @@ import { BootstrapVueNext } from "bootstrap-vue-next";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 import "leaflet/dist/leaflet.css";
 
+
+
+
 //importing the vuex store
 import store from "./state/store.js";
 
@@ -23,10 +26,16 @@ import store from "./state/store.js";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
+import { VueTelInput } from "vue3-tel-input";
+import "vue3-tel-input/dist/vue3-tel-input.css";
+
+
 //WYSIWYG editor
 import CKEditor from "@ckeditor/ckeditor5-vue";
 
 const appName = import.meta.env.VITE_APP_NAME || "FRONTROW";
+
+
 
 createInertiaApp({
     title: (title) => `${title}`,
@@ -42,7 +51,21 @@ createInertiaApp({
 
         const options = {};
 
-        return app.use(Toast, options).use(MotionPlugin).use(plugin).use(store).use(ZiggyVue).use(vSelect).use(Vuelidate).use(vSelect).use(Vue3Signature).use(BootstrapVueNext).use(CKEditor).mount(el);
+        return app
+            .use(Toast, options)
+
+            .use(MotionPlugin)
+            .use(plugin)
+            .use(store)
+            .use(ZiggyVue)
+            .use(vSelect)
+            .use(Vuelidate)
+            .use(vSelect)
+            .use(Vue3Signature)
+            .use(BootstrapVueNext)
+            .use(CKEditor)
+            .component("VueTelInput", VueTelInput)
+            .mount(el);
     },
     progress: {
         color: "#01B3BD",

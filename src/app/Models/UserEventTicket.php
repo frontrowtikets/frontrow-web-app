@@ -20,5 +20,6 @@ class UserEventTicket extends Model
          'user_email',
         'ticket_id',
         'booking_id',
+        'event_ticket_id',
     ];
 }

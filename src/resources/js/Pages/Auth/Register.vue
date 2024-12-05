@@ -1,36 +1,31 @@
 <script setup>
-import { Head, Link, useForm,router } from "@inertiajs/vue3";
+import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import Layout from "@/js/Layouts/auth.vue";
-import { onMounted, reactive, ref , computed} from "vue";
-import { forIn } from "lodash";
+import { onMounted, reactive, ref, computed } from "vue";
 
 //data
+const isPhoneNumberValid = ref(false);
+const invalidPhoneNumberMsg = ref('');
+const userPhoneNumber = ref('')
 
 
-const registerAsEventsManager =  ref(false);
 
 const form = useForm({
     name: "",
     email: "",
-    asEventsManager:false,
+    asEventsManager: false,
     password: "",
-    phone:"",
+    phone_number:'',
     password_confirmation: "",
     terms: true,
     division: "",
 });
-
-const asEventsManager = computed(()=>{
-    form.asEventsManager = registerAsEventsManager.value
-
-})
 
 //data
 const state = reactive({
     slide: 0,
     sliding: null,
 });
-
 
 //methods
 
@@ -40,10 +35,23 @@ onMounted(() => {});
 const submit = () => {
     form.post(route("register"), {
         onFinish: () => form.reset("password", "password_confirmation"),
+        onError: (err) => console.log(err),
     });
 };
-function backHome(){
-     router.visit("/");
+function backHome() {
+    router.visit("/");
+}
+
+function phoneNumber(val,phoneObj){
+    form.phone_number = phoneObj['number'];
+    isPhoneNumberValid.value = phoneObj.valid
+}
+function checkValidity(){
+    if(isPhoneNumberValid.value === false || typeof isPhoneNumberValid.value == 'undefined'){
+        invalidPhoneNumberMsg.value = 'Phone Number is Invalid'
+    }else{
+        invalidPhoneNumberMsg.value = ''
+    }
 }
 </script>
 
@@ -68,7 +76,7 @@ function backHome(){
                         </div>
                     </div>
                     <div style="position: absolute; right: 0; top: 17%">
-                        <button @click="backHome">
+                        <button @click="backHome" class="backhome">
                             <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024">
                                 <path
                                     d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"
@@ -98,6 +106,15 @@ function backHome(){
                                     {{ form.errors.password }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
+                                <div v-if="form.errors.phone_number" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ form.errors.phone_number }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                <div v-if="invalidPhoneNumberMsg" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ invalidPhoneNumberMsg }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="name">Full Name</label>
                                     <input style="font-size: 13px" type="text" class="form-control" id="name" placeholder="Name" required v-model="form.name" />
@@ -111,9 +128,10 @@ function backHome(){
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="email"> Phone Number</label>
-                                    <input style="font-size: 13px" type="text" class="form-control" id="phone" required  placeholder="Phone NO." v-model="form.phone" />
-                                    <InputError class="mt-2 mb-4 text-danger" :message="form.errors.email" />
+                                    <label for="phone_number"> Phone Number</label>
+                                    <VueTelInput class="form-control" :inputOptions.required="true" :inputOptions.showDialCode="true" :rules="[isValidPhone]" v-model="form.phone_number" @input="phoneNumber" @change="phoneNumber" @blur="checkValidity" />
+                                    <!-- <input style="font-size: 13px" type="text" class="form-control" id="phone_number" required placeholder="Phone NO." v-model="form.phone_number" />-->
+                                    <small class="text-danger" v-if="invalidPhoneNumberMsg">{{invalidPhoneNumberMsg}}</small>
                                 </div>
 
                                 <div class="mb-3">
@@ -130,7 +148,7 @@ function backHome(){
                                     />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.password" />
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-4">
                                     <label for="password_confirmation">Confirm Password</label>
                                     <input
                                         style="font-size: 13px"
@@ -144,12 +162,17 @@ function backHome(){
                                     />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.password_confirmation" />
                                 </div>
-
-                                <div>
+                                <div class="">
+                                    <div class="mb-3 form-check form-check-left">
+                                        <input class="form-check-input" type="checkbox" id="formCheckRight1" v-model="form.asEventsManager" />
+                                        <label class="form-check-label" for="formCheckRight1"> Register as Events Manager </label>
+                                    </div>
+                                </div>
+                                <!-- <div>
                                     <b-form-checkbox id="customControlInline" name="remember" value="true" v-model="registerAsEventsManager" unchecked-value="false">
                                         Signup as Events Manager
                                     </b-form-checkbox>
-                                </div>
+                                </div> -->
 
                                 <div class="mt-5 d-grid">
                                     <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" @click="submit" :disabled="form.processing">
