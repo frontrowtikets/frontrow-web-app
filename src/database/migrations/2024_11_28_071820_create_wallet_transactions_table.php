@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wallet_transactions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->decimal('amount',total:12);
-            $table->string('transaction_type',100);
-            $table->string('reference', 100);
-            $table->longText('description')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        // Schema::create('wallet_transactions', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        //     $table->decimal('amount', total: 12);
+        //     $table->string('transaction_type', 100);
+        //     $table->string('reference', 100);
+        //     $table->longText('description')->nullable();
+        //     $table->timestamps();
+        //     $table->softDeletes();
+        // });
+         Schema::dropIfExists('wallet_transactions');
     }
 
     /**

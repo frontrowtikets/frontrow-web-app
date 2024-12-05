@@ -68,7 +68,7 @@ export default {
     },
     mounted() {
         this.currentUser = usePage().props.auth.user;
-        this.loadSearchMap();
+        router.reload();
     },
     methods: {
         async loadSearchMap() {
@@ -304,7 +304,7 @@ export default {
 
 <template>
     <header id="page-topbar">
-        <div class="navbar-header" style="background-color: #002804">
+        <div class="navbar-header" style="background-color: #01676C">
             <div class="d-flex">
                 <!-- LOGO -->
                 <div
@@ -313,11 +313,11 @@ export default {
                     <Link :href="route('landing')">
                         <div class="avatar-sm">
                             <span class="avatar-title rounded-circle bg-light">
-                                <img
+                                <!-- <img
                                     src="@/images/FRONTROWLogo.svg"
                                     alt
                                     height="48"
-                                />
+                                /> -->
                             </span>
                         </div>
                     </Link>

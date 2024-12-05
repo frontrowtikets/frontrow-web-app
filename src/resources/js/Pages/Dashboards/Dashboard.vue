@@ -1,148 +1,20 @@
 <script setup>
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import Layout from "@/js/Layouts/vertical.vue";
+import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, onMounted } from "vue";
 import simplebar from "simplebar-vue";
 import icondata from "@/images/icondata.png";
 import axios from "axios";
 // import 'simplebar-vue/dist/simplebar.min.css';
-import WalletBalance from "./wallet-balance.vue";
-import Overview from "./overview.vue";
 
-
+defineOptions({ layout: DashboardLayout });
 const props = defineProps(["incidentCount"]);
-const state = reactive({
-    items: [
-        {
-            text: "Dashboard",
-            href: "/",
-        },
-        {
-            text: "Home",
-            active: true,
-        },
-    ],
-    markCenter: { lat: 0.363889, lng: 32.528611 },
-    forecastData: [
-        {
-            date: "",
-            avgTemperature: 0,
-            avgHumidity: 0,
-            totalPrecipitation: 0,
-        },
-    ],
-});
-
-onMounted(() => {
-    fetchForecastWeather();
-});
-async function fetchForecastWeather() {
-    const API_KEY = "a233ac050e0ae77b44ea0868ab090373";
-    const lat = state.markCenter.lat;
-    const lon = state.markCenter.lng;
-
-    try {
-        // Fetch forecast data
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`);
-
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-
-        // Group forecast data by day
-        const dailyForecast = {};
-
-        data.list.forEach((forecast) => {
-            const date = forecast.dt_txt.split(" ")[0]; // Extract the date part from dt_txt (format: "YYYY-MM-DD HH:MM:SS")
-
-            if (!dailyForecast[date]) {
-                dailyForecast[date] = {
-                    temperatureSum: 0,
-                    humiditySum: 0,
-                    precipitationSum: 0,
-                    count: 0,
-                };
-            }
-
-            // Add forecast data to daily summary
-            dailyForecast[date].temperatureSum += forecast.main.temp;
-            dailyForecast[date].humiditySum += forecast.main.humidity;
-            dailyForecast[date].precipitationSum += forecast.rain ? forecast.rain["3h"] : 0;
-            dailyForecast[date].count += 1;
-        });
-
-        // Calculate daily averages and totals
-        const dailySummaries = Object.keys(dailyForecast).map((date) => {
-            const day = dailyForecast[date];
-            return {
-                date: date,
-                avgTemperature: (day.temperatureSum / day.count).toFixed(2), // Average temperature
-                avgHumidity: (day.humiditySum / day.count).toFixed(2), // Average humidity
-                totalPrecipitation: day.precipitationSum.toFixed(2), // Total precipitation
-            };
-        });
-
-        console.log("current forecasts", dailySummaries);
-
-        // Return the daily summaries for further use in your Vue component
-        state.forecastData = dailySummaries;
-
-        //saveDetails in database
-        saveWeatherMetrics();
-    } catch (err) {
-        console.error(err.message);
-    }
-}
-
-function saveWeatherMetrics() {
-    const todayForeCast = state.forecastData[0];
-    let formData = new FormData();
-    formData.append("avgTemp", Number(todayForeCast.avgTemperature));
-    formData.append("avgHumdity", Number(todayForeCast.avgHumidity));
-    formData.append("avgPrecipitaion", Number(todayForeCast.totalPrecipitation));
-
-    const config = {
-        headers: {
-            "content-type": "multipart/form-data",
-            Authorization: `Bearer ${usePage().props.auth.user.api_token}`,
-        },
-    };
-
-    axios
-        .post("/api/metrics/saveMetrics", formData, config)
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((error) => {
-            app.isProcessing = false;
-            console.log({ error });
-            Swal.fire({
-                title: "Something Went Wrong",
-                icon: "error",
-                html: `<p style="font-size: 14px">There is something that went wrong and it is not your fault. Please, reach out to ICT for help.</p>`,
-                showCloseButton: false,
-                showCancelButton: false,
-                focusConfirm: true,
-                confirmButtonText: "OK",
-                confirmButtonColor: "#43ad60",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                closeOnClickOutside: false,
-            }).then((result) => {
-                if (result.value) {
-                    Swal.close();
-                    router.visit("/weatherMaps");
-                }
-            });
-        });
-}
+const state = reactive({});
 </script>
 <template>
-    <Head title="Dashboard" />
-    <Layout>
+    <div>
+        <Head title="Dashboard" />
         <PageHeader title="Dashboard" :items="state.items" />
         <div class="row">
             <div class="col-xl-4">
@@ -158,7 +30,7 @@ function saveWeatherMetrics() {
                         <div class="row">
                             <div class="mt-4 col-sm-6">
                                 <div class="pb-5">
-                                    <p class="fw-medium">Incidents Reported</p>
+                                    <p class="fw-medium">Tickets</p>
                                     <h4>{{ props.incidentCount }}</h4>
                                 </div>
                             </div>
@@ -167,11 +39,9 @@ function saveWeatherMetrics() {
                     </div>
 
                     <div class="mb-3 bg-transparent card-footer border-top">
-                        <Link :href="route('CreateIncident')">
-                            <div class="text-center" @click="reportIncident">
-                                <div class="btn btn-primary me-2 w-md">Report Incident</div>
-                            </div></Link
-                        >
+                        <div class="text-center" @click="reportIncident">
+                            <div class="btn btn-primary me-2 w-md">Create Ticket</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -188,15 +58,15 @@ function saveWeatherMetrics() {
                                     <div class="text-muted">
                                         <p class="mb-1">
                                             <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
-                                            Report Environmental Encroachment Incidents
+                                            Book Tickets
                                         </p>
                                         <p class="mb-1">
                                             <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
-                                            Recieve Weather Reports & Notifications
+                                            Load wallet & make transactions.
                                         </p>
                                         <p class="mb-0">
                                             <i class="align-middle mdi mdi-circle-medium text-primary me-1"></i>
-                                            Get Location-Based Weather Insights, and so much more.
+                                            Create Events & Manage Clients.
                                         </p>
                                     </div>
                                 </div>
@@ -213,12 +83,12 @@ function saveWeatherMetrics() {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="mb-4 text-muted">Today's Avg. Humidity</p>
+                                <p class="mb-4 text-muted">My Tickets</p>
 
                                 <div class="row">
                                     <div class="col-6">
                                         <div>
-                                            <h5>{{ state.forecastData[0].avgHumidity }}%</h5>
+                                            <h5>12</h5>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -235,13 +105,13 @@ function saveWeatherMetrics() {
                             <div class="card-body">
                                 <p class="mb-4 text-muted">
                                     <!-- <i class="mb-0 align-middle mdi mdi-ethereum h2 text-primary me-3"></i> -->
-                                    Today's Avg. Precipitation
+                                    My Wallet Balance
                                 </p>
 
                                 <div class="row">
                                     <div class="col-6">
                                         <div>
-                                            <h5>{{ state.forecastData[0].totalPrecipitation }}mm</h5>
+                                            <h5>UGX 10,000</h5>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -258,13 +128,13 @@ function saveWeatherMetrics() {
                             <div class="card-body">
                                 <p class="mb-4 text-muted">
                                     <!-- <i class="mb-0 align-middle mdi mdi-litecoin h2 text-info me-3"></i> -->
-                                    Today's Avg. Temperature
+                                    Overview
                                 </p>
 
                                 <div class="row">
                                     <div class="col-6">
                                         <div>
-                                            <h5>{{ state.forecastData[0].avgTemperature }} &degc</h5>
+                                            <h5>{{}} //</h5>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -293,7 +163,7 @@ function saveWeatherMetrics() {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="mb-4 card-title">Incident Reports</h4>
+                        <h4 class="mb-4 card-title">Transactions</h4>
                         <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="All" active>
                                 <b-card-text>
@@ -332,14 +202,14 @@ function saveWeatherMetrics() {
                                                 </tr>
                                             </tbody>
                                         </table> -->
-                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                                        <div>No Incidents Yet.</div>
+                                        <div>No Transactions Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
                                 </b-card-text>
                             </b-tab>
-                            <b-tab title="Work In Progress">
+                            <b-tab title="processing">
                                 <b-card-text>
                                     <!-- <simpleBar style="max-height: 330px"> -->
                                     <!-- <table class="table align-middle table-centered table-nowrap">
@@ -376,14 +246,14 @@ function saveWeatherMetrics() {
                                                 </tr>
                                             </tbody>
                                         </table> -->
-                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                                        <div>No Incidents Yet.</div>
+                                        <div>No Transactions Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
                                 </b-card-text>
                             </b-tab>
-                            <b-tab title="Closed">
+                            <b-tab title="Successful">
                                 <b-card-text>
                                     <!-- <simpleBar style="max-height: 330px"> -->
                                     <!-- <table class="table align-middle table-centered table-nowrap">
@@ -420,9 +290,53 @@ function saveWeatherMetrics() {
                                                 </tr>
                                             </tbody>
                                         </table> -->
-                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                                        <div>No Incidents Yet.</div>
+                                        <div>No Transactions Yet.</div>
+                                    </div>
+                                    <!-- </simpleBar> -->
+                                </b-card-text>
+                            </b-tab>
+                            <b-tab title="Failed">
+                                <b-card-text>
+                                    <!-- <simpleBar style="max-height: 330px"> -->
+                                    <!-- <table class="table align-middle table-centered table-nowrap">
+                                            <tbody>
+                                                <tr v-for="data of transactionsData" :key="data.id">
+                                                    <td style="width: 50px">
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
+                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-end">
+                                                            <h5 class="mb-0 font-size-14 text-muted">
+                                                                {{ data.price }}
+                                                            </h5>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table> -->
+                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                        <div>No Transactions Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
                                 </b-card-text>
@@ -519,10 +433,10 @@ function saveWeatherMetrics() {
             <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="mb-4 card-title">Current Weather Metrics</h4>
+                        <h4 class="mb-4 card-title">My Events</h4>
                         <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
                             <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                            <div>No Metrics Yet.</div>
+                            <div>No Events Yet.</div>
                         </div>
                         <!-- <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="Buy" active>
@@ -637,5 +551,5 @@ function saveWeatherMetrics() {
                 </div>
             </div>
         </div>
-    </Layout>
+    </div>
 </template>

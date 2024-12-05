@@ -4,15 +4,16 @@ import { MetisMenu } from "metismenujs";
 import { menuItems } from "./menu";
 import { router } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
+import IsUserAdmin from "../Composables/IsUserAdmin.js";
+
 
 /**
  * Sidenav component
  */
 export default {
     setup() {
-        const isCurrentUserAdmin = false;
         return {
-            isCurrentUserAdmin,
+            IsUserAdmin,
             usePage,
         };
     },
@@ -105,26 +106,7 @@ export default {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("dashboard"));
         },
-        toRouterWeatherMaps() {
-            document.body.classList.toggle("sidebar-enable");
-            router.get(route("weatherMaps"));
-        },
-        toRouterChat() {
-            document.body.classList.toggle("sidebar-enable");
-            router.get(route("chat"));
-        },
-        toRouterIncidentReports() {
-            document.body.classList.toggle("sidebar-enable");
-            router.get(route("incidents"));
-        },
-        toRouterReports() {
-            document.body.classList.toggle("sidebar-enable");
-            router.get(route("reports"));
-        },
-        toRouterSettings() {
-            document.body.classList.toggle("sidebar-enable");
-            router.get(route("settings"));
-        },
+
     },
 };
 </script>
@@ -142,35 +124,36 @@ export default {
                     <span @click="toRouterDashboard" :class="usePage().url == '/dashboard' ? 'text-white fw-bold' : 'text-grayish'">Dashboard</span>
                 </a>
             </li>
-            <li class="" role="button">
-                <a>
-                    <i class="bx bx-map" style="color: #ffffff"></i>
-                    <span :class="usePage().url == '/weatherMaps' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterWeatherMaps" >Weather Maps</span>
-                </a>
-            </li>
-            <li class="" role="button">
-                <a>
-                    <i class="bx bxs-chat" style="color: #fff"></i>
-                    <span :class="usePage().url == '/chat' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterChat">Chat</span>
-                </a>
-            </li>
-            <li class="" role="button" v-if="isCurrentUserAdmin">
+               <li class="" role="button" v-if="IsUserAdmin">
                 <a>
                     <i class="bx bx-user-pin" style="color: #fff"></i>
                     <span :class="usePage().url == '/userregister' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterRegister">Users</span>
                 </a>
             </li>
+            <li class="" role="button">
+                <a>
+                    <i class="mdi mdi-ticket " style="color: #ffffff"></i>
+                    <span :class="usePage().url == '/tickets' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterWeatherMaps" >Tickets</span>
+                </a>
+            </li>
+            <li class="" role="button">
+                <a>
+                    <i class="mdi mdi-movie-roll" style="color: #fff"></i>
+                    <span :class="usePage().url == '/events' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterChat">Events</span>
+                </a>
+            </li>
+
 
             <li class="" role="button" >
                 <a>
-                    <i class="bx bx-user-pin" style="color: #fff"></i>
-                    <span :class="usePage().url == '/incidents' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterIncidentReports">Incident Reports</span>
+                    <i class="bx bx-money" style="color: #fff"></i>
+                    <span :class="usePage().url == '/wallet' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterIncidentReports">My Wallet</span>
                 </a>
             </li>
             <li class="" role="button" >
                 <a>
                     <i class="bx bxs-report" style="color: #fff"></i>
-                    <span :class="usePage().url == '/reports' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterReports"> Weather Reports</span>
+                    <span :class="usePage().url == '/transactions' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterReports">My Transactions</span>
                 </a>
             </li>
             <li class="" role="button">

@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $currentUser->api_token =  $userApiToken;
         $currentUser->save();
 
-        return Inertia::render('Dashboards/TicketBuyerDashboard', [
+        return Inertia::render('Dashboards/Dashboard', [
 
         ]);
     }

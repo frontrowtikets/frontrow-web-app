@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('movie_casts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('movie_id')->references('id')->on('movies')->onDelete('cascade');
+            $table->id('id');
+            $table->unsignedBigInteger('movie_id');
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
             $table->string('name');
             $table->string('role');
             $table->string('profile_image_url')->nullable();

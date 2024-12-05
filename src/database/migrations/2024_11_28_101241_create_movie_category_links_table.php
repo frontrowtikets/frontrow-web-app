@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('movie_category_links', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('movie_id')->references('id')->on('movies')->onDelete('cascade');
-            $table->foreignUuid('category_id')->references('id')->on('movie_categories')->onDelete('cascade');
+            $table->id('id');
+            $table->unsignedBigInteger('movie_id');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('movie_categories')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

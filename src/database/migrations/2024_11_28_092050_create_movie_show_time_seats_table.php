@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('movie_show_time_seats', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('movie_show_time_id')->references('id')->on('movie_show_times')->onDelete('cascade');
+            $table->id('id');
+            $table->unsignedBigInteger('movie_show_time_id');
+            $table->foreign('movie_show_time_id')->references('id')->on('movie_show_times')->onDelete('cascade');
             $table->string('seat_number')->nullable();
             $table->string('row_name')->nullable();
             $table->string('column_name')->nullable();
