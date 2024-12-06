@@ -35,57 +35,71 @@ const state = reactive({
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-nowrap table-striped dt-responsive nowrap w-100">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Name</th>
-                                        <th class="text-center">Email</th>
-                                        <th class="text-center">Type</th>
-                                        <th class="text-center">Permissions</th>
-                                        <th class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(user, index) in props.users" :key="index">
-                                        <th scope="row" :style="{ backgroundColor: '#fff' }">
-                                            <div v-if="user != null">
-                                                <img :src="user.profile_photo_url" :alt="''" class="rounded-circle avatar-xs object-fit-cover" />
-                                            </div>
-                                        </th>
-                                        <td :style="{ backgroundColor: '#fff' }">{{ user.name }}</td>
-                                        <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.email }}</td>
-                                        <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.division }}</td>
-                                        <td :style="{ backgroundColor: '#fff' }" class="text-center">
-                                            <div v-if="user.allPermissions.includes('admin')">
-                                                <span class="badge text-bg-secondary">Administrator</span>
-                                            </div>
-                                            <div v-if="user.allPermissions.includes('ticket_buyer')">
-                                                <span class="badge text-bg-success">Ticket Buyer</span>
-                                            </div>
-                                            <div v-if="user.allPermissions.includes('beneficiary')">
-                                                <span class="badge text-bg-primary">Beneficiary</span>
-                                            </div>
-                                            <div v-if="user.allPermissions.includes('s_admin')">
-                                                <span class="badge text-bg-warning">Super Admin</span>
-                                            </div>
-
-                                        </td>
-
-                                        <td :style="{ backgroundColor: '#fff' }" class="text-end">
-                                            <div class="d-flex justify-content-end">
-                                                <div class="gap-1 mb-0 list-unstyled hstack">
-                                                    <div data-bs-toggle="tooltip" data-bs-placement="top" aria-label="View" @click="viewUserDetails(user.id)">
-                                                        <div class="btn btn-sm btn-soft-primary"><i class="mdi mdi-eye-outline"></i></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="mb-4 d-flex justify-content-end">
+                            <div><b-button variant="primary" class="">Assign Permissions</b-button></div>
                         </div>
+                        <b-tabs>
+                            <b-tab title="Users" active>
+                                <div class="mt-5 table-responsive">
+                                    <table class="table align-middle table-nowrap table-striped dt-responsive nowrap w-100">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th class="text-center">Email</th>
+                                                <th class="text-center">Type</th>
+                                                <th class="text-center">Permissions</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(user, index) in props.users" :key="index">
+                                                <th scope="row" :style="{ backgroundColor: '#fff' }">
+                                                    <div v-if="user != null">
+                                                        <img :src="user.profile_photo_url" :alt="''" class="rounded-circle avatar-xs object-fit-cover" />
+                                                    </div>
+                                                </th>
+                                                <td :style="{ backgroundColor: '#fff' }">{{ user.name }}</td>
+                                                <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.email }}</td>
+                                                <td :style="{ backgroundColor: '#fff' }" class="text-center">
+                                                    <div v-if="user.user_type == 'ticket_buyer'"><span class="badge text-bg-warning">Ticket Buyer</span></div>
+                                                    <div v-if="user.user_type == 'beneficiary'"><span class="badge text-bg-primary">Beneficiary</span></div>
+                                                    <div v-if="user.user_type == 'admin'"><span class="badge text-bg-indigo">Admin</span></div>
+                                                </td>
+                                                <td :style="{ backgroundColor: '#fff' }" class="text-center">
+                                                    <div v-if="user.allPermissions.includes('admin')">
+                                                        <span class="badge text-bg-secondary">Administrator</span>
+                                                    </div>
+                                                    <div v-if="user.allPermissions.includes('ticket_buyer')">
+                                                        <span class="badge text-bg-success">Ticket Buyer</span>
+                                                    </div>
+                                                    <div v-if="user.allPermissions.includes('beneficiary')">
+                                                        <span class="badge text-bg-primary">Beneficiary</span>
+                                                    </div>
+                                                    <div v-if="user.allPermissions.includes('s_admin')">
+                                                        <span class="badge text-bg-warning">Super Admin</span>
+                                                    </div>
+                                                </td>
+
+                                                <td :style="{ backgroundColor: '#fff' }" class="text-end">
+                                                    <div class="d-flex justify-content-end">
+                                                        <div class="gap-1 mb-0 list-unstyled hstack">
+                                                            <div data-bs-toggle="tooltip" data-bs-placement="top" aria-label="View" @click="viewUserDetails(user.id)">
+                                                                <div class="btn btn-sm btn-soft-primary"><i class="mdi mdi-eye-outline"></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </b-tab>
+                            <b-tab title="Beneficiary Requests">
+                                <div class="mt-5"></div>
+
+                            </b-tab>
+                        </b-tabs>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,6 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/userregister', [UserRegister::class, 'index'])->name('userRegister');
-
-
+    Route::get('/userdetails', [UserRegister::class, 'userDetails'])->name('userDetails');
 });
 

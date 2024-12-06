@@ -18,30 +18,42 @@ const state = reactive({});
     <DashboardLayout>
         <PageHeader title="Dashboard" :items="state.items" />
         <div class="row">
-            <div class="col-xl-4">
+
+              <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
                         <div>
+                           <div>
                             <!-- <img class="rounded-circle header-profile-user" :src="avatar1" alt="Header Avatar" /> -->
                             <img :src="usePage().props.auth.user.profile_photo_url" :alt="'p'" class="rounded-circle header-profile-user object-fit-cover" />
+                        </div>
+
+                            <div class="mt-2">
+                                <h5>{{usePage().props.auth.user.name}}</h5>
+                                <p class="mb-1 text-muted">
+                                    {{usePage().props.auth.user.email}}
+                                </p>
+                                <p class="mb-0 text-muted">Id no: #SK0234</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="card-body border-top">
                         <div class="row">
-                            <div class="mt-4 col-sm-6">
-                                <div class="pb-5">
-                                    <p class="fw-medium">Tickets</p>
-                                    <h4>{{ props.incidentCount }}</h4>
+                            <div class="col-12 text-end">
+                                <div>
+                                    <p class="mb-2 fw-medium">Wallet Balance :</p>
+                                    <h4>UGX 6134.39</h4>
                                 </div>
                             </div>
-                            <div class="col-sm-6"></div>
+
                         </div>
                     </div>
 
-                    <div class="mb-3 bg-transparent card-footer border-top">
-                        <div class="text-center" @click="reportIncident">
-                            <div class="btn btn-primary me-2 w-md">Create Ticket</div>
+                    <div class="bg-transparent card-footer border-top">
+                        <div class="text-center">
+                            <a href="#" class="btn btn-light me-2 w-md">Deposit</a>
+                            <a href="#" class="btn btn-primary me-2 w-md">Buy  Ticket</a>
                         </div>
                     </div>
                 </div>
@@ -106,7 +118,7 @@ const state = reactive({});
                             <div class="card-body">
                                 <p class="mb-4 text-muted">
                                     <!-- <i class="mb-0 align-middle mdi mdi-ethereum h2 text-primary me-3"></i> -->
-                                    My Wallet Balance
+                                    Total Balance
                                 </p>
 
                                 <div class="row">

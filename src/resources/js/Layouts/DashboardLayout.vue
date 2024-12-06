@@ -63,9 +63,7 @@ export default {
             document.getElementById("status").style.display = "none";
         }
     },
-    beforeMount(){
-        router.reload()
-    }
+
 };
 </script>
 

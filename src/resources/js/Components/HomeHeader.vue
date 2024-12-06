@@ -141,7 +141,7 @@ function goLogin() {
                                 type="text"
                                 class="form-control"
                                 id="searched_place"
-                                :placeholder="'Searchss'"
+                                :placeholder="'Search'"
                             />
                             <span class="bx bx-search-alt"></span>
                         </div>

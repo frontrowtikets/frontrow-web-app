@@ -214,45 +214,43 @@ function makeUserAdmin() {
     <PageHeader :title="'User Details'" :items="state.items" @click="goBack" />
     <div class="row">
         <div class="col-xl-4">
-            <div class="card overflow-hidden">
+            <div class="overflow-hidden card">
                 <div class="bg-soft bg-primary">
                     <div class="row">
                         <div class="col-9">
-                            <div class="text-primary p-3">
+                            <div class="p-3 text-primary">
                                 <!-- <h5 class="text-primary">Welcome Back !</h5> -->
                             </div>
                         </div>
-                        <div class="col-3 align-self-end pt-3 pb-3 pe-4">
+                        <div class="pt-3 pb-3 col-3 align-self-end pe-4">
                             <img src="@/images/FRONTROWLogo.svg" height="75" width="75" alt class="img-fluid" />
                         </div>
                     </div>
                 </div>
-                <div class="card-body pt-0">
+                <div class="pt-0 card-body">
                     <div class="row">
                         <div class="col-sm-7">
-                            <div class="avatar-md profile-user-wid mb-4">
+                            <div class="mb-4 avatar-md profile-user-wid">
                                 <img :src="props.userDetails.profile_photo_url" alt class="img-thumbnail rounded-circle" />
                             </div>
                             <div class="mt-4">
                                 <h5 class="font-size-15 text-truncate">{{ props.userDetails.name }}</h5>
-                                <p class="text-muted mb-0 text-truncate">{{ props.userDetails.division }}</p>
+                                <p class="mb-0 text-muted text-truncate">{{ props.userDetails.division }}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-5">
                             <div class="pt-4">
                                 <div class="fw-bold text-end text-muted">
-                                    Role:
-                                    <div v-if="props.userDetails.allPermissions.includes('admin')">
-                                        <span class="badge text-bg-warning">Administrator</span>
-                                    </div>
-                                    <div>
-                                        <span class="badge text-bg-success">Normal User</span>
-                                    </div>
+                                    User Type:
+
+                                    <div v-if="props.userDetails.user_type == 'ticket_buyer'"><span class="badge text-bg-warning">Ticket Buyer</span></div>
+                                    <div v-if="props.userDetails.user_type == 'beneficiary'"><span class="badge text-bg-primary">Beneficiary</span></div>
+                                    <div v-if="props.userDetails.user_type == 'admin'"><span class="badge text-bg-indigo">Admin</span></div>
                                 </div>
                             </div>
                             <div class="mt-4 d-flex justify-content-end" v-if="isSuperAdmin">
-                                <div class="btn btn-primary btn-sm mt-2" @click="makeUserAdmin">
+                                <div class="mt-2 btn btn-primary btn-sm" @click="makeUserAdmin">
                                     Make User Admin
                                     <i class="mdi mdi-arrow-right ms-1"></i>
                                 </div>
@@ -265,9 +263,9 @@ function makeUserAdmin() {
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Personal Information</h4>
+                    <h4 class="mb-4 card-title">Personal Information</h4>
 
-                    <div class="table-responsive mb-0">
+                    <div class="mb-0 table-responsive">
                         <table class="table">
                             <tbody>
                                 <tr>
@@ -279,12 +277,14 @@ function makeUserAdmin() {
                                     <td>{{ props.userDetails.email }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Division:</th>
-                                    <td>{{ props.userDetails.division }}</td>
+                                    <th scope="row">User Type:</th>
+                                    <td v-if="props.userDetails.user_type == 'ticket_buyer'">Ticket Buyer</td>
+                                    <td v-if="props.userDetails.user_type == 'beneficiary'">Beneficiary</td>
+                                    <td v-if="props.userDetails.user_type == 'admin'">Admin</td>
                                 </tr>
 
                                 <tr>
-                                    <th scope="row">Number of reports made :</th>
+                                    <th scope="row">Events Created:</th>
                                     <td>0</td>
                                 </tr>
 
@@ -298,15 +298,15 @@ function makeUserAdmin() {
                         </table>
                     </div>
 
-                    <div class="table-responsive mt-5">
+                    <div class="mt-5 table-responsive">
                         <table class="table">
                             <tbody>
                                 <tr>
                                     <td>
-                                        <div class="fw-bold mb-3 flex-wrap col-2" style="word-wrap: normal">Permissions:</div>
+                                        <div class="flex-wrap mb-3 fw-bold col-2" style="word-wrap: normal">Permissions:</div>
                                         <div v-if="props.userDetails.hasOwnProperty('allPermissions')">
                                             <span role="button" v-for="(permission, index) in props.userDetails.allPermissions" :key="`${index}_${permission}`">
-                                                <span class="badge badge-soft-primary font-size-11 me-4 mb-3" @click="revokePermission(permission)"
+                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-4" @click="revokePermission(permission)"
                                                     >{{ permission }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
                                                 ></span>
                                             </span>
@@ -334,10 +334,10 @@ function makeUserAdmin() {
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Environmental Reports Made</h4>
-                    <div class="table-responsive mb-0">
+                    <h4 class="mb-4 card-title"></h4>
+                    <div class="mb-0 table-responsive">
                         <div>
-                            <div class="text-center mt-5 mb-5">
+                            <div class="mt-5 mb-5 text-center">
                                 <div class="mb-2"><i class="fas fa-ban text-muted" style=""></i></div>
                                 No Reports Yet
                             </div>

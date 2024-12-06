@@ -1,10 +1,12 @@
 <script setup>
-import HorizontalHomeLayout from "../Layouts/HorizontalHomeLayout.vue";
-defineOptions({ layout: HorizontalHomeLayout });
+import HomeHeader from "../Components/HomeHeader.vue";
+import FooterSection from "../Components/FooterSection.vue";
 </script>
 <template>
     <b-container class="mt-5">
-        <div class="row">
+        <HomeHeader />
+
+        <div class="row" style="margin-top: 22vh;margin-bottom: 10vh;">
             <div class="col-lg-3">
                 <div class="card">
                     <div class="card-body">
@@ -19,7 +21,6 @@ defineOptions({ layout: HorizontalHomeLayout });
                                 <li>
                                     <a href="javascript: void(0);"> <i class="mdi mdi-chevron-right me-1"></i> Online Event </a>
                                 </li>
-
                             </ul>
                         </div>
                         <div class="pt-3 mt-4">
@@ -50,20 +51,12 @@ defineOptions({ layout: HorizontalHomeLayout });
                         <div class="pt-3 mt-4">
                             <h5 class="mb-3 font-size-14">Region</h5>
                             <div>
-                                <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-                                    Central Region
-                                </b-form-checkbox>
+                                <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted"> Central Region </b-form-checkbox>
 
-                                <b-form-checkbox id="checkbox-2" name="checkbox-2" value="accepted" unchecked-value="not_accepted">
-                                    Western Region
-                                </b-form-checkbox>
+                                <b-form-checkbox id="checkbox-2" name="checkbox-2" value="accepted" unchecked-value="not_accepted"> Western Region </b-form-checkbox>
 
-                                <b-form-checkbox id="checkbox-3" name="checkbox-3" value="accepted" unchecked-value="not_accepted">
-                                   Eastern Region
-                                </b-form-checkbox>
-                                <b-form-checkbox id="checkbox-4" name="checkbox-4" value="accepted" unchecked-value="not_accepted">
-                                   Eastern Region
-                                </b-form-checkbox>
+                                <b-form-checkbox id="checkbox-3" name="checkbox-3" value="accepted" unchecked-value="not_accepted"> Eastern Region </b-form-checkbox>
+                                <b-form-checkbox id="checkbox-4" name="checkbox-4" value="accepted" unchecked-value="not_accepted"> Eastern Region </b-form-checkbox>
                             </div>
                         </div>
                     </div>
@@ -141,4 +134,5 @@ defineOptions({ layout: HorizontalHomeLayout });
             </div>
         </div>
     </b-container>
+    <FooterSection />
 </template>

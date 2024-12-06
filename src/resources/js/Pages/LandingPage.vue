@@ -2,7 +2,9 @@
 import HomeAboutSection from "../Components/HomeAboutSection.vue";
 import HomePopularEvents from "../Components/HomePopularEvents.vue";
 import HomeEventOffers from "../Components/HomeEventOffers.vue";
-import HorizontalHomeLayout from "../Layouts/HorizontalHomeLayout.vue"
+import HorizontalHomeLayout from "../Layouts/HorizontalHomeLayout.vue";
+import HomeHeader from "../Components/HomeHeader.vue";
+import FooterSection from "../Components/FooterSection.vue";
 import { onMounted, reactive, onBeforeMount, computed } from "vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import "vue3-pdf-app/dist/icons/main.css";
@@ -11,8 +13,7 @@ import img5 from "../../images/movies/banner5.png";
 import img6 from "../../images/movies/banner6.png";
 import { breakpointsTailwind, useBreakpoints, useWindowSize } from "@vueuse/core";
 
-
-defineOptions({ layout: HorizontalHomeLayout });
+// defineOptions({ layout: HorizontalHomeLayout });
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
@@ -39,20 +40,16 @@ function windowScroll() {
         }
     }
 }
-
-
-
-
 </script>
 
 <template>
     <Head title="FrontRow" />
-
     <div class="no-scrollbar">
-
         <div v-scroll-spy>
+            <HomeHeader />
+
             <!-- hero section start -->
-            <section class=" section" id="home">
+            <section class=" section" id="home" style="margin-top: 15vh">
                 <!-- <div class="bg-overlay"></div> -->
                 <b-container>
                     <div id="carouselExampleDark" class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel ">
@@ -101,6 +98,7 @@ function windowScroll() {
             </div>
 
             <HomeAboutSection />
+            <FooterSection/>
         </div>
         <!-- <div v-if="!greaterThanMd" class="w-full pr-5 mb-5 d-flex justify-content-end" :style="{ position: 'fixed', bottom: '0px', marginLeft: width - 200 + 'px' }">
             <div role="button" class="" style="" @click="state.reportIncidentModal = true">

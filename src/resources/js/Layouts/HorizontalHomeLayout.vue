@@ -33,13 +33,15 @@ export default {
     <div>
         <!-- Begin page -->
         <div id="layout-wrapper">
-            <HomeHeader />
+
             <!-- ============================================================== -->
             <!-- Start right Content here -->
             <!-- ============================================================== -->
             <div class="main-content">
+                <HomeHeader />
                 <div class="page-content">
                     <div class="container-fluid">
+
                         <slot />
                     </div>
                     <!-- container-fluid -->

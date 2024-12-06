@@ -5,30 +5,33 @@ import Layout from "../../Layouts/main.vue";
 import PageHeader from "../../Components/page-header.vue";
 import ChartData from "./data-crypto";
 
-import img1 from '../../../images/crypto/features-img/img-1.png';
-import cImg1 from '../../../images/companies/img-1.png';
-import cImg2 from '../../../images/companies/img-2.png';
-import cImg3 from '../../../images/companies/img-3.png';
+import img1 from "../../../images/crypto/features-img/img-1.png";
+import cImg1 from "../../../images/companies/img-1.png";
+import cImg2 from "../../../images/companies/img-2.png";
+import cImg3 from "../../../images/companies/img-3.png";
 
 export default {
     components: {
         Layout,
         PageHeader,
-        simplebar
+        simplebar,
     },
     data() {
         return {
             title: "Crypto",
-            img1, cImg1, cImg2, cImg3,
+            img1,
+            cImg1,
+            cImg2,
+            cImg3,
             items: [
                 {
                     text: "Dashboards",
-                    href: "javascript:void(0)"
+                    href: "javascript:void(0)",
                 },
                 {
                     text: "Crypto",
-                    active: true
-                }
+                    active: true,
+                },
             ],
             ChartData,
             walletData: [
@@ -44,25 +47,25 @@ export default {
                         {
                             text: "Ethereum",
                             coin: "4.5701 ETH",
-                            amount: "$ 1123.64"
+                            amount: "$ 1123.64",
                         },
                         {
                             text: "Bitcoin",
                             coin: "0.4412 BTC",
-                            amount: "$ 4025.32"
+                            amount: "$ 4025.32",
                         },
                         {
                             text: "Litecoin",
                             coin: "35.3811 LTC",
-                            amount: "$ 2263.09"
-                        }
-                    ]
-                }
+                            amount: "$ 2263.09",
+                        },
+                    ],
+                },
             ],
             chartOptions: {
                 chart: {
                     height: 300,
-                    type: "radialBar"
+                    type: "radialBar",
                 },
                 plotOptions: {
                     radialBar: {
@@ -73,7 +76,7 @@ export default {
                             margin: 5,
                             size: "35%",
                             background: "transparent",
-                            image: undefined
+                            image: undefined,
                         },
                         track: {
                             show: true,
@@ -88,15 +91,15 @@ export default {
                                 top: 0,
                                 left: 0,
                                 blur: 3,
-                                opacity: 0.5
-                            }
+                                opacity: 0.5,
+                            },
                         },
                         dataLabels: {
                             name: {
                                 show: true,
                                 fontSize: "16px",
                                 fontWeight: 600,
-                                offsetY: -10
+                                offsetY: -10,
                             },
                             value: {
                                 show: true,
@@ -104,7 +107,7 @@ export default {
                                 offsetY: 4,
                                 formatter: function (val) {
                                     return val + "%";
-                                }
+                                },
                             },
                             total: {
                                 show: true,
@@ -115,27 +118,23 @@ export default {
                                 fontWeight: 600,
                                 formatter: function (w) {
                                     return (
-                                        w.globals.seriesTotals.reduce(function (
-                                            a,
-                                            b
-                                        ) {
+                                        w.globals.seriesTotals.reduce(function (a, b) {
                                             return a + b;
-                                        },
-                                            0) + "%"
+                                        }, 0) + "%"
                                     );
-                                }
-                            }
-                        }
-                    }
+                                },
+                            },
+                        },
+                    },
                 },
                 stroke: {
-                    lineCap: "round"
+                    lineCap: "round",
                 },
                 colors: ["#3452e1", "#f1b44c", "#50a5f1"],
                 labels: ["Ethereum", "Bitcoin", "Ethereum"],
                 legend: {
-                    show: false
-                }
+                    show: false,
+                },
             },
             series: [
                 {
@@ -414,38 +413,38 @@ export default {
                         [1361487600000, 38.55],
                         [1361746800000, 38.11],
                         [1361833200000, 38.59],
-                        [1361919600000, 39.6]
-                    ]
-                }
+                        [1361919600000, 39.6],
+                    ],
+                },
             ],
             overviewchartOptions: {
                 chart: {
                     type: "area",
                     height: 240,
-                    toolbar: "false"
+                    toolbar: "false",
                 },
                 stroke: {
                     curve: "smooth",
-                    width: 2
+                    width: 2,
                 },
                 colors: ["#f1b44c"],
 
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
                 },
                 markers: {
                     size: 0,
-                    style: "hollow"
+                    style: "hollow",
                 },
                 xaxis: {
                     type: "datetime",
                     min: new Date("01 Mar 2012").getTime(),
-                    tickAmount: 6
+                    tickAmount: 6,
                 },
                 tooltip: {
                     x: {
-                        format: "dd MMM yyyy"
-                    }
+                        format: "dd MMM yyyy",
+                    },
                 },
                 fill: {
                     type: "gradient",
@@ -453,11 +452,11 @@ export default {
                         shadeIntensity: 1,
                         opacityFrom: 0.7,
                         opacityTo: 0.9,
-                        stops: [0, 100]
-                    }
-                }
+                        stops: [0, 100],
+                    },
+                },
             },
-            selection: "one_year"
+            selection: "one_year",
         };
     },
     methods: {
@@ -477,20 +476,20 @@ export default {
                                 {
                                     text: "Ethereum",
                                     coin: "2.5701 ETH",
-                                    amount: "$ 1123.64"
+                                    amount: "$ 1123.64",
                                 },
                                 {
                                     text: "Bitcoin",
                                     coin: "0.8552 BTC",
-                                    amount: "$ 4025.32"
+                                    amount: "$ 4025.32",
                                 },
                                 {
                                     text: "Litecoin",
                                     coin: "35.7411 LTC",
-                                    amount: "$ 2263.09"
-                                }
-                            ]
-                        }
+                                    amount: "$ 2263.09",
+                                },
+                            ],
+                        },
                     ];
                     break;
 
@@ -508,20 +507,20 @@ export default {
                                 {
                                     text: "Ethereum",
                                     coin: "2.5701 ETH",
-                                    amount: "$ 723.64"
+                                    amount: "$ 723.64",
                                 },
                                 {
                                     text: "Bitcoin",
                                     coin: "0.8552 BTC",
-                                    amount: "$ 1225.32"
+                                    amount: "$ 1225.32",
                                 },
                                 {
                                     text: "Litecoin",
                                     coin: "35.7411 LTC",
-                                    amount: "$ 4563.09"
-                                }
-                            ]
-                        }
+                                    amount: "$ 4563.09",
+                                },
+                            ],
+                        },
                     ];
                     break;
 
@@ -539,20 +538,20 @@ export default {
                                 {
                                     text: "Ethereum",
                                     coin: "2.5701 ETH",
-                                    amount: "$ 523.64"
+                                    amount: "$ 523.64",
                                 },
                                 {
                                     text: "Bitcoin",
                                     coin: "0.8552 BTC",
-                                    amount: "$ 1025.32"
+                                    amount: "$ 1025.32",
                                 },
                                 {
                                     text: "Litecoin",
                                     coin: "14.7411 LTC",
-                                    amount: "$ 6563.09"
-                                }
-                            ]
-                        }
+                                    amount: "$ 6563.09",
+                                },
+                            ],
+                        },
                     ];
                     break;
 
@@ -570,20 +569,20 @@ export default {
                                 {
                                     text: "Ethereum",
                                     coin: "2.5701 ETH",
-                                    amount: "$ 1123.64"
+                                    amount: "$ 1123.64",
                                 },
                                 {
                                     text: "Bitcoin",
                                     coin: "0.8552 BTC",
-                                    amount: "$ 4025.32"
+                                    amount: "$ 4025.32",
                                 },
                                 {
                                     text: "Litecoin",
                                     coin: "35.7411 LTC",
-                                    amount: "$ 2263.09"
-                                }
-                            ]
-                        }
+                                    amount: "$ 2263.09",
+                                },
+                            ],
+                        },
                     ];
                     break;
                 default:
@@ -600,20 +599,20 @@ export default {
                                 {
                                     text: "Ethereum",
                                     coin: "2.5701 ETH",
-                                    amount: "$ 523.64"
+                                    amount: "$ 523.64",
                                 },
                                 {
                                     text: "Bitcoin",
                                     coin: "0.8552 BTC",
-                                    amount: "$ 1025.32"
+                                    amount: "$ 1025.32",
                                 },
                                 {
                                     text: "Litecoin",
                                     coin: "14.7411 LTC",
-                                    amount: "$ 6563.09"
-                                }
-                            ]
-                        }
+                                    amount: "$ 6563.09",
+                                },
+                            ],
+                        },
                     ];
                     break;
             }
@@ -622,33 +621,21 @@ export default {
             this.selection = timeline;
             switch (timeline) {
                 case "one_month":
-                    this.$refs.chart.zoomX(
-                        new Date("28 Jan 2013").getTime(),
-                        new Date("27 Feb 2013").getTime()
-                    );
+                    this.$refs.chart.zoomX(new Date("28 Jan 2013").getTime(), new Date("27 Feb 2013").getTime());
                     break;
                 case "six_months":
-                    this.$refs.chart.zoomX(
-                        new Date("27 Sep 2012").getTime(),
-                        new Date("27 Feb 2013").getTime()
-                    );
+                    this.$refs.chart.zoomX(new Date("27 Sep 2012").getTime(), new Date("27 Feb 2013").getTime());
                     break;
                 case "one_year":
-                    this.$refs.chart.zoomX(
-                        new Date("27 Feb 2012").getTime(),
-                        new Date("27 Feb 2013").getTime()
-                    );
+                    this.$refs.chart.zoomX(new Date("27 Feb 2012").getTime(), new Date("27 Feb 2013").getTime());
                     break;
                 case "all":
-                    this.$refs.chart.zoomX(
-                        new Date("23 Jan 2012").getTime(),
-                        new Date("27 Feb 2013").getTime()
-                    );
+                    this.$refs.chart.zoomX(new Date("23 Jan 2012").getTime(), new Date("27 Feb 2013").getTime());
                     break;
                 default:
             }
-        }
-    }
+        },
+    },
 };
 </script>
 <template>
@@ -659,8 +646,7 @@ export default {
                 <div class="card">
                     <div class="card-body">
                         <div class="ml-2 float-end dropdown">
-                            <a class="text-muted dropdown-toggle" href="#" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                            <a class="text-muted dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="mdi mdi-dots-horizontal font-size-18"></i>
                             </a>
 
@@ -677,9 +663,7 @@ export default {
 
                             <div>
                                 <h5>Henry Wells</h5>
-                                <p class="mb-1 text-muted">
-                                    henrywells@abc.com
-                                </p>
+                                <p class="mb-1 text-muted">henrywells@abc.com</p>
                                 <p class="mb-0 text-muted">Id no: #SK0234</p>
                             </div>
                         </div>
@@ -697,29 +681,23 @@ export default {
                                 <div class="mt-4 mt-sm-0">
                                     <p class="mb-2 fw-medium">Coin :</p>
                                     <div class="mt-1 d-inline-flex align-items-center">
-                                        <a href="javascript: void(0);" class="m-1" data-toggle="tooltip"
-                                            data-placement="top" title="Bitcoin">
+                                        <a href="javascript: void(0);" class="m-1" data-toggle="tooltip" data-placement="top" title="Bitcoin">
                                             <div class="avatar-xs">
-                                                <span
-                                                    class="avatar-title rounded-circle bg-soft bg-warning text-warning font-size-18">
+                                                <span class="avatar-title rounded-circle bg-soft bg-warning text-warning font-size-18">
                                                     <i class="mdi mdi-bitcoin"></i>
                                                 </span>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="m-1" data-toggle="tooltip"
-                                            data-placement="top" title="Ethereum">
+                                        <a href="javascript: void(0);" class="m-1" data-toggle="tooltip" data-placement="top" title="Ethereum">
                                             <div class="avatar-xs">
-                                                <span
-                                                    class="avatar-title rounded-circle bg-soft bg-primary text-primary font-size-18">
+                                                <span class="avatar-title rounded-circle bg-soft bg-primary text-primary font-size-18">
                                                     <i class="mdi mdi-ethereum"></i>
                                                 </span>
                                             </div>
                                         </a>
-                                        <a href="javascript: void(0);" class="m-1" data-toggle="tooltip"
-                                            data-placement="top" title="Litecoin">
+                                        <a href="javascript: void(0);" class="m-1" data-toggle="tooltip" data-placement="top" title="Litecoin">
                                             <div class="avatar-xs">
-                                                <span
-                                                    class="avatar-title rounded-circle bg-soft bg-info text-info font-size-18">
+                                                <span class="avatar-title rounded-circle bg-soft bg-info text-info font-size-18">
                                                     <i class="mdi mdi-litecoin"></i>
                                                 </span>
                                             </div>
@@ -793,13 +771,7 @@ export default {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <apexchart class="apex-charts" :height="50" :options="
-                                                ChartData.SparklineChart1
-                                                    .chartOptions
-                                            " :series="
-    ChartData.SparklineChart1
-        .series
-" />
+                                            <apexchart class="apex-charts" :height="50" :options="ChartData.SparklineChart1.chartOptions" :series="ChartData.SparklineChart1.series" />
                                         </div>
                                     </div>
                                 </div>
@@ -826,13 +798,7 @@ export default {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <apexchart class="apex-charts" :height="50" :options="
-                                                ChartData.SparklineChart2
-                                                    .chartOptions
-                                            " :series="
-    ChartData.SparklineChart2
-        .series
-" />
+                                            <apexchart class="apex-charts" :height="50" :options="ChartData.SparklineChart2.chartOptions" :series="ChartData.SparklineChart2.series" />
                                         </div>
                                     </div>
                                 </div>
@@ -859,13 +825,7 @@ export default {
                                     </div>
                                     <div class="col-6">
                                         <div>
-                                            <apexchart class="apex-charts" :height="50" :options="
-                                                ChartData.SparklineChart3
-                                                    .chartOptions
-                                            " :series="
-    ChartData.SparklineChart3
-        .series
-" />
+                                            <apexchart class="apex-charts" :height="50" :options="ChartData.SparklineChart3.chartOptions" :series="ChartData.SparklineChart3.series" />
                                         </div>
                                     </div>
                                 </div>
@@ -918,16 +878,14 @@ export default {
                                     </div>
 
                                     <div class="mt-4">
-                                        <a href="#" class="btn btn-primary btn-sm">View more
-                                            <i class="mdi mdi-arrow-right ms-1"></i></a>
+                                        <a href="#" class="btn btn-primary btn-sm">View more <i class="mdi mdi-arrow-right ms-1"></i></a>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 col-sm-6">
                                 <div>
-                                    <apexchart class="apex-charts" dir="ltr" type="radialBar" height="300"
-                                        :series="data.chartSeries" :options="chartOptions"></apexchart>
+                                    <apexchart class="apex-charts" dir="ltr" type="radialBar" height="300" :series="data.chartSeries" :options="chartOptions"></apexchart>
                                 </div>
                             </div>
 
@@ -939,9 +897,7 @@ export default {
                                     </p>
                                     <h5>
                                         {{ data.coin }} =
-                                        <span class="text-muted font-size-14">{{
-                                            data.amount
-                                        }}</span>
+                                        <span class="text-muted font-size-14">{{ data.amount }}</span>
                                     </h5>
                                 </div>
                             </div>
@@ -958,34 +914,42 @@ export default {
                         <div>
                             <div id="overview-chart" class="apex-charts" dir="ltr">
                                 <div class="text-center toolbar button-items">
-                                    <button id="one_month" class="btn btn-light btn-sm" @click="updateData('one_month')"
+                                    <button
+                                        id="one_month"
+                                        class="btn btn-light btn-sm"
+                                        @click="updateData('one_month')"
                                         :class="{
-                                            active: selection === 'one_month'
-                                        }">
+                                            active: selection === 'one_month',
+                                        }"
+                                    >
                                         1M
                                     </button>
 
-                                    <button id="six_months" class="btn btn-light btn-sm" @click="updateData('six_months')"
+                                    <button
+                                        id="six_months"
+                                        class="btn btn-light btn-sm"
+                                        @click="updateData('six_months')"
                                         :class="{
-                                            active: selection === 'six_months'
-                                        }">
+                                            active: selection === 'six_months',
+                                        }"
+                                    >
                                         6M
                                     </button>
 
-                                    <button id="one_year" class="btn btn-light btn-sm" @click="updateData('one_year')"
+                                    <button
+                                        id="one_year"
+                                        class="btn btn-light btn-sm"
+                                        @click="updateData('one_year')"
                                         :class="{
-                                            active: selection === 'one_year'
-                                        }">
+                                            active: selection === 'one_year',
+                                        }"
+                                    >
                                         1Y
                                     </button>
 
-                                    <button id="all" class="btn btn-light btn-sm" @click="updateData('all')"
-                                        :class="{ active: selection === 'all' }">
-                                        ALL
-                                    </button>
+                                    <button id="all" class="btn btn-light btn-sm" @click="updateData('all')" :class="{ active: selection === 'all' }">ALL</button>
                                 </div>
-                                <apexchart ref="chart" type="area" :height="240" class="apex-charts"
-                                    :options="overviewchartOptions" :series="series" />
+                                <apexchart ref="chart" type="area" :height="240" class="apex-charts" :options="overviewchartOptions" :series="series" />
                             </div>
                         </div>
                     </div>
@@ -1008,17 +972,13 @@ export default {
                                             <tbody>
                                                 <tr v-for="data of ChartData.transactionsData" :key="data.icon">
                                                     <td style="width: 50px">
-                                                        <div :class="
-                                                            `font-size-22 text-${data.color}`
-                                                        ">
-                                                            <i :class="{
-                                                                'bx bx-down-arrow-circle':
-                                                                    `${data.color}` ===
-                                                                    'primary',
-                                                                'bx bx-up-arrow-circle':
-                                                                    `${data.color}` ===
-                                                                    'danger'
-                                                            }"></i>
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -1058,17 +1018,13 @@ export default {
                                             <tbody>
                                                 <tr v-for="data of ChartData.transactionsData" :key="data.id">
                                                     <td style="width: 50px">
-                                                        <div :class="
-                                                            `font-size-22 text-${data.color}`
-                                                        ">
-                                                            <i :class="{
-                                                                'bx bx-down-arrow-circle':
-                                                                    `${data.color}` ===
-                                                                    'primary',
-                                                                'bx bx-up-arrow-circle':
-                                                                    `${data.color}` ===
-                                                                    'danger'
-                                                            }"></i>
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -1108,17 +1064,13 @@ export default {
                                             <tbody>
                                                 <tr v-for="data of ChartData.transactionsData" :key="data.id">
                                                     <td style="width: 50px">
-                                                        <div :class="
-                                                            `font-size-22 text-${data.color}`
-                                                        ">
-                                                            <i :class="{
-                                                                'bx bx-down-arrow-circle':
-                                                                    `${data.color}` ===
-                                                                    'primary',
-                                                                'bx bx-up-arrow-circle':
-                                                                    `${data.color}` ===
-                                                                    'danger'
-                                                            }"></i>
+                                                        <div :class="`font-size-22 text-${data.color}`">
+                                                            <i
+                                                                :class="{
+                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
+                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
+                                                                }"
+                                                            ></i>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -1170,13 +1122,8 @@ export default {
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h5 class="font-size-14">
-                                                Donec vitae sapien ut
-                                            </h5>
-                                            <p class="text-muted">
-                                                If several languages coalesce, the
-                                                grammar of the resulting language
-                                            </p>
+                                            <h5 class="font-size-14">Donec vitae sapien ut</h5>
+                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
 
                                             <div class="float-end">
                                                 <p class="mb-0 text-muted">
@@ -1184,9 +1131,7 @@ export default {
                                                     Joseph
                                                 </p>
                                             </div>
-                                            <p class="mb-0 text-muted">
-                                                12 Mar, 2020
-                                            </p>
+                                            <p class="mb-0 text-muted">12 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
@@ -1198,14 +1143,8 @@ export default {
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h5 class="font-size-14">
-                                                Cras ultricies mi eu turpis
-                                            </h5>
-                                            <p class="text-muted">
-                                                To an English person, it will seem
-                                                like simplified English, as a
-                                                skeptical cambridge
-                                            </p>
+                                            <h5 class="font-size-14">Cras ultricies mi eu turpis</h5>
+                                            <p class="text-muted">To an English person, it will seem like simplified English, as a skeptical cambridge</p>
 
                                             <div class="float-end">
                                                 <p class="mb-0 text-muted">
@@ -1213,9 +1152,7 @@ export default {
                                                     Jerry
                                                 </p>
                                             </div>
-                                            <p class="mb-0 text-muted">
-                                                13 Mar, 2020
-                                            </p>
+                                            <p class="mb-0 text-muted">13 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
@@ -1227,14 +1164,8 @@ export default {
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h5 class="font-size-14">
-                                                Duis arcu tortor suscipit
-                                            </h5>
-                                            <p class="text-muted">
-                                                It va esser tam simplic quam
-                                                occidental in fact, it va esser
-                                                occidental.
-                                            </p>
+                                            <h5 class="font-size-14">Duis arcu tortor suscipit</h5>
+                                            <p class="text-muted">It va esser tam simplic quam occidental in fact, it va esser occidental.</p>
 
                                             <div class="float-end">
                                                 <p class="mb-0 text-muted">
@@ -1242,9 +1173,7 @@ export default {
                                                     Calvin
                                                 </p>
                                             </div>
-                                            <p class="mb-0 text-muted">
-                                                14 Mar, 2020
-                                            </p>
+                                            <p class="mb-0 text-muted">14 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
@@ -1256,13 +1185,8 @@ export default {
                                             </span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h5 class="font-size-14">
-                                                Donec vitae sapien ut
-                                            </h5>
-                                            <p class="text-muted">
-                                                If several languages coalesce, the
-                                                grammar of the resulting language
-                                            </p>
+                                            <h5 class="font-size-14">Donec vitae sapien ut</h5>
+                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
 
                                             <div class="float-end">
                                                 <p class="mb-0 text-muted">
@@ -1270,9 +1194,7 @@ export default {
                                                     Joseph
                                                 </p>
                                             </div>
-                                            <p class="mb-0 text-muted">
-                                                12 Mar, 2020
-                                            </p>
+                                            <p class="mb-0 text-muted">12 Mar, 2020</p>
                                         </div>
                                     </div>
                                 </li>
@@ -1338,9 +1260,7 @@ export default {
                                         </div>
 
                                         <div class="text-center">
-                                            <button type="button" class="btn btn-success w-md">
-                                                Buy Coin
-                                            </button>
+                                            <button type="button" class="btn btn-success w-md">Buy Coin</button>
                                         </div>
                                     </div>
                                 </b-card-text>
@@ -1392,9 +1312,7 @@ export default {
                                         </div>
 
                                         <div class="text-center">
-                                            <button type="button" class="btn btn-danger w-md">
-                                                Sell Coin
-                                            </button>
+                                            <button type="button" class="btn btn-danger w-md">Sell Coin</button>
                                         </div>
                                     </div>
                                 </b-card-text>
