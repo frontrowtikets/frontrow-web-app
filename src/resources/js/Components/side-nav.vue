@@ -12,9 +12,12 @@ import IsUserAdmin from "../Composables/IsUserAdmin.js";
  */
 export default {
     setup() {
+        //check whether user is admin
+        const isUserAdmin = IsUserAdmin();
         return {
             IsUserAdmin,
             usePage,
+            isUserAdmin
         };
     },
     data() {
@@ -24,6 +27,8 @@ export default {
         };
     },
     mounted: function () {
+
+        //
         if (document.getElementById("side-menu")) new MetisMenu("#side-menu");
         var links = document.getElementsByClassName("side-nav-link-ref");
         var matchingMenuItem = null;
@@ -124,7 +129,7 @@ export default {
                     <span @click="toRouterDashboard" :class="usePage().url == '/dashboard' ? 'text-white fw-bold' : 'text-grayish'">Dashboard</span>
                 </a>
             </li>
-               <li class="" role="button" v-if="IsUserAdmin">
+               <li class="" role="button" v-if="isUserAdmin == true">
                 <a>
                     <i class="bx bx-user-pin" style="color: #fff"></i>
                     <span :class="usePage().url == '/userregister' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterRegister">Users</span>

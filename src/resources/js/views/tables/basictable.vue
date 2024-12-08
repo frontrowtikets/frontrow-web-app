@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 
 /**
  * Basic-table component
@@ -86,7 +86,7 @@ export default {
             </p>
 
             <div class="table-responsive">
-              <table class="table table-dark mb-0">
+              <table class="table mb-0 table-dark">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -180,7 +180,7 @@ export default {
             </p>
 
             <div class="table-responsive">
-              <table class="table table-striped mb-0">
+              <table class="table mb-0 table-striped">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -228,7 +228,7 @@ export default {
             </p>
 
             <div class="table-responsive">
-              <table class="table table-bordered mb-0">
+              <table class="table mb-0 table-bordered">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -273,7 +273,7 @@ export default {
             </p>
 
             <div class="table-responsive">
-              <table class="table table-borderless mb-0">
+              <table class="table mb-0 table-borderless">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -322,7 +322,7 @@ export default {
             </p>
 
             <div class="table-responsive">
-              <table class="table table-hover mb-0">
+              <table class="table mb-0 table-hover">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -367,7 +367,7 @@ export default {
             </p>
 
             <div class="table-responsive">
-              <table class="table table-sm m-0">
+              <table class="table m-0 table-sm">
                 <thead>
                   <tr>
                     <th>#</th>

@@ -16,8 +16,8 @@ Route::group(['namespace' => 'Api'], function () {
 
     ]], function () {
         Route::prefix('userRegister')->group(function () {
-            Route::post("/makeUserAdmin", [UserRegister::class, 'makeUserAdmin']);
             Route::post("/revokePermission", [UserRegister::class, 'revokePermission']);
+            Route::post("/assignPermissions", [UserRegister::class, 'assignPermissions']);
         });
     });
 });

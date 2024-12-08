@@ -18,5 +18,8 @@ Route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/userregister', [UserRegister::class, 'index'])->name('userRegister');
     Route::get('/userdetails', [UserRegister::class, 'userDetails'])->name('userDetails');
+    Route::post('/makeuserbeneficiary', [UserRegister::class, 'makeuserbeneficiary']);
+    Route::post('/deactivateBeneficiary', [UserRegister::class, 'deactivateBeneficiary']);
+
 });
 

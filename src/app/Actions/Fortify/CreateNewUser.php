@@ -27,12 +27,19 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
-        return User::create([
+        $createdUser = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'phone_number' => $input['phone_number'],
             'user_type' => $input['asEventsManager'] == true  || $input['asEventsManager'] == 'true' ? 'beneficiary' : 'ticket_buyer',
+            'beneficiary_status' =>  $input['asEventsManager'] == true  || $input['asEventsManager'] == 'true' ? 'inactive' : null,
             'password' => Hash::make($input['password']),
         ]);
+
+        //Assign Ticket Buyer Permission by default
+        $createdUser->givePermissionTo('ticket_buyer');
+
+
+        return $createdUser;
     }
 }

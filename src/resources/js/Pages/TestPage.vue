@@ -1,5 +1,5 @@
 <script setup >
-import Products from "../views/dashboard/crypto.vue";
+import Products from "../views/tables/basictable.vue";
 </script>
 <template>
 

@@ -7,6 +7,9 @@ import logoDarkSm from "../../../images/logo.svg";
 import moment from "moment";
 import axios from "axios";
 import Swal from "sweetalert2";
+import  makeUserBeneficiary from  "../../Composables/makeUserBeneficiary.js"
+import deactivateBeneficiary from "../../Composables/deactivateBeneficiary.js";
+
 
 const props = defineProps({
     userDetails: Object,
@@ -30,8 +33,8 @@ const state = reactive({
 });
 
 //computed
-const isSuperAdmin = computed(() => {
-    if (usePage().props.auth.user.allPermissions.includes("admin")) {
+const isBeneficiary = computed(() => {
+    if (props.userDetails.allPermissions.includes("beneficiary")) {
         return true;
     } else {
         return false;
@@ -100,7 +103,7 @@ function revokePermission(permissionName) {
                     Swal.fire({
                         title: "Something Went Wrong",
                         icon: "error",
-                        html: `<p style="font-size: 14px">There is something that went wrong and it is not your fault. Please, reach out to ICT for help.</p>`,
+                        html: `<p style="font-size: 14px">There is something that went wrong and it is not your fault. Please, reach out to Support for help.</p>`,
                         showCloseButton: false,
                         showCancelButton: false,
                         focusConfirm: true,
@@ -123,88 +126,6 @@ function revokePermission(permissionName) {
 
 function goBack() {
     router.visit("/userregister");
-}
-
-function makeUserAdmin() {
-    const options = {
-        headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${usePage().props.auth.user.api_token}`,
-        },
-    };
-
-    Swal.fire({
-        title: "Are you sure?",
-        icon: "info",
-        html: `<p style="font-size: 14px">You are to make ${props.userDetails.name} an Administrator.</p>`,
-        showCancelButton: true,
-        focusConfirm: true,
-        confirmButtonText: "Yes, Proceed",
-        confirmButtonColor: "#43ad60",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        closeOnClickOutside: false,
-    }).then((result) => {
-        if (result.value) {
-            Swal.fire({
-                title: "Please wait...",
-                allowOutsideClick: false,
-                showCancelButton: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-            });
-            axios
-                .post("api/userRegister/makeUserAdmin", { userEmail: props.userDetails.email }, options)
-                .then((res) => {
-                    if (res.data.results === "success") {
-                        Swal.fire({
-                            title: "Operation Successful.",
-                            icon: "success",
-                            html: `<p style="font-size: 14px">The have successfully made ${props.userDetails.name} an Administrator.</p>`,
-                            showCloseButton: false,
-                            showCancelButton: false,
-                            focusConfirm: true,
-                            confirmButtonText: "OK",
-                            confirmButtonColor: "#43ad60",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            closeOnClickOutside: false,
-                        }).then((result) => {
-                            if (result.value) {
-                                Swal.close();
-                                router.reload({
-                                    preserveState: false,
-                                });
-                            }
-                        });
-                    }
-                })
-                .catch((err) => {
-                    console.log("Error:", err);
-                    Swal.fire({
-                        title: "Something Went Wrong",
-                        icon: "error",
-                        html: `<p style="font-size: 14px">There is something that went wrong and it is not your fault. Please, reach out to ICT for help.</p>`,
-                        showCloseButton: false,
-                        showCancelButton: false,
-                        focusConfirm: true,
-                        confirmButtonText: "OK",
-                        confirmButtonColor: "#43ad60",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        closeOnClickOutside: false,
-                    }).then((result) => {
-                        if (result.value) {
-                            router.reload({
-                                preserveState: false,
-                            });
-                        }
-                    });
-                });
-        }
-    });
 }
 </script>
 
@@ -249,12 +170,6 @@ function makeUserAdmin() {
                                     <div v-if="props.userDetails.user_type == 'admin'"><span class="badge text-bg-indigo">Admin</span></div>
                                 </div>
                             </div>
-                            <div class="mt-4 d-flex justify-content-end" v-if="isSuperAdmin">
-                                <div class="mt-2 btn btn-primary btn-sm" @click="makeUserAdmin">
-                                    Make User Admin
-                                    <i class="mdi mdi-arrow-right ms-1"></i>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -281,6 +196,23 @@ function makeUserAdmin() {
                                     <td v-if="props.userDetails.user_type == 'ticket_buyer'">Ticket Buyer</td>
                                     <td v-if="props.userDetails.user_type == 'beneficiary'">Beneficiary</td>
                                     <td v-if="props.userDetails.user_type == 'admin'">Admin</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Beneficiary Status:</th>
+                                    <td v-if="props.userDetails.beneficiary_status == 'inactive'">
+                                        <span class=" badge badge-soft-warning font-size-11">Inactive</span>
+                                    </td>
+                                    <td v-else-if="props.userDetails.beneficiary_status == 'deactivated'">
+                                        <span class=" badge badge-soft-danger font-size-11">Deactived</span>
+
+                                    </td>
+                                      <td v-else-if="props.userDetails.beneficiary_status == 'active'">
+                                        <span class=" badge badge-soft-success font-size-11">Active</span>
+
+                                    </td>
+                                    <td v-else>
+                                        <span class=" badge badge-soft-primary font-size-11">Not a Beneficiary</span>
+                                    </td>
                                 </tr>
 
                                 <tr>
@@ -326,15 +258,16 @@ function makeUserAdmin() {
                     <Stat :icon="stat.icon" :title="stat.title" :value="stat.value" />
                 </div>
             </div>
-            <div class="">
-                <div class="">
-                    <UnicefStaffLoginActivity />
-                </div>
-            </div>
 
             <div class="card">
                 <div class="card-body">
-                    <h4 class="mb-4 card-title"></h4>
+                    <div class="text-end" v-if="isBeneficiary === false">
+                        <b-button variant="primary" @click="makeUserBeneficiary(props.userDetails.name,props.userDetails.id)"> Make User Beneficiary</b-button>
+                    </div>
+                    <div class="text-end" v-if="isBeneficiary === true">
+                        <b-button variant="danger" @click="deactivateBeneficiary(props.userDetails.name, props.userDetails.id)"> Deactivate Beneficiary</b-button>
+                    </div>
+
                     <div class="mb-0 table-responsive">
                         <div>
                             <div class="mt-5 mb-5 text-center">
