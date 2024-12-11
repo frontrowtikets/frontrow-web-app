@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class LandingPageController extends Controller
 {
     public function index(Request $request) {
-        return \Inertia\Inertia::render('TestPage');
+        return \Inertia\Inertia::render('LandingPage');
     }
 }

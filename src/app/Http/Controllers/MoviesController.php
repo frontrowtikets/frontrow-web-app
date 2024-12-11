@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\MovieSettings;
+use App\Services\MovieService;
 
 class MoviesController extends Controller
 {
@@ -18,5 +20,11 @@ class MoviesController extends Controller
 
     public function schedueMovie(Request $request){
         return \Inertia\Inertia::render('Movies/ScheduleMovie');
+    }
+
+    public function savemoviesSettings(MovieSettings $request)
+    {
+        $settingsData = $request->validated();
+        MovieService::saveSettings($settingsData);
     }
 }

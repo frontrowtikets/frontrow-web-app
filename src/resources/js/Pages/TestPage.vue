@@ -1,5 +1,5 @@
 <script setup >
-import Products from "../views/icons/boxicons.vue";
+import Products from "../views/forms/advanced.vue";
 </script>
 <template>
 

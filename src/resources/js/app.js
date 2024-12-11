@@ -16,6 +16,9 @@ import { BootstrapVueNext } from "bootstrap-vue-next";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 import "leaflet/dist/leaflet.css";
 
+import TagInput from "@mayank1513/vue-tag-input";
+import "@mayank1513/vue-tag-input/style.css";
+
 
 
 
@@ -64,6 +67,7 @@ createInertiaApp({
             .use(Vue3Signature)
             .use(BootstrapVueNext)
             .use(CKEditor)
+            .use(TagInput)
             .component("VueTelInput", VueTelInput)
             .mount(el);
     },

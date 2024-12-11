@@ -157,3 +157,8 @@ function goToMoviesPage(){
         </b-container>
     </nav>
 </template>
+<style scoped>
+.nav-link:hover {
+      color: #fff !important; /* Text color on hover */
+    }
+</style>
