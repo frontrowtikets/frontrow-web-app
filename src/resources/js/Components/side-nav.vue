@@ -13,11 +13,10 @@ import IsUserAdmin from "../Composables/IsUserAdmin.js";
 export default {
     setup() {
         //check whether user is admin
-        const isUserAdmin = IsUserAdmin();
+        const {isAdmin} = IsUserAdmin();
         return {
-            IsUserAdmin,
             usePage,
-            isUserAdmin
+            isAdmin
         };
     },
     data() {
@@ -111,6 +110,18 @@ export default {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("dashboard"));
         },
+          toRouterEvents() {
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("my_events_page"));
+        },
+          toRouterMovies() {
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("my_movies_page"));
+        },
+         toRouterSettings() {
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("settings"));
+        },
 
     },
 };
@@ -129,7 +140,7 @@ export default {
                     <span @click="toRouterDashboard" :class="usePage().url == '/dashboard' ? 'text-white fw-bold' : 'text-grayish'">Dashboard</span>
                 </a>
             </li>
-               <li class="" role="button" v-if="isUserAdmin == true">
+               <li class="" role="button" v-if="isAdmin == true">
                 <a>
                     <i class="bx bx-user-pin" style="color: #fff"></i>
                     <span :class="usePage().url == '/userregister' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterRegister">Users</span>
@@ -141,10 +152,16 @@ export default {
                     <span :class="usePage().url == '/tickets' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterWeatherMaps" >Tickets</span>
                 </a>
             </li>
+             <li class="" role="button">
+                <a>
+                    <i class=" bx bx-play-circle" style="color: #fff"></i>
+                    <span :class="(usePage().url == '/myevents' ||usePage().url == '/scheduleevents'  ) ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterMovies">Movies</span>
+                </a>
+            </li>
             <li class="" role="button">
                 <a>
                     <i class="mdi mdi-movie-roll" style="color: #fff"></i>
-                    <span :class="usePage().url == '/events' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterChat">Events</span>
+                    <span :class="(usePage().url == '/mymovies' || usePage().url == '/mymoviesschedulemovies') ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterEvents">Events</span>
                 </a>
             </li>
 

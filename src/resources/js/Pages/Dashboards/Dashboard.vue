@@ -1,16 +1,24 @@
 <script setup>
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { Head,  usePage } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
-import { reactive, onMounted } from "vue";
-import simplebar from "simplebar-vue";
+import { reactive, onMounted, computed } from "vue";
 import icondata from "@/images/icondata.png";
-import axios from "axios";
-// import 'simplebar-vue/dist/simplebar.min.css';
+import IsUserBeneficiary from "../../Composables/IsUserBeneficiary.js";
+import useRequestBeneficiaryStatus from "../../Composables/useRequestBeneficiaryStatus.js";
+import useScheduleMoviesPage from "../../Composables/useScheduleMoviesPage.js"
+import useScheduleEventsPage from "../../Composables/useScheduleEventsPage";
 
 // defineOptions({ layout: DashboardLayout });
 const props = defineProps(["incidentCount"]);
 const state = reactive({});
+const { isBeneficiary } = IsUserBeneficiary();
+
+const currentUser = computed(() => {
+    const theUser = usePage().props.auth.user;
+    return theUser;
+});
+
 </script>
 <template>
     <Head title="Dashboard" />
@@ -18,20 +26,19 @@ const state = reactive({});
     <DashboardLayout>
         <PageHeader title="Dashboard" :items="state.items" />
         <div class="row">
-
-              <div class="col-xl-4">
+            <div class="col-xl-4">
                 <div class="card">
                     <div class="card-body">
                         <div>
-                           <div>
-                            <!-- <img class="rounded-circle header-profile-user" :src="avatar1" alt="Header Avatar" /> -->
-                            <img :src="usePage().props.auth.user.profile_photo_url" :alt="'p'" class="rounded-circle header-profile-user object-fit-cover" />
-                        </div>
+                            <div>
+                                <!-- <img class="rounded-circle header-profile-user" :src="avatar1" alt="Header Avatar" /> -->
+                                <img :src="usePage().props.auth.user.profile_photo_url" :alt="'p'" class="rounded-circle header-profile-user object-fit-cover" />
+                            </div>
 
                             <div class="mt-2">
-                                <h5>{{usePage().props.auth.user.name}}</h5>
+                                <h5>{{ usePage().props.auth.user.name }}</h5>
                                 <p class="mb-1 text-muted">
-                                    {{usePage().props.auth.user.email}}
+                                    {{ usePage().props.auth.user.email }}
                                 </p>
                                 <p class="mb-0 text-muted">Id no: #SK0234</p>
                             </div>
@@ -46,14 +53,13 @@ const state = reactive({});
                                     <h4>UGX 6134.39</h4>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
                     <div class="bg-transparent card-footer border-top">
                         <div class="text-center">
                             <a href="#" class="btn btn-light me-2 w-md">Deposit</a>
-                            <a href="#" class="btn btn-primary me-2 w-md">Buy  Ticket</a>
+                            <a href="#" class="btn btn-primary me-2 w-md">Buy Ticket</a>
                         </div>
                     </div>
                 </div>
@@ -99,14 +105,9 @@ const state = reactive({});
                                 <p class="mb-4 text-muted">My Tickets</p>
 
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="">
                                         <div>
                                             <h5>12</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
-                                            <!-- <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="bitconinChart.series" :options="bitconinChart.chartOptions"></apexchart> -->
                                         </div>
                                     </div>
                                 </div>
@@ -116,20 +117,12 @@ const state = reactive({});
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="mb-4 text-muted">
-                                    <!-- <i class="mb-0 align-middle mdi mdi-ethereum h2 text-primary me-3"></i> -->
-                                    Total Balance
-                                </p>
+                                <p class="mb-4 text-muted">Total Balance</p>
 
                                 <div class="row">
-                                    <div class="col-6">
-                                        <div>
+                                    <div class="">
+                                        <div class="">
                                             <h5>UGX 10,000</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
-                                            <!-- <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="ethereumChart.series" :options="ethereumChart.chartOptions"></apexchart> -->
                                         </div>
                                     </div>
                                 </div>
@@ -173,9 +166,9 @@ const state = reactive({});
         </div> -->
 
         <div class="row">
-            <div class="col-xl-4">
-                <div class="card">
-                    <div class="card-body">
+            <div class="col-4 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body w-100">
                         <h4 class="mb-4 card-title">Transactions</h4>
                         <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="All" active>
@@ -215,57 +208,14 @@ const state = reactive({});
                                                 </tr>
                                             </tbody>
                                         </table> -->
-                                    <div  class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                    <div class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
                                     <!-- </simpleBar> -->
                                 </b-card-text>
                             </b-tab>
-                            <b-tab title="processing">
-                                <b-card-text>
-                                    <!-- <simpleBar style="max-height: 330px"> -->
-                                    <!-- <table class="table align-middle table-centered table-nowrap">
-                                            <tbody>
-                                                <tr v-for="data of transactionsData" :key="data.id">
-                                                    <td style="width: 50px">
-                                                        <div :class="`font-size-22 text-${data.color}`">
-                                                            <i
-                                                                :class="{
-                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
-                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
-                                                                }"
-                                                            ></i>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
-                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14 text-muted">
-                                                                {{ data.price }}
-                                                            </h5>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table> -->
-                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                                        <div>No Transactions Yet.</div>
-                                    </div>
-                                    <!-- </simpleBar> -->
-                                </b-card-text>
-                            </b-tab>
+
                             <b-tab title="Successful">
                                 <b-card-text>
                                     <!-- <simpleBar style="max-height: 330px"> -->
@@ -358,14 +308,31 @@ const state = reactive({});
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="mb-4 card-title">Notifications</h4>
-                        <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                            <div>No Notifications Yet.</div>
+            <div class="col-4 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body w-100">
+                        <h4 class="mb-4 card-title">My Movies</h4>
+                        <div v-if="isBeneficiary">
+                            <div class="text-end"><b-button variant="primary" @click="useScheduleMoviesPage">Schedule Movie</b-button></div>
+                            <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div>No Movies Yet.</div>
+                            </div>
                         </div>
+                        <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
+                            <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">Beneficiary Status <span class="text-primary">Pending Approval</span></div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                                    You need to become a beneficiary to schedule Movies.<br />
+                                    <span class="text-primary">Click Here</span> to submit your request.
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- <ul class="list-group">
                                 <li class="border-0 list-group-item">
                                     <div class="d-flex">
@@ -443,14 +410,32 @@ const state = reactive({});
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4">
-                <div class="card">
-                    <div class="card-body">
+            <div class="col-4 d-flex align-items-stretch">
+                <div class="card w-100">
+                    <div class="card-body w-100">
                         <h4 class="mb-4 card-title">My Events</h4>
-                        <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                            <div>No Events Yet.</div>
+                        <div v-if="isBeneficiary">
+                            <div class="text-end"><b-button variant="primary" @click="useScheduleEventsPage">Schedule Event</b-button></div>
+
+                            <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div>No Events Yet.</div>
+                            </div>
                         </div>
+                        <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
+                            <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">Beneficiary Status <span class="text-primary">Pending Approval</span></div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                                    You need to become a beneficiary to schedule Events.<br />
+                                    <span class="text-primary">Click Here</span> to submit your request.
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="Buy" active>
                                 <b-card-text>

@@ -1,14 +1,21 @@
 import { usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
+
 
 const IsUserAdmin =() => {
-    const userPermissions = usePage().props.auth.user.allPermissions
 
-      if (userPermissions.includes("s_admin") || userPermissions.includes("admin")) {
-          return true;
-      } else {
-          return false;
-      }
-   
+      const isAdmin = computed(() => {
+          if (usePage().props.auth.user.allPermissions.includes("s_admin") || usePage().props.auth.user.allPermissions.includes("admin")) {
+              return true;
+          } else {
+              return false;
+          }
+      });
+
+      return {
+          isAdmin,
+      };
+
 }
 
 export default IsUserAdmin;

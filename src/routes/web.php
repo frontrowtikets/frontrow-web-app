@@ -1,13 +1,18 @@
 <?php
 
 use App\Http\Controllers\LandingPageController;
-use App\Http\Controllers\EventsPageController;
+use App\Http\Controllers\EventsController;
+use App\Http\Controllers\MoviesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserRegister;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
-Route::get('/events', [EventsPageController::class, 'index'])->name('events_page');
+Route::get('/events', [EventsController::class, 'homeEvents'])->name('events_home_page');
+Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('events_home_page');
+
+
 
 
 Route::middleware([
@@ -20,6 +25,11 @@ Route::middleware([
     Route::get('/userdetails', [UserRegister::class, 'userDetails'])->name('userDetails');
     Route::post('/makeuserbeneficiary', [UserRegister::class, 'makeuserbeneficiary']);
     Route::post('/deactivateBeneficiary', [UserRegister::class, 'deactivateBeneficiary']);
-
+    Route::post('/userbeneficiaryrequest', [UserRegister::class, 'userbeneficiaryrequest']);
+    Route::get('/myevents', [EventsController::class, 'myEvents'])->name('my_events_page');
+    Route::get('/mymovies', [MoviesController::class, 'myMovies'])->name('my_movies_page');
+    Route::get('/schedulemovies', [MoviesController::class, 'schedueMovie'])->name('schedule_movies_page');
+    Route::get('/scheduleevents', [EventsController::class, 'ScheduleEvent'])->name('schedule_events_page');
+    Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
 });
 

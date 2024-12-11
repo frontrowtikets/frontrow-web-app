@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 
 /**
  * Boxicons-icon component
@@ -33,7 +33,7 @@ export default {
         <div class="card">
           <div class="card-body">
             <h4 class="card-title">Examples</h4>
-            <p class="card-subtitle mb-4">
+            <p class="mb-4 card-subtitle">
               Use class
               <code>&lt;i class="bx bx-**">&lt;/i></code>
             </p>

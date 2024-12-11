@@ -20,6 +20,12 @@ function goHome() {
 function goLogin() {
     router.visit("/login");
 }
+function goToEventsPage(){
+    router.visit("/events")
+}
+function goToMoviesPage(){
+    router.visit("/movies")
+}
 </script>
 <template>
     <nav
@@ -58,10 +64,10 @@ function goLogin() {
                 class="collapse navbar-collapse"
                 id="topnav-menu-content"
                 v-motion
-                :initial="{ opacity: 0 }"
+                :initial="{ opacity: 1 }"
                 :enter="{ opacity: 1 }"
-                :delay="20"
-                :duration="400"
+                :delay="0"
+                :duration="100"
             >
                 <ul
                     class="navbar-nav ms-auto"
@@ -71,10 +77,10 @@ function goLogin() {
                     <li class="nav-item" @click="goHome">
                         <a class="nav-link" href="#home">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">Cinemas</a>
+                    <li class="nav-item" @click="goToMoviesPage">
+                        <a class="nav-link" href="#about">Movies</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" @click="goToEventsPage">
                         <a class="nav-link" href="#features">Events</a>
                     </li>
                     <li class="nav-item">

@@ -1,13 +1,19 @@
 import { usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 const IsUserTicketBuyer = () => {
-    const userPermissions = usePage().props.auth.user.allPermissions;
 
-    if (userPermissions.includes("ticket_buyer")) {
-        return true;
-    } else {
-        return false;
-    }
+    const isTicketBuyer = computed(()=>{
+         if (usePage().props.auth.user.allPermissions.includes("ticket_buyer")) {
+             return true;
+         } else {
+             return false;
+         }
+    })
+
+    return {
+        isTicketBuyer,
+    };
 };
 
 export default IsUserTicketBuyer;

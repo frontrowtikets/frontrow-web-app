@@ -1,6 +1,6 @@
 <script setup>
-import HomeHeader from "../Components/HomeHeader.vue";
-import FooterSection from "../Components/FooterSection.vue";
+import HomeHeader from "../../Components/HomeHeader.vue";
+import FooterSection from "../../Components/FooterSection.vue";
 </script>
 <template>
     <b-container class="mt-5">
@@ -66,7 +66,7 @@ import FooterSection from "../Components/FooterSection.vue";
                 <div class="mb-3 row">
                     <div class="col-xl-4 col-sm-6">
                         <div class="mt-2">
-                            <h5>Events</h5>
+                            <h5>Movies</h5>
                         </div>
                     </div>
                     <div class="col-lg-8 col-sm-6">

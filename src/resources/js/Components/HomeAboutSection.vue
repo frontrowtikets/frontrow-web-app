@@ -95,7 +95,7 @@ const greaterThanMd = breakpoints.greater("md");
                                                 class="mdi mdi-movie-roll h2 text-primary"
                                             ></i>
                                         </div>
-                                        <h5>Cinemas</h5>
+                                        <h5>Cinemas & Events</h5>
                                         <p class="mb-0 text-muted">
                                             Quis autem vel eum iure
                                             reprehenderit

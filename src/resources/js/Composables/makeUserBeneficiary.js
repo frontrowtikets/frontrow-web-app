@@ -6,7 +6,7 @@ const makeUserBeneficiary = (userName,userId) => {
         Swal.fire({
             title: "Are you sure?",
             icon: "info",
-            html: `<p style="font-size: 14px">You are to make ${userName} a Beneficiary.</p>`,
+            html: `<p style="font-size: 14px">You are about to make ${userName} a Beneficiary.</p>`,
             showCancelButton: true,
             focusConfirm: true,
             confirmButtonText: "Yes, Proceed",

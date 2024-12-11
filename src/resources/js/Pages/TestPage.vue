@@ -1,5 +1,5 @@
 <script setup >
-import Products from "../views/tables/basictable.vue";
+import Products from "../views/icons/boxicons.vue";
 </script>
 <template>
 

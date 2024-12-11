@@ -55,4 +55,11 @@ class UserRegister extends Controller
 
         $theUser->revokePermissionTo('beneficiary');
     }
+    public function userbeneficiaryrequest( Request $request){
+        $theUser = User::where('id', $request->userId)->first();
+        $theUser->user_type = 'beneficiary';
+        $theUser->beneficiary_status = 'inactive';
+        $theUser->save();
+
+    }
 }
