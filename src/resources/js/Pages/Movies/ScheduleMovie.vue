@@ -21,7 +21,7 @@ const state = reactive({
 </script>
 
 <template>
-    <Head title="Schedule Movies" />
+    <Head title="Schedule Movie" />
 
     <DashboardLayout>
         <PageHeader title="Schedule Movies" :items="state.items" />

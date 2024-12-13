@@ -7,9 +7,8 @@ import logoDarkSm from "../../../images/logo.svg";
 import moment from "moment";
 import axios from "axios";
 import Swal from "sweetalert2";
-import  makeUserBeneficiary from  "../../Composables/makeUserBeneficiary.js"
+import makeUserBeneficiary from "../../Composables/makeUserBeneficiary.js";
 import deactivateBeneficiary from "../../Composables/deactivateBeneficiary.js";
-
 
 const props = defineProps({
     userDetails: Object,
@@ -165,8 +164,12 @@ function goBack() {
                                 <div class="fw-bold text-end text-muted">
                                     User Type:
 
-                                    <div v-if="props.userDetails.user_type == 'ticket_buyer'"><span class="badge text-bg-warning">Ticket Buyer</span></div>
-                                    <div v-if="props.userDetails.user_type == 'beneficiary'"><span class="badge text-bg-primary">Beneficiary</span></div>
+                                    <div v-if="props.userDetails.user_type == 'ticket_buyer'">
+                                        <span class="badge text-bg-warning">Ticket Buyer</span>
+                                    </div>
+                                    <div v-if="props.userDetails.user_type == 'beneficiary'">
+                                        <span class="badge text-bg-primary">Beneficiary</span>
+                                    </div>
                                     <div v-if="props.userDetails.user_type == 'admin'"><span class="badge text-bg-indigo">Admin</span></div>
                                 </div>
                             </div>
@@ -200,18 +203,16 @@ function goBack() {
                                 <tr>
                                     <th scope="row">Beneficiary Status:</th>
                                     <td v-if="props.userDetails.beneficiary_status == 'inactive'">
-                                        <span class=" badge badge-soft-warning font-size-11">Inactive</span>
+                                        <span class="badge badge-soft-warning font-size-11">Inactive</span>
                                     </td>
                                     <td v-else-if="props.userDetails.beneficiary_status == 'deactivated'">
-                                        <span class=" badge badge-soft-danger font-size-11">Deactived</span>
-
+                                        <span class="badge badge-soft-danger font-size-11">Deactived</span>
                                     </td>
-                                      <td v-else-if="props.userDetails.beneficiary_status == 'active'">
-                                        <span class=" badge badge-soft-success font-size-11">Active</span>
-
+                                    <td v-else-if="props.userDetails.beneficiary_status == 'active'">
+                                        <span class="badge badge-soft-success font-size-11">Active</span>
                                     </td>
                                     <td v-else>
-                                        <span class=" badge badge-soft-primary font-size-11">Not a Beneficiary</span>
+                                        <span class="badge badge-soft-primary font-size-11">Not a Beneficiary</span>
                                     </td>
                                 </tr>
 
@@ -237,7 +238,11 @@ function goBack() {
                                     <td>
                                         <div class="flex-wrap mb-3 fw-bold col-2" style="word-wrap: normal">Permissions:</div>
                                         <div v-if="props.userDetails.hasOwnProperty('allPermissions')">
-                                            <span role="button" v-for="(permission, index) in props.userDetails.allPermissions" :key="`${index}_${permission}`">
+                                            <span
+                                                role="button"
+                                                v-for="(permission, index) in props.userDetails.allPermissions"
+                                                :key="`${index}_${permission}`"
+                                            >
                                                 <span class="mb-3 badge badge-soft-primary font-size-11 me-4" @click="revokePermission(permission)"
                                                     >{{ permission }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
                                                 ></span>
@@ -262,10 +267,14 @@ function goBack() {
             <div class="card">
                 <div class="card-body">
                     <div class="text-end" v-if="isBeneficiary === false">
-                        <b-button variant="primary" @click="makeUserBeneficiary(props.userDetails.name,props.userDetails.id)"> Make User Beneficiary</b-button>
+                        <b-button variant="primary" @click="makeUserBeneficiary(props.userDetails.name, props.userDetails.id)">
+                            Make User Beneficiary</b-button
+                        >
                     </div>
                     <div class="text-end" v-if="isBeneficiary === true">
-                        <b-button variant="danger" @click="deactivateBeneficiary(props.userDetails.name, props.userDetails.id)"> Deactivate Beneficiary</b-button>
+                        <b-button variant="danger" @click="deactivateBeneficiary(props.userDetails.name, props.userDetails.id)">
+                            Deactivate Beneficiary</b-button
+                        >
                     </div>
 
                     <div class="mb-0 table-responsive">

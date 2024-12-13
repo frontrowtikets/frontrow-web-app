@@ -155,13 +155,13 @@ export default {
              <li class="" role="button">
                 <a>
                     <i class=" bx bx-play-circle" style="color: #fff"></i>
-                    <span :class="(usePage().url == '/myevents' ||usePage().url == '/scheduleevents'  ) ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterMovies">Movies</span>
+                    <span :class="(usePage().url == '/mymovies' ||usePage().url == '/schedulemovies'  ) ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterMovies">Movies</span>
                 </a>
             </li>
             <li class="" role="button">
                 <a>
                     <i class="mdi mdi-movie-roll" style="color: #fff"></i>
-                    <span :class="(usePage().url == '/mymovies' || usePage().url == '/mymoviesschedulemovies') ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterEvents">Events</span>
+                    <span :class="(usePage().url == '/myevents' || usePage().url == '/scheduleevents') ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterEvents">Events</span>
                 </a>
             </li>
 
