@@ -54,6 +54,9 @@ const form = useForm({
     gps_location: "",
     start_date: "",
     end_date: "",
+    start_time:"",
+    end_time:"",
+    status:"",
     thumbnail_url: "",
     currency: "",
     access_type: "",
@@ -133,7 +136,10 @@ function deleteTicket(index) {
 }
 
 const submit = () => {
-    form.post(route("create_event"), {
+    form.post("/createevent", {
+    onSuccess:()=>{
+        router.visit("/mymovies")
+    },
         onError: (err) => {
             const keysArray = Object.keys(err);
                  Swal.fire({
@@ -157,15 +163,7 @@ const submit = () => {
                     });
         },
     });
-    // useInertiaFormSubmit(
-    //     {
-    //         eventCategories: mergedArray,
-    //     },
-    //     "createevent",
-    //     "/myevents",
-    //     "You Schedule an Event",
-    //     "You have successfully scheduled an Event "
-    // );
+ 
 };
 </script>
 
@@ -218,6 +216,16 @@ const submit = () => {
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
+                                            <label for="event_status" class="mb-2">Event Status <span class="text-danger">*</span></label>
+                                            <select class="form-select form-control" id="event_status" v-model="form.status">
+                                                <option value="" disabled>Select</option>
+                                                <option value="coming_soon">Coming Soon</option>
+                                                <option value="ongoing">Ongoing</option>
+                                                <option value="expired">Expired</option>
+                                            </select>
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-9">
                                             <label for="event_description" class="mb-2">Description</label>
                                             <VueEditor v-model="form.description" id="event_description"></VueEditor>
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.description" />
@@ -240,7 +248,7 @@ const submit = () => {
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.location_name" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="gps_location" class="mb-2">GPRS Coordinates</label>
+                                            <label for="gps_location" class="mb-2">GPRS Coordinates <span class="text-danger">*</span></label>
                                             <input
                                                 style="font-size: 13px"
                                                 type="text"
@@ -260,7 +268,6 @@ const submit = () => {
                                                     type="date"
                                                     class="form-control"
                                                     id="title"
-                                                    placeholder="Coordinates"
                                                     required
                                                     v-model="form.start_date"
                                                 />
@@ -273,22 +280,47 @@ const submit = () => {
                                                     type="date"
                                                     class="form-control"
                                                     id="title"
-                                                    placeholder="Coordinates"
                                                     required
                                                     v-model="form.end_date"
                                                 />
                                                 <InputError class="mt-2 mb-4 text-danger" :message="form.errors.end_date" />
                                             </div>
                                         </div>
+                                         <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
+                                            <div class="w-100">
+                                                <label for="start_time" class="mb-2">Start Time<span class="text-danger">*</span></label>
+                                                <input
+                                                    style="font-size: 13px"
+                                                    type="time"
+                                                    class="form-control"
+                                                    id="title"
+                                                    required
+                                                    v-model="form.start_time"
+                                                />
+                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.start_time" />
+                                            </div>
+                                            <div class="w-100">
+                                                <label for="end_time" class="mb-2">End Time<span class="text-danger">*</span></label>
+                                                <input
+                                                    style="font-size: 13px"
+                                                    type="time"
+                                                    class="form-control"
+                                                    id="title"
+                                                    required
+                                                    v-model="form.end_time"
+                                                />
+                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.end_time" />
+                                            </div>
+                                        </div>
                                         <div>
-                                            <label for="event_banner" class="mb-2">Event Card Image</label>
+                                            <label for="event_banner" class="mb-2">Event Card Image <span class="text-danger">*</span></label>
                                             <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                                 <div class="dropzone w-100">
                                                     <div class="mx-auto">
                                                         <i class="bx bxs-cloud-upload" style="font-size: 4em; color: #b5b5b5"></i>
                                                     </div>
                                                     <div class="text-center text-muted">Appears on the card of your event Page.</div>
-                                                    <div class="text-center text-muted">Please note your image should not be below 200x320.</div>
+                                                    <div class="text-center text-muted">Please note your image should not be below 200x320 (<20MB).</div>
 
                                                     <label for="dropzoneFile">Select Files</label>
                                                     <input
@@ -327,7 +359,7 @@ const submit = () => {
                                                         <i class="bx bxs-cloud-upload" style="font-size: 4em; color: #b5b5b5"></i>
                                                     </div>
                                                     <div class="text-center text-muted">Appears across the top of your event Page.</div>
-                                                    <div class="text-center text-muted">Please note your image should not be below 1500x500.</div>
+                                                    <div class="text-center text-muted">Please note your image should not be below 1500x500 (<20MB) .</div>
 
                                                     <label for="dropzoneFile2">Select Files</label>
                                                     <input

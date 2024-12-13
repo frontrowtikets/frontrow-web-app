@@ -34,7 +34,9 @@ class EventsController extends Controller
         ]);
     }
     public function CreateEvent(CreateEvent $request){
-        return $request;
+        $eventDetails = $request->validated();
+        EventService::creteEvent($eventDetails);
+        //  return \Inertia\Inertia::render('Events/MyEvents');
     }
 
     public function saveEventsSettings(EventSettings $request)

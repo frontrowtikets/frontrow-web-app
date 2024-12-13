@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Models\EventCategory;
 use App\Models\Event;
+use Illuminate\Support\Facades\Auth;
+
+
 /**
  * Event Service.
  * This class is responsible for handing all functionalities related to events
@@ -28,20 +31,35 @@ class EventService
         }
     }
 
-    public static function creteEvent($eventDetails){
+    public static function creteEvent($eventDetails)
+    {
 
-        Event::updateOrCreate(['id' => $eventDetails['id']],[
-            'beneficiary_id' => $eventDetails[''],
-            'title' => $eventDetails[''],
-            'description' => $eventDetails[''],
-            'location_name' => $eventDetails[''],
-            'gps_location' => $eventDetails[''],
-            'start_date' => $eventDetails[''],
-            'end_date' => $eventDetails[''],
-            'thumbnail_url' => $eventDetails[''],
-            'currency' => $eventDetails[''],
-            'access_type' => $eventDetails[''],
+        $createdEvent = Event::updateOrCreate([
+            'id' => isset($eventDetails['id']) ? $eventDetails['id'] : null
+        ], [
+            'beneficiary_id' => isset($eventDetails['beneficiary_id']) ? $eventDetails['beneficiary_id']  :  Auth::user()->id,
+            'title' => $eventDetails['title'],
+            'description' => $eventDetails['description'],
+            'location_name' => $eventDetails['location_name'],
+            'gps_location' => $eventDetails['gps_location'],
+            'start_date' => $eventDetails['start_date'],
+            'start_time' => $eventDetails['start_time'],
+            'end_time' => $eventDetails['end_time'],
+            'end_date' => $eventDetails['end_date'],
+            'access_type' => $eventDetails['access_type'],
+            'status' => $eventDetails['status'],
         ]);
+
+        $cardImage = $createdEvent->addMedia($eventDetails['cardImage'])->toMediaCollection('event_images');
+        $cardImageUrl = $cardImage->getUrl();
+        $createdEvent->thumbnail_url = $cardImageUrl;
+
+        if (isset($eventDetails['bannerImage'])) {
+            $bannerImage = $createdEvent->addMedia($eventDetails['bannerImage'])->toMediaCollection('event_images');
+            $bannerImageUrl = $bannerImage->getUrl();
+            $createdEvent->banner_image_url = $bannerImageUrl;
+        }
+        $createdEvent->save();
 
     }
 }

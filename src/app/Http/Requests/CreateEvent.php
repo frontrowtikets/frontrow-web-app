@@ -14,10 +14,13 @@ class CreateEvent extends FormRequest
     public function authorize(): bool
     {
         $currentUser = Auth::user();
-        if (!is_null($currentUser)) {
-            return true;
+        $userPermissionDetails = $currentUser->getAllPermissions();
+        $permissions = [];
+        foreach ($userPermissionDetails as $perm) {
+            array_push($permissions, $perm->name);
         }
-        return false;
+        $isBeneficiary = in_array('beneficiary', $permissions);
+        return $isBeneficiary;
     }
 
     /**
@@ -29,17 +32,18 @@ class CreateEvent extends FormRequest
     {
         return [
             'title' => 'required',
-            'description' => 'required',
             'location_name' => 'required',
-            // 'gps_location' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            // 'thumbnail_url' => 'required',
-            // 'currency' => 'required',
-            // 'access_type' => 'required',
-            // 'categories' => 'required',
+            'cardImage' => 'required',
+            'status' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'access_type' => 'required',
             'cardImage' => 'required',
             'tickets' => 'required',
+            'description' =>'string',
+            'gps_location' => 'string',
         ];
     }
 }
