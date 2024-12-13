@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('reg_status', 20)->default('pending');
+            $table->string('email', 60)->index();
+            $table->string('reg_status', 20)->default('pending')->index();
             $table->timestamps();
             $table->softDeletes();
         });

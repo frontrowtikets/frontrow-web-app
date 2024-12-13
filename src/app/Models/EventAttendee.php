@@ -13,6 +13,7 @@ class EventAttendee extends Model
     protected $fillable = [
         'event_id',
         'user_id',
-        'reg_status'
+        'reg_status',
+        'email',
     ];
 }
