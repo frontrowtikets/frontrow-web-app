@@ -18,7 +18,6 @@ class Event extends Model
         'description',
         'location_name',
         'gps_location',
-        'status',
         'start_date',
         'end_date',
         'thumbnail_url',

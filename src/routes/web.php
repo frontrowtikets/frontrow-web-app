@@ -30,6 +30,8 @@ Route::middleware([
     Route::get('/mymovies', [MoviesController::class, 'myMovies'])->name('my_movies_page');
     Route::get('/schedulemovies', [MoviesController::class, 'schedueMovie'])->name('schedule_movies_page');
     Route::get('/scheduleevents', [EventsController::class, 'ScheduleEvent'])->name('schedule_events_page');
+    Route::post('/createevent', [EventsController::class, 'CreateEvent'])->name('create_event');
+
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
 
     Route::prefix('admin')->group(function () {

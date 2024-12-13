@@ -1,5 +1,5 @@
 <script setup >
-import Products from "../views/forms/advanced.vue";
+import Products from "../views/ecommerce/product-detail.vue";
 </script>
 <template>
 
