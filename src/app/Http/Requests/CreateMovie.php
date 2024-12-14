@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 
-class CreateEvent extends FormRequest
+class CreateMovie extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,22 +31,21 @@ class CreateEvent extends FormRequest
     public function rules(): array
     {
         return [
+
             'title' => 'required',
-            'location_name' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'cardImage' => 'required',
-            'status' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'access_type' => 'required',
-            'bannerImage' => 'file',
-            'tickets' => 'required',
-            'description' =>'string',
-            'gps_location' => 'string',
-            'categories' => 'array',
             'beneficiary_id' => 'numeric',
-            'tickets'=> 'array',
+            'description' => 'string',
+            'release_date' => 'date',
+            'duration' => 'string',
+            'categories' => 'array',
+            'language' => 'string',
+            'trailer_url' => 'string',
+            'is_active' => 'boolean',
+            'status' => 'required',
+            'maturity_rating' => 'string',
+            'bannerImage' => 'file',
+            'cardImage' => 'required',
+            'tickets' => 'array',
         ];
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { Head, useForm, router } from "@inertiajs/vue3";
+import { Head, useForm, router,usePage } from "@inertiajs/vue3";
 import { reactive, onMounted, ref, watch } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import InputError from "@/js/Components/InputError.vue";
@@ -76,6 +76,7 @@ const selectedBeneficiary = ref(null)
  const {isAdmin} = IsUserAdmin();
 
 onMounted(() => {
+    form["beneficiary_id"] = usePage().props.auth.user.id;
     window.navigator.geolocation.getCurrentPosition(currentCoords, null, {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -86,7 +87,6 @@ onMounted(() => {
 watch(
     eventTickets,
     (newVal) => {
-        console.log("youo", form["tickets"]);
         form["tickets"] = [...newVal];
     },
     { deep: true }
@@ -138,7 +138,7 @@ function deleteTicket(index) {
 const submit = () => {
     form.post("/createevent", {
     onSuccess:()=>{
-        router.visit("/mymovies")
+        router.visit("/myevents")
     },
         onError: (err) => {
             const keysArray = Object.keys(err);
@@ -163,7 +163,7 @@ const submit = () => {
                     });
         },
     });
- 
+
 };
 </script>
 
@@ -176,7 +176,7 @@ const submit = () => {
             <div class="card">
                 <div class="card-body">
                     <form>
-                        <Stepper :steps="['Event Details', 'Tickets & Seat Maps', 'Confirm & Schedule']">
+                        <Stepper :steps="['Event Details', 'Tickets', 'Confirm & Schedule']">
                             <template #default="{ currentStep }">
                                 <div v-if="currentStep === 1">
 
@@ -232,7 +232,7 @@ const submit = () => {
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="title" class="mb-2">Event Catergory <span class="text-danger">*</span></label>
-                                            <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'"></v-select>
+                                            <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'" ></v-select>
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="location" class="mb-2">Location<span class="text-danger">*</span></label>
@@ -503,19 +503,19 @@ const submit = () => {
                                                                     <div>
                                                                         <div class="mb-2 text-mute" v-if="form.location_name">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
+                                                                                class="align-middle bx bx-map-pin font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Location:</span><span>{{ form.location_name }}</span></span>
                                                                         </div>
                                                                         <div class="mb-2 text-mute" v-if="form.gps_location">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
+                                                                                class="align-middle bx bx-map font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Map Coordinates:</span><span>{{ form.gps_location }}</span></span>
                                                                         </div>
                                                                         <div class="mb-2 text-mute" v-if="form.start_date">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
+                                                                                class="align-middle bx bx-calendar font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Date:</span><span v-if="form.start_date">{{ form.start_date }}</span><span v-if="form.end_date"> to {{ form.end_date }}</span></span>
                                                                         </div>

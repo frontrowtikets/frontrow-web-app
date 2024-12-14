@@ -112,7 +112,7 @@ function revokeMovieCategory(removecat) {
                         </b-tab>
                         <b-tab title="Movies">
                             <div class="mt-5">
-                                <h6>Categories</h6>
+                                <h6>Categories(Genres)</h6>
                                 <div class="mt-2 w-100">
                                     <span role="button" v-for="(cat, index) in state.movieCategories" :key="`${index}_${cat}`">
                                         <span class="mb-3 badge badge-soft-primary font-size-11 me-4" @click="revokeMovieCategory(cat)"

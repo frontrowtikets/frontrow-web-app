@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\EventCategory;
 use App\Models\Event;
+use App\Models\EventCategoryLink;
+use App\Models\EventTicket;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -60,6 +62,28 @@ class EventService
             $createdEvent->banner_image_url = $bannerImageUrl;
         }
         $createdEvent->save();
+
+        if (count($eventDetails['categories']) > 0) {
+            EventCategoryLink::where('event_id', $createdEvent->id)->delete();
+            foreach ($eventDetails['categories'] as $category) {
+                EventCategoryLink::create([
+                    'event_id' => $createdEvent->id,
+                    'category_id' => $category['id'],
+                ]);
+            }
+        }
+
+        if (count($eventDetails['tickets']) > 0) {
+            foreach($eventDetails['tickets'] as $ticket){
+                EventTicket::updateOrCreate(['id' => isset($ticket['id']) ? $ticket['id'] : null], [
+                    'event_id' =>$createdEvent->id,
+                    'category' => $ticket['category'],
+                    'price' => $ticket['price'],
+                    'available_quantity' => $ticket['quantity'],
+                    'currency' => $ticket['currency'],
+                ]);
+            }
+        }
 
     }
 }

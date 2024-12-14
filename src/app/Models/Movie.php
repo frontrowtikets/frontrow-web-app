@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Enums\Fit;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
 class Movie extends Model implements HasMedia
@@ -42,11 +40,5 @@ class Movie extends Model implements HasMedia
     // {
     //     return $this->getMedia('movie_files');
     // }
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this
-            ->addMediaConversion('preview')
-            ->fit(Fit::Contain,)
-            ->nonQueued();
-    }
+
 }

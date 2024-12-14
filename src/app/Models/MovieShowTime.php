@@ -19,6 +19,7 @@ class MovieShowTime extends Model
         'start_time',
         'end_time',
         'ticket_price',
+        'currency',
 
     ];
 }

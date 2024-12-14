@@ -25,7 +25,7 @@ class MovieTicket extends Model
         'ticket_status',
         'ticket_url',
         'ticket_id',
-        'booking_id'
+        'booking_id',
 
     ];
 }

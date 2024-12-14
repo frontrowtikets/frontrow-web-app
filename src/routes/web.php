@@ -31,6 +31,8 @@ Route::middleware([
     Route::get('/schedulemovies', [MoviesController::class, 'schedueMovie'])->name('schedule_movies_page');
     Route::get('/scheduleevents', [EventsController::class, 'ScheduleEvent'])->name('schedule_events_page');
     Route::post('/createevent', [EventsController::class, 'CreateEvent'])->name('create_event');
+    Route::post('/createmovie', [MoviesController::class, 'CreateMovie'])->name('create_movie');
+
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
 
