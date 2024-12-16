@@ -122,6 +122,19 @@ export default {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("settings"));
         },
+        toTransactions() {
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("my_transactions"));
+        },
+         toWallet() {
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("my_wallet"));
+        },
+        toTickets() {
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("my_tickets"));
+        },
+
 
     },
 };
@@ -149,7 +162,7 @@ export default {
             <li class="" role="button">
                 <a>
                     <i class="mdi mdi-ticket " style="color: #ffffff"></i>
-                    <span :class="usePage().url == '/tickets' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterWeatherMaps" >Tickets</span>
+                    <span :class="usePage().url == '/mytickets' ? 'text-white fw-bold' : 'text-grayish'" @click="toTickets" >Tickets</span>
                 </a>
             </li>
              <li class="" role="button">
@@ -169,13 +182,13 @@ export default {
             <li class="" role="button" >
                 <a>
                     <i class="bx bx-money" style="color: #fff"></i>
-                    <span :class="usePage().url == '/wallet' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterIncidentReports">My Wallet</span>
+                    <span :class="usePage().url == '/mywallet' ? 'text-white fw-bold' : 'text-grayish'" @click="toWallet">My Wallet</span>
                 </a>
             </li>
             <li class="" role="button" >
                 <a>
                     <i class="bx bxs-report" style="color: #fff"></i>
-                    <span :class="usePage().url == '/transactions' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterReports">My Transactions</span>
+                    <span :class="usePage().url == '/mytransactions' ? 'text-white fw-bold' : 'text-grayish'" @click="toTransactions">My Transactions</span>
                 </a>
             </li>
             <li class="" role="button">
