@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 import logoDark from '../../../images/logo-dark.png';
 
 /**
@@ -62,14 +62,14 @@ export default {
               </div>
             </div>
             <div class="row">
-              <div class="col-6 mt-3">
+              <div class="mt-3 col-6">
                 <address>
                   <strong>Payment Method:</strong>
                   <br />Visa ending **** 4242
                   <br />jsmith@email.com
                 </address>
               </div>
-              <div class="col-6 mt-3 text-end">
+              <div class="mt-3 col-6 text-end">
                 <address>
                   <strong>Order Date:</strong>
                   <br />October 16, 2019

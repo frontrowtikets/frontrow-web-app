@@ -1,5 +1,5 @@
 <script setup>
-import { Head, useForm, router } from "@inertiajs/vue3";
+import { Head, useForm, router,usePage } from "@inertiajs/vue3";
 import { reactive, onMounted, ref, watch } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import InputError from "@/js/Components/InputError.vue";
@@ -54,6 +54,9 @@ const form = useForm({
     gps_location: "",
     start_date: "",
     end_date: "",
+    start_time:"",
+    end_time:"",
+    status:"",
     thumbnail_url: "",
     currency: "",
     access_type: "",
@@ -73,6 +76,7 @@ const selectedBeneficiary = ref(null)
  const {isAdmin} = IsUserAdmin();
 
 onMounted(() => {
+    form["beneficiary_id"] = usePage().props.auth.user.id;
     window.navigator.geolocation.getCurrentPosition(currentCoords, null, {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -83,7 +87,6 @@ onMounted(() => {
 watch(
     eventTickets,
     (newVal) => {
-        console.log("youo", form["tickets"]);
         form["tickets"] = [...newVal];
     },
     { deep: true }
@@ -133,7 +136,10 @@ function deleteTicket(index) {
 }
 
 const submit = () => {
-    form.post(route("create_event"), {
+    form.post("/createevent", {
+    onSuccess:()=>{
+        router.visit("/myevents")
+    },
         onError: (err) => {
             const keysArray = Object.keys(err);
                  Swal.fire({
@@ -157,15 +163,7 @@ const submit = () => {
                     });
         },
     });
-    // useInertiaFormSubmit(
-    //     {
-    //         eventCategories: mergedArray,
-    //     },
-    //     "createevent",
-    //     "/myevents",
-    //     "You Schedule an Event",
-    //     "You have successfully scheduled an Event "
-    // );
+
 };
 </script>
 
@@ -178,7 +176,7 @@ const submit = () => {
             <div class="card">
                 <div class="card-body">
                     <form>
-                        <Stepper :steps="['Event Details', 'Tickets & Seat Maps', 'Confirm & Schedule']">
+                        <Stepper :steps="['Event Details', 'Tickets', 'Confirm & Schedule']">
                             <template #default="{ currentStep }">
                                 <div v-if="currentStep === 1">
 
@@ -218,13 +216,23 @@ const submit = () => {
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
+                                            <label for="event_status" class="mb-2">Event Status <span class="text-danger">*</span></label>
+                                            <select class="form-select form-control" id="event_status" v-model="form.status">
+                                                <option value="" disabled>Select</option>
+                                                <option value="coming_soon">Coming Soon</option>
+                                                <option value="ongoing">Ongoing</option>
+                                                <option value="expired">Expired</option>
+                                            </select>
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-9">
                                             <label for="event_description" class="mb-2">Description</label>
                                             <VueEditor v-model="form.description" id="event_description"></VueEditor>
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.description" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="title" class="mb-2">Event Catergory <span class="text-danger">*</span></label>
-                                            <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'"></v-select>
+                                            <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'" ></v-select>
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="location" class="mb-2">Location<span class="text-danger">*</span></label>
@@ -240,7 +248,7 @@ const submit = () => {
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.location_name" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="gps_location" class="mb-2">GPRS Coordinates</label>
+                                            <label for="gps_location" class="mb-2">GPRS Coordinates <span class="text-danger">*</span></label>
                                             <input
                                                 style="font-size: 13px"
                                                 type="text"
@@ -260,7 +268,6 @@ const submit = () => {
                                                     type="date"
                                                     class="form-control"
                                                     id="title"
-                                                    placeholder="Coordinates"
                                                     required
                                                     v-model="form.start_date"
                                                 />
@@ -273,22 +280,47 @@ const submit = () => {
                                                     type="date"
                                                     class="form-control"
                                                     id="title"
-                                                    placeholder="Coordinates"
                                                     required
                                                     v-model="form.end_date"
                                                 />
                                                 <InputError class="mt-2 mb-4 text-danger" :message="form.errors.end_date" />
                                             </div>
                                         </div>
+                                         <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
+                                            <div class="w-100">
+                                                <label for="start_time" class="mb-2">Start Time<span class="text-danger">*</span></label>
+                                                <input
+                                                    style="font-size: 13px"
+                                                    type="time"
+                                                    class="form-control"
+                                                    id="title"
+                                                    required
+                                                    v-model="form.start_time"
+                                                />
+                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.start_time" />
+                                            </div>
+                                            <div class="w-100">
+                                                <label for="end_time" class="mb-2">End Time<span class="text-danger">*</span></label>
+                                                <input
+                                                    style="font-size: 13px"
+                                                    type="time"
+                                                    class="form-control"
+                                                    id="title"
+                                                    required
+                                                    v-model="form.end_time"
+                                                />
+                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.end_time" />
+                                            </div>
+                                        </div>
                                         <div>
-                                            <label for="event_banner" class="mb-2">Event Card Image</label>
+                                            <label for="event_banner" class="mb-2">Event Card Image <span class="text-danger">*</span></label>
                                             <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                                 <div class="dropzone w-100">
                                                     <div class="mx-auto">
                                                         <i class="bx bxs-cloud-upload" style="font-size: 4em; color: #b5b5b5"></i>
                                                     </div>
                                                     <div class="text-center text-muted">Appears on the card of your event Page.</div>
-                                                    <div class="text-center text-muted">Please note your image should not be below 200x320.</div>
+                                                    <div class="text-center text-muted">Please note your image should not be below 200x320 (<20MB).</div>
 
                                                     <label for="dropzoneFile">Select Files</label>
                                                     <input
@@ -327,7 +359,7 @@ const submit = () => {
                                                         <i class="bx bxs-cloud-upload" style="font-size: 4em; color: #b5b5b5"></i>
                                                     </div>
                                                     <div class="text-center text-muted">Appears across the top of your event Page.</div>
-                                                    <div class="text-center text-muted">Please note your image should not be below 1500x500.</div>
+                                                    <div class="text-center text-muted">Please note your image should not be below 1500x500 (<20MB) .</div>
 
                                                     <label for="dropzoneFile2">Select Files</label>
                                                     <input
@@ -471,19 +503,19 @@ const submit = () => {
                                                                     <div>
                                                                         <div class="mb-2 text-mute" v-if="form.location_name">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
+                                                                                class="align-middle bx bx-map-pin font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Location:</span><span>{{ form.location_name }}</span></span>
                                                                         </div>
                                                                         <div class="mb-2 text-mute" v-if="form.gps_location">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
+                                                                                class="align-middle bx bx-map font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Map Coordinates:</span><span>{{ form.gps_location }}</span></span>
                                                                         </div>
                                                                         <div class="mb-2 text-mute" v-if="form.start_date">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
+                                                                                class="align-middle bx bx-calendar font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Date:</span><span v-if="form.start_date">{{ form.start_date }}</span><span v-if="form.end_date"> to {{ form.end_date }}</span></span>
                                                                         </div>

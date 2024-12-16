@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 
 export default {
   components: { Layout, PageHeader },
@@ -90,7 +90,7 @@ export default {
                   <ul class="list-unstyled categories-list">
                     <li>
                       <div class="custom-accordion">
-                        <a class="text-body fw-medium py-1 d-flex align-items-center" data-toggle="collapse"
+                        <a class="py-1 text-body fw-medium d-flex align-items-center" data-toggle="collapse"
                           v-b-toggle.categories-collapse role="button" aria-expanded="false"
                           aria-controls="categories-collapse">
                           <i class="mdi mdi-folder font-size-16 text-warning me-2"></i>
@@ -98,8 +98,8 @@ export default {
                           <i class="mdi mdi-chevron-up accor-down-icon ms-auto"></i>
                         </a>
                         <b-collapse visible class="collapse show" id="categories-collapse">
-                          <div class="card border-0 shadow-none ps-2 mb-0">
-                            <ul class="list-unstyled mb-0">
+                          <div class="mb-0 border-0 shadow-none card ps-2">
+                            <ul class="mb-0 list-unstyled">
                               <li>
                                 <a href="#" class="d-flex align-items-center"><span class="me-auto">Design</span></a>
                               </li>
@@ -160,7 +160,7 @@ export default {
                 </div>
 
                 <div class="mt-auto">
-                  <div class="alert alert-success alert-dismissible fade show px-3 mb-0" role="alert">
+                  <div class="px-3 mb-0 alert alert-success alert-dismissible fade show" role="alert">
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     <div class="mb-3">
                       <i class="bx bxs-folder-open h1 text-success"></i>
@@ -187,7 +187,7 @@ export default {
             <div class="card">
               <div class="card-body">
                 <div>
-                  <div class="row mb-3">
+                  <div class="mb-3 row">
                     <div class="col-xl-3 col-sm-6">
                       <div class="mt-2">
                         <h5>My Files</h5>
@@ -195,9 +195,9 @@ export default {
                     </div>
                     <div class="col-xl-9 col-sm-6">
                       <form class="mt-4 mt-sm-0 float-sm-end d-flex align-items-center">
-                        <div class="search-box mb-2 me-2">
+                        <div class="mb-2 search-box me-2">
                           <div class="position-relative">
-                            <input type="text" class="form-control bg-light border-light rounded"
+                            <input type="text" class="rounded form-control bg-light border-light"
                               placeholder="Search..." />
                             <i class="bx bx-search-alt search-icon"></i>
                           </div>
@@ -220,11 +220,11 @@ export default {
                 <div>
                   <div class="row">
                     <div class="col-xl-4 col-sm-6">
-                      <div class="card shadow-none border">
-                        <div class="card-body p-3">
+                      <div class="border shadow-none card">
+                        <div class="p-3 card-body">
                           <div class="">
                             <div class="float-end ms-2">
-                              <b-dropdown toggle-class="font-size-16 text-muted p-0" class="mb-2" variant="white"
+                              <b-dropdown toggle-class="p-0 font-size-16 text-muted" class="mb-2" variant="white"
                                 menu-class="dropdown-menu-end" right>
                                 <template #button-content>
                                   <i class="mdi mdi-dots-horizontal"></i>
@@ -237,22 +237,22 @@ export default {
                                 <b-dropdown-item href="#">Remove</b-dropdown-item>
                               </b-dropdown>
                             </div>
-                            <div class="avatar-xs me-3 mb-3">
-                              <div class="avatar-title bg-transparent rounded">
+                            <div class="mb-3 avatar-xs me-3">
+                              <div class="bg-transparent rounded avatar-title">
                                 <i class="bx bxs-folder font-size-24 text-warning"></i>
                               </div>
                             </div>
                             <div class="d-flex">
                               <div class="overflow-hidden me-auto">
-                                <h5 class="font-size-14 text-truncate mb-1">
+                                <h5 class="mb-1 font-size-14 text-truncate">
                                   <a href="javascript: void(0);" class="text-body">Design</a>
                                 </h5>
-                                <p class="text-muted text-truncate mb-0">
+                                <p class="mb-0 text-muted text-truncate">
                                   12 Files
                                 </p>
                               </div>
                               <div class="align-self-end ms-2">
-                                <p class="text-muted mb-0">6GB</p>
+                                <p class="mb-0 text-muted">6GB</p>
                               </div>
                             </div>
                           </div>
@@ -262,11 +262,11 @@ export default {
                     <!-- end col -->
 
                     <div class="col-xl-4 col-sm-6">
-                      <div class="card shadow-none border">
-                        <div class="card-body p-3">
+                      <div class="border shadow-none card">
+                        <div class="p-3 card-body">
                           <div class="">
                             <div class="float-end ms-2">
-                              <b-dropdown toggle-class="font-size-16 text-muted p-0" class="mb-2" variant="white"
+                              <b-dropdown toggle-class="p-0 font-size-16 text-muted" class="mb-2" variant="white"
                                 menu-class="dropdown-menu-end" right>
                                 <template #button-content>
                                   <i class="mdi mdi-dots-horizontal"></i>
@@ -279,22 +279,22 @@ export default {
                                 <b-dropdown-item href="#">Remove</b-dropdown-item>
                               </b-dropdown>
                             </div>
-                            <div class="avatar-xs me-3 mb-3">
-                              <div class="avatar-title bg-transparent rounded">
+                            <div class="mb-3 avatar-xs me-3">
+                              <div class="bg-transparent rounded avatar-title">
                                 <i class="bx bxs-folder font-size-24 text-warning"></i>
                               </div>
                             </div>
                             <div class="d-flex">
                               <div class="overflow-hidden me-auto">
-                                <h5 class="font-size-14 text-truncate mb-1">
+                                <h5 class="mb-1 font-size-14 text-truncate">
                                   <a href="javascript: void(0);" class="text-body">Development</a>
                                 </h5>
-                                <p class="text-muted text-truncate mb-0">
+                                <p class="mb-0 text-muted text-truncate">
                                   20 Files
                                 </p>
                               </div>
                               <div class="align-self-end ms-2">
-                                <p class="text-muted mb-0">8GB</p>
+                                <p class="mb-0 text-muted">8GB</p>
                               </div>
                             </div>
                           </div>
@@ -304,11 +304,11 @@ export default {
                     <!-- end col -->
 
                     <div class="col-xl-4 col-sm-6">
-                      <div class="card shadow-none border">
-                        <div class="card-body p-3">
+                      <div class="border shadow-none card">
+                        <div class="p-3 card-body">
                           <div class="">
                             <div class="float-end ms-2">
-                              <b-dropdown toggle-class="font-size-16 text-muted p-0" class="mb-2" variant="white"
+                              <b-dropdown toggle-class="p-0 font-size-16 text-muted" class="mb-2" variant="white"
                                 menu-class="dropdown-menu-end" right>
                                 <template #button-content>
                                   <i class="mdi mdi-dots-horizontal"></i>
@@ -321,22 +321,22 @@ export default {
                                 <b-dropdown-item href="#">Remove</b-dropdown-item>
                               </b-dropdown>
                             </div>
-                            <div class="avatar-xs me-3 mb-3">
-                              <div class="avatar-title bg-transparent rounded">
+                            <div class="mb-3 avatar-xs me-3">
+                              <div class="bg-transparent rounded avatar-title">
                                 <i class="bx bxs-folder font-size-24 text-warning"></i>
                               </div>
                             </div>
                             <div class="d-flex">
                               <div class="overflow-hidden me-auto">
-                                <h5 class="font-size-14 text-truncate mb-1">
+                                <h5 class="mb-1 font-size-14 text-truncate">
                                   <a href="javascript: void(0);" class="text-body">Project A</a>
                                 </h5>
-                                <p class="text-muted text-truncate mb-0">
+                                <p class="mb-0 text-muted text-truncate">
                                   06 Files
                                 </p>
                               </div>
                               <div class="align-self-end ms-2">
-                                <p class="text-muted mb-0">2GB</p>
+                                <p class="mb-0 text-muted">2GB</p>
                               </div>
                             </div>
                           </div>
@@ -346,11 +346,11 @@ export default {
                     <!-- end col -->
 
                     <div class="col-xl-4 col-sm-6">
-                      <div class="card shadow-none border">
-                        <div class="card-body p-3">
+                      <div class="border shadow-none card">
+                        <div class="p-3 card-body">
                           <div class="">
                             <div class="float-end ms-2">
-                              <b-dropdown toggle-class="font-size-16 text-muted p-0" class="mb-2" variant="white"
+                              <b-dropdown toggle-class="p-0 font-size-16 text-muted" class="mb-2" variant="white"
                                 menu-class="dropdown-menu-end" right>
                                 <template #button-content>
                                   <i class="mdi mdi-dots-horizontal"></i>
@@ -363,22 +363,22 @@ export default {
                                 <b-dropdown-item href="#">Remove</b-dropdown-item>
                               </b-dropdown>
                             </div>
-                            <div class="avatar-xs me-3 mb-3">
-                              <div class="avatar-title bg-transparent rounded">
+                            <div class="mb-3 avatar-xs me-3">
+                              <div class="bg-transparent rounded avatar-title">
                                 <i class="bx bxs-folder font-size-24 text-warning"></i>
                               </div>
                             </div>
                             <div class="d-flex">
                               <div class="overflow-hidden me-auto">
-                                <h5 class="font-size-14 text-truncate mb-1">
+                                <h5 class="mb-1 font-size-14 text-truncate">
                                   <a href="javascript: void(0);" class="text-body">Admin</a>
                                 </h5>
-                                <p class="text-muted text-truncate mb-0">
+                                <p class="mb-0 text-muted text-truncate">
                                   08 Files
                                 </p>
                               </div>
                               <div class="align-self-end ms-2">
-                                <p class="text-muted mb-0">4GB</p>
+                                <p class="mb-0 text-muted">4GB</p>
                               </div>
                             </div>
                           </div>
@@ -388,11 +388,11 @@ export default {
                     <!-- end col -->
 
                     <div class="col-xl-4 col-sm-6">
-                      <div class="card shadow-none border">
-                        <div class="card-body p-3">
+                      <div class="border shadow-none card">
+                        <div class="p-3 card-body">
                           <div class="">
                             <div class="float-end ms-2">
-                              <b-dropdown toggle-class="font-size-16 text-muted p-0" class="mb-2"
+                              <b-dropdown toggle-class="p-0 font-size-16 text-muted" class="mb-2"
                                 menu-class="dropdown-menu-end" variant="white" right>
                                 <template #button-content>
                                   <i class="mdi mdi-dots-horizontal"></i>
@@ -405,22 +405,22 @@ export default {
                                 <b-dropdown-item href="#">Remove</b-dropdown-item>
                               </b-dropdown>
                             </div>
-                            <div class="avatar-xs me-3 mb-3">
-                              <div class="avatar-title bg-transparent rounded">
+                            <div class="mb-3 avatar-xs me-3">
+                              <div class="bg-transparent rounded avatar-title">
                                 <i class="bx bxs-folder font-size-24 text-warning"></i>
                               </div>
                             </div>
                             <div class="d-flex">
                               <div class="overflow-hidden me-auto">
-                                <h5 class="font-size-14 text-truncate mb-1">
+                                <h5 class="mb-1 font-size-14 text-truncate">
                                   <a href="javascript: void(0);" class="text-body">Sketch Design</a>
                                 </h5>
-                                <p class="text-muted text-truncate mb-0">
+                                <p class="mb-0 text-muted text-truncate">
                                   12 Files
                                 </p>
                               </div>
                               <div class="align-self-end ms-2">
-                                <p class="text-muted mb-0">6GB</p>
+                                <p class="mb-0 text-muted">6GB</p>
                               </div>
                             </div>
                           </div>
@@ -430,11 +430,11 @@ export default {
                     <!-- end col -->
 
                     <div class="col-xl-4 col-sm-6">
-                      <div class="card shadow-none border">
-                        <div class="card-body p-3">
+                      <div class="border shadow-none card">
+                        <div class="p-3 card-body">
                           <div class="">
                             <div class="float-end ms-2">
-                              <b-dropdown toggle-class="font-size-16 text-muted p-0" class="mb-2" variant="white"
+                              <b-dropdown toggle-class="p-0 font-size-16 text-muted" class="mb-2" variant="white"
                                 menu-class="dropdown-menu-end" right>
                                 <template #button-content>
                                   <i class="mdi mdi-dots-horizontal"></i>
@@ -447,22 +447,22 @@ export default {
                                 <b-dropdown-item href="#">Remove</b-dropdown-item>
                               </b-dropdown>
                             </div>
-                            <div class="avatar-xs me-3 mb-3">
-                              <div class="avatar-title bg-transparent rounded">
+                            <div class="mb-3 avatar-xs me-3">
+                              <div class="bg-transparent rounded avatar-title">
                                 <i class="bx bxs-folder font-size-24 text-warning"></i>
                               </div>
                             </div>
                             <div class="d-flex">
                               <div class="overflow-hidden me-auto">
-                                <h5 class="font-size-14 text-truncate mb-1">
+                                <h5 class="mb-1 font-size-14 text-truncate">
                                   <a href="javascript: void(0);" class="text-body">Applications</a>
                                 </h5>
-                                <p class="text-muted text-truncate mb-0">
+                                <p class="mb-0 text-muted text-truncate">
                                   20 Files
                                 </p>
                               </div>
                               <div class="align-self-end ms-2">
-                                <p class="text-muted mb-0">8GB</p>
+                                <p class="mb-0 text-muted">8GB</p>
                               </div>
                             </div>
                           </div>
@@ -475,7 +475,7 @@ export default {
                 </div>
 
                 <div class="mt-4">
-                  <div class="d-flex flex-wrap">
+                  <div class="flex-wrap d-flex">
                     <h5 class="font-size-14 me-3">Recent Files</h5>
 
                     <div class="ms-auto">
@@ -485,7 +485,7 @@ export default {
                   <hr class="mt-2" />
 
                   <div class="table-responsive">
-                    <table class="table table-centered table-nowrap table-hover mb-0">
+                    <table class="table mb-0 table-centered table-nowrap table-hover">
                       <thead>
                         <tr>
                           <th scope="col">Name</th>
@@ -497,13 +497,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-file-document font-size-16 align-middle text-primary me-2"></i>
+                                class="align-middle mdi mdi-file-document font-size-16 text-primary me-2"></i>
                               index.html</a>
                           </td>
                           <td>12-10-2020, 09:45</td>
                           <td>09 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white"
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white"
                               menu-class="dropdown-menu-end" right>
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -520,13 +520,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-folder-zip font-size-16 align-middle text-warning me-2"></i>
+                                class="align-middle mdi mdi-folder-zip font-size-16 text-warning me-2"></i>
                               Project-A.zip</a>
                           </td>
                           <td>11-10-2020, 17:05</td>
                           <td>115 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" menu-class="dropdown-menu-end"
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" menu-class="dropdown-menu-end"
                               variant="white" right>
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -543,13 +543,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-image font-size-16 align-middle text-muted me-2"></i>
+                                class="align-middle mdi mdi-image font-size-16 text-muted me-2"></i>
                               Img-1.jpeg</a>
                           </td>
                           <td>11-10-2020, 13:26</td>
                           <td>86 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -566,13 +566,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-text-box font-size-16 align-middle text-muted me-2"></i>
+                                class="align-middle mdi mdi-text-box font-size-16 text-muted me-2"></i>
                               update list.txt</a>
                           </td>
                           <td>10-10-2020, 11:32</td>
                           <td>08 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -589,13 +589,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-folder font-size-16 align-middle text-warning me-2"></i>
+                                class="align-middle mdi mdi-folder font-size-16 text-warning me-2"></i>
                               Project B</a>
                           </td>
                           <td>10-10-2020, 10:51</td>
                           <td>72 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -612,13 +612,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-text-box font-size-16 align-middle text-muted me-2"></i>
+                                class="align-middle mdi mdi-text-box font-size-16 text-muted me-2"></i>
                               Changes list.txt</a>
                           </td>
                           <td>09-10-2020, 17:05</td>
                           <td>07 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -635,13 +635,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-image font-size-16 align-middle text-success me-2"></i>
+                                class="align-middle mdi mdi-image font-size-16 text-success me-2"></i>
                               Img-2.png</a>
                           </td>
                           <td>09-10-2020, 15:12</td>
                           <td>31 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -658,13 +658,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="mdi mdi-folder font-size-16 align-middle text-warning me-2"></i>
+                                class="align-middle mdi mdi-folder font-size-16 text-warning me-2"></i>
                               Project C</a>
                           </td>
                           <td>09-10-2020, 10:11</td>
                           <td>20 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -681,13 +681,13 @@ export default {
                         <tr>
                           <td>
                             <a href="javascript: void(0);" class="text-dark fw-medium"><i
-                                class="bx bxs-file font-size-16 align-middle text-primary me-2"></i>
+                                class="align-middle bx bxs-file font-size-16 text-primary me-2"></i>
                               starter-page.html</a>
                           </td>
                           <td>08-10-2020, 03:22</td>
                           <td>11 KB</td>
                           <td>
-                            <b-dropdown toggle-class="font-size-16 text-muted p-0" variant="white" right
+                            <b-dropdown toggle-class="p-0 font-size-16 text-muted" variant="white" right
                               menu-class="dropdown-menu-end">
                               <template #button-content>
                                 <i class="mdi mdi-dots-horizontal"></i>
@@ -716,27 +716,27 @@ export default {
       <div class="card filemanager-sidebar ms-lg-2">
         <div class="card-body">
           <div class="text-center">
-            <h5 class="font-size-15 mb-4">Storage</h5>
+            <h5 class="mb-4 font-size-15">Storage</h5>
             <apexchart class="apex-charts" type="radialBar" height="150" dir="ltr" :series="series"
               :options="chartOptions"></apexchart>
 
-            <p class="text-muted mt-4">48.02 GB (76%) of 64 GB used</p>
+            <p class="mt-4 text-muted">48.02 GB (76%) of 64 GB used</p>
           </div>
 
           <div class="mt-4">
-            <div class="card border shadow-none mb-2">
+            <div class="mb-2 border shadow-none card">
               <a href="javascript: void(0);" class="text-body">
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-success font-size-20">
+                      <div class="bg-transparent rounded avatar-title text-success font-size-20">
                         <i class="mdi mdi-image"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
-                      <h5 class="font-size-13 text-truncate mb-1">Images</h5>
-                      <p class="text-muted text-truncate mb-0">176 Files</p>
+                      <h5 class="mb-1 font-size-13 text-truncate">Images</h5>
+                      <p class="mb-0 text-muted text-truncate">176 Files</p>
                     </div>
 
                     <div class="ms-2">
@@ -747,19 +747,19 @@ export default {
               </a>
             </div>
 
-            <div class="card border shadow-none mb-2">
+            <div class="mb-2 border shadow-none card">
               <a href="javascript: void(0);" class="text-body">
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-danger font-size-20">
+                      <div class="bg-transparent rounded avatar-title text-danger font-size-20">
                         <i class="mdi mdi-play-circle-outline"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
-                      <h5 class="font-size-13 text-truncate mb-1">Video</h5>
-                      <p class="text-muted text-truncate mb-0">45 Files</p>
+                      <h5 class="mb-1 font-size-13 text-truncate">Video</h5>
+                      <p class="mb-0 text-muted text-truncate">45 Files</p>
                     </div>
 
                     <div class="ms-2">
@@ -770,19 +770,19 @@ export default {
               </a>
             </div>
 
-            <div class="card border shadow-none mb-2">
+            <div class="mb-2 border shadow-none card">
               <a href="javascript: void(0);" class="text-body">
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-info font-size-20">
+                      <div class="bg-transparent rounded avatar-title text-info font-size-20">
                         <i class="mdi mdi-music"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
-                      <h5 class="font-size-13 text-truncate mb-1">Music</h5>
-                      <p class="text-muted text-truncate mb-0">21 Files</p>
+                      <h5 class="mb-1 font-size-13 text-truncate">Music</h5>
+                      <p class="mb-0 text-muted text-truncate">21 Files</p>
                     </div>
 
                     <div class="ms-2">
@@ -793,19 +793,19 @@ export default {
               </a>
             </div>
 
-            <div class="card border shadow-none mb-2">
+            <div class="mb-2 border shadow-none card">
               <a href="javascript: void(0);" class="text-body">
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-primary font-size-20">
+                      <div class="bg-transparent rounded avatar-title text-primary font-size-20">
                         <i class="mdi mdi-file-document"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
-                      <h5 class="font-size-13 text-truncate mb-1">Document</h5>
-                      <p class="text-muted text-truncate mb-0">21 Files</p>
+                      <h5 class="mb-1 font-size-13 text-truncate">Document</h5>
+                      <p class="mb-0 text-muted text-truncate">21 Files</p>
                     </div>
 
                     <div class="ms-2">
@@ -816,19 +816,19 @@ export default {
               </a>
             </div>
 
-            <div class="card border shadow-none">
+            <div class="border shadow-none card">
               <a href="javascript: void(0);" class="text-body">
                 <div class="p-2">
                   <div class="d-flex">
                     <div class="avatar-xs align-self-center me-2">
-                      <div class="avatar-title rounded bg-transparent text-warning font-size-20">
+                      <div class="bg-transparent rounded avatar-title text-warning font-size-20">
                         <i class="mdi mdi-folder"></i>
                       </div>
                     </div>
 
                     <div class="overflow-hidden me-auto">
-                      <h5 class="font-size-13 text-truncate mb-1">Others</h5>
-                      <p class="text-muted text-truncate mb-0">20 Files</p>
+                      <h5 class="mb-1 font-size-13 text-truncate">Others</h5>
+                      <p class="mb-0 text-muted text-truncate">20 Files</p>
                     </div>
 
                     <div class="ms-2">

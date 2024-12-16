@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class EventTicket extends Model
+class EventReview extends Model
 {
     //
     use SoftDeletes;
 
-
     protected $fillable = [
-
         'event_id',
-        'category',
-        'price',
-        'ticket_thumbnail_url',
-        'available_quantity',
-        'currency',
+        'user_id',
+        'review',
+        'submitted_by'
 
     ];
 }

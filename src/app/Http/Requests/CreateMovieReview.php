@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 
-class CreateEvent extends FormRequest
+class CreateMovieReview extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +19,7 @@ class CreateEvent extends FormRequest
         foreach ($userPermissionDetails as $perm) {
             array_push($permissions, $perm->name);
         }
-        $isBeneficiary = in_array('beneficiary', $permissions);
+        $isBeneficiary = in_array('ticket_buyer', $permissions);
         return $isBeneficiary;
     }
 
@@ -31,22 +31,10 @@ class CreateEvent extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'location_name' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'cardImage' => 'required',
-            'status' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-            'access_type' => 'required',
-            'bannerImage' => 'file',
-            'tickets' => 'required',
-            'description' =>'string',
-            'gps_location' => 'string',
-            'categories' => 'array',
-            'beneficiary_id' => 'numeric',
-            'tickets'=> 'array',
+            'review' => 'required',
+            'movie_id' => 'required',
+            'user_id'=> 'required',
+            'submitted_by' => 'required'
         ];
     }
 }

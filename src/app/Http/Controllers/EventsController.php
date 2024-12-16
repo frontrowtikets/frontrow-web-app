@@ -8,6 +8,9 @@ use App\Services\EventService;
 use App\Models\EventCategory;
 use App\Models\User;
 use App\Http\Requests\CreateEvent;
+use App\Models\Event;
+use Illuminate\Support\Facades\Auth;
+
 
 class EventsController extends Controller
 {
@@ -20,7 +23,10 @@ class EventsController extends Controller
 
     public function myEvents(Request $request)
     {
-        return \Inertia\Inertia::render('Events/MyEvents');
+        $myEvents = Event::where('beneficiary_id', Auth::id())->latest()->paginate(12);
+        return \Inertia\Inertia::render('Events/MyEvents',[
+            'myEvents' => $myEvents
+        ]);
     }
 
     public function ScheduleEvent(Request $request)
@@ -34,7 +40,9 @@ class EventsController extends Controller
         ]);
     }
     public function CreateEvent(CreateEvent $request){
-        return $request;
+        $eventDetails = $request->validated();
+        EventService::creteEvent($eventDetails);
+          return \Inertia\Inertia::render('Events/MyEvents');
     }
 
     public function saveEventsSettings(EventSettings $request)

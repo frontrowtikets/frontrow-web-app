@@ -31,13 +31,15 @@ Route::middleware([
     Route::get('/schedulemovies', [MoviesController::class, 'schedueMovie'])->name('schedule_movies_page');
     Route::get('/scheduleevents', [EventsController::class, 'ScheduleEvent'])->name('schedule_events_page');
     Route::post('/createevent', [EventsController::class, 'CreateEvent'])->name('create_event');
+    Route::post('/createmovie', [MoviesController::class, 'CreateMovie'])->name('create_movie');
+    Route::post('/createmoviereview', [MoviesController::class, 'CreateMovieReview'])->name('create_movie_review');
+    Route::get("/movie/{title}/{id}", [MoviesController::class, 'movieDetail'])->name('movie_detail');
+    Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
-
     Route::prefix('admin')->group(function () {
         Route::post('/saveeventssettings', [EventsController::class, 'saveEventsSettings'])->name('eventsSettins');
         Route::post('/savemoviessettings', [MoviesController::class, 'savemoviesSettings'])->name('moviesSettins');
-
     });
 });
 

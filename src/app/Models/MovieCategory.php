@@ -15,4 +15,9 @@ class MovieCategory extends Model
     protected $fillable = [
         'name'
     ];
+
+    // public function movies()
+    // {
+    //     return $this->belongsToMany(Movie::class, 'movies_categories_links', 'category_id', 'movie_id');
+    // }
 }
