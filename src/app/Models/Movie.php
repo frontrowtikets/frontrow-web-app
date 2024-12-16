@@ -34,11 +34,34 @@ class Movie extends Model implements HasMedia
         'currency',
         'maturity_rating',
     ];
-    // protected $appends = ['files'];
+    protected $appends = ['overallRating'];
 
-    // public function getFilesAttribute()
-    // {
-    //     return $this->getMedia('movie_files');
-    // }
+    public function getoverallRatingAttribute()
+    {
+        $averageRating = MovieRating::where('movie_id', $this->id)->avg('rating');
+        return round($averageRating);
+
+    }
+    public function beneficiary()
+    {
+        return $this->belongsTo(User::class, 'beneficiary_id', 'id');
+    }
+
+    public function showTimes()
+    {
+        return $this->hasMany(MovieShowTime::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(MovieReview::class);
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(MovieCategory::class, 'movie_category_links', 'movie_id', 'category_id');
+    }
+
+
 
 }

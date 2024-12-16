@@ -1,5 +1,7 @@
 <script setup >
-import Products from "../views/ecommerce/product-detail.vue";
+import Products from "../views/ecommerce/checkout.vue";
+
+const props = defineProps(['movieDetails']);
 </script>
 <template>
 
@@ -8,3 +10,4 @@ import Products from "../views/ecommerce/product-detail.vue";
     </div>
 
 </template>
+

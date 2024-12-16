@@ -54,6 +54,7 @@ const form = useForm({
     release_date: "",
     duration:"",
     status:"",
+    rating:3,
     thumbnail_url: "",
     currency: "",
     maturity_rating: "",
@@ -67,7 +68,8 @@ const bannerImageData = ref(null);
 const cardImageData = ref(null);
 const movieTheatres = ref([{ currency: "UGX" }]);
 const scheduleForBeneficiary = ref(false);
-const selectedBeneficiary = ref(null)
+const selectedBeneficiary = ref(null);
+const movieRating = ref(3);
 const movieLanguages = ref(["English","Kiswahili","Luganda",]);
 
 
@@ -87,6 +89,9 @@ watch(
 );
 watch(selectedBeneficiary,(newVal)=>{
     form["beneficiary_id"] = newVal.id
+})
+watch(movieRating,(newVal)=>{
+    form["rating"] = newVal
 })
 
 
@@ -125,7 +130,9 @@ function addTicket() {
 function deleteTicket(index) {
     movieTheatres.value.splice(index, 1);
 }
-
+function updateRating(star){
+movieRating.value = star
+}
 const submit = () => {
     form.post("/createmovie", {
     onSuccess:()=>{
@@ -235,6 +242,7 @@ const submit = () => {
                                             <input class="form-control" type="text" id="formFile" placeholder="Link" v-model="form.trailer_url" >
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.trailer_url" />
                                         </div>
+
                                         <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                             <div class="w-100">
                                                 <label for="release_date" class="mb-2">Release Date<span class="text-danger">*</span></label>
@@ -261,6 +269,24 @@ const submit = () => {
                                                 />
                                                 <InputError class="mt-2 mb-4 text-danger" :message="form.errors.duration" />
                                             </div>
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-9">
+                                            <label for="trailer_url" class="mb-2">Rating</label>
+
+                                                <div class="flex-row gap-2 d-flex" role="button">
+                                                <div
+                                                 v-for="star in 5"
+                                                :key="star"
+                                                class="movie-item-star-icon-button"
+                                                :class="star <= movieRating ? 'text-warning' : 'text-grey'"
+                                                :disabled="star === movieRating"
+                                                @click="updateRating(star)"
+                                                @mouseover="()=>movieRating =star"
+                                            >
+                                                <i class="bx bxs-star" ></i>
+                                                </div>
+                                                </div>
+
                                         </div>
 
                                         <div>

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
 
-class CreateMovie extends FormRequest
+class CreateMovieReview extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +19,7 @@ class CreateMovie extends FormRequest
         foreach ($userPermissionDetails as $perm) {
             array_push($permissions, $perm->name);
         }
-        $isBeneficiary = in_array('beneficiary', $permissions);
+        $isBeneficiary = in_array('ticket_buyer', $permissions);
         return $isBeneficiary;
     }
 
@@ -31,22 +31,10 @@ class CreateMovie extends FormRequest
     public function rules(): array
     {
         return [
-
-            'title' => 'required',
-            'beneficiary_id' => 'numeric',
-            'description' => 'string',
-            'release_date' => 'date',
-            'duration' => 'string',
-            'categories' => 'array',
-            'language' => 'string',
-            'trailer_url' => 'string',
-            'is_active' => 'boolean',
-            'status' => 'required',
-            'maturity_rating' => 'string',
-            'bannerImage' => 'file',
-            'cardImage' => 'required',
-            'tickets' => 'array',
-            'rating' => 'numeric',
+            'review' => 'required',
+            'movie_id' => 'required',
+            'user_id'=> 'required',
+            'submitted_by' => 'required'
         ];
     }
 }

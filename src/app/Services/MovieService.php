@@ -7,7 +7,9 @@ use App\Models\Movie;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MovieCategoryLink;
 use App\Models\MovieShowTime;
-
+use App\Models\MovieRating;
+use App\Models\EventReview;
+use App\Models\MovieReview;
 
 /**
  * Event Service.
@@ -49,12 +51,12 @@ class MovieService
             'maturity_rating' => $movieDetails['maturity_rating'],
         ]);
 
-        $cardImage = $createdMovie->addMedia($movieDetails['cardImage'])->toMediaCollection('event_images');
+        $cardImage = $createdMovie->addMedia($movieDetails['cardImage'])->toMediaCollection('movie_images');
         $cardImageUrl = $cardImage->getUrl();
         $createdMovie->thumbnail_url = $cardImageUrl;
 
         if (isset($movieDetails['bannerImage'])) {
-            $bannerImage = $createdMovie->addMedia($movieDetails['bannerImage'])->toMediaCollection('event_images');
+            $bannerImage = $createdMovie->addMedia($movieDetails['bannerImage'])->toMediaCollection('movie_images');
             $bannerImageUrl = $bannerImage->getUrl();
             $createdMovie->poster_url = $bannerImageUrl;
         }
@@ -84,5 +86,20 @@ class MovieService
             }
         }
 
+        MovieRating::create([
+            'movie_id' => $createdMovie->id,
+            'user_id' => $createdMovie->beneficiary_id,
+            'rating' => $movieDetails['rating'],
+        ]);
+
+    }
+
+    public static function createReview($reviewDetails){
+        MovieReview::create([
+            'movie_id' => $reviewDetails['movie_id'],
+            'user_id' => $reviewDetails['user_id'],
+            'review' => $reviewDetails['review'],
+            'submitted_by' => $reviewDetails['submitted_by']
+        ]);
     }
 }
