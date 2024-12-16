@@ -9,7 +9,6 @@ import useScheduleMoviesPage from "@/js/Composables/useScheduleMoviesPage.js";
 import useScheduleEventsPage from "@/js/Composables/useScheduleEventsPage";
 import MyMoviesCard from "@/js/Components/MyMoviesCard.vue";
 import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
-import MyMoviesDetails from "@/js/Components/MyMoviesDetails.vue";
 
 import icondata from "@/images/icondata.png";
 

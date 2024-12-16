@@ -5,6 +5,9 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\MoviesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\WalletController;
 use App\Http\Controllers\UserRegister;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +38,12 @@ Route::middleware([
     Route::post('/createmoviereview', [MoviesController::class, 'CreateMovieReview'])->name('create_movie_review');
     Route::get("/movie/{title}/{id}", [MoviesController::class, 'movieDetail'])->name('movie_detail');
     Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+    Route::get('/mytransactions', [TransactionsController::class, 'myTransactions'])->name('my_transactions');
+    Route::get('/mywallet', [WalletController::class, 'myTransactions'])->name('my_wallet');
+    Route::get('/mytickets', [TicketController::class, 'myTickets'])->name('my_tickets');
+
+
+
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
     Route::prefix('admin')->group(function () {
