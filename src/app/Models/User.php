@@ -63,7 +63,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'directPermissions',
         'permissionsViaRoles',
         'allPermissions',
-        'roles',
     ];
 
     /**
@@ -93,9 +92,5 @@ class User extends Authenticatable implements MustVerifyEmail
         $allPermissions = $this->getAllPermissions()->pluck('name')->all();
         return $allPermissions;
     }
-    public function getrolesAttribute()
-    {
-        $roles = $this->roles()->get();
-        return $roles;
-    }
+    
 }

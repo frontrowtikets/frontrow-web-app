@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MovieShowTimeSeat extends Model
+class SeatMap extends Model
 {
     //
     use SoftDeletes;
 
     protected $fillable = [
+
+        'movie_id',
         'movie_show_time_id',
-        'seat_number',
-        'row_name',
-        'column_name',
-        'seat_status',
-        'seat_map_id'
+        'room_name',
+        'from',
+        'to',
+        'seats_per_row',
     ];
 }
