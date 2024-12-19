@@ -1,11 +1,15 @@
 <script setup>
 import { reactive, onMounted, computed, ref } from "vue";
+import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import MovieCheckout from "../../Components/MovieCheckout.vue";
+import PageHeader from "../../Components/page-header.vue";
 import { useWindowSize } from '@vueuse/core'
+
+const props = defineProps(["buyMovieDetails"]);
 
 const state = reactive({});
 const { height } = useWindowSize()
@@ -17,7 +21,6 @@ const selectedTheatre = ref(null);
 const selectedRoom = ref("");
 const selectedSeats = ref([]);
 const showCheckout = ref(false);
-const props = defineProps(["buyMovieDetails"]);
 
 const totalPrice = computed(() => {
     if (selectedSeats.value.length > 0 && selectedTheatre) {
@@ -27,12 +30,16 @@ const totalPrice = computed(() => {
         return 0;
     }
 });
+
+function viewDetails(){
+router.visit(`/movie/${props.buyMovieDetails.title}/${props.buyMovieDetails.id}`)
+}
 </script>
 <template>
-    <Head title="Schedule Movies" />
+    <Head title="checkout" />
 
     <DashboardLayout>
-        <PageHeader title="Schedule Movie" :items="state.items" />
+        <PageHeader :title="props.buyMovieDetails.title" :items="state.items" />
         <div v-if="showCheckout">
             <div class="col-12">
                 <div class="card" :style="{height:`${height-100}px`}">
@@ -49,8 +56,8 @@ const totalPrice = computed(() => {
                     <div class="card-body">
                         <div class="w-100 d-flex justify-content-between">
                             <div><h5 class="mb-4 card-title">Seat Map</h5></div>
-                            <div class="">
-                                <a href="/ecommerce/product-detail" class="btn btn-light">
+                            <div class="" @click="viewDetails">
+                                <a  class="btn btn-light">
                                     <i class="mdi mdi-arrow-left me-1"></i> View Movie Details
                                 </a>
                             </div>
