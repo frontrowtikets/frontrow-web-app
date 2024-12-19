@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Http\Requests\CreateEvent;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateEventReview;
+
 
 
 class EventsController extends Controller
@@ -24,7 +26,7 @@ class EventsController extends Controller
     public function myEvents(Request $request)
     {
         $myEvents = Event::where('beneficiary_id', Auth::id())->latest()->paginate(12);
-        return \Inertia\Inertia::render('Events/MyEvents',[
+        return \Inertia\Inertia::render('Events/MyEvents', [
             'myEvents' => $myEvents
         ]);
     }
@@ -32,17 +34,36 @@ class EventsController extends Controller
     public function ScheduleEvent(Request $request)
     {
         $eventCategories = EventCategory::select('id', 'name')->get();
-        $beneficiaries = User::select('id','name')->where('user_type','beneficiary')->where('beneficiary_status','active')->get();
+        $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
 
         return \Inertia\Inertia::render('Events/ScheduleEvent', [
             "eventCategories" => $eventCategories,
             "beneficiaries" => $beneficiaries,
         ]);
     }
-    public function CreateEvent(CreateEvent $request){
+    public function CreateEvent(CreateEvent $request)
+    {
         $eventDetails = $request->validated();
         EventService::creteEvent($eventDetails);
-          return \Inertia\Inertia::render('Events/MyEvents');
+        return \Inertia\Inertia::render('Events/MyEvents');
+    }
+
+    public function eventDetail(Request $request)
+    {
+        $eventDetail = Event::where('id', $request->id)->with([
+            'beneficiary',
+            'categories',
+            'reviews.user',
+            'eventTickets'
+        ])->first();
+        return \Inertia\Inertia::render('Events/EventDetailsPage', [
+            'eventDetails' => $eventDetail
+        ]);
+    }
+
+    public function CreateEventReview(CreateEventReview $request){
+        $reviewDetails = $request->validated();
+        EventService::createReview($reviewDetails);
     }
 
     public function saveEventsSettings(EventSettings $request)
@@ -50,4 +71,5 @@ class EventsController extends Controller
         $settingsData = $request->validated();
         EventService::saveSettings($settingsData);
     }
+
 }

@@ -40,7 +40,6 @@ class Movie extends Model implements HasMedia
     {
         $averageRating = MovieRating::where('movie_id', $this->id)->avg('rating');
         return round($averageRating);
-
     }
     public function beneficiary()
     {
@@ -61,7 +60,4 @@ class Movie extends Model implements HasMedia
     {
         return $this->belongsToMany(MovieCategory::class, 'movie_category_links', 'movie_id', 'category_id');
     }
-
-
-
 }

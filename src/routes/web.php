@@ -36,13 +36,15 @@ Route::middleware([
     Route::post('/createevent', [EventsController::class, 'CreateEvent'])->name('create_event');
     Route::post('/createmovie', [MoviesController::class, 'CreateMovie'])->name('create_movie');
     Route::post('/createmoviereview', [MoviesController::class, 'CreateMovieReview'])->name('create_movie_review');
+    Route::post('/createeventreview', [EventsController::class, 'CreateEventReview'])->name('create_event_review');
     Route::get("/movie/{title}/{id}", [MoviesController::class, 'movieDetail'])->name('movie_detail');
     Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+    Route::get("/event/{title}/{id}", [EventsController::class, 'eventDetail'])->name('event_detail');
     Route::get('/mytransactions', [TransactionsController::class, 'myTransactions'])->name('my_transactions');
     Route::get('/mywallet', [WalletController::class, 'myTransactions'])->name('my_wallet');
     Route::get('/mytickets', [TicketController::class, 'myTickets'])->name('my_tickets');
     Route::post('/saveseatmap', [MoviesController::class, 'saveSeatMap'])->name('save_seat_map');
-  
+
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
     Route::prefix('admin')->group(function () {

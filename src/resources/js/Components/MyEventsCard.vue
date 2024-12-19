@@ -4,12 +4,12 @@ import moment from 'moment';
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 
 
-const props = defineProps(['movieDetails']);
+const props = defineProps(['eventDetails']);
 
 const emit  = defineEmits(['viewDetails']);
 
 const creationTime = computed(()=>{
-    return moment(props.movieDetails.updated_at).fromNow()
+    return moment(props.eventDetails.updated_at).fromNow()
 })
 
 function slugify(title){
@@ -18,9 +18,9 @@ function slugify(title){
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 }
-function viewMovieDetails(){
+function viewEventsDetails(){
 
-    router.visit(`/movie/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`)
+    router.visit(`/event/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`)
 }
 </script>
 <template>
@@ -38,27 +38,27 @@ function viewMovieDetails(){
                         >
 
 
-                            <b-dropdown-item @click="viewMovieDetails"
+                            <b-dropdown-item @click="viewEventsDetails"
                                 >View Details</b-dropdown-item
                             >
                             <b-dropdown-item href="#">Edit</b-dropdown-item>
                             <b-dropdown-item href="#">Tickets Sold</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item href="#">Delete</b-dropdown-item>
+                            <b-dropdown-item href="#" ><span class="text-danger">Delete</span></b-dropdown-item>
                         </b-dropdown>
                     </div>
-                    <div class="mb-3 avatar-xs me-3" @click="viewMovieDetails">
+                    <div class="mb-3 avatar-xs me-3" @click="viewEventsDetails">
                         <div class="bg-transparent rounded avatar-title">
                             <i
                                 class="bx bxs-folder font-size-24 text-warning"
                             ></i>
                         </div>
                     </div>
-                    <div class="d-flex" @click="viewMovieDetails">
+                    <div class="d-flex" @click="viewEventsDetails">
                         <div class="overflow-hidden me-auto">
                             <h5 class="mb-1 font-size-14 text-truncate">
                                 <a href="javascript: void(0);" class="text-body"
-                                    >{{props.movieDetails.title}}
+                                    >{{props.eventDetails.title}}
                                 </a>
                             </h5>
                             <small class="mb-0 text-muted text-truncate">

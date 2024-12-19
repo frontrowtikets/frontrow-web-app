@@ -220,7 +220,6 @@ function saveSeatMap(){
                                 class="mx-auto rounded-circle header-profile-user object-fit-cover d-block"
                             />
                             <h5 class="mt-3 mb-1">{{ props.movieDetails.beneficiary.name }}</h5>
-                            <p class="mb-0 text-muted">Since July 2017</p>
                         </div>
 
                         <ul class="mt-4 list-unstyled">

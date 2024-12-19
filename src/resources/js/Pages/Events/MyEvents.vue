@@ -7,7 +7,7 @@ import IsUserBeneficiary from "@/js/Composables/IsUserBeneficiary.js";
 import useRequestBeneficiaryStatus from "@/js/Composables/useRequestBeneficiaryStatus.js";
 import useScheduleMoviesPage from "@/js/Composables/useScheduleMoviesPage.js";
 import useScheduleEventsPage from "@/js/Composables/useScheduleEventsPage";
-import MyMoviesCard from "@/js/Components/MyMoviesCard.vue";
+import MyEventsCard from "@/js/Components/MyEventsCard.vue";
 import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 
 import icondata from "@/images/icondata.png";
@@ -108,17 +108,17 @@ const currentUser = computed(() => {
                                                             </li>
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"
-                                                                    ><span class="me-auto">Concerts</span> <i class="mdi mdi-pin ms-auto"></i
+                                                                    ><span class="me-auto">paid Events</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
                                                             </li>
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"
-                                                                    ><span class="me-auto">Comedy Shows</span></a
+                                                                    ><span class="me-auto">Free Events</span></a
                                                                 >
                                                             </li>
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"
-                                                                    ><span class="me-auto">Music Shows</span> <i class="mdi mdi-pin ms-auto"></i
+                                                                    ><span class="me-auto">Invite Only Events</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
                                                             </li>
                                                         </ul>
@@ -183,10 +183,10 @@ const currentUser = computed(() => {
                                 <div>
                                     <div v-if="paginatedItems.length > 0">
                                         <div class="row">
-                                            <MyMoviesCard
-                                                v-for="(movie, index) in paginatedItems"
-                                                :key="`${index}_${movie.id}_${movie.title}`"
-                                                :movieDetails="movie"
+                                            <MyEventsCard
+                                                v-for="(event, index) in paginatedItems"
+                                                :key="`${index}_${event.id}_${event.title}`"
+                                                :eventDetails="event"
                                             />
 
                                             <div ref="myEventsBottom"></div>

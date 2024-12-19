@@ -52,14 +52,19 @@ class MoviesController extends Controller
 
     public function movieDetail(Request $request)
     {
-        $movieDetail = Movie::where('id', $request->id)->with(['beneficiary', 'showTimes',
-        'genres', 'reviews.user' ])->first();
+        $movieDetail = Movie::where('id', $request->id)->with([
+            'beneficiary',
+            'showTimes',
+            'genres',
+            'reviews.user'
+        ])->first();
         return \Inertia\Inertia::render('Movies/MovieDetailsPage', [
             'movieDetails' => $movieDetail
         ]);
     }
 
-    public function buyMovieTicket(Request $request){
+    public function buyMovieTicket(Request $request)
+    {
         $movieDetail = Movie::where('id', $request->id)->with([
             'showTimes',
         ])->first();
@@ -68,10 +73,10 @@ class MoviesController extends Controller
         ]);
     }
 
-    public function saveSeatMap(Request $request){
+    public function saveSeatMap(Request $request)
+    {
         $seatMapDetails = $request->seatMaps;
         MovieService::saveSeatMap($seatMapDetails);
-
     }
 
     public function savemoviesSettings(MovieSettings $request)

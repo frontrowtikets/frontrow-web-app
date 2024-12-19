@@ -7,6 +7,8 @@ use App\Models\Event;
 use App\Models\EventCategoryLink;
 use App\Models\EventTicket;
 use Illuminate\Support\Facades\Auth;
+use App\Models\EventReview;
+
 
 
 /**
@@ -85,5 +87,15 @@ class EventService
             }
         }
 
+    }
+
+    public static function createReview($reviewDetails)
+    {
+        EventReview::create([
+            'event_id' => $reviewDetails['event_id'],
+            'user_id' => $reviewDetails['user_id'],
+            'review' => $reviewDetails['review'],
+            'submitted_by' => $reviewDetails['submitted_by']
+        ]);
     }
 }

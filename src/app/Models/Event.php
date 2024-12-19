@@ -32,11 +32,20 @@ class Event extends Model implements HasMedia
         'status',
     ];
 
-    // protected $appends = ['files'];
-
-    // public function getFilesAttribute()
-    // {
-    //     return $this->getMedia('event_files');
-    // }
+    public function beneficiary()
+    {
+        return $this->belongsTo(User::class, 'beneficiary_id', 'id');
+    }
+    public function reviews()
+    {
+        return $this->hasMany(EventReview::class);
+    }
+    public function categories()
+    {
+        return $this->belongsToMany(EventCategory::class, 'event_category_links', 'event_id', 'category_id');
+    }
+    public function eventTickets(){
+        return $this->hasMany(EventTicket::class);
+    }
 
 }
