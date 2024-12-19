@@ -68,6 +68,12 @@ class MoviesController extends Controller
         ]);
     }
 
+    public function saveSeatMap(Request $request){
+        $seatMapDetails = $request->seatMaps;
+        MovieService::saveSeatMap($seatMapDetails);
+
+    }
+
     public function savemoviesSettings(MovieSettings $request)
     {
         $settingsData = $request->validated();

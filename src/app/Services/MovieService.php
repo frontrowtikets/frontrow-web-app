@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\MovieCategoryLink;
 use App\Models\MovieShowTime;
 use App\Models\MovieRating;
-use App\Models\EventReview;
 use App\Models\MovieReview;
+use App\Models\SeatMap;
+use App\Models\MovieShowTimeSeat;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Event Service.
@@ -35,11 +37,12 @@ class MovieService
         }
     }
 
-    public static function createMovie($movieDetails){
+    public static function createMovie($movieDetails)
+    {
 
         $createdMovie = Movie::updateOrCreate([
             'id' => isset($movieDetails['id']) ? $movieDetails['id'] : null
-        ],[
+        ], [
             'beneficiary_id' => isset($movieDetails['beneficiary_id']) && !is_null($movieDetails['beneficiary_id']) ? $movieDetails['beneficiary_id']  :  Auth::user()->id,
             'title' => $movieDetails['title'],
             'description' => $movieDetails['description'],
@@ -91,10 +94,37 @@ class MovieService
             'user_id' => $createdMovie->beneficiary_id,
             'rating' => $movieDetails['rating'],
         ]);
-
     }
 
-    public static function createReview($reviewDetails){
+    public static function saveSeatMap($seatmapDetails)
+    {
+        foreach ($seatmapDetails as $seatmapDetail) {
+
+            $creagedSeatMap = SeatMap::create([
+                'movie_id' => $seatmapDetail['showTime']['movie_id'],
+                'movie_show_time_id' => $seatmapDetail['showTime']['id'],
+                'room_name' => $seatmapDetail['roomName'],
+                'from' => $seatmapDetail['fromRow'],
+                'to' => $seatmapDetail['toRow'],
+                'seats_per_row' => $seatmapDetail['rowSeatsNumber'],
+            ]);
+
+
+            foreach ($seatmapDetail['combinations'] as $seatLabel) {
+
+
+                MovieShowTimeSeat::create([
+                    'movie_show_time_id' => $seatmapDetail['showTime']['id'],
+                    'seat_map_id' => $creagedSeatMap->id,
+                    'seat_number' => $seatLabel,
+                    'seat_status' => 'available',
+                ]);
+            }
+        }
+    }
+
+    public static function createReview($reviewDetails)
+    {
         MovieReview::create([
             'movie_id' => $reviewDetails['movie_id'],
             'user_id' => $reviewDetails['user_id'],
