@@ -41,7 +41,11 @@ const useInertiaFormSubmit = (payload = {}, endpoint = "", successEndpoint = "/"
                     }).then((result) => {
                         if (result.value) {
                             Swal.close();
-                            router.visit(successEndpoint);
+                            if (successEndpoint = 'reload'){
+                                router.reload();
+                            }else{
+                                 router.visit(successEndpoint);
+                            }
                         }
                     });
                 },

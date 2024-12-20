@@ -16,4 +16,9 @@ class EventAttendee extends Model
         'reg_status',
         'email',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

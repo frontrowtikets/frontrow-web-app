@@ -1,5 +1,5 @@
 <script setup>
-import { Head, usePage } from "@inertiajs/vue3";
+import { Head, usePage,router } from "@inertiajs/vue3";
 import { reactive, computed, ref } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
@@ -46,6 +46,9 @@ const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
+function allMovies(){
+    router.visit('allmovies')
+}
 </script>
 
 <template>
@@ -140,8 +143,8 @@ const currentUser = computed(() => {
                                                 <span class="me-auto">Ratings</span>
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="javascript: void(0);" class="text-body d-flex align-items-center">
+                                        <li @click="allMovies" role="button">
+                                            <a  class="text-body d-flex align-items-center">
                                                 <i class="mdi mdi-play-circle-outline text-danger font-size-16 me-2"></i>
                                                 <span class="me-auto">Other Movies</span>
                                             </a>

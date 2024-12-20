@@ -31,7 +31,7 @@ onMounted(() => {});
                     class="col-xl-3 col-md-4 col-sm-6"
                 >
                     <EventCard
-                        :discount="item.discount"
+                        
                         :eventName="item.eventName"
                         :eventImageLink="item.eventImage"
                         :eventDate="item.eventDate"

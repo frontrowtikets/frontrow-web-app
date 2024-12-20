@@ -138,6 +138,10 @@ function saveSeatMap(){
         "Changes have been saved successfully"
     );
 }
+function goToMovieManager(){
+    router.visit(`/moviemanager/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
+
+}
 </script>
 <template>
     <Head :title="props.movieDetails.title" />
@@ -220,7 +224,6 @@ function saveSeatMap(){
                                 class="mx-auto rounded-circle header-profile-user object-fit-cover d-block"
                             />
                             <h5 class="mt-3 mb-1">{{ props.movieDetails.beneficiary.name }}</h5>
-                            <p class="mb-0 text-muted">Since July 2017</p>
                         </div>
 
                         <ul class="mt-4 list-unstyled">
@@ -261,8 +264,8 @@ function saveSeatMap(){
                                 </div>
                             </li>
                         </ul>
-                        <div class="mt-4" v-if="props.movieDetails.beneficiary_id == currentUser.id">
-                            <a href="#!" class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
+                        <div class="mt-4" v-if="props.movieDetails.beneficiary_id == currentUser.id" @click="goToMovieManager">
+                            <a  class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
                         </div>
                     </div>
                 </div>
@@ -291,7 +294,7 @@ function saveSeatMap(){
 
                         <div class="mb-5" v-if="props.movieDetails.trailer_url">
                             <h5 class="mb-3 fw-semibold">Trailer:</h5>
-                            <!-- <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" /> -->
+                            <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" />
                         </div>
 
                         <h5 class="mb-3 fw-semibold">Show Times</h5>

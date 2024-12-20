@@ -18,7 +18,6 @@ const form = useForm({
     phone_number:'',
     password_confirmation: "",
     terms: true,
-    division: "",
 });
 
 //data
