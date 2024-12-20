@@ -12,7 +12,7 @@ class UserRegister extends Controller
     public function index()
     {
 
-        $users = User::paginate(15);
+        $users = User::orderBy('created_at', 'desc')->paginate(15);
         $userAssignPermission = User::select('name', 'id', 'email')->get();
         $seededPermissions = Permission::select('name')->get();
         $inactiveDeneficiaries = User::where('beneficiary_status','inactive')->paginate(15);

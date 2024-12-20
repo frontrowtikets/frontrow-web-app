@@ -11,6 +11,8 @@ use App\Http\Requests\CreateEvent;
 use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateEventReview;
+use App\Http\Requests\RegisterForEvent;
+use App\Models\EventAttendee;
 
 
 
@@ -54,16 +56,56 @@ class EventsController extends Controller
             'beneficiary',
             'categories',
             'reviews.user',
-            'eventTickets'
+            'eventTickets',
         ])->first();
         return \Inertia\Inertia::render('Events/EventDetailsPage', [
             'eventDetails' => $eventDetail
         ]);
     }
 
-    public function CreateEventReview(CreateEventReview $request){
+    public function CreateEventReview(CreateEventReview $request)
+    {
         $reviewDetails = $request->validated();
         EventService::createReview($reviewDetails);
+    }
+
+    public function RegisterForEvent(RegisterForEvent $request)
+    {
+
+        $requestDetails = $request->validated();
+        EventService::registerForEvent($requestDetails);
+    }
+
+    public function eventManager(Request $request)
+    {
+        $attendanceList = EventAttendee::where('event_id', $request->id)->where('reg_status', 'approved')->with(['user'])->paginate(15);
+        $attendanceRequests = EventAttendee::where('event_id', $request->id)->where('reg_status', 'pending')->with(['user'])->paginate(15);
+        $declinedRequests = EventAttendee::where('event_id', $request->id)->where('reg_status', 'declined')->with(['user'])->paginate(15);
+        $eventDetails = Event::select('id', 'access_type', 'title')->where('id', $request->id)->first();
+        return \Inertia\Inertia::render('Events/EventManager', [
+            'attendanceList' => $attendanceList,
+            'attendanceRequests' => $attendanceRequests,
+            'declinedRequests' => $declinedRequests,
+            'event_id' => $eventDetails->id,
+            'event_type' => $eventDetails->access_type,
+            'event_title' => $eventDetails->title
+        ]);
+    }
+
+    public function acceptInvitation(Request $request)
+    {
+        EventService::approveInvitation($request);
+    }
+
+    public function declineInvitation(Request $request)
+    {
+        EventService::declineInvitation($request);
+    }
+    public function allEvents(Request $request) {
+        $events = Event::orderBy('created_at', 'desc')->paginate(12);
+        return \Inertia\Inertia::render('Events/AllEventsPage', [
+            'events' => $events
+        ]);
     }
 
     public function saveEventsSettings(EventSettings $request)
@@ -71,5 +113,4 @@ class EventsController extends Controller
         $settingsData = $request->validated();
         EventService::saveSettings($settingsData);
     }
-
 }

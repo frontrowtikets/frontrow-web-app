@@ -40,10 +40,10 @@ function viewMovieDetails() {
                                 >View Details</b-dropdown-item
                             >
                             <b-dropdown-item href="#">Edit</b-dropdown-item>
-                            <b-dropdown-item href="#">Seat Map</b-dropdown-item>
                             <b-dropdown-item href="#"
                                 >Tickets Sold</b-dropdown-item
                             >
+                            <b-dropdown-item href="#">Movie Manager</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item href="#"
                                 ><span class="text-danger"

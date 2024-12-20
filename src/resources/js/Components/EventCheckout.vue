@@ -8,7 +8,7 @@ const paymentMethod = ref("card");
 </script>
 
 <template>
-    <div class="modalCheckout">
+    <div class="modalCheckout2">
         <form class="form">
             <div class="payment--options">
                 <button
@@ -119,7 +119,6 @@ const paymentMethod = ref("card");
                                 title="Email"
                                 placeholder="Email"
                             />
-
                         </div>
                     </div>
                     <div class="input_container">
@@ -135,10 +134,9 @@ const paymentMethod = ref("card");
                             placeholder="0770 222222"
                         />
                     </div>
-
                 </div>
             </div>
-               <div class="" v-else-if="paymentMethod == 'airtel'">
+            <div class="" v-else-if="paymentMethod == 'airtel'">
                 <div class="mb-4 credit-card-info--form">
                     <div class="input_container">
                         <label for="password_field" class="input_label"
@@ -166,7 +164,6 @@ const paymentMethod = ref("card");
                                 title="Email"
                                 placeholder="Email"
                             />
-
                         </div>
                     </div>
                     <div class="input_container">
@@ -182,7 +179,6 @@ const paymentMethod = ref("card");
                             placeholder="0704 222222"
                         />
                     </div>
-
                 </div>
             </div>
             <button class="purchase--btn">Checkout</button>
@@ -190,7 +186,7 @@ const paymentMethod = ref("card");
     </div>
 </template>
 <style scoped>
-.modalCheckout {
+.modalCheckout2 {
     width: fit-content;
     height: fit-content;
     background: #ffffff;

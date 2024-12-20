@@ -2,11 +2,14 @@
 import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
-import { reactive, onMounted, computed, ref } from "vue";
-import IsUserBeneficiary from "../../Composables/IsUserBeneficiary.js";
+import { reactive, onMounted, computed, ref, watch } from "vue";
+import IsUserAdmin from "../../Composables/IsUserAdmin.js";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import useInertiaFormSubmit from "../../Composables/useInertiaFormSubmit.js";
-import RegisterForEvent from "../../Components/RegisterForEvent.vue";
+import EventCheckout from "../../Components/EventCheckout.vue";
+import { useWindowSize } from "@vueuse/core";
+
+
 import moment from "moment";
 import Swal from "sweetalert2";
 import vSelect from "vue-select";
@@ -15,11 +18,38 @@ import "vue-select/dist/vue-select.css";
 const props = defineProps(["eventDetails"]);
 const state = reactive({});
 
+const { height } = useWindowSize();
+
 
 const registerForEventModal = ref(false);
+const buyTicketModal = ref(false);
+const isPhoneNumberValid = ref(false);
+const invalidPhoneNumberMsg = ref("");
+const selectedTicket = ref(null);
+const ticketQuantity = ref(1);
+const showCheckout = ref(false);
+
+const { isAdmin } = IsUserAdmin();
+
 const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
+});
+
+watch(ticketQuantity,(newVal)=>{
+      if(newVal > selectedTicket.value.available_quantity ){
+        ticketQuantity.value = 1
+    }
+})
+
+const ticketTotal = computed(() => {
+
+    if (selectedTicket.value) {
+        const total = Number(selectedTicket.value.price * ticketQuantity.value);
+        return total;
+    } else {
+        return 0;
+    }
 });
 
 const form = useForm({
@@ -29,7 +59,13 @@ const form = useForm({
     submitted_by: usePage().props.auth.user.name,
 });
 
-
+const eventRegisterForm = useForm({
+    name: "",
+    email: "",
+    phone_number: "",
+    terms: false,
+    event_id: props.eventDetails.id,
+});
 
 const submit = () => {
     form.post("/createeventreview", {
@@ -60,6 +96,38 @@ const submit = () => {
     });
 };
 
+function submitEventRegisterRequest() {
+    eventRegisterForm.post(route("register_for_event"), {
+        onFinish: () => {
+            registerForEventModal.value = false;
+            Swal.fire({
+                title: "Request Sent",
+                icon: "success",
+                html: `<p style="font-size: 14px">You have successfully submitted your request to attend the event</p>`,
+                showCloseButton: false,
+                showCancelButton: false,
+                focusConfirm: true,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#43ad60",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                closeOnClickOutside: false,
+            }).then((result) => {
+                if (result.value) {
+                    router.reload();
+                }
+            });
+        },
+        onError: (err) => console.log(err),
+    });
+}
+
+function showEventRegModal() {
+    eventRegisterForm["name"] = usePage().props.auth.user.name;
+    eventRegisterForm["email"] = usePage().props.auth.user.email;
+    registerForEventModal.value = true;
+}
+
 function slugify(title) {
     return title
         .toLowerCase()
@@ -67,14 +135,41 @@ function slugify(title) {
         .replace(/(^-|-$)/g, "");
 }
 function buyTicket() {
-    router.visit(`/event/buy-ticket/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`);
+    buyTicketModal.value = true;
+}
+function phoneNumber(val, phoneObj) {
+    eventRegisterForm.phone_number = phoneObj["number"];
+    isPhoneNumberValid.value = phoneObj.valid;
+}
+function checkValidity() {
+    if (isPhoneNumberValid.value === false || typeof isPhoneNumberValid.value == "undefined") {
+        invalidPhoneNumberMsg.value = "Phone Number is Invalid";
+    } else {
+        invalidPhoneNumberMsg.value = "";
+    }
+}
+function goToEventManager() {
+    router.visit(`/eventmanager/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`);
+}
+function checkoutMovie(){
+   showCheckout.value= true
 }
 </script>
 <template>
     <Head :title="props.eventDetails.title" />
     <DashboardLayout>
-        <PageHeader :title="props.eventDetails.title" :items="state.items" />
-        <div class="row">
+        <PageHeader :title="props.eventDetails.title" :items="state.items" role="button" @click="showCheckout= false" />
+
+        <div v-if="showCheckout">
+             <div class="col-12">
+                <div class="card" :style="{ height: `${height - 100}px` }">
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        <EventCheckout />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" v-else>
             <div class="col-xl-3">
                 <div class="card">
                     <div class="card-body">
@@ -116,16 +211,26 @@ function buyTicket() {
                             </table>
                         </div>
                         <div class="gap-2 hstack">
-                            <button class="btn btn-soft-primary w-100" @click="buyTicket" v-if="props.eventDetails.access_type == 'paid'">
-                                Buy Ticket
-                            </button>
-                            <button
-                                class="btn btn-soft-primary w-100"
-                                @click="registerForEventModal = true"
-                                v-else="props.eventDetails.access_type == 'paid'"
-                            >
-                                Register
-                            </button>
+                            <div v-if="props.eventDetails.beneficiary_id != currentUser.id">
+                                <button class="btn btn-soft-primary w-100" @click="buyTicket" v-if="props.eventDetails.access_type == 'paid'">
+                                    Buy Ticket
+                                </button>
+                                <div v-else>
+                                    <b-button variant="primary" class="mt-4" v-if="props.eventDetails.reg_status == 'pending'" disabled
+                                        >Pending Approval</b-button
+                                    >
+                                    <b-button variant="primary" class="mt-4" v-else-if="props.eventDetails.reg_status == 'approved'"
+                                        >Get Ticket</b-button
+                                    >
+                                    <button
+                                        class="btn btn-soft-primary w-100"
+                                        @click="showEventRegModal"
+                                        v-else="props.eventDetails.access_type == 'paid'"
+                                    >
+                                        Register
+                                    </button>
+                                </div>
+                            </div>
 
                             <button class="btn btn-soft-danger w-100" v-if="props.eventDetails.beneficiary_id == currentUser.id">Edit</button>
                         </div>
@@ -181,8 +286,8 @@ function buyTicket() {
                                 </div>
                             </li>
                         </ul>
-                        <div class="mt-4" v-if="props.eventDetails.beneficiary_id == currentUser.id">
-                            <a href="#!" class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
+                        <div class="mt-4" v-if="props.eventDetails.beneficiary_id == currentUser.id" @click="goToEventManager">
+                            <a class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
                         </div>
                     </div>
                 </div>
@@ -200,6 +305,9 @@ function buyTicket() {
                                 <span class="badge badge-soft-primary me-3" v-for="(category, index) in props.eventDetails.categories" :key="index">{{
                                     category.name
                                 }}</span>
+                            </div>
+                            <div class="" v-if="props.eventDetails.beneficiary_id == currentUser.id || isAdmin">
+                                <button class="btn btn-soft-primary w-100" @click="goToEventManager">Event Manager</button>
                             </div>
                         </div>
 
@@ -234,10 +342,18 @@ function buyTicket() {
                             </div>
                         </div>
 
-                        <b-button variant="primary" class="mt-4" @click="buyTicket" v-if="props.eventDetails.access_type == 'paid'"
-                            >Buy Ticket
-                        </b-button>
-                        <b-button variant="primary" class="mt-4" @click="registerForEventModal = true" v-else>Register</b-button>
+                        <div v-if="props.eventDetails.beneficiary_id != currentUser.id">
+                            <b-button variant="primary" class="mt-4" @click="buyTicket" v-if="props.eventDetails.access_type == 'paid'"
+                                >Buy Ticket
+                            </b-button>
+                            <div v-else>
+                                <b-button variant="primary" class="mt-4" v-if="props.eventDetails.reg_status == 'pending'" disabled
+                                    >Pending Approval</b-button
+                                >
+                                <b-button variant="primary" class="mt-4" v-else-if="props.eventDetails.reg_status == 'approved'">Get Ticket</b-button>
+                                <b-button variant="primary" class="mt-4" @click="showEventRegModal" v-else>Register</b-button>
+                            </div>
+                        </div>
 
                         <div class="mt-5">
                             <h5 class="mb-4">Reviews :</h5>
@@ -300,10 +416,133 @@ function buyTicket() {
                         </div>
                     </div>
                 </div>
+                <b-modal v-model="registerForEventModal" id="EventRegister" centered title="Register For Event" title-class="font-18" hide-footer>
+                    <div>
+                        <form>
+                            <div v-if="eventRegisterForm.errors.email" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ eventRegisterForm.errors.email }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <div
+                                v-if="eventRegisterForm.errors.phone_number"
+                                class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
+                                role="alert"
+                            >
+                                {{ eventRegisterForm.errors.phone_number }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            <div v-if="eventRegisterForm.errors.terms" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ eventRegisterForm.errors.terms }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            <div v-if="invalidPhoneNumberMsg" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ invalidPhoneNumberMsg }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="name">Name</label>
+                                <input
+                                    style="font-size: 13px"
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    placeholder="Name"
+                                    required
+                                    v-model="eventRegisterForm.name"
+                                />
+                                <InputError class="mt-2 mb-4 text-danger" :message="eventRegisterForm.errors.name" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email"> Email Address</label>
+                                <input
+                                    style="font-size: 13px"
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    required
+                                    autocomplete="username"
+                                    placeholder="Enter email"
+                                    v-model="eventRegisterForm.email"
+                                />
+                                <InputError class="mt-2 mb-4 text-danger" :message="eventRegisterForm.errors.email" />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="phone_number"> Phone Number</label>
+                                <VueTelInput
+                                    class="form-control"
+                                    :inputOptions.required="true"
+                                    :inputOptions.showDialCode="true"
+                                    :rules="[isValidPhone]"
+                                    v-model="eventRegisterForm.phone_number"
+                                    @input="phoneNumber"
+                                    @change="phoneNumber"
+                                    @blur="checkValidity"
+                                />
+                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg }}</small>
+                            </div>
+
+                            <div class="">
+                                <div class="mb-3 form-check form-check-left">
+                                    <input class="form-check-input" type="checkbox" id="formCheckRight1" v-model="eventRegisterForm.terms" />
+                                    <label class="form-check-label" for="formCheckRight1"> Allow Terms & Conditions </label>
+                                    <InputError class="mt-2 mb-4 text-danger" :message="eventRegisterForm.errors.terms" />
+                                </div>
+                            </div>
+
+                            <div class="mt-5 d-grid">
+                                <button
+                                    class="btn btn-primary btn-block waves-effect waves-light"
+                                    type="submit"
+                                    @click.prevent="submitEventRegisterRequest"
+                                    :disabled="eventRegisterForm.processing"
+                                >
+                                    <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="eventRegisterForm.processing"></i
+                                    ><span>Register</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </b-modal>
+                <b-modal v-model="buyTicketModal" id="buyEventTicket" centered title="Buy Event Ticket" title-class="font-18" hide-footer>
+                    <div>
+                        <div class="mb-4">
+                            <span>Availbale</span>({{ selectedTicket?.available_quantity }})
+                        </div>
+                        <div class="mb-3">
+                            <label>Ticket Type</label>
+                            <v-select v-model="selectedTicket" :options="props.eventDetails.event_tickets" :label="'category'"></v-select>
+                        </div>
+                        <div class="mb-4">
+                            <label>Quantity</label>
+                            <input class="form-control" type="number" id="formCheckRight1"
+                             v-model="ticketQuantity" :disabled="selectedTicket === null"
+
+                             :min="1"
+                             :max="selectedTicket?.available_quantity"
+                             />
+                        </div>
+                        <div class=" text-end">
+                                <div class="mb-2 fw-bold me-3">Total</div>
+                                <div>
+                                    <h4>{{ selectedTicket?.currency || "UGX" }} {{ useCurrencyFormat(ticketTotal) }}</h4>
+                                </div>
+                            </div>
+                        <div class="mt-5 d-grid">
+                            <button
+                                class="btn btn-primary btn-block waves-effect waves-light"
+                                @click.prevent="checkoutMovie"
+                                :disabled="selectedTicket === null"
+                            >
+                                <span>Proceed</span>
+                            </button>
+                        </div>
+                    </div>
+                </b-modal>
             </div>
-            <RegisterForEvent
-            :showModal="registerForEventModal"
-            />
         </div>
     </DashboardLayout>
 </template>

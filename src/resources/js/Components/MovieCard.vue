@@ -1,23 +1,23 @@
 <script setup>
 const props = defineProps([
     "discount",
-    "eventName",
-    "eventImageLink",
-    "eventDate",
-    "eventLocation",
-    "eventPrice",
-    "eventCurrency",
-    "eventId"
+    "movieName",
+    "movieImageLink",
+    "movieDate",
+    "movieLocation",
+    "moviePrice",
+    "movieCurrency",
+    "movieId"
 ]);
 const emit = defineEmits(["view"])
 const viewDetails = ()  => {
-    emit('view',props.eventName);
+    emit('view',props.movieName);
 }
 </script>
 
 <template>
     <b-container>
-        <div class="rounded shadow card w-100" @click="()=>$emit('view',eventName,eventId)">
+        <div class="rounded shadow card w-100" @click="()=>$emit('view',movieName,movieId)">
             <div class="p-2">
                 <div
                     class="overflow-hidden rounded position-relative"
@@ -35,7 +35,7 @@ const viewDetails = ()  => {
                     </div>
                     <div>
                         <img
-                            :src="`${eventImageLink}`"
+                            :src="`${movieImageLink}`"
                             alt
                             class=""
                             style="
@@ -57,20 +57,20 @@ const viewDetails = ()  => {
                 <div class="pb-2 mt-4 ps-2 pe-2" role="button">
                     <h5 class="mb-3 text-truncate text-start">
                         <div class="text-hover-warning" role="button">
-                            {{ eventName }}
+                            {{ movieName }}
                         </div>
                     </h5>
                     <div class="mb-1 text-primary text-start">
                         <i class="bx bx-calendar-event me-1"></i
-                        ><span>{{ eventDate }}</span>
+                        ><span>{{ movieDate }}</span>
                     </div>
                     <div class="text-truncate text-start">
                         <i class="bx bx-map me-1"></i
-                        ><span>{{ eventLocation }} </span>
+                        ><span>{{ movieLocation }} </span>
                     </div>
 
                     <h5 class="mt-3 text-end">
-                        <b>{{ eventCurrency }} {{ eventPrice }}</b>
+                        <b>{{ movieCurrency }} {{ moviePrice }}</b>
                     </h5>
                 </div>
             </div>

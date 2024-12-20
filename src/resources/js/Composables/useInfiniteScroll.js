@@ -6,6 +6,7 @@ export function useInfiniteScroll(propName, elementRef = null) {
     const propValue = () => usePage().props[propName];
     const paginatedItems = ref(propValue().data);
     const initialUrl = usePage().url;
+    let observerListner = null
 
     const nextPageExists = computed(() => propValue().next_page_url !== null);
 
@@ -27,9 +28,10 @@ export function useInfiniteScroll(propName, elementRef = null) {
         );
     };
 
-    if (elementRef !== null) {
-        useObserveHitBottom(elementRef, loadMoreItems, { rootMargin: "0px 0px 0px 0px" });
+    if (elementRef) {
+     useObserveHitBottom(elementRef, loadMoreItems, { rootMargin: "0px 0px 0px 0px" });
     }
+
 
     return {
         paginatedItems,

@@ -8,7 +8,13 @@ use App\Models\EventCategoryLink;
 use App\Models\EventTicket;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EventReview;
-
+use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Models\EventAttendee;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewUserTempPasswordMail;
 
 
 /**
@@ -76,9 +82,9 @@ class EventService
         }
 
         if (count($eventDetails['tickets']) > 0) {
-            foreach($eventDetails['tickets'] as $ticket){
+            foreach ($eventDetails['tickets'] as $ticket) {
                 EventTicket::updateOrCreate(['id' => isset($ticket['id']) ? $ticket['id'] : null], [
-                    'event_id' =>$createdEvent->id,
+                    'event_id' => $createdEvent->id,
                     'category' => $ticket['category'],
                     'price' => $ticket['price'],
                     'available_quantity' => $ticket['quantity'],
@@ -86,7 +92,61 @@ class EventService
                 ]);
             }
         }
+    }
 
+    public static function registerForEvent($requestDetails)
+    {
+
+        //create account if the account doesnt exist
+        $currentUser = User::where('email', $requestDetails['email'])->first();
+        if (is_null($currentUser)) {
+            $randomPassword = Str::random(12);
+            $currentUser = User::create(
+                [
+                    'name' => $requestDetails['name'],
+                    'email' => $requestDetails['email'],
+                    'phone_number' => $requestDetails['phone_number'],
+                    'user_type' => 'ticket_buyer',
+                    'password' => Hash::make($randomPassword),
+                ]
+            );
+            Log::alert('TempPassword'. $randomPassword);
+            //send email with temp. Password
+            try {
+                $message = (new NewUserTempPasswordMail($currentUser->name, $randomPassword))
+                    ->onQueue('emails');
+
+                Mail::to($currentUser->email)
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        EventAttendee::updateOrCreate(
+            [
+                'event_id' => $requestDetails['event_id'],
+                'email' => $currentUser->email
+            ],
+            [
+                'user_id' => $currentUser->id,
+                'reg_status' => 'pending'
+            ]
+        );
+    }
+
+    public static function approveInvitation($requestDetails)
+    {
+        $attendanceDetail = EventAttendee::where('id', $requestDetails->attendace_id)->first();
+        $attendanceDetail->reg_status = 'approved';
+        $attendanceDetail->save();
+    }
+
+    public static function declineInvitation($requestDetails)
+    {
+        $attendanceDetail = EventAttendee::where('id', $requestDetails->attendace_id)->first();
+        $attendanceDetail->reg_status = 'declined';
+        $attendanceDetail->save();
     }
 
     public static function createReview($reviewDetails)

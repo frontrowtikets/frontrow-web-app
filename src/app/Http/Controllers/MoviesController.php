@@ -79,6 +79,17 @@ class MoviesController extends Controller
         MovieService::saveSeatMap($seatMapDetails);
     }
 
+    public function movieManager(Request $request){
+        return \Inertia\Inertia::render('Movies/MovieManager', );
+    }
+
+    public function allMovies(Request $request){
+        $movies = Movie::orderBy('created_at', 'desc')->paginate(12);
+        return \Inertia\Inertia::render('Movies/AllMoviesPage', [
+            'movies' => $movies
+        ]);
+    }
+
     public function savemoviesSettings(MovieSettings $request)
     {
         $settingsData = $request->validated();

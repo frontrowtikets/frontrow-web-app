@@ -39,7 +39,7 @@ router.visit(`/movie/${props.buyMovieDetails.title}/${props.buyMovieDetails.id}`
     <Head title="checkout" />
 
     <DashboardLayout>
-        <PageHeader :title="props.buyMovieDetails.title" :items="state.items" />
+        <PageHeader :title="props.buyMovieDetails.title" :items="state.items" role="button" @click="showCheckout=false" />
         <div v-if="showCheckout">
             <div class="col-12">
                 <div class="card" :style="{height:`${height-100}px`}">
