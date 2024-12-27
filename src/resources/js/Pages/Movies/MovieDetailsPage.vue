@@ -142,6 +142,9 @@ function goToMovieManager(){
     router.visit(`/moviemanager/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
 
 }
+function configureSeatMap(){
+    router.visit(`/seat-map/${props.movieDetails.id}`)
+}
 </script>
 <template>
     <Head :title="props.movieDetails.title" />
@@ -285,7 +288,7 @@ function goToMovieManager(){
                                 }}</span>
                             </div>
                             <div class="" v-if="props.movieDetails.beneficiary_id == currentUser.id">
-                                <button class="btn btn-soft-primary w-100" @click="seatMapModal = true">Add Seat Map</button>
+                                <button class="btn btn-soft-primary w-100" @click="configureSeatMap">Add Seat Map</button>
                             </div>
                         </div>
 

@@ -39,7 +39,7 @@ const state = reactive({
             // href: "javascript:void(0)"
         },
         {
-            text: "Event Manager",
+            text: "Manage Event",
             active: true,
         },
     ],
@@ -129,9 +129,9 @@ function declineRequest(userID) {
 }
 </script>
 <template>
-    <Head title="Event Manager" />
+    <Head title="Manage Event" />
     <DashboardLayout>
-        <PageHeader title="Event Manager" :items="state.items" />
+        <PageHeader title="Manage Event" :items="state.items" />
         <div class="row">
             <div class="card">
                 <div class="card-body">

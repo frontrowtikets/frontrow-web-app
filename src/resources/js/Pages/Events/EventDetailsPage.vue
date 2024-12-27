@@ -307,7 +307,7 @@ function checkoutMovie(){
                                 }}</span>
                             </div>
                             <div class="" v-if="props.eventDetails.beneficiary_id == currentUser.id || isAdmin">
-                                <button class="btn btn-soft-primary w-100" @click="goToEventManager">Event Manager</button>
+                                <button class="btn btn-soft-primary w-100" @click="goToEventManager">Manage Event</button>
                             </div>
                         </div>
 

@@ -41,6 +41,7 @@ Route::middleware([
     Route::get("/movie/{title}/{id}", [MoviesController::class, 'movieDetail'])->name('movie_detail');
     Route::get("/moviemanager/{title}/{id}", [MoviesController::class, 'movieManager'])->name('movie_manager');
     Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+    Route::get("/seat-map/{id}", [MoviesController::class, 'seatMap'])->name('seat_map');
     Route::get("/event/{title}/{id}", [EventsController::class, 'eventDetail'])->name('event_detail');
     Route::post("/event/acceptinvitation", [EventsController::class, 'acceptInvitation'])->name('accept_invitation');
     Route::post("/event/declineinvitation", [EventsController::class, 'declineInvitation'])->name('decline_invitation');
