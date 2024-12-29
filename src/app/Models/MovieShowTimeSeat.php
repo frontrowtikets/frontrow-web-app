@@ -14,8 +14,7 @@ class MovieShowTimeSeat extends Model
         'movie_show_time_id',
         'seat_number',
         'row_name',
-        'column_name',
         'seat_status',
-        'seat_map_id'
+        'seat_map_id',
     ];
 }

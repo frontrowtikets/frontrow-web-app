@@ -100,13 +100,10 @@ class MovieService
     {
         foreach ($seatmapDetails as $seatmapDetail) {
 
-            $creagedSeatMap = SeatMap::create([
+            $createdSeatMap = SeatMap::create([
                 'movie_id' => $seatmapDetail['showTime']['movie_id'],
                 'movie_show_time_id' => $seatmapDetail['showTime']['id'],
                 'room_name' => $seatmapDetail['roomName'],
-                'from' => $seatmapDetail['fromRow'],
-                'to' => $seatmapDetail['toRow'],
-                'seats_per_row' => $seatmapDetail['rowSeatsNumber'],
             ]);
 
 
@@ -115,9 +112,9 @@ class MovieService
 
                 MovieShowTimeSeat::create([
                     'movie_show_time_id' => $seatmapDetail['showTime']['id'],
-                    'seat_map_id' => $creagedSeatMap->id,
+                    'seat_map_id' => $createdSeatMap->id,
                     'seat_number' => $seatLabel,
-                    'seat_status' => 'available',
+                    'seat_status' => in_array($seatLabel, $seatmapDetail['reserved'])?'reserved':'available',
                 ]);
             }
         }

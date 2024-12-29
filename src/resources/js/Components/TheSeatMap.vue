@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
+const emit = defineEmits(['markAsReserved'])
+
 const props = defineProps({
     // Change rowSeats to include seat counts
     rowData: {
@@ -45,6 +47,12 @@ const getSeatStatus = (seatId) => {
     if (selectedSeats.value.includes(seatId)) return "selected";
     return "available";
 };
+
+function markReserved(){
+    emit('markAsReserved',selectedSeats)
+    reservedSeats.value = selectedSeats.value;
+    selectedSeats.value = []
+}
 </script>
 
 <template>
@@ -52,10 +60,12 @@ const getSeatStatus = (seatId) => {
         <div class="mb-4 text-center">
             <div class="w-100 bg-primary" style="height: 10px"></div>
             <p class="text-muted small">
-                {{ props.theatre.theatre }}({{ props.roomName }})
+                {{ props.theatre.theatre }}<span v-if="props.roomName">({{ props.roomName }})</span>
             </p>
         </div>
-
+<div v-if="selectedSeats.length" class="mb-3 text-end w-100">
+     <div @click="markReserved" class=" btn btn-sm btn-soft-primary">Mark as Reserved</div>
+</div>
         <div class="row">
             <div class="col-12">
                 <div

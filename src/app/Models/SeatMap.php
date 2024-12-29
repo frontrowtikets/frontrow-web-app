@@ -15,8 +15,6 @@ class SeatMap extends Model
         'movie_id',
         'movie_show_time_id',
         'room_name',
-        'from',
-        'to',
-        'seats_per_row',
+      
     ];
 }

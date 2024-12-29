@@ -39,14 +39,14 @@ const useInertiaFormSubmit = (payload = {}, endpoint = "", successEndpoint = "/"
                         allowEscapeKey: false,
                         closeOnClickOutside: false,
                     }).then((result) => {
-                        if (result.value) {
+
                             Swal.close();
-                            if (successEndpoint = 'reload'){
+                            if (successEndpoint === 'reload'){
                                 router.reload();
                             }else{
-                                 router.visit(successEndpoint);
+                                 router.get(`${successEndpoint}`);
                             }
-                        }
+
                     });
                 },
                 onError: (errors) => {

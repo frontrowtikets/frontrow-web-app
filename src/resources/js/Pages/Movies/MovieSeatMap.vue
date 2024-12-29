@@ -31,25 +31,39 @@ const seatMapFields = ref([
         room: null,
         seats: [
             {
-                rowLabel: "A",
-                seatsNumber: 10,
+                row: "A",
+                seatCount: 10,
             },
         ],
+        reserved: [],
     },
 ]);
 
-const rowData = [
-    { row: "A", seatCount: 10 },
-    { row: "B", seatCount: 35 },
-    { row: "C", seatCount: 12 },
-];
-const theatre = {
-    theatre: "theatre1",
-};
+//structured seatmap to be saved
+const structuredSeatMap = computed(() => {
+    const seatMap = [];
 
-const roomName = "Room 1";
+    //TODO: Reduce time complexity
+    seatMapFields.value.forEach((field) => {
+        if (field.theatre && field.room !== null) {
+            const cleanSeatMap = {
+                showTime: field.theatre,
+                reserved: field.reserved,
+                roomName: field.room,
+                combinations: [],
+            };
+            field.seats.forEach((rowSeats) => {
+                const rowSeatsCombinations = generateCombinations(rowSeats);
+                cleanSeatMap.combinations = [...cleanSeatMap.combinations, ...rowSeatsCombinations];
+            });
+            //removing duplicate seats
+            cleanSeatMap.combinations = [...new Set(cleanSeatMap.combinations)];
+            seatMap.push(cleanSeatMap);
+        }
+    });
 
-const reservedSeats = ["A1"];
+    return seatMap;
+});
 
 function addTheatre() {
     const lastItem = seatMapFields.value[seatMapFields.value.length - 1];
@@ -59,10 +73,11 @@ function addTheatre() {
             room: null,
             seats: [
                 {
-                    rowLabel: "A",
-                    seatsNumber: 10,
+                    row: "A",
+                    seatCount: 10,
                 },
             ],
+            reserved: [],
         });
     }
 }
@@ -73,16 +88,56 @@ function removeTheatre(index) {
 
 function addRow(index, seatmapIndex) {
     const lastItem = seatMapFields.value[seatmapIndex].seats[index];
-    if (lastItem.rowLabel != "") {
+    if (lastItem.row != "") {
         seatMapFields.value[seatmapIndex].seats.push({
-            rowLabel: "",
-            seatsNumber: 10,
+            row: "",
+            seatCount: 10,
         });
     }
 }
 
-function removeRow(index, seatmapIndex){
-    seatMapFields.value[seatmapIndex].seats.splice(index,1)
+function removeRow(index, seatmapIndex) {
+    if (seatMapFields.value[seatmapIndex].seats.length !== 1) {
+        seatMapFields.value[seatmapIndex].seats.splice(index, 1);
+    }
+}
+
+function markReserved(seats, theSeatMapIndex) {
+    const reservedSeats = seats.value;
+    seatMapFields.value[theSeatMapIndex].reserved = reservedSeats;
+}
+
+function generateCombinations({ row, seatCount }) {
+    if (!row || seatCount <= 0) {
+        return [];
+    }
+
+    const combinations = [];
+    for (let i = 1; i <= seatCount; i++) {
+        combinations.push(`${row}${i}`);
+    }
+
+    return combinations;
+}
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+}
+ function saveSeatMap() {
+    const seatMap = structuredSeatMap.value;
+
+     useInertiaFormSubmit(
+        {
+            seatMaps: seatMap,
+        },
+        "/saveseatmap",
+        `/movie/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`,
+        "You are about to save changes",
+        "Changes have been saved successfully"
+    );
+
 }
 </script>
 <template>
@@ -92,7 +147,15 @@ function removeRow(index, seatmapIndex){
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <div><TheSeatMap :rowData="rowData" :reserved="reservedSeats" :theatre="theatre" :roomName="roomName" /></div>
+                    <div v-for="(theSeatMap, theSeatMapIndex) in seatMapFields" :key="`${theSeatMapIndex}_${theSeatMap.room}_${theSeatMapIndex}`">
+                        <TheSeatMap
+                            :rowData="theSeatMap.seats"
+                            :reserved="theSeatMap.reserved"
+                            :theatre="theSeatMap.theatre"
+                            :roomName="theSeatMap?.room"
+                            @markAsReserved="markReserved($event, theSeatMapIndex)"
+                        />
+                    </div>
                     <div>
                         <div class="mt-4 me-4">
                             <div v-for="(seatmap, seatmapIndex) in seatMapFields" :key="`${seatmapIndex}_${seatmap.theatre}_${seatmapIndex}`">
@@ -106,11 +169,11 @@ function removeRow(index, seatmapIndex){
                                 </div>
                                 <div class="gap-4 mb-4 justify-content-between d-flex">
                                     <div class="col-6">
-                                        <label>Theatre</label>
+                                        <label>Theatre <span class="text-danger">*</span></label>
                                         <v-select :options="props.movieDetails.show_times" v-model="seatmap.theatre" :label="'theatre'"></v-select>
                                     </div>
                                     <div class="col-6">
-                                        <label>Room Name</label>
+                                        <label>Room Name <span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" id="roomname" v-model="seatmap.room" />
                                     </div>
                                 </div>
@@ -131,12 +194,14 @@ function removeRow(index, seatmapIndex){
 
                                     <div
                                         v-for="(field, index) in seatmap.seats"
-                                        :key="`${index}_${field.rowLabel}`"
+                                        :key="`${index}_${field.row}`"
                                         class="flex-row mb-2 d-flex justify-content-between align-items-center"
                                     >
-                                        <div @click="removeRow(index, seatmapIndex)"><i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i></div>
+                                        <div @click="removeRow(index, seatmapIndex)">
+                                            <i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i>
+                                        </div>
                                         <div class="col-5">
-                                            <select class="form-select form-control" id="movie_status" v-model="field.rowLabel">
+                                            <select class="form-select form-control" id="movie_status" v-model="field.row">
                                                 <option value="" disabled default>Select</option>
                                                 <option value="A">A</option>
                                                 <option value="B">B</option>
@@ -156,7 +221,7 @@ function removeRow(index, seatmapIndex){
                                             </select>
                                         </div>
                                         <div class="col-5">
-                                            <input class="form-control" type="number" id="roomname" v-model="field.seatsNumber" />
+                                            <input class="form-control" type="number" id="roomname" v-model="field.seatCount" />
                                         </div>
                                         <div>
                                             <b-button
@@ -172,7 +237,7 @@ function removeRow(index, seatmapIndex){
                                     </div>
                                 </div>
                                 <div
-                                    class="rounded  col-2 d-flex align-items-center justify-content-center"
+                                    class="rounded col-2 d-flex align-items-center justify-content-center"
                                     style="background-color: #f6f6f9"
                                     role="button"
                                     @click="addTheatre"
@@ -181,29 +246,6 @@ function removeRow(index, seatmapIndex){
                                     <div class="p-2 text-success fw-bold">Add Theatre</div>
                                 </div>
                             </div>
-
-                            <!-- <div class="gap-3 d-flex col-12 justify-content-between">
-                                <div class="col-9">
-                                    <div class="mb-3">
-                                        <label>Room Name</label>
-                                        <input class="form-control" type="text" id="roomname" v-model="seatMapFields.room" />
-                                    </div>
-
-
-                                    <div class="mb-4">
-                                        <label>Seats Per Row</label>
-                                        <input class="form-control" type="text" id="roomname" v-model="seatMapFields.seatsPerRow" />
-                                    </div>
-                                </div>
-                                <div
-                                    class="rounded col-2 d-flex align-items-center justify-content-center"
-                                    style="background-color: #f6f6f9"
-                                    role="button"
-                                    @click="generateSeatMap"
-                                >
-                                    <div class="text-success fw-bold">Add</div>
-                                </div>
-                            </div> -->
                             <div class="mt-5 mb-5">
                                 <b-button variant="primary" @click="saveSeatMap">Save Changes</b-button>
                             </div>

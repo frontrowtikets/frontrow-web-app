@@ -191,7 +191,7 @@ export default {
                     <span :class="usePage().url == '/mytransactions' ? 'text-white fw-bold' : 'text-grayish'" @click="toTransactions">My Transactions</span>
                 </a>
             </li>
-            <li class="" role="button">
+            <li class="" role="button" v-if="isAdmin == true">
                 <a>
                     <i class="bx bxs-cog" style="color: #fff"></i>
                     <span :class="usePage().url == '/settings' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterSettings" >Settings</span>
