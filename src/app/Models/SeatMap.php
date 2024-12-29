@@ -15,6 +15,18 @@ class SeatMap extends Model
         'movie_id',
         'movie_show_time_id',
         'room_name',
-      
     ];
+    protected $appends = ['showTime', 'showTimeSeats'];
+
+    public function getshowTimeSeatsAttribute()
+    {
+        $showTimeSeats = MovieShowTimeSeat::where('seat_map_id', $this->id)->where('deleted_at', null)->get();
+        return $showTimeSeats;
+    }
+
+    public function getshowTimeAttribute()
+    {
+        $showTime = MovieShowTime::where('id', $this->movie_show_time_id)->get();
+        return $showTime;
+    }
 }

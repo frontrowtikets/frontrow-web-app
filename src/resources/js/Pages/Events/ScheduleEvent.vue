@@ -221,7 +221,6 @@ const submit = () => {
                                                 <option value="" disabled>Select</option>
                                                 <option value="coming_soon">Coming Soon</option>
                                                 <option value="ongoing">Ongoing</option>
-                                                <option value="expired">Expired</option>
                                             </select>
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
                                         </div>

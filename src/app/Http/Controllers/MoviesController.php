@@ -94,6 +94,7 @@ class MoviesController extends Controller
         $movieDetails = Movie::select('id', 'title')->where('id',$request->id)->with([
             'showTimes',
             'genres',
+            'seatmap'
         ])->first();
         return \Inertia\Inertia::render('Movies/MovieSeatMap', [
             'movieDetails' => $movieDetails

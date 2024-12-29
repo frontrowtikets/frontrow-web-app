@@ -17,14 +17,12 @@ const currentUser = computed(() => {
     return theUser;
 });
 
-
 const form = useForm({
     review: "",
     movie_id: props.movieDetails.id,
     user_id: usePage().props.auth.user.id,
     submitted_by: usePage().props.auth.user.name,
 });
-
 
 const submit = () => {
     form.post("/createmoviereview", {
@@ -65,14 +63,11 @@ function buyTicket() {
     router.visit(`/movie/buy-ticket/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
 }
 
-
-
-function goToMovieManager(){
+function goToMovieManager() {
     router.visit(`/moviemanager/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
-
 }
-function configureSeatMap(){
-    router.visit(`/seat-map/${props.movieDetails.id}`)
+function configureSeatMap() {
+    router.visit(`/seat-map/${props.movieDetails.id}`);
 }
 </script>
 <template>
@@ -197,7 +192,7 @@ function configureSeatMap(){
                             </li>
                         </ul>
                         <div class="mt-4" v-if="props.movieDetails.beneficiary_id == currentUser.id" @click="goToMovieManager">
-                            <a  class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
+                            <a class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
                         </div>
                     </div>
                 </div>
@@ -217,7 +212,9 @@ function configureSeatMap(){
                                 }}</span>
                             </div>
                             <div class="" v-if="props.movieDetails.beneficiary_id == currentUser.id">
-                                <button class="btn btn-soft-primary w-100" @click="configureSeatMap">Add Seat Map</button>
+                                <button class="btn btn-soft-primary w-100" @click="configureSeatMap">
+                                    {{ props.movieDetails.hasSeatMap ? "Edit" : "Add" }} Seat Map
+                                </button>
                             </div>
                         </div>
 
@@ -332,7 +329,6 @@ function configureSeatMap(){
                         </div>
                     </div>
                 </div>
-
             </div>
             <!--end col-->
         </div>

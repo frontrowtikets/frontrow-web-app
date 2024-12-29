@@ -39,6 +39,12 @@ const seatMapFields = ref([
     },
 ]);
 
+onMounted(()=>{
+    if(props.movieDetails.seatmap.length > 0){
+        setSavedSeatMap()
+    }
+})
+
 //structured seatmap to be saved
 const structuredSeatMap = computed(() => {
     const seatMap = [];
@@ -64,6 +70,10 @@ const structuredSeatMap = computed(() => {
 
     return seatMap;
 });
+function setSavedSeatMap(){
+    const setMap = props.movieDetails.seatmap;
+
+}
 
 function addTheatre() {
     const lastItem = seatMapFields.value[seatMapFields.value.length - 1];
