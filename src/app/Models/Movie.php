@@ -34,12 +34,22 @@ class Movie extends Model implements HasMedia
         'currency',
         'maturity_rating',
     ];
-    protected $appends = ['overallRating'];
+    protected $appends = ['overallRating', 'hasSeatMap'];
 
     public function getoverallRatingAttribute()
     {
         $averageRating = MovieRating::where('movie_id', $this->id)->avg('rating');
         return round($averageRating);
+    }
+    public function gethasSeatMapAttribute()
+    {
+        $seatMap = SeatMap::where('movie_id', $this->id)->where('deleted_at', null)->first();
+
+        if (is_null($seatMap)) {
+            return false;
+        } else {
+            return true;
+        }
     }
     public function beneficiary()
     {
@@ -56,8 +66,14 @@ class Movie extends Model implements HasMedia
         return $this->hasMany(MovieReview::class);
     }
 
+    public function seatmap() {
+        return $this->hasMany(SeatMap::class);
+    }
+
     public function genres()
     {
         return $this->belongsToMany(MovieCategory::class, 'movie_category_links', 'movie_id', 'category_id');
     }
+
+
 }

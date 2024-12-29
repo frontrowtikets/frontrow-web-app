@@ -90,6 +90,17 @@ class MoviesController extends Controller
         ]);
     }
 
+    public function seatMap(Request $request){
+        $movieDetails = Movie::select('id', 'title')->where('id',$request->id)->with([
+            'showTimes',
+            'genres',
+            'seatmap'
+        ])->first();
+        return \Inertia\Inertia::render('Movies/MovieSeatMap', [
+            'movieDetails' => $movieDetails
+        ]);
+    }
+
     public function savemoviesSettings(MovieSettings $request)
     {
         $settingsData = $request->validated();

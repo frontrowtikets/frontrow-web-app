@@ -2,16 +2,12 @@
 import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
-import { reactive, onMounted, computed, ref } from "vue";
-import IsUserBeneficiary from "../../Composables/IsUserBeneficiary.js";
+import { reactive, computed, ref } from "vue";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
-import useInertiaFormSubmit from "../../Composables/useInertiaFormSubmit.js";
 import moment from "moment";
 import YouTube from "vue3-youtube";
 import Swal from "sweetalert2";
-import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import SeatMap from "../../Components/SeatMap.vue";
 
 const props = defineProps(["movieDetails"]);
 const state = reactive({});
@@ -21,23 +17,12 @@ const currentUser = computed(() => {
     return theUser;
 });
 
-const seatMaps = ref([]);
-const seatMapFields = reactive({
-    theatre: null,
-    room: null,
-    from: "A",
-    to: null,
-    seatsPerRow: 10,
-});
-
 const form = useForm({
     review: "",
     movie_id: props.movieDetails.id,
     user_id: usePage().props.auth.user.id,
     submitted_by: usePage().props.auth.user.name,
 });
-
-const seatMapModal = ref(false);
 
 const submit = () => {
     form.post("/createmoviereview", {
@@ -78,69 +63,11 @@ function buyTicket() {
     router.visit(`/movie/buy-ticket/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
 }
 
-function getAlphabetRange(start = "A", end = "O") {
-    const alphabet = "ABCDEFGHIJKLMNO".split("");
-    const startIndex = alphabet.indexOf(start.toUpperCase());
-    const endIndex = alphabet.indexOf(end.toUpperCase());
-
-    if (startIndex === -1 || endIndex === -1) {
-        throw new Error("Invalid input: Start and end must be alphabetical letters.");
-    }
-
-    if (startIndex <= endIndex) {
-        return alphabet.slice(startIndex, endIndex + 1);
-    }
-
-    return alphabet.slice(endIndex, startIndex + 1).reverse();
-}
-function generateSeatMap() {
-    const rows = getAlphabetRange(seatMapFields.from, seatMapFields.to);
-    const cleanSeatMap = {
-        showTime: seatMapFields.theatre,
-        room: seatMapFields.room,
-        rowSeats: rows,
-        rowSeatsNumber: seatMapFields.seatsPerRow,
-        reserved: [],
-        fromRow:seatMapFields.from,
-        toRow:seatMapFields.to,
-        roomName: seatMapFields.room,
-    };
-    seatMaps.value.push(cleanSeatMap);
-    (seatMapFields.theatre = null),
-        (seatMapFields.room = null),
-        (seatMapFields.from = ""),
-        (seatMapFields.to = null),
-        (seatMapFields.seatsPerRow = 0);
-}
-function generateSeatCombinations(rows, seatsPerRow) {
-    const seatCombinations = [];
-
-    for (const row of rows) {
-        for (let seat = 1; seat <= seatsPerRow; seat++) {
-            seatCombinations.push(`${row}${seat}`);
-        }
-    }
-
-    return seatCombinations;
-}
-function saveSeatMap(){
-    seatMaps.value.forEach((seatmap)=>{
-        seatmap.combinations = generateSeatCombinations(seatmap.rowSeats,Number(seatmap.rowSeatsNumber))
-    })
-    console.log("jj",seatMaps.value)
-     useInertiaFormSubmit(
-        {
-            seatMaps: seatMaps.value,
-        },
-        "/saveseatmap",
-        "/mymovies",
-        "You are about to save changes",
-        "Changes have been saved successfully"
-    );
-}
-function goToMovieManager(){
+function goToMovieManager() {
     router.visit(`/moviemanager/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
-
+}
+function configureSeatMap() {
+    router.visit(`/seat-map/${props.movieDetails.id}`);
 }
 </script>
 <template>
@@ -265,7 +192,7 @@ function goToMovieManager(){
                             </li>
                         </ul>
                         <div class="mt-4" v-if="props.movieDetails.beneficiary_id == currentUser.id" @click="goToMovieManager">
-                            <a  class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
+                            <a class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
                         </div>
                     </div>
                 </div>
@@ -285,7 +212,9 @@ function goToMovieManager(){
                                 }}</span>
                             </div>
                             <div class="" v-if="props.movieDetails.beneficiary_id == currentUser.id">
-                                <button class="btn btn-soft-primary w-100" @click="seatMapModal = true">Add Seat Map</button>
+                                <button class="btn btn-soft-primary w-100" @click="configureSeatMap">
+                                    {{ props.movieDetails.hasSeatMap ? "Edit" : "Add" }} Seat Map
+                                </button>
                             </div>
                         </div>
 
@@ -400,98 +329,6 @@ function goToMovieManager(){
                         </div>
                     </div>
                 </div>
-                <b-modal v-model="seatMapModal" size="xl" id="Seat_Map" centered title="Seat Map" title-class="font-18" hide-footer>
-                    <div class="mt-5 d-flex">
-                        <div class="col-4 me-4">
-                            <div class="mb-3">
-                                <label>Theatre</label>
-                                <v-select :options="props.movieDetails.show_times" v-model="seatMapFields.theatre" :label="'theatre'"></v-select>
-                            </div>
-
-                            <div class="gap-3 d-flex col-12 justify-content-between">
-                                <div class="col-9">
-                                    <div class="mb-3">
-                                        <label>Room Name</label>
-                                        <input class="form-control" type="text" id="roomname" v-model="seatMapFields.room" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label>Rows </label>
-                                        <div class="flex-row d-flex justify-content-between align-items-center">
-                                            <div class="col-5">
-                                                <select class="form-select form-control" id="movie_status" v-model="seatMapFields.from">
-                                                    <option value="" disabled default>Select</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="D">D</option>
-                                                    <option value="E">E</option>
-                                                    <option value="F">F</option>
-                                                    <option value="G">G</option>
-                                                    <option value="H">H</option>
-                                                    <option value="I">I</option>
-                                                    <option value="J">J</option>
-                                                    <option value="K">K</option>
-                                                    <option value="L">L</option>
-                                                    <option value="M">M</option>
-                                                    <option value="N">N</option>
-                                                    <option value="O">O</option>
-                                                </select>
-                                            </div>
-                                            <div>to</div>
-                                            <div class="col-5">
-                                                <select class="form-select form-control" id="movie_status" v-model="seatMapFields.to">
-                                                    <option value="" disabled default>Select</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="D">D</option>
-                                                    <option value="E">E</option>
-                                                    <option value="F">F</option>
-                                                    <option value="G">G</option>
-                                                    <option value="H">H</option>
-                                                    <option value="I">I</option>
-                                                    <option value="J">J</option>
-                                                    <option value="K">K</option>
-                                                    <option value="L">L</option>
-                                                    <option value="M">M</option>
-                                                    <option value="N">N</option>
-                                                    <option value="O">O</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label>Seats Per Row</label>
-                                        <input class="form-control" type="text" id="roomname" v-model="seatMapFields.seatsPerRow" />
-                                    </div>
-                                </div>
-                                <div
-                                    class="rounded col-2 d-flex align-items-center justify-content-center"
-                                    style="background-color: #f6f6f9"
-                                    role="button"
-                                    @click="generateSeatMap"
-                                >
-                                    <div class="text-success fw-bold">Add</div>
-                                </div>
-                            </div>
-                            <div class="mt-5 mb-5">
-                                <b-button variant="primary" @click="saveSeatMap">Save Changes</b-button>
-                            </div>
-                        </div>
-                        <div class="flex-col w-100 horizontalScroll d-flex flex-column">
-                            <SeatMap
-                                v-for="(seatmap, index) in seatMaps"
-                                :key="`${index}_${seatmap.room}_${seatmap.rowSeatsNumber}_${seatmap.showTime.id}`"
-                                :rowSeats="seatmap.rowSeats"
-                                :rowSeatsNumber="seatmap.rowSeatsNumber"
-                                :reserved="seatmap.reserved"
-                                :theatre="seatmap.showTime"
-                                :roomName="seatmap.roomName"
-                            />
-                        </div>
-                    </div>
-                </b-modal>
             </div>
             <!--end col-->
         </div>
