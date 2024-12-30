@@ -100,12 +100,21 @@ class MovieService
     {
         foreach ($seatmapDetails as $seatmapDetail) {
 
-            $createdSeatMap = SeatMap::create([
+            $seatMapId = null;
+
+            if (array_key_exists('seatmapId', $seatmapDetail) && !is_null($seatmapDetail['seatmapId']) && $seatmapDetail['seatmapId'] != "null") {
+                $seatMapId = $seatmapDetail['seatmapId'];
+            }
+
+            $createdSeatMap = SeatMap::updateOrCreate([
+                'id' => $seatMapId
+            ], [
                 'movie_id' => $seatmapDetail['showTime']['movie_id'],
                 'movie_show_time_id' => $seatmapDetail['showTime']['id'],
                 'room_name' => $seatmapDetail['roomName'],
             ]);
 
+            MovieShowTimeSeat::where('seat_map_id', $createdSeatMap->id)->forceDelete();
 
             foreach ($seatmapDetail['combinations'] as $seatLabel) {
 
@@ -113,11 +122,15 @@ class MovieService
                 MovieShowTimeSeat::create([
                     'movie_show_time_id' => $seatmapDetail['showTime']['id'],
                     'seat_map_id' => $createdSeatMap->id,
-                    'seat_number' => $seatLabel,
-                    'seat_status' => in_array($seatLabel, $seatmapDetail['reserved'])?'reserved':'available',
+                    'seat_number' => $seatLabel['label'],
+                    'seat_status' => in_array($seatLabel['label'], $seatmapDetail['reserved']) ? 'reserved' : 'available',
                 ]);
             }
         }
+    }
+
+    public static function deleteSeatMap($seatMapId){
+        SeatMap::where('id', $seatMapId)->forceDelete();
     }
 
     public static function createReview($reviewDetails)

@@ -79,6 +79,11 @@ class MoviesController extends Controller
         MovieService::saveSeatMap($seatMapDetails);
     }
 
+    public function deleteSeatMap(Request $request){
+        $seatMapId = $request->id;
+        MovieService::deleteSeatMap($seatMapId);
+    }
+
     public function movieManager(Request $request){
         return \Inertia\Inertia::render('Movies/MovieManager', );
     }
@@ -100,6 +105,7 @@ class MoviesController extends Controller
             'movieDetails' => $movieDetails
         ]);
     }
+
 
     public function savemoviesSettings(MovieSettings $request)
     {

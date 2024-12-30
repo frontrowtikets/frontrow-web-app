@@ -2,7 +2,7 @@
 import PageHeader from "@/js/Components/page-header.vue";
 import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
-import { reactive, onMounted, computed, ref } from "vue";
+import { reactive, onMounted, computed, ref, watch } from "vue";
 import Swal from "sweetalert2";
 import icondata from "@/images/icondata.png";
 import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
@@ -25,6 +25,9 @@ const state = reactive({
     ],
 });
 
+//TODO: Disble button onmount
+const hasChanges = ref(true);
+
 const seatMapFields = ref([
     {
         theatre: "",
@@ -39,11 +42,13 @@ const seatMapFields = ref([
     },
 ]);
 
-onMounted(()=>{
-    if(props.movieDetails.seatmap.length > 0){
-        setSavedSeatMap()
+onMounted(() => {
+    if (props.movieDetails.seatmap.length > 0) {
+        setSavedSeatMap();
     }
-})
+});
+
+
 
 //structured seatmap to be saved
 const structuredSeatMap = computed(() => {
@@ -57,6 +62,7 @@ const structuredSeatMap = computed(() => {
                 reserved: field.reserved,
                 roomName: field.room,
                 combinations: [],
+                seatmapId: field.hasOwnProperty("seatmapId") ? field.seatmapId : null,
             };
             field.seats.forEach((rowSeats) => {
                 const rowSeatsCombinations = generateCombinations(rowSeats);
@@ -70,9 +76,49 @@ const structuredSeatMap = computed(() => {
 
     return seatMap;
 });
-function setSavedSeatMap(){
-    const setMap = props.movieDetails.seatmap;
 
+function setSavedSeatMap() {
+    const seatMap = props.movieDetails.seatmap;
+    const structuredSeatMap = [];
+    //TODO: Reduce time complexity
+    seatMap.forEach((item) => {
+        const seatMapField = {
+            theatre: item.showTime[0],
+            room: item.room_name,
+            seats: [],
+            reserved: [],
+            seatmapId: item.id,
+        };
+        item.showTimeSeats.forEach((seat) => {
+            if (seat.seat_status == "reserved") {
+                seatMapField.reserved.push(seat.seat_number);
+            }
+        });
+
+        const transformedSeatMap = transformSeats(item.showTimeSeats);
+        seatMapField.seats = transformedSeatMap;
+        structuredSeatMap.push(seatMapField);
+    });
+    seatMapFields.value = structuredSeatMap;
+}
+function transformSeats(seats) {
+    const groupedSeats = seats.reduce((acc, seat) => {
+        const row = seat.seat_number[0];
+
+        if (!acc[row]) {
+            acc[row] = [];
+        }
+
+        acc[row].push(seat);
+
+        return acc;
+    }, {});
+
+    return Object.entries(groupedSeats).map(([row, seats]) => ({
+        row: row,
+        seatCount: seats.length,
+        id: seats.id,
+    }));
 }
 
 function addTheatre() {
@@ -90,10 +136,27 @@ function addTheatre() {
             reserved: [],
         });
     }
+    hasChanges.value = true;
 }
 
 function removeTheatre(index) {
-    seatMapFields.value.splice(index, 1);
+
+    const theSeatMap = seatMapFields.value[index];
+
+    if(theSeatMap.hasOwnProperty('seatmapId')){
+        useInertiaFormSubmit(
+        {
+            id: theSeatMap.seatmapId
+        },
+        "/deleteseatmap",
+        `reload`,
+        "You are to delete the seat map",
+        "Deleted successfully"
+    );
+    }
+
+
+    // seatMapFields.value.splice(index, 1);
 }
 
 function addRow(index, seatmapIndex) {
@@ -104,27 +167,30 @@ function addRow(index, seatmapIndex) {
             seatCount: 10,
         });
     }
+    hasChanges.value = true;
 }
 
 function removeRow(index, seatmapIndex) {
     if (seatMapFields.value[seatmapIndex].seats.length !== 1) {
         seatMapFields.value[seatmapIndex].seats.splice(index, 1);
     }
+    hasChanges.value = true;
 }
 
 function markReserved(seats, theSeatMapIndex) {
     const reservedSeats = seats.value;
-    seatMapFields.value[theSeatMapIndex].reserved = reservedSeats;
+    seatMapFields.value[theSeatMapIndex].reserved = [...seatMapFields.value[theSeatMapIndex].reserved, ...reservedSeats];
+    hasChanges.value = true;
 }
 
-function generateCombinations({ row, seatCount }) {
+function generateCombinations({ row, seatCount, id = null }) {
     if (!row || seatCount <= 0) {
         return [];
     }
 
     const combinations = [];
     for (let i = 1; i <= seatCount; i++) {
-        combinations.push(`${row}${i}`);
+        combinations.push({ label: `${row}${i}`, id });
     }
 
     return combinations;
@@ -135,10 +201,10 @@ function slugify(title) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 }
- function saveSeatMap() {
+function saveSeatMap() {
     const seatMap = structuredSeatMap.value;
 
-     useInertiaFormSubmit(
+    useInertiaFormSubmit(
         {
             seatMaps: seatMap,
         },
@@ -147,7 +213,6 @@ function slugify(title) {
         "You are about to save changes",
         "Changes have been saved successfully"
     );
-
 }
 </script>
 <template>
@@ -257,12 +322,12 @@ function slugify(title) {
                                 </div>
                             </div>
                             <div class="mt-5 mb-5">
-                                <b-button variant="primary" @click="saveSeatMap">Save Changes</b-button>
+                                <b-button variant="primary" @click="saveSeatMap" :disabled="!hasChanges">Save Changes</b-button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div></DashboardLayout
-    >
+        </div>
+    </DashboardLayout>
 </template>

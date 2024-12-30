@@ -52,6 +52,8 @@ Route::middleware([
     Route::get('/mywallet', [WalletController::class, 'myTransactions'])->name('my_wallet');
     Route::get('/mytickets', [TicketController::class, 'myTickets'])->name('my_tickets');
     Route::post('/saveseatmap', [MoviesController::class, 'saveSeatMap'])->name('save_seat_map');
+    Route::post('/deleteseatmap', [MoviesController::class, 'deleteSeatMap'])->name('delete_seat_map');
+
 
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');

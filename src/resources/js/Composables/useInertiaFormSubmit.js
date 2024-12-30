@@ -70,6 +70,8 @@ const useInertiaFormSubmit = (payload = {}, endpoint = "", successEndpoint = "/"
                         }
                     });
                 },
+                preserveState:false,
+                preserveScroll:true
             });
         }
     });
