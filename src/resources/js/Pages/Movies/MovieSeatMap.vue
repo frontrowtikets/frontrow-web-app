@@ -2,7 +2,7 @@
 import PageHeader from "@/js/Components/page-header.vue";
 import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
-import { reactive, onMounted, computed, ref } from "vue";
+import { reactive, onMounted, computed, ref, watch } from "vue";
 import Swal from "sweetalert2";
 import icondata from "@/images/icondata.png";
 import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
@@ -25,6 +25,9 @@ const state = reactive({
     ],
 });
 
+//TODO: Disble button onmount
+const hasChanges = ref(true);
+
 const seatMapFields = ref([
     {
         theatre: "",
@@ -45,6 +48,8 @@ onMounted(() => {
     }
 });
 
+
+
 //structured seatmap to be saved
 const structuredSeatMap = computed(() => {
     const seatMap = [];
@@ -57,6 +62,7 @@ const structuredSeatMap = computed(() => {
                 reserved: field.reserved,
                 roomName: field.room,
                 combinations: [],
+                seatmapId: field.hasOwnProperty("seatmapId") ? field.seatmapId : null,
             };
             field.seats.forEach((rowSeats) => {
                 const rowSeatsCombinations = generateCombinations(rowSeats);
@@ -70,6 +76,7 @@ const structuredSeatMap = computed(() => {
 
     return seatMap;
 });
+
 function setSavedSeatMap() {
     const seatMap = props.movieDetails.seatmap;
     const structuredSeatMap = [];
@@ -80,6 +87,7 @@ function setSavedSeatMap() {
             room: item.room_name,
             seats: [],
             reserved: [],
+            seatmapId: item.id,
         };
         item.showTimeSeats.forEach((seat) => {
             if (seat.seat_status == "reserved") {
@@ -109,6 +117,7 @@ function transformSeats(seats) {
     return Object.entries(groupedSeats).map(([row, seats]) => ({
         row: row,
         seatCount: seats.length,
+        id: seats.id,
     }));
 }
 
@@ -127,10 +136,27 @@ function addTheatre() {
             reserved: [],
         });
     }
+    hasChanges.value = true;
 }
 
 function removeTheatre(index) {
-    seatMapFields.value.splice(index, 1);
+
+    const theSeatMap = seatMapFields.value[index];
+
+    if(theSeatMap.hasOwnProperty('seatmapId')){
+        useInertiaFormSubmit(
+        {
+            id: theSeatMap.seatmapId
+        },
+        "/deleteseatmap",
+        `reload`,
+        "You are to delete the seat map",
+        "Deleted successfully"
+    );
+    }
+
+
+    // seatMapFields.value.splice(index, 1);
 }
 
 function addRow(index, seatmapIndex) {
@@ -141,28 +167,30 @@ function addRow(index, seatmapIndex) {
             seatCount: 10,
         });
     }
+    hasChanges.value = true;
 }
 
 function removeRow(index, seatmapIndex) {
     if (seatMapFields.value[seatmapIndex].seats.length !== 1) {
         seatMapFields.value[seatmapIndex].seats.splice(index, 1);
     }
+    hasChanges.value = true;
 }
 
 function markReserved(seats, theSeatMapIndex) {
     const reservedSeats = seats.value;
     seatMapFields.value[theSeatMapIndex].reserved = [...seatMapFields.value[theSeatMapIndex].reserved, ...reservedSeats];
-    console.log("thisss", seatMapFields.value[theSeatMapIndex].reserved);
+    hasChanges.value = true;
 }
 
-function generateCombinations({ row, seatCount }) {
+function generateCombinations({ row, seatCount, id = null }) {
     if (!row || seatCount <= 0) {
         return [];
     }
 
     const combinations = [];
     for (let i = 1; i <= seatCount; i++) {
-        combinations.push(`${row}${i}`);
+        combinations.push({ label: `${row}${i}`, id });
     }
 
     return combinations;
@@ -294,7 +322,7 @@ function saveSeatMap() {
                                 </div>
                             </div>
                             <div class="mt-5 mb-5">
-                                <b-button variant="primary" @click="saveSeatMap">Save Changes</b-button>
+                                <b-button variant="primary" @click="saveSeatMap" :disabled="!hasChanges">Save Changes</b-button>
                             </div>
                         </div>
                     </div>
