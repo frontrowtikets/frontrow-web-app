@@ -39,11 +39,11 @@ const seatMapFields = ref([
     },
 ]);
 
-onMounted(()=>{
-    if(props.movieDetails.seatmap.length > 0){
-        setSavedSeatMap()
+onMounted(() => {
+    if (props.movieDetails.seatmap.length > 0) {
+        setSavedSeatMap();
     }
-})
+});
 
 //structured seatmap to be saved
 const structuredSeatMap = computed(() => {
@@ -70,9 +70,46 @@ const structuredSeatMap = computed(() => {
 
     return seatMap;
 });
-function setSavedSeatMap(){
-    const setMap = props.movieDetails.seatmap;
+function setSavedSeatMap() {
+    const seatMap = props.movieDetails.seatmap;
+    const structuredSeatMap = [];
+    //TODO: Reduce time complexity
+    seatMap.forEach((item) => {
+        const seatMapField = {
+            theatre: item.showTime[0],
+            room: item.room_name,
+            seats: [],
+            reserved: [],
+        };
+        item.showTimeSeats.forEach((seat) => {
+            if (seat.seat_status == "reserved") {
+                seatMapField.reserved.push(seat.seat_number);
+            }
+        });
 
+        const transformedSeatMap = transformSeats(item.showTimeSeats);
+        seatMapField.seats = transformedSeatMap;
+        structuredSeatMap.push(seatMapField);
+    });
+    seatMapFields.value = structuredSeatMap;
+}
+function transformSeats(seats) {
+    const groupedSeats = seats.reduce((acc, seat) => {
+        const row = seat.seat_number[0];
+
+        if (!acc[row]) {
+            acc[row] = [];
+        }
+
+        acc[row].push(seat);
+
+        return acc;
+    }, {});
+
+    return Object.entries(groupedSeats).map(([row, seats]) => ({
+        row: row,
+        seatCount: seats.length,
+    }));
 }
 
 function addTheatre() {
@@ -114,7 +151,8 @@ function removeRow(index, seatmapIndex) {
 
 function markReserved(seats, theSeatMapIndex) {
     const reservedSeats = seats.value;
-    seatMapFields.value[theSeatMapIndex].reserved = reservedSeats;
+    seatMapFields.value[theSeatMapIndex].reserved = [...seatMapFields.value[theSeatMapIndex].reserved, ...reservedSeats];
+    console.log("thisss", seatMapFields.value[theSeatMapIndex].reserved);
 }
 
 function generateCombinations({ row, seatCount }) {
@@ -135,10 +173,10 @@ function slugify(title) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 }
- function saveSeatMap() {
+function saveSeatMap() {
     const seatMap = structuredSeatMap.value;
 
-     useInertiaFormSubmit(
+    useInertiaFormSubmit(
         {
             seatMaps: seatMap,
         },
@@ -147,7 +185,6 @@ function slugify(title) {
         "You are about to save changes",
         "Changes have been saved successfully"
     );
-
 }
 </script>
 <template>
@@ -263,6 +300,6 @@ function slugify(title) {
                     </div>
                 </div>
             </div>
-        </div></DashboardLayout
-    >
+        </div>
+    </DashboardLayout>
 </template>

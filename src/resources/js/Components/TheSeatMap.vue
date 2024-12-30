@@ -8,7 +8,7 @@ const props = defineProps({
     rowData: {
         type: Array,
         required: true,
-        // Expected format: [{ row: 'A', seatCount: 10 }, { row: 'B', seatCount: 15 }]
+        // format: [{ row: 'A', seatCount: 10 }, { row: 'B', seatCount: 15 }]
     },
     reserved: {
         type: Array,
@@ -50,9 +50,10 @@ const getSeatStatus = (seatId) => {
 
 function markReserved(){
     emit('markAsReserved',selectedSeats)
-    reservedSeats.value = selectedSeats.value;
+    reservedSeats.value = [...reservedSeats.value,...selectedSeats.value];
     selectedSeats.value = []
 }
+
 </script>
 
 <template>
