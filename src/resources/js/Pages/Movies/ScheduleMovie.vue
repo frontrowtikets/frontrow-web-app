@@ -67,6 +67,7 @@ const form = useForm({
 const bannerImageData = ref(null);
 const cardImageData = ref(null);
 const movieTheatres = ref([{ currency: "UGX" }]);
+const movieCasts = ref([{ init: 1 }]);
 const scheduleForBeneficiary = ref(false);
 const selectedBeneficiary = ref(null);
 const movieRating = ref(3);
@@ -174,7 +175,7 @@ const submit = () => {
             <div class="card">
                 <div class="card-body">
                     <form>
-                        <Stepper :steps="['Movie Details', 'Theater', 'Confirm & Schedule']">
+                        <Stepper :steps="['Movie Details', 'Theater','Casts', 'Confirm & Schedule']">
                             <template #default="{ currentStep }">
                                 <div v-if="currentStep === 1">
 
@@ -203,7 +204,7 @@ const submit = () => {
                                             />
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.title" />
                                         </div>
-                                        <div class="mb-4 col-12 col-md-9">
+                                        <div class="mb-4 col-12 col-md-9" v-if="isAdmin">
                                             <label for="maturity_rating" class="mb-2">Maturity Rating<span class="text-danger">*</span></label>
                                             <select class="form-select form-control" id="maturity_rating" v-model="form.maturity_rating">
                                                 <option value="" disabled>Select</option>
@@ -423,8 +424,46 @@ const submit = () => {
                                         <input type="button" class="mt-3 btn btn-success mt-lg-0" value="Add" @click="addTicket" />
                                     </div>
                                 </div>
-
                                 <div v-if="currentStep === 3">
+                                    <div class="mt-4 mb-5 repeater">
+                                        <div class="col-12">
+                                            <div v-for="(field, index) in movieCasts" :key="field.id" class="mb-3 w-100 d-flex align-items-center gap-4 ">
+                                                <div class="mb-3 col-4 ">
+                                                    <label for="theatre">Name</label>
+                                                    <input id="theatre" v-model="field.name" type="text" class="form-control" />
+
+                                                </div>
+                                                <div class="mb-3 col-3">
+                                                    <label for="theatre">Role</label>
+                                                    <input id="theatre" v-model="field.role" type="text" class="form-control" />
+
+                                                </div>
+
+
+
+                                                <div class="mb-3 ">
+                                                    <label>Upload Profile Picture</label>
+                                                    <div><b-button variant="light" class="w-lg mt-1">
+                     <span> <i class="mdi mdi-upload d-block "></i></span>
+                    </b-button></div>
+                                                </div>
+
+
+
+                                                <div class=" align-self-center ">
+                                                    <div class="pt-3">
+                                                        <span class="mb-3 badge font-size-11 me-4" @click="deleteTicket(index)"
+                                                            >{{ permission }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
+                                                        ></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="button" class="mt-3 btn btn-success mt-lg-0" value="Add" @click="addTicket" />
+                                    </div>
+                                </div>
+
+                                <div v-if="currentStep === 4">
                                     <div class="mt-4">
                                         <div class="">
                                             <div class="">

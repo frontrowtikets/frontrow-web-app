@@ -19,7 +19,7 @@ const state = reactive({
             // href: "javascript:void(0)"
         },
         {
-            text: "Movie Manager",
+            text: "Manager Movie",
             active: true,
         },
     ],

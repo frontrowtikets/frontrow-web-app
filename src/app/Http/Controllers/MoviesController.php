@@ -67,6 +67,7 @@ class MoviesController extends Controller
     {
         $movieDetail = Movie::where('id', $request->id)->with([
             'showTimes',
+            'seatmap',
         ])->first();
         return \Inertia\Inertia::render('Movies/BuyMovieTicket', [
             'buyMovieDetails' => $movieDetail
