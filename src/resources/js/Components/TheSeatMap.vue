@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 
-const emit = defineEmits(['markAsReserved'])
+const emit = defineEmits(["markAsReserved", "selectedSeats"]);
 
 const props = defineProps({
     // Change rowSeats to include seat counts
@@ -22,6 +22,13 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    showMarkReservedButton: {
+        type: Boolean,
+        default: true,
+    },
+    roomId:{
+        type: Number
+    }
 });
 
 const rows = ref([]);
@@ -33,6 +40,8 @@ onMounted(() => {
     reservedSeats.value = props.reserved;
 });
 
+
+
 const toggleSeat = (seatId) => {
     const index = selectedSeats.value.indexOf(seatId);
     if (index > -1) {
@@ -40,6 +49,10 @@ const toggleSeat = (seatId) => {
     } else {
         selectedSeats.value.push(seatId);
     }
+    if(props.showMarkReservedButton === false){
+        emit('selectedSeats',selectedSeats.value,props.theatre,props.roomId,props.roomName)
+    }
+
 };
 
 const getSeatStatus = (seatId) => {
@@ -48,12 +61,11 @@ const getSeatStatus = (seatId) => {
     return "available";
 };
 
-function markReserved(){
-    emit('markAsReserved',selectedSeats)
-    reservedSeats.value = [...reservedSeats.value,...selectedSeats.value];
-    selectedSeats.value = []
+function markReserved() {
+    emit("markAsReserved", selectedSeats);
+    reservedSeats.value = [...reservedSeats.value, ...selectedSeats.value];
+    selectedSeats.value = [];
 }
-
 </script>
 
 <template>
@@ -61,12 +73,18 @@ function markReserved(){
         <div class="mb-4 text-center">
             <div class="w-100 bg-primary" style="height: 10px"></div>
             <p class="text-muted small">
-                {{ props.theatre.theatre }}<span v-if="props.roomName">({{ props.roomName }})</span>
+                {{ props.theatre.theatre
+                }}<span v-if="props.roomName">({{ props.roomName }})</span>
             </p>
         </div>
-<div v-if="selectedSeats.length" class="mb-3 text-end w-100">
-     <div @click="markReserved" class=" btn btn-sm btn-soft-primary">Mark as Reserved</div>
-</div>
+        <div
+            v-if="selectedSeats.length && props.showMarkReservedButton"
+            class="mb-3 text-end w-100"
+        >
+            <div @click="markReserved" class="btn btn-sm btn-soft-primary">
+                Mark as Reserved
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <div

@@ -17,16 +17,16 @@ const state = reactive({
             // href: "javascript:void(0)"
         },
         {
-            text: "Movie Manager",
+            text: "Manage Movie",
             active: true,
         },
     ],
 });
 </script>
 <template>
-    <Head title="Movie Manager" />
+    <Head title="Manage Movie" />
     <DashboardLayout>
-        <PageHeader title="Movie Manager" :items="state.items" />
+        <PageHeader title="Manage Movie" :items="state.items" />
         <div class="row">
             <div class="card">
                 <div class="card-body">
