@@ -60,6 +60,10 @@ class Movie extends Model implements HasMedia
     {
         return $this->hasMany(MovieShowTime::class);
     }
+    public function moviecasts()
+    {
+        return $this->hasMany(MovieCast::class);
+    }
 
     public function reviews()
     {

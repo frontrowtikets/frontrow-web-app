@@ -4,7 +4,14 @@ import airtelMoney from "../../images/airtelMoney.png";
 import creditCard from "../../images/creditCard.svg";
 import { ref } from "vue";
 
+const props = defineProps(["paymentDetails"]);
 const paymentMethod = ref("card");
+const isProcessing = ref(false);
+
+const payTicket = () => {
+    isProcessing.value = true
+    
+};
 </script>
 
 <template>

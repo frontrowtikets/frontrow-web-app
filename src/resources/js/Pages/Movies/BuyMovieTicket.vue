@@ -13,7 +13,17 @@ import icondata from "@/images/icondata.png";
 
 const props = defineProps(["buyMovieDetails"]);
 
-const state = reactive({});
+const state = reactive({
+    items: [
+        {
+            text: "Buy Ticket",
+        },
+        {
+            text: "Checkout",
+            active: true,
+        },
+    ],
+});
 const { height } = useWindowSize();
 
 const rooms = ref(["Room 1", "Room 2", "Room 3", "Room 4"]);
@@ -132,7 +142,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
             <div class="col-12">
                 <div class="card" :style="{ height: `${height - 100}px` }">
                     <div class="card-body d-flex align-items-center justify-content-center">
-                        <MovieCheckout />
+                        <MovieCheckout  :paymentDetails="selectedTheatres"/>
                     </div>
                 </div>
             </div>
@@ -197,12 +207,12 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                                         </div>
                                     </div>
                                 </div>
-                                <div v-else class="text-center pt-5 mb-5 pb-5">
+                                <div v-else class="pt-5 pb-5 mb-5 text-center">
                                     <span class="">Select seats to book</span>
                                 </div>
                             </div>
                             <div v-else>
-                                <div class="text-center pt-5 mb-5 pb-5">
+                                <div class="pt-5 pb-5 mb-5 text-center">
                                     <span class="">Movie has no seat map</span>
                                 </div>
                                 <!-- <div class="mb-3">

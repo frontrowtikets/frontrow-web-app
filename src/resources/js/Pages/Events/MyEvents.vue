@@ -185,7 +185,7 @@ function allEvents(){
                                 </div>
                                 <hr class="mb-4" />
                                 <div>
-                                    <div v-if="paginatedItems.length > 0">
+                                    <div v-if="paginatedItems?.length > 0">
                                         <div class="row">
                                             <MyEventsCard
                                                 v-for="(event, index) in paginatedItems"
@@ -195,7 +195,7 @@ function allEvents(){
 
                                             <div ref="myEventsBottom"></div>
                                             <div v-if="nextPageExists" class="mt-4 text-center text-success">
-                                                <i class="bx bx-loader bx-spin font-size-18 me-2"></i> Loading more
+                                                <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                             </div>
                                             <div v-else class="mt-4 text-center text-primary">No More Data</div>
                                         </div>

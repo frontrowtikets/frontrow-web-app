@@ -4,7 +4,7 @@ import { useObserveHitBottom } from "./useObserveHitBottom.js";
 
 export function useInfiniteScroll(propName, elementRef = null) {
     const propValue = () => usePage().props[propName];
-    const paginatedItems = ref(propValue().data);
+    const paginatedItems = ref(propValue()?.data);
     const initialUrl = usePage().url;
     let observerListner = null
 

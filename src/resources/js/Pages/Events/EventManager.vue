@@ -204,7 +204,7 @@ function declineRequest(userID) {
                                 </table>
                                 <div ref="usersTableBottom"></div>
                                 <div v-if="nextPageExists" class="mt-4 text-center text-success">
-                                    <i class="bx bx-loader bx-spin font-size-18 me-2"></i> Loading more
+                                    <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
                                 <div v-else class="mt-4 text-center text-primary">No More Data</div>
                             </div>
@@ -280,7 +280,7 @@ function declineRequest(userID) {
                                 </table>
                                 <div ref="usersTableBottom"></div>
                                 <div v-if="requestsPageExists" class="mt-4 text-center text-success">
-                                    <i class="bx bx-loader bx-spin font-size-18 me-2"></i> Loading more
+                                    <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
                                 <div v-else class="mt-4 text-center text-primary">No More Data</div>
                             </div>
@@ -347,7 +347,7 @@ function declineRequest(userID) {
                                 </table>
                                  <div ref="usersTableBottom"></div>
                                 <div v-if="declinedPageExists" class="mt-4 text-center text-success">
-                                    <i class="bx bx-loader bx-spin font-size-18 me-2"></i> Loading more
+                                    <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
                                 <div v-else class="mt-4 text-center text-primary">No More Data</div>
                             </div>

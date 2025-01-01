@@ -69,6 +69,10 @@ function goToMovieManager() {
 function configureSeatMap() {
     router.visit(`/seat-map/${props.movieDetails.id}`);
 }
+function capitalizeFirstCharacter(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() ;
+}
 </script>
 <template>
     <Head :title="props.movieDetails.title" />
@@ -218,8 +222,35 @@ function configureSeatMap() {
                             </div>
                         </div>
 
-                        <h5 class="mb-3 fw-semibold">Description</h5>
+                        <div class="mb-5">
+                            <h5 class="mb-3 fw-semibold">Description</h5>
                         <p class="text-muted" v-html="props.movieDetails.description"></p>
+                        </div>
+
+                        <div v-if="props.movieDetails.moviecasts.length > 0" class="mb-5">
+                            <h6 class="mb-3 fw-semibold">Casts</h6>
+
+                            <div class="flex-wrap gap-5 w-100 d-flex">
+                                <div class="text-center" v-for="(moviecasts, index) in props.movieDetails.moviecasts" :key="index">
+                                    <div v-if="moviecasts.profile_image_url" class="mb-4">
+                                        <img
+                                            :src="`${moviecasts.profile_image_url}`"
+                                            :alt="'img'"
+                                            class="rounded-circle avatar-sm object-fit-cover"
+                                        />
+                                    </div>
+                                    <div v-else class="mx-auto mb-4 avatar-sm">
+                                        <span class="avatar-title rounded-circle bg-soft bg-primary text-primary font-size-16">{{
+                                            capitalizeFirstCharacter(moviecasts.name)
+                                        }}</span>
+                                    </div>
+                                    <h5 class="font-size-15">
+                                        <a href="javascript: void(0);" class="text-dark">{{ moviecasts.name }}</a>
+                                    </h5>
+                                    <p class="text-muted">{{ moviecasts.role }}</p>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mb-5" v-if="props.movieDetails.trailer_url">
                             <h5 class="mb-3 fw-semibold">Trailer:</h5>

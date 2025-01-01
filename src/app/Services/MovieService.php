@@ -11,6 +11,7 @@ use App\Models\MovieRating;
 use App\Models\MovieReview;
 use App\Models\SeatMap;
 use App\Models\MovieShowTimeSeat;
+use App\Models\MovieCast;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -86,6 +87,23 @@ class MovieService
                     'currency' => $ticket['currency'],
                     'ticket_price' => $ticket['ticket_price'],
                 ]);
+            }
+        }
+
+        if (count($movieDetails['casts']) > 0) {
+            foreach ($movieDetails['casts'] as $cast) {
+               $moviecast = MovieCast::updateOrCreate(['id' => isset($cast['id']) ? $cast['id'] : null],[
+                    'movie_id' => $createdMovie->id,
+                    'name' => $cast['castName'],
+                    'role' => $cast['role'],
+                ]);
+
+                if (isset($cast['image']) && !is_null($cast['image']) && $cast['image'] != 'null') {
+                    $castImage = $createdMovie->addMedia($cast['image'])->toMediaCollection('casts_profile_images');
+                    $castImageUrl = $castImage->getUrl();
+                    $moviecast->profile_image_url = $castImageUrl;
+                }
+                $moviecast->save();
             }
         }
 

@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 import { userGridData } from "./data-user";
 
 /**
@@ -50,9 +50,9 @@ export default {
     <PageHeader :title="title" :items="items" />
     <div class="row">
       <div v-for="user in userGridData" :key="user.id" class="col-xl-3 col-sm-6">
-        <div class="card text-center">
+        <div class="text-center card">
           <div class="card-body">
-            <div v-if="user.font" class="avatar-sm mx-auto mb-4">
+            <div v-if="user.font" class="mx-auto mb-4 avatar-sm">
               <span
                 class="avatar-title rounded-circle bg-soft bg-primary text-primary font-size-16"
               >{{user.font}}</span>
@@ -68,19 +68,19 @@ export default {
             <div>
               <a
                 href="javascript: void(0);"
-                class="badge bg-primary font-size-11 m-1"
+                class="m-1 badge bg-primary font-size-11"
               >{{user.projects[0]}}</a>
               <a
                 href="javascript: void(0);"
-                class="badge bg-primary font-size-11 m-1"
+                class="m-1 badge bg-primary font-size-11"
               >{{user.projects[1]}}</a>
               <a
                 href="javascript: void(0);"
-                class="badge bg-primary font-size-11 m-1"
+                class="m-1 badge bg-primary font-size-11"
               >{{user.projects[2]}}</a>
             </div>
           </div>
-          <div class="card-footer bg-transparent border-top">
+          <div class="bg-transparent card-footer border-top">
             <div class="contact-links d-flex font-size-20">
               <div class="flex-fill">
                 <a v-b-tooltip.hover.top title="Message" href="javascript: void(0);">
@@ -106,7 +106,7 @@ export default {
     <!-- end row -->
     <div class="row">
       <div class="col-12">
-        <div class="text-center my-3">
+        <div class="my-3 text-center">
           <a href="javascript:void(0);" class="text-success">
             <i class="bx bx-hourglass bx-spin me-2"></i> Load more
           </a>
