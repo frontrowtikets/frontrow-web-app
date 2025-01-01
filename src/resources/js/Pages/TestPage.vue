@@ -1,5 +1,5 @@
 <script setup >
-import Products from "../views/ecommerce/checkout.vue";
+import Products from "../views/contacts/contacts-grid.vue";
 
 const props = defineProps(['movieDetails']);
 </script>

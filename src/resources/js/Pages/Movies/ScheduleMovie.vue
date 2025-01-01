@@ -1,6 +1,6 @@
 <script setup>
 import { Head, useForm, router,usePage } from "@inertiajs/vue3";
-import { reactive, onMounted, ref, watch } from "vue";
+import { reactive, onMounted, ref, watch, computed } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import InputError from "@/js/Components/InputError.vue";
 import Stepper from "@/js/Components/Stepper.vue";
@@ -62,18 +62,18 @@ const form = useForm({
     bannerImage: null,
     cardImage: null,
     tickets: [],
+    casts:[],
 });
 
 const bannerImageData = ref(null);
 const cardImageData = ref(null);
 const movieTheatres = ref([{ currency: "UGX" }]);
-const movieCasts = ref([{ init: 1 }]);
+const movieCasts = ref([{ castName: '', role: '', image: null, imagePreview: null,imageUrl:''}]);
 const scheduleForBeneficiary = ref(false);
 const selectedBeneficiary = ref(null);
 const movieRating = ref(3);
 const movieLanguages = ref(["English","Kiswahili","Luganda",]);
-
-
+const fileInputs = ref([]);
  const {isAdmin} = IsUserAdmin();
 
 onMounted(() => {
@@ -94,7 +94,13 @@ watch(selectedBeneficiary,(newVal)=>{
 watch(movieRating,(newVal)=>{
     form["rating"] = newVal
 })
+watch(movieCasts,(newVal)=>{
+    const cleaned  = newVal.map((cast)=>{
+        return {castName:cast.castName,role:cast.role,image:cast.image}
+    })
 
+    form['casts'] = cleaned;
+}, { deep: true } )
 
 
 function saveImage(event, cardType) {
@@ -164,6 +170,34 @@ const submit = () => {
     });
 
 };
+const selectProfilePhoto = (index) => {
+     fileInputs.value[index]?.click();
+};
+
+function addNewCast() {
+      movieCasts.value.push({
+        castName: '',
+        role: '',
+        image: null,
+        imagePreview: null,
+        imageUrl:''
+      })
+    }
+function removeCast(index) {
+      movieCasts.value.splice(index, 1)
+    }
+function handleImageUpload(event, index) {
+      const file = event.target.files[0]
+      if (!file) return
+
+      movieCasts.value[index].image = file
+
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        movieCasts.value[index].imagePreview = e.target.result
+      }
+      reader.readAsDataURL(file)
+    }
 </script>
 
 <template>
@@ -427,14 +461,15 @@ const submit = () => {
                                 <div v-if="currentStep === 3">
                                     <div class="mt-4 mb-5 repeater">
                                         <div class="col-12">
-                                            <div v-for="(field, index) in movieCasts" :key="field.id" class="mb-3 w-100 d-flex align-items-center gap-4 ">
+                                            <div v-for="(field, index) in movieCasts" :key="`${index}_${field.name}`" class="gap-4 mb-3 w-100 d-flex align-items-center ">
+
                                                 <div class="mb-3 col-4 ">
-                                                    <label for="theatre">Name</label>
-                                                    <input id="theatre" v-model="field.name" type="text" class="form-control" />
+                                                    <label for="theatre">Name <span class="text-danger">*</span></label>
+                                                    <input id="theatre" v-model="field.castName" type="text" class="form-control" />
 
                                                 </div>
                                                 <div class="mb-3 col-3">
-                                                    <label for="theatre">Role</label>
+                                                    <label for="theatre">Role <span class="text-danger">*</span></label>
                                                     <input id="theatre" v-model="field.role" type="text" class="form-control" />
 
                                                 </div>
@@ -443,23 +478,34 @@ const submit = () => {
 
                                                 <div class="mb-3 ">
                                                     <label>Upload Profile Picture</label>
-                                                    <div><b-button variant="light" class="w-lg mt-1">
-                     <span> <i class="mdi mdi-upload d-block "></i></span>
-                    </b-button></div>
+                                                    <div>
+                     <input
+              type="file"
+              class=" form-control"
+              @change="(event)=>handleImageUpload(event, index)"
+              accept="image/*"
+            />
+
+                </div>
+
                                                 </div>
+  <div v-if="field.imagePreview" class="">
+                <img v-if="field.imageUrl != ''" :src="field.imageUrl" :alt="'img'" class="rounded-circle avatar-sm object-fit-cover" />
+
+                <img v-else :src="field.imagePreview" :alt="'img'" class="rounded-circle avatar-sm object-fit-cover" />
+            </div>
 
 
-
-                                                <div class=" align-self-center ">
+                                                <div class=" align-self-center">
                                                     <div class="pt-3">
-                                                        <span class="mb-3 badge font-size-11 me-4" @click="deleteTicket(index)"
+                                                        <span class="mb-3 badge font-size-11 me-4" @click="removeCast(index)" v-if="movieCasts.length > 1"
                                                             >{{ permission }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
                                                         ></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="button" class="mt-3 btn btn-success mt-lg-0" value="Add" @click="addTicket" />
+                                        <input type="button" class="mt-3 btn btn-success mt-lg-0" value="Add" @click="addNewCast" />
                                     </div>
                                 </div>
 
@@ -529,6 +575,19 @@ const submit = () => {
                                                                                 class="align-middle bx bx-play-circle font-size-16 text-primary me-1"
                                                                             ></i>
                                                                             <span><span class="fw-bold me-3">Status:</span><span v-if="form.status == 'coming_soon'">Coming Soon</span><span v-if="form.status == 'now_showing'">Now Showing</span></span>
+                                                                        </div>
+                                                                        <div class="mb-2 text-mute" v-if="form.casts.length>0">
+                                                                            <i
+                                                                                class="align-middle bx bx-user-circle font-size-16 text-primary me-1"
+                                                                            ></i>
+                                                                            <span><span class="fw-bold me-3">Casts:</span> <span
+                                                role="button"
+                                                v-for="(cast, index) in form.casts"
+                                                :key="`${index}_${cast.castName}`"
+                                            >
+                                                <span class="mb-3 badge badge-soft-secondary font-size-11 me-2"
+                                                    >{{ cast.castName}}</span>
+                                            </span></span>
                                                                         </div>
 
 

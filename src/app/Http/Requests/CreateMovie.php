@@ -47,6 +47,7 @@ class CreateMovie extends FormRequest
             'cardImage' => 'required',
             'tickets' => 'array',
             'rating' => 'numeric',
+            'casts' => 'array',
         ];
     }
 }

@@ -56,7 +56,8 @@ class MoviesController extends Controller
             'beneficiary',
             'showTimes',
             'genres',
-            'reviews.user'
+            'reviews.user',
+            'moviecasts'
         ])->first();
         return \Inertia\Inertia::render('Movies/MovieDetailsPage', [
             'movieDetails' => $movieDetail

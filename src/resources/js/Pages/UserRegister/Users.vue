@@ -243,7 +243,7 @@ function assignPermission() {
                                         </tbody>
                                     </table>
                                     <div ref="usersTableBottom"></div>
-                                    <div v-if="nextPageExists" class="mt-4 text-center text-success"> <i class=" bx bx-loader bx-spin font-size-18 me-2"></i> Loading more</div>
+                                    <div v-if="nextPageExists" class="mt-4 text-center text-success"> <i class=" bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more</div>
                                     <div v-else class="mt-4 text-center text-primary">No More Data </div>
 
                                 </div>
@@ -317,7 +317,7 @@ function assignPermission() {
                                         </tbody>
                                     </table>
                                     <div ref="beneficiaryRequestsTableBottom"></div>
-                                    <div v-if="inactivenextPageExists" class="mt-4 text-center text-success"> <i class=" bx bx-loader bx-spin font-size-18 me-2"></i> Loading more</div>
+                                    <div v-if="inactivenextPageExists" class="mt-4 text-center text-success"> <i class=" bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more</div>
                                     <div v-else class="mt-4 text-center text-primary">No More Data </div>
                                 </div>
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
@@ -384,7 +384,7 @@ function assignPermission() {
                                         </tbody>
                                     </table>
                                     <div ref="deactivatedTableBottom"></div>
-                                    <div v-if="deactivenextPageExists" class="mt-4 text-center text-success"> <i class=" bx bx-loader bx-spin font-size-18 me-2"></i> Loading more</div>
+                                    <div v-if="deactivenextPageExists" class="mt-4 text-center text-success"> <i class=" bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more</div>
                                     <div v-else class="mt-4 text-center text-primary">No More Data </div>
                                 </div>
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
