@@ -5,7 +5,7 @@ import DashboardLayout from "../../Layouts/main.vue";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
-import MovieCheckout from "../../Components/MovieCheckout.vue";
+import MovieCheckout from "./MovieCheckout.vue";
 import PageHeader from "../../Components/page-header.vue";
 import { useWindowSize } from "@vueuse/core";
 import TheSeatMap from "@/js/Components/TheSeatMap.vue";
@@ -142,7 +142,12 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
             <div class="col-12">
                 <div class="card" :style="{ height: `${height - 100}px` }">
                     <div class="card-body d-flex align-items-center justify-content-center">
-                        <MovieCheckout  :paymentDetails="selectedTheatres"/>
+                        <MovieCheckout
+                        :paymentDetails="selectedTheatres"
+                        :currency="selectedTheatre?.currency"
+                        :total="totalPrice"
+                        :movieId="props.buyMovieDetails.id"
+                        />
                     </div>
                 </div>
             </div>

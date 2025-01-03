@@ -19,13 +19,14 @@ class MovieTicket extends Model
         'user_email',
         'movie_show_time_id',
         'movie_show_time_seat_id',
-        'total_price',
         'purchase_date',
         'used_at',
         'ticket_status',
         'ticket_url',
         'ticket_id',
         'booking_id',
+        'user_payment_detail_id',
+        'payment_transaction_id'
 
     ];
 }

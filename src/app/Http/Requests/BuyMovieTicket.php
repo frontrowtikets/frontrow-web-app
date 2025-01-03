@@ -22,7 +22,20 @@ class BuyMovieTicket extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'selectedSeatsDetails' => 'required|array',
+            'paymentDetails.*.roomId' => 'required|integer',
+            'paymentDetails.*.theatreId' => 'required|integer',
+            'paymentDetails.*.selectedSeats' => 'required|array',
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'phoneNumber' => 'required|string',
+            'paymentType' => 'required|string',
+            'cardNumber' => 'required',
+            'expiryDate' => 'required|string',
+            'cvv' => 'required',
+            'currency' => 'required|string',
+            'total' => 'required|integer',
+            'movieId' => 'required'
         ];
     }
 }

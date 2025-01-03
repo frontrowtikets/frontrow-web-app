@@ -22,7 +22,6 @@ import "@mayank1513/vue-tag-input/style.css";
 
 
 
-
 //importing the vuex store
 import store from "./state/store.js";
 
@@ -36,7 +35,7 @@ import "vue3-tel-input/dist/vue3-tel-input.css";
 //WYSIWYG editor
 import CKEditor from "@ckeditor/ckeditor5-vue";
 
-const appName = import.meta.env.VITE_APP_NAME || "FRONTROW";
+const appName = import.meta.env.VITE_APP_NAME || "Frontrow";
 
 
 
