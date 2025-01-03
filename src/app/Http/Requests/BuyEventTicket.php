@@ -22,7 +22,10 @@ class BuyEventTicket extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'paymentDetails' => 'required|array',
+            'paymentDetails.*.roomId' => 'required|integer',
+            'paymentDetails.*.roomId' => 'required|integer',
+
         ];
     }
 }

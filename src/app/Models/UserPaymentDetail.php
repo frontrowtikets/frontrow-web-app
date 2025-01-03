@@ -12,14 +12,14 @@ class UserPaymentDetail extends Model
 
     protected $fillable = [
 
-         'user_id',
-            'full_name',
-            'user_email',
-            'user_phone_number',
-            'visa_card',
-            'bank_name',
-            'cvv',
-            'card_expiry_date',
+        'user_id',
+        'full_name',
+        'user_email',
+        'user_phone_number',
+        'visa_card',
+        'bank_name',
+        'cvv',
+        'card_expiry_date',
+        'payment_type',
     ];
-    
 }
