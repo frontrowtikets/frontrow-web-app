@@ -8,8 +8,10 @@ use App\Services\MovieService;
 
 class BuyMovieTicketController extends Controller
 {
-    public function buyTicket(BuyMovieTicket $request){
+    public function buyTicket(BuyMovieTicket $request)
+    {
         $paymentDetails = $request->validated();
         MovieService::buyTicket($paymentDetails);
+        return response('success');
     }
 }

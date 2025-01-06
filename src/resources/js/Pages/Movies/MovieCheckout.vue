@@ -4,7 +4,7 @@ import airtelMoney from "../../../images/airtelMoney.png";
 import creditCard from "../../../images/creditCard.svg";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import { ref, computed, onMounted } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
 import axios from "axios";
 
 const props = defineProps(["paymentDetails", "currency", "total", "movieId"]);
@@ -66,12 +66,10 @@ function checkValidity() {
 }
 async function payTicket() {
     isProcessing.value = true;
-    console.log("details", paymentDetailsCleaned.value);
     await axios
         .post("/api/v1/buyMovieTicket", paymentDetailsCleaned.value)
-        .then(({ res }) => {
-            console.log(res);
-          
+        .then((res) => {
+            router.visit("/mytickets");
         })
         .catch((err) => {
             responseError.value = err.response.data.message;
@@ -265,7 +263,9 @@ async function payTicket() {
                 <span class="me-2">UGX</span><span>{{ useCurrencyFormat(props.total) }}</span>
             </div>
 
-            <button class="purchase--btn" @click.prevent="payTicket">Checkout</button>
+            <button class="purchase--btn" @click.prevent="payTicket">
+                <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Checkout</span>
+            </button>
         </form>
     </div>
 </template>

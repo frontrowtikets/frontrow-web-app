@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import moment from "moment";
 
 const emit = defineEmits(["markAsReserved", "selectedSeats"]);
 
@@ -26,9 +27,9 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
-    roomId:{
-        type: Number
-    }
+    roomId: {
+        type: Number,
+    },
 });
 
 const rows = ref([]);
@@ -40,7 +41,16 @@ onMounted(() => {
     reservedSeats.value = props.reserved;
 });
 
+const showEndDateTime = computed(() => {
+    const startDate = props?.theatre?.screening_date;
+    const endTime = props?.theatre?.end_time;
+    return moment(`${startDate} ${endTime}`, "YYYY-MM-DD HH:mm");
+});
 
+const hasShowEnded = computed(() => {
+    const currentTime = moment();
+    return currentTime.isAfter(showEndDateTime.value);
+});
 
 const toggleSeat = (seatId) => {
     const index = selectedSeats.value.indexOf(seatId);
@@ -49,10 +59,15 @@ const toggleSeat = (seatId) => {
     } else {
         selectedSeats.value.push(seatId);
     }
-    if(props.showMarkReservedButton === false){
-        emit('selectedSeats',selectedSeats.value,props.theatre,props.roomId,props.roomName)
+    if (props.showMarkReservedButton === false) {
+        emit(
+            "selectedSeats",
+            selectedSeats.value,
+            props.theatre,
+            props.roomId,
+            props.roomName
+        );
     }
-
 };
 
 const getSeatStatus = (seatId) => {
@@ -75,6 +90,9 @@ function markReserved() {
             <p class="text-muted small">
                 {{ props.theatre.theatre
                 }}<span v-if="props.roomName">({{ props.roomName }})</span>
+                <span v-if="hasShowEnded" class="badge bg-danger ms-4"
+                    >Ended</span
+                >
             </p>
         </div>
         <div
@@ -119,6 +137,7 @@ function markReserved() {
                                         getSeatStatus(
                                             `${rowInfo.row}${seatNumber}`
                                         ) === 'available',
+                                    disabled: hasShowEnded,
                                 },
                             ]"
                             :disabled="

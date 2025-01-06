@@ -23,7 +23,7 @@ const state = reactive({
             href: "javascript:void(0)",
         },
         {
-            text: "Schedule Events",
+            text: "Schedule Movies",
             active: true,
         },
     ],
@@ -602,7 +602,7 @@ function handleImageUpload(event, index) {
                                                 :disabled="form.processing"
                                             >
                                                 <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
-                                                ><span>Schedule Event</span>
+                                                ><span>Schedule Movie</span>
                                             </button>
                                         </div>
                                                         </div>

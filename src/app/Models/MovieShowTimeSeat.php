@@ -17,4 +17,9 @@ class MovieShowTimeSeat extends Model
         'seat_status',
         'seat_map_id',
     ];
+
+    public function seatmap()
+    {
+        return $this->belongsTo(SeatMap::class, 'seat_map_id');
+    }
 }

@@ -15,6 +15,9 @@ Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 Route::get('/events', [EventsController::class, 'homeEvents'])->name('events_home_page');
 Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('events_home_page');
 
+Route::get('/verify/movie/ticket/{ticketId}/{transactionId}/{userDetailsId}', [MoviesController::class, 'verifyTicket'])->name('verifyTicket');
+
+
 
 
 

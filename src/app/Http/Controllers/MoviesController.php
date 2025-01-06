@@ -9,7 +9,10 @@ use App\Http\Requests\CreateMovieReview;
 use App\Services\MovieService;
 use App\Models\MovieCategory;
 use App\Models\Movie;
+use App\Models\MovieTicket;
+use App\Models\PaymentTransaction;
 use App\Models\User;
+use App\Models\UserPaymentDetail;
 use Illuminate\Support\Facades\Auth;
 
 class MoviesController extends Controller
@@ -81,24 +84,28 @@ class MoviesController extends Controller
         MovieService::saveSeatMap($seatMapDetails);
     }
 
-    public function deleteSeatMap(Request $request){
+    public function deleteSeatMap(Request $request)
+    {
         $seatMapId = $request->id;
         MovieService::deleteSeatMap($seatMapId);
     }
 
-    public function movieManager(Request $request){
-        return \Inertia\Inertia::render('Movies/MovieManager', );
+    public function movieManager(Request $request)
+    {
+        return \Inertia\Inertia::render('Movies/MovieManager',);
     }
 
-    public function allMovies(Request $request){
+    public function allMovies(Request $request)
+    {
         $movies = Movie::orderBy('created_at', 'desc')->paginate(12);
         return \Inertia\Inertia::render('Movies/AllMoviesPage', [
             'movies' => $movies
         ]);
     }
 
-    public function seatMap(Request $request){
-        $movieDetails = Movie::select('id', 'title')->where('id',$request->id)->with([
+    public function seatMap(Request $request)
+    {
+        $movieDetails = Movie::select('id', 'title')->where('id', $request->id)->with([
             'showTimes',
             'genres',
             'seatmap'
@@ -113,5 +120,27 @@ class MoviesController extends Controller
     {
         $settingsData = $request->validated();
         MovieService::saveSettings($settingsData);
+    }
+
+    public function verifyTicket(Request $request)
+    {
+        $movieTikectDetails = MovieTicket::where('ticket_id', $request->ticketId)->where('user_payment_detail_id', $request->userDetailsId)->where('payment_transaction_id', $request->transactionId)->with([
+            'movie',
+            'theatre',
+            "showTimeSeats",
+            "showTimeSeats.seatmap"
+        ])->first();
+        $userDetails = UserPaymentDetail::where('id', $request->userDetailsId)->first();
+        $transactionDetails = PaymentTransaction::where('id', $request->transactionId)->first();
+
+        $isValid = !is_null($movieTikectDetails) && !is_null($userDetails) && !is_null($transactionDetails);
+
+        return \Inertia\Inertia::render('Movies/VerifyMovieTicket', [
+            'movieTikectDetails' => $movieTikectDetails,
+            'userDetails' => $userDetails,
+            'transactionDetails' => $transactionDetails,
+            'isValid' => $isValid
+
+        ]);
     }
 }
