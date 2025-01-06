@@ -51,7 +51,7 @@ function viewEventsDetails(){
                     <div class="mb-3 avatar-xs me-3" @click="viewEventsDetails">
                         <div class="bg-transparent rounded avatar-title">
                             <i
-                                class="bx bxs-folder font-size-24 text-warning"
+                                class="mdi mdi-movie-roll font-size-24 text-secondary"
                             ></i>
                         </div>
                     </div>

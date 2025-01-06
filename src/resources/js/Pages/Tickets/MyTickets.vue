@@ -1,10 +1,11 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { reactive, onMounted,ref } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
 import icondata from "@/images/icondata.png";
 import MovieTicketCard from "@/js/Components/MovieTicketCard.vue";
+import EventTicketCard from "@/js/Components/EventTicketCard.vue";
 import { useInfiniteScroll } from "@/js/Composables/useInfiniteScroll.js";
 
 const props = defineProps({
@@ -36,8 +37,10 @@ const state = reactive({
 });
 
 const movieTicketsBottom = ref(null);
+const movieEventsBottom = ref(null);
 
 const { paginatedItems, nextPageExists } = useInfiniteScroll("movieTickets", movieTicketsBottom);
+const { paginatedItems: eventpaginatedItems, nextPageExists: eventNextPageExists } = useInfiniteScroll("eventTickets", movieEventsBottom);
 
 onMounted(() => {});
 function allEvents() {
@@ -66,7 +69,7 @@ function allMovies() {
 
                                 <div v-if="paginatedItems.length > 0">
                                     <div class="flex-wrap gap-5 mt-5 d-flex justify-content-center">
-                                        <MovieTicketCard
+                                        <EventTicketCard
                                             v-for="(ticket, index) in paginatedItems"
                                             :key="`${index}_${ticket.id}`"
                                             :ticketId="ticket.ticket_id"
@@ -77,6 +80,8 @@ function allMovies() {
                                             :transactionDetails="ticket?.payment_transaction"
                                             :seatDetails="ticket?.show_time_seats"
                                         />
+                                    </div>
+                                    <div>
                                         <div ref="movieTicketsBottom"></div>
                                         <div v-if="nextPageExists" class="mt-4 text-center text-success">
                                             <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
@@ -87,16 +92,37 @@ function allMovies() {
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                     <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                     <div>No Movie Tickets Yet.</div>
+                                    <div ref="movieTicketsBottom"></div>
                                 </div>
                             </b-tab>
                             <b-tab :title="'Event Tickets'">
                                 <div class="mt-4 text-end">
                                     <b-button class="btn btn-soft-primary" @click="allEvents">More Events</b-button>
                                 </div>
-                                <div v-if="props.eventTickets.length > 0"></div>
+                                <div v-if="eventpaginatedItems.length > 0">
+                                    <div class="flex-wrap gap-5 mt-5 d-flex justify-content-center">
+                                        <EventTicketCard
+                                            v-for="(ticket, index) in eventpaginatedItems"
+                                            :key="`${index}_${ticket.id}`"
+                                            :ticketId="ticket.ticket_id"
+                                            :status="ticket.ticket_status"
+                                            :event="ticket?.event"
+                                            :userDetails="ticket?.user_payment_detail"
+                                            :transactionDetails="ticket?.payment_transaction"
+                                        />
+                                    </div>
+                                    <div>
+                                        <div ref="movieEventsBottom"></div>
+                                        <div v-if="nextPageExists" class="mt-4 text-center text-success">
+                                            <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
+                                        </div>
+                                        <div v-else class="mt-4 text-center text-primary">No More Data</div>
+                                    </div>
+                                </div>
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                     <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                     <div>No Event Tickets Yet.</div>
+                                    <div ref="movieEventsBottom"></div>
                                 </div>
                             </b-tab>
                         </b-tabs>

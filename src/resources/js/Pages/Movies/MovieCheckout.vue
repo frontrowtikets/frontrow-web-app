@@ -73,6 +73,7 @@ async function payTicket() {
         })
         .catch((err) => {
             responseError.value = err.response.data.message;
+            isProcessing.value = false;
         });
 }
 </script>
@@ -200,7 +201,7 @@ async function payTicket() {
                         </div>
                     </div>
                     <div class="input_container">
-                        <label for="password_field" class="input_label">Phone Number</label>
+                        <label for="password_field" class="input_label">MTN Phone Number</label>
                         <VueTelInput
                             class="input_field"
                             :inputOptions.required="true"
@@ -244,7 +245,7 @@ async function payTicket() {
                         </div>
                     </div>
                     <div class="input_container">
-                        <label for="password_field" class="input_label">Phone Number</label>
+                        <label for="password_field" class="input_label">Airtel Phone Number</label>
                         <VueTelInput
                             class="input_field"
                             :inputOptions.required="true"

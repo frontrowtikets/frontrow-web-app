@@ -57,7 +57,7 @@ const attendenceRequestsListBottom = ref(null);
 const attendenceDeclinedListBottom = ref(null);
 const registerForEventModal = ref(false);
 
-const { paginatedItems, nextPageExists } = useInfiniteScroll("attendanceList", attendenceListBottom);
+const { paginatedItems, nextPageExists } = useInfiniteScroll("attendanceList", );
 const { paginatedItems: requestspaginatedItems, nextPageExists: requestsPageExists } = useInfiniteScroll(
     "attendanceRequests",
     attendenceRequestsListBottom
@@ -202,7 +202,7 @@ function declineRequest(userID) {
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div ref="usersTableBottom"></div>
+                                <div ref="attendenceListBottom"></div>
                                 <div v-if="nextPageExists" class="mt-4 text-center text-success">
                                     <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
@@ -211,6 +211,8 @@ function declineRequest(userID) {
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                 <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                 <div>No attendance yet.</div>
+                                <div ref="attendenceListBottom"></div>
+
                             </div>
                         </b-tab>
                         <b-tab title="Attendance Requests" v-if="props.event_type != 'paid'">
@@ -278,7 +280,7 @@ function declineRequest(userID) {
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div ref="usersTableBottom"></div>
+                                <div ref="attendenceRequestsListBottom"></div>
                                 <div v-if="requestsPageExists" class="mt-4 text-center text-success">
                                     <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
@@ -287,6 +289,8 @@ function declineRequest(userID) {
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                 <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                 <div>No attendance requests yet.</div>
+                                <div ref="attendenceRequestsListBottom"></div>
+
                             </div>
                         </b-tab>
                         <b-tab title="Declined" v-if="props.event_type != 'paid'">
@@ -345,7 +349,7 @@ function declineRequest(userID) {
                                         </tr>
                                     </tbody>
                                 </table>
-                                 <div ref="usersTableBottom"></div>
+                                 <div ref="attendenceDeclinedListBottom"></div>
                                 <div v-if="declinedPageExists" class="mt-4 text-center text-success">
                                     <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
@@ -353,7 +357,9 @@ function declineRequest(userID) {
                             </div>
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                 <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
-                                <div>No attendance yet.</div>
+                                <div>No Data.</div>
+                                 <div ref="attendenceDeclinedListBottom"></div>
+
                             </div>
                         </b-tab>
                     </b-tabs>
@@ -458,6 +464,5 @@ function declineRequest(userID) {
                     </b-modal>
                 </div>
             </div>
-        </div></DashboardLayout
-    >
+        </div></DashboardLayout>
 </template>

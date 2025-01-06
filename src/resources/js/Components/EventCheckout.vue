@@ -2,9 +2,82 @@
 import mtnLogo from "../../images/mtnMobileMoney.png";
 import airtelMoney from "../../images/airtelMoney.png";
 import creditCard from "../../images/creditCard.svg";
-import { ref } from "vue";
+import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
+import { ref, computed, onMounted } from "vue";
+import { usePage, router } from "@inertiajs/vue3";
+import axios from "axios";
+
+const props = defineProps(["selectedTicket", "quantity"]);
 
 const paymentMethod = ref("card");
+const buyerName = ref("");
+const buyerEmail = ref("");
+const cardNumber = ref("");
+const expiryDate = ref("");
+const userPhoneNumber = ref("");
+const cvv = ref("");
+const isPhoneNumberValid = ref(true);
+const invalidPhoneNumberMsg = ref("");
+
+const responseError = ref("");
+
+const isProcessing = ref(false);
+
+onMounted(() => {
+    if (usePage().props.auth.user != null) {
+        buyerName.value = usePage().props.auth.user.name;
+        buyerEmail.value = usePage().props.auth.user.email;
+    }
+});
+
+const totalAmount = computed(() => {
+    const total = Number(props.selectedTicket.price * props.quantity);
+    return total;
+});
+
+const paymentDetailsCleaned = computed(() => {
+    const cleaned = {
+        name: buyerName.value,
+        email: buyerEmail.value,
+        phoneNumber: userPhoneNumber.value,
+        paymentType: paymentMethod.value,
+        cardNumber: cardNumber.value,
+        expiryDate: expiryDate.value,
+        cvv: cvv.value,
+        selectedTicket: props.selectedTicket,
+        total: totalAmount.value,
+        quantity: props.quantity,
+    };
+
+    return cleaned;
+});
+function phoneNumber(val, phoneObj) {
+    userPhoneNumber.value = phoneObj["number"];
+    isPhoneNumberValid.value = phoneObj.valid;
+}
+function checkValidity() {
+    if (
+        isPhoneNumberValid.value === false ||
+        typeof isPhoneNumberValid.value == "undefined"
+    ) {
+        invalidPhoneNumberMsg.value = "Phone Number is Invalid";
+    } else {
+        invalidPhoneNumberMsg.value = "";
+    }
+}
+
+async function payTicket() {
+    isProcessing.value = true;
+    await axios
+        .post("/api/v1/buyEventTicket", paymentDetailsCleaned.value)
+        .then((res) => {
+            router.visit("/mytickets");
+        })
+        .catch((err) => {
+            responseError.value = err.response.data.message;
+            isProcessing.value = false;
+        });
+}
 </script>
 
 <template>
@@ -33,6 +106,19 @@ const paymentMethod = ref("card");
                     <img :src="airtelMoney" height="40" />
                 </button>
             </div>
+            <div
+                v-if="responseError"
+                class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
+                role="alert"
+            >
+                {{ responseError }}
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+            </div>
             <div class="separator">
                 <hr class="line" />
                 <p>Select Payment Method</p>
@@ -51,7 +137,42 @@ const paymentMethod = ref("card");
                             name="input-name"
                             title="Enter Card Holder Name"
                             placeholder="Enter your full name"
+                            v-model="buyerName"
                         />
+                    </div>
+                    <div class="input_container">
+                        <label for="password_field" class="input_label"
+                            >Email Address</label
+                        >
+                        <input
+                            id="password_field"
+                            class="input_field"
+                            type="email"
+                            name="input-name"
+                            title="Enter Email Address"
+                            placeholder="Enter Email Address"
+                            v-model="buyerEmail"
+                        />
+                    </div>
+                    <div class="input_container">
+                        <label for="password_field" class="input_label"
+                            >Phone Number</label
+                        >
+                        <VueTelInput
+                            class="input_field"
+                            :inputOptions.required="true"
+                            :inputOptions.showDialCode="true"
+                            :rules="[isValidPhone]"
+                            v-model="userPhoneNumber"
+                            @input="phoneNumber"
+                            @change="phoneNumber"
+                            @blur="checkValidity"
+                        />
+                        <small
+                            class="text-danger"
+                            v-if="invalidPhoneNumberMsg"
+                            >{{ invalidPhoneNumberMsg }}</small
+                        >
                     </div>
                     <div class="input_container">
                         <label for="password_field" class="input_label"
@@ -63,7 +184,9 @@ const paymentMethod = ref("card");
                             type="number"
                             name="input-name"
                             title="Enter Card Number"
+                            v-maska="'#### #### #### ####'"
                             placeholder="0000 0000 0000 0000"
+                            v-model="cardNumber"
                         />
                     </div>
                     <div class="input_container">
@@ -77,7 +200,9 @@ const paymentMethod = ref("card");
                                 type="text"
                                 name="input-name"
                                 title="Expiry Date"
-                                placeholder="01/23"
+                                v-maska="'##/##'"
+                                placeholder="01/25"
+                                v-model="expiryDate"
                             />
                             <input
                                 id="password_field"
@@ -86,6 +211,7 @@ const paymentMethod = ref("card");
                                 name="cvv"
                                 title="CVV"
                                 placeholder="CVV"
+                                v-model="cvv"
                             />
                         </div>
                     </div>
@@ -104,6 +230,7 @@ const paymentMethod = ref("card");
                             name="input-name"
                             title="Enter Card Holder Name"
                             placeholder="Enter your full name"
+                            v-model="buyerName"
                         />
                     </div>
                     <div class="input_container">
@@ -118,21 +245,29 @@ const paymentMethod = ref("card");
                                 name="input-name"
                                 title="Email"
                                 placeholder="Email"
+                                v-model="buyerEmail"
                             />
                         </div>
                     </div>
                     <div class="input_container">
                         <label for="password_field" class="input_label"
-                            >Phone Number</label
+                            >MTN Phone Number</label
                         >
-                        <input
-                            id="password_field"
+                        <VueTelInput
                             class="input_field"
-                            type="number"
-                            name="input-name"
-                            title="Phone Number"
-                            placeholder="0770 222222"
+                            :inputOptions.required="true"
+                            :inputOptions.showDialCode="true"
+                            :rules="[isValidPhone]"
+                            v-model="userPhoneNumber"
+                            @input="phoneNumber"
+                            @change="phoneNumber"
+                            @blur="checkValidity"
                         />
+                        <small
+                            class="text-danger"
+                            v-if="invalidPhoneNumberMsg"
+                            >{{ invalidPhoneNumberMsg }}</small
+                        >
                     </div>
                 </div>
             </div>
@@ -149,6 +284,7 @@ const paymentMethod = ref("card");
                             name="input-name"
                             title="Enter Card Holder Name"
                             placeholder="Enter your full name"
+                            v-model="buyerName"
                         />
                     </div>
                     <div class="input_container">
@@ -163,25 +299,43 @@ const paymentMethod = ref("card");
                                 name="input-name"
                                 title="Email"
                                 placeholder="Email"
+                                v-model="buyerEmail"
                             />
                         </div>
                     </div>
                     <div class="input_container">
                         <label for="password_field" class="input_label"
-                            >Phone Number</label
+                            >Airtel Phone Number</label
                         >
-                        <input
-                            id="password_field"
+                        <VueTelInput
                             class="input_field"
-                            type="number"
-                            name="input-name"
-                            title="Phone Number"
-                            placeholder="0704 222222"
+                            :inputOptions.required="true"
+                            :inputOptions.showDialCode="true"
+                            :rules="[isValidPhone]"
+                            v-model="userPhoneNumber"
+                            @input="phoneNumber"
+                            @change="phoneNumber"
+                            @blur="checkValidity"
                         />
+                        <small
+                            class="text-danger"
+                            v-if="invalidPhoneNumberMsg"
+                            >{{ invalidPhoneNumberMsg }}</small
+                        >
                     </div>
                 </div>
             </div>
-            <button class="purchase--btn">Checkout</button>
+            <div class="text-end text-muted fw-bold">
+                <span class="me-2">{{ props.selectedTicket.currency }}</span
+                ><span>{{ useCurrencyFormat(totalAmount) }}</span>
+            </div>
+            <button class="purchase--btn" @click.prevent="payTicket">
+                <i
+                    class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                    v-if="isProcessing"
+                ></i
+                ><span>Checkout</span>
+            </button>
         </form>
     </div>
 </template>

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted } from "vue";
-import MovieInvoice from "./MovieInvoice.vue";
-import MovieTicket from "./MovieTicket.vue";
+import EventInvoice from "./EventInvoice.vue";
+import EventTicket from "./EventTicket.vue";
 import moment from "moment";
 import Swal from "sweetalert2";
 import html2pdf from "html2pdf.js";
@@ -9,17 +9,15 @@ import html2pdf from "html2pdf.js";
 const props = defineProps([
     "ticketId",
     "status",
-    "movie",
-    "theatre",
+    "event",
     "userDetails",
     "transactionDetails",
-    "seatDetails"
 ]);
 
 
 const showEndDateTime = computed(() => {
-    const startDate = props?.theatre?.screening_date;
-    const endTime = props?.theatre?.end_time;
+    const startDate = props?.event?.start_date;
+    const endTime = props?.event?.end_time;
     return moment(`${startDate} ${endTime}`, "YYYY-MM-DD HH:mm");
 });
 
@@ -37,7 +35,7 @@ function downloadInvoice() {
             Swal.showLoading();
         },
     });
-    var element = document.getElementById("movieInvoice");
+    var element = document.getElementById("eventInvoicepdf");
 
     var options = {
         margin: 0.5,
@@ -47,7 +45,7 @@ function downloadInvoice() {
         },
         image: {
             type: "jpeg",
-            quality: 1.0,
+            quality: 5.0,
         },
         html2canvas: {
             scale: 1.0,
@@ -79,7 +77,7 @@ function downloadTicket() {
             Swal.showLoading();
         },
     });
-    var element = document.getElementById("movieticket");
+    var element = document.getElementById("eventticket");
 
     var options = {
         margin: 0.5,
@@ -113,9 +111,9 @@ function downloadTicket() {
 </script>
 <template>
     <div
-        class="card"
+        class="card2"
         :style="{
-            backgroundImage: `url(${props.movie.thumbnail_url})`,
+            backgroundImage: `url(${props.event.banner_image_url})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -136,19 +134,23 @@ function downloadTicket() {
                     >
                 </div>
 
-                <span class="text-truncate">{{ props.movie.title }}</span>
-                <small class="fw-light">{{ props.theatre.theatre }}</small>
+                <span class="text-truncate">{{ props.event.title }}</span>
+                <small class="fw-light">{{ props.event.location_name }}</small>
                 <small class="fw-light">
                     {{
-                        moment(props.theatre.screening_date).format(
-                            "ddd, DD MMM YYYY"
+                        moment(props.event.start_date).format(
+                            " DD MMM YYYY"
+                        )
+                    }} - {{
+                        moment(props.event.end_date).format(
+                            " DD MMM YYYY"
                         )
                     }}
                 </small>
                  <small class="fw-light">
                     From: {{
-                        moment(props.theatre.start_time, "HH:mm:ss").format("h:mm A")
-                    }} to: {{ moment(props.theatre.end_time, "HH:mm:ss").format("h:mm A") }}
+                        moment(props.event.start_time, "HH:mm:ss").format("h:mm A")
+                    }} to: {{ moment(props.event.end_time, "HH:mm:ss").format("h:mm A") }}
                 </small>
             </div>
         </div>
@@ -221,28 +223,25 @@ function downloadTicket() {
                 </ul>
             </div>
         </div>
-        <div class="d-none">
-            <MovieInvoice
-            :movie="props.movie"
-            :theatre="props.theatre"
+     <div class="d-none">
+            <EventInvoice
+            :event="props.event"
             :userDetails="props.userDetails"
             :transactionDetails="props.transactionDetails"
             />
         </div>
         <div class="d-none">
-            <MovieTicket
+            <EventTicket
             :ticketId="props.ticketId"
-            :movie="props.movie"
-            :theatre="props.theatre"
+            :event="props.event"
             :userDetails="props.userDetails"
             :transactionDetails="props.transactionDetails"
-            :seatDetails = "props.seatDetails"
             />
         </div>
     </div>
 </template>
 <style scoped>
-.card {
+.card2 {
     width: 250px;
     height: 200px;
     border-radius: 15px;
@@ -253,7 +252,7 @@ function downloadTicket() {
     overflow: hidden;
 }
 
-.card::before {
+.card2::before {
     content: "";
     height: 100px;
     width: 100px;

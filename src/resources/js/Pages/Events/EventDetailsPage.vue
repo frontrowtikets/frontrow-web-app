@@ -9,17 +9,17 @@ import useInertiaFormSubmit from "../../Composables/useInertiaFormSubmit.js";
 import EventCheckout from "../../Components/EventCheckout.vue";
 import { useWindowSize } from "@vueuse/core";
 
-
 import moment from "moment";
 import Swal from "sweetalert2";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
 const props = defineProps(["eventDetails"]);
-const state = reactive({});
+const state = reactive({
+
+});
 
 const { height } = useWindowSize();
-
 
 const registerForEventModal = ref(false);
 const buyTicketModal = ref(false);
@@ -36,14 +36,13 @@ const currentUser = computed(() => {
     return theUser;
 });
 
-watch(ticketQuantity,(newVal)=>{
-      if(newVal > selectedTicket.value.available_quantity ){
-        ticketQuantity.value = 1
+watch(ticketQuantity, (newVal) => {
+    if (newVal > selectedTicket.value.available_quantity) {
+        ticketQuantity.value = 1;
     }
-})
+});
 
 const ticketTotal = computed(() => {
-
     if (selectedTicket.value) {
         const total = Number(selectedTicket.value.price * ticketQuantity.value);
         return total;
@@ -151,20 +150,23 @@ function checkValidity() {
 function goToEventManager() {
     router.visit(`/eventmanager/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`);
 }
-function checkoutMovie(){
-   showCheckout.value= true
+function checkoutMovie() {
+    showCheckout.value = true;
 }
 </script>
 <template>
     <Head :title="props.eventDetails.title" />
     <DashboardLayout>
-        <PageHeader :title="props.eventDetails.title" :items="state.items" role="button" @click="showCheckout= false" />
+        <PageHeader :title="props.eventDetails.title" :items="state.items" role="button" @click="showCheckout = false" />
 
         <div v-if="showCheckout">
-             <div class="col-12">
+            <div class="col-12">
                 <div class="card" :style="{ height: `${height - 100}px` }">
                     <div class="card-body d-flex align-items-center justify-content-center">
-                        <EventCheckout />
+                        <EventCheckout
+                        :quantity="ticketQuantity"
+                        :selectedTicket="selectedTicket"
+                        />
                     </div>
                 </div>
             </div>
@@ -509,28 +511,29 @@ function checkoutMovie(){
                 </b-modal>
                 <b-modal v-model="buyTicketModal" id="buyEventTicket" centered title="Buy Event Ticket" title-class="font-18" hide-footer>
                     <div>
-                        <div class="mb-4">
-                            <span>Availbale</span>({{ selectedTicket?.available_quantity }})
-                        </div>
+                        <div class="mb-4"><span>Availbale</span>({{ selectedTicket?.available_quantity }})</div>
                         <div class="mb-3">
                             <label>Ticket Type</label>
                             <v-select v-model="selectedTicket" :options="props.eventDetails.event_tickets" :label="'category'"></v-select>
                         </div>
                         <div class="mb-4">
                             <label>Quantity</label>
-                            <input class="form-control" type="number" id="formCheckRight1"
-                             v-model="ticketQuantity" :disabled="selectedTicket === null"
-
-                             :min="1"
-                             :max="selectedTicket?.available_quantity"
-                             />
+                            <input
+                                class="form-control"
+                                type="number"
+                                id="formCheckRight1"
+                                v-model="ticketQuantity"
+                                :disabled="selectedTicket === null"
+                                :min="1"
+                                :max="selectedTicket?.available_quantity"
+                            />
                         </div>
-                        <div class=" text-end">
-                                <div class="mb-2 fw-bold me-3">Total</div>
-                                <div>
-                                    <h4>{{ selectedTicket?.currency || "UGX" }} {{ useCurrencyFormat(ticketTotal) }}</h4>
-                                </div>
+                        <div class="text-end">
+                            <div class="mb-2 fw-bold me-3">Total</div>
+                            <div>
+                                <h4>{{ selectedTicket?.currency || "UGX" }} {{ useCurrencyFormat(ticketTotal) }}</h4>
                             </div>
+                        </div>
                         <div class="mt-5 d-grid">
                             <button
                                 class="btn btn-primary btn-block waves-effect waves-light"

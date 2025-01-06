@@ -12,6 +12,9 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateEventReview;
 use App\Http\Requests\RegisterForEvent;
+use App\Models\UserEventTicket;
+use App\Models\PaymentTransaction;
+use App\Models\UserPaymentDetail;
 use App\Models\EventAttendee;
 
 
@@ -112,5 +115,24 @@ class EventsController extends Controller
     {
         $settingsData = $request->validated();
         EventService::saveSettings($settingsData);
+    }
+
+    public function verifyTicket(Request $request)
+    {
+        $eventTikectDetails = UserEventTicket::where('ticket_id', $request->ticketId)->where('user_payment_detail_id', $request->userDetailsId)->where('payment_transaction_id', $request->transactionId)->with([
+            'event',
+        ])->first();
+        $userDetails = UserPaymentDetail::where('id', $request->userDetailsId)->first();
+        $transactionDetails = PaymentTransaction::where('id', $request->transactionId)->first();
+
+        $isValid = !is_null($eventTikectDetails) && !is_null($userDetails) && !is_null($transactionDetails);
+
+        return \Inertia\Inertia::render('Events/VerifyEventTicket', [
+            'eventTikectDetails' => $eventTikectDetails,
+            'userDetails' => $userDetails,
+            'transactionDetails' => $transactionDetails,
+            'isValid' => $isValid
+
+        ]);
     }
 }
