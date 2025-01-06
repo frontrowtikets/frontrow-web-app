@@ -97,7 +97,7 @@ class MoviesController extends Controller
 
     public function allMovies(Request $request)
     {
-        $movies = Movie::orderBy('created_at', 'desc')->paginate(12);
+        $movies = Movie::with(["showTimes"])->orderBy('created_at', 'desc')->paginate(12);
         return \Inertia\Inertia::render('Movies/AllMoviesPage', [
             'movies' => $movies
         ]);
