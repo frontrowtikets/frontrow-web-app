@@ -18,7 +18,7 @@ class TicketController extends Controller
             'theatre',
             "showTimeSeats",
              "showTimeSeats.seatmap"
-        ])->get();
+        ])->orderBy('created_at', 'desc')->paginate(12);
 
         return \Inertia\Inertia::render('Tickets/MyTickets', [
             "movieTickets" => $movieTickets

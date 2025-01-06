@@ -12,11 +12,11 @@ class UserRegister extends Controller
     public function index()
     {
 
-        $users = User::orderBy('created_at', 'desc')->paginate(15);
+        $users = User::orderBy('created_at', 'desc')->paginate(12);
         $userAssignPermission = User::select('name', 'id', 'email')->get();
         $seededPermissions = Permission::select('name')->get();
-        $inactiveDeneficiaries = User::where('beneficiary_status','inactive')->paginate(15);
-        $deactiveDeneficiaries = User::where('beneficiary_status', 'deactivated')->paginate(15);
+        $inactiveDeneficiaries = User::where('beneficiary_status','inactive')->paginate(12);
+        $deactiveDeneficiaries = User::where('beneficiary_status', 'deactivated')->paginate(12);
 
 
         return   \Inertia\Inertia::render('UserRegister/Users', [

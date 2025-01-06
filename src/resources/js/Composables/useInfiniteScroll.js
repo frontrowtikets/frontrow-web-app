@@ -28,7 +28,7 @@ export function useInfiniteScroll(propName, elementRef = null) {
         );
     };
 
-    if (elementRef) {
+    if (elementRef != null) {
      useObserveHitBottom(elementRef, loadMoreItems, { rootMargin: "0px 0px 0px 0px" });
     }
 
