@@ -234,13 +234,18 @@ class MovieService
                     'purchase_date' => now(),
                     'user_payment_detail_id' => $userPaymentDetails->id,
                     'payment_transaction_id' => $paymentTransactions->id,
-                    // 'used_at',
-                    // 'ticket_status',
-                    // 'ticket_url',
-                    // 'ticket_id',
-                    // 'booking_id',
+                    'ticket_id' => self::generateRandomMovieTicketId(),
+                    'ticket_status' => 'paid'
                 ]);
             }
         }
+
+    }
+    private static  function generateRandomMovieTicketId()
+    {
+        $prefix = "FRMT";
+        $uniqueId = uniqid($prefix, true);
+        $uniqueId = str_replace('.', '', $uniqueId);
+        return substr($uniqueId, 0, 18);
     }
 }

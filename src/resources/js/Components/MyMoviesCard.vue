@@ -55,7 +55,7 @@ function viewMovieDetails() {
                     <div class="mb-3 avatar-xs me-3" @click="viewMovieDetails">
                         <div class="bg-transparent rounded avatar-title">
                             <i
-                                class="bx bxs-folder font-size-24 text-warning"
+                                class="bx bx-play-circle font-size-24 text-secondary"
                             ></i>
                         </div>
                     </div>

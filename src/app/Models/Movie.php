@@ -34,7 +34,7 @@ class Movie extends Model implements HasMedia
         'currency',
         'maturity_rating',
     ];
-    protected $appends = ['overallRating', 'hasSeatMap'];
+  
 
     public function getoverallRatingAttribute()
     {
@@ -68,6 +68,10 @@ class Movie extends Model implements HasMedia
     public function reviews()
     {
         return $this->hasMany(MovieReview::class);
+    }
+
+    public function tickets(){
+        return $this->hasMany(MovieTicket::class);
     }
 
     public function seatmap() {

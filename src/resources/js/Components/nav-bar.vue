@@ -391,13 +391,13 @@ export default {
                     </button>
                 </div>
 
-                <b-dropdown
+                <!-- <b-dropdown
                     right
                     menu-class="p-0 dropdown-menu-lg dropdown-menu-end"
                     toggle-class="header-item noti-icon"
                     variant="black"
                 >
-                    <template v-slot:button-content>
+                    < <template v-slot:button-content>
                         <i class="bx bx-bell"></i>
                         <span
                             class="badge bg-danger rounded-pill"
@@ -488,16 +488,16 @@ export default {
                         <div class="mt-5 mb-5 text-center" v-else>
                             You have no Notifications
                         </div>
-                        <!-- <div class="p-2 border-top d-grid" v-if="currentUser.notifications.length > 0">
+                         <div class="p-2 border-top d-grid" v-if="currentUser.notifications.length > 0">
                             <a class="text-center btn btn-sm btn-link font-size-14" href="javascript:void(0)">
                                 <i class="mdi mdi-arrow-down-circle me-1"></i>
                                 <span key="t-view-more">
                                     {{ $t("navbar.dropdown.notification.button") }}
                                 </span>
                             </a>
-                        </div> -->
+                        </div>
                     </div>
-                </b-dropdown>
+                </b-dropdown> -->
 
                 <b-dropdown
                     right
