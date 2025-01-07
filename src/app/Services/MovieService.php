@@ -60,6 +60,7 @@ class MovieService
             'languange' => $movieDetails['language'],
             'trailer_url' => $movieDetails['trailer_url'],
             'status' => $movieDetails['status'],
+            'is_active' => false,
             'maturity_rating' => $movieDetails['maturity_rating'],
         ]);
 

@@ -1,20 +1,6 @@
 services:
 
-  # superbase to be used
-  # mysql:
-  #   image: mariadb:11.5.2
-  #   restart: unless-stopped
-  #   tty: true
-  #   ports:
-  #     - 3307:3306
-  #   environment:
-  #     MYSQL_DATABASE: "${buddeDB}"
-  #     MYSQL_ROOT_PASSWORD: "${buddeDB_Password}"
-  #     MYSQL_USER: "${mysql_user}"
-  #     MYSQL_PASSWORD: "${mysql_password}"
-  #   volumes:
-  #     - ./budde-db:/var/lib/mysql
-  
+
   php_frontrow:
     build: 
       context: .
@@ -23,6 +9,7 @@ services:
       - 9003:9000
     volumes:
       - ./src:/var/www/html
+    
     networks:
       - frontrow_network
     

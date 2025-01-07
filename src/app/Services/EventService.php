@@ -61,6 +61,7 @@ class EventService
             'end_date' => $eventDetails['end_date'],
             'access_type' => $eventDetails['access_type'],
             'status' => $eventDetails['status'],
+            'is_active' => false
         ]);
 
         $cardImage = $createdEvent->addMedia($eventDetails['cardImage'])->toMediaCollection('event_images');
