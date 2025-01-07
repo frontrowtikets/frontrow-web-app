@@ -17,7 +17,7 @@ import { breakpointsTailwind, useBreakpoints, useWindowSize } from "@vueuse/core
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
-const props = defineProps(["realtimeWeatherData"]);
+const props = defineProps(["last3Movies","last3Events","upcomingmovies","upcomingevents"]);
 const state = reactive({});
 
 const greaterThanMd = breakpoints.greater("md");
@@ -27,7 +27,21 @@ onBeforeMount(() => {
     window.addEventListener("scroll", windowScroll);
 });
 
-onMounted(() => {});
+onMounted(() => {
+     document.getElementById('seenextBanner').click();
+});
+
+const banners = computed(()=>{
+    //this is based from the upcoming events and movies
+    const banners = [
+    props.upcomingevents[0]?.banner_image_url,
+    props.upcomingevents[1]?.banner_image_url,
+    props.upcomingmovies[0]?.poster_url,
+    props.upcomingmovies[1]?.poster_url
+].filter(banner => banner && banner.trim() !== '');
+
+return banners;
+})
 
 function windowScroll() {
     const navbar = document.getElementById("navbar");
@@ -54,21 +68,27 @@ function windowScroll() {
                 <b-container>
                     <div id="carouselExampleDark" class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel ">
                         <div class="carousel-indicators" v-if="greaterThanMd">
-                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            <button v-if="banners[0]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button v-if="banners[1]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button v-if="banners[2]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            <button v-if="banners[3]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
+
                         </div>
                         <div class="rounded carousel-inner" style="max-height: 45vh">
-                            <div class="carousel-item active" data-bs-interval="10000">
-                                <img :src="img6" class="d-block w-100" alt="First slide" />
+                            <div v-if="banners[0]" class="carousel-item active" data-bs-interval="10000">
+                                <img :src="banners[0]" class="d-block w-100" alt="First slide" />
                                 <div class="carousel-caption d-none d-md-block"></div>
                             </div>
-                            <div class="carousel-item" data-bs-interval="2000">
-                                <img :src="img5" class="d-block w-100" alt="Second slide" />
+                            <div v-if="banners[1]" class="carousel-item" data-bs-interval="2000">
+                                <img :src="banners[1]" class="d-block w-100" alt="Second slide" />
                                 <div class="carousel-caption d-none d-md-block"></div>
                             </div>
-                            <div class="carousel-item">
-                                <img :src="img4" class="d-block w-100" alt="Third slide" />
+                            <div v-if="banners[2]" class="carousel-item">
+                                <img :src="banners[2]" class="d-block w-100" alt="Third slide" />
+                                <div class="carousel-caption d-none d-md-block"></div>
+                            </div>
+                            <div v-if="banners[3]" class="carousel-item">
+                                <img :src="banners[3]" class="d-block w-100" alt="fourth slide" />
                                 <div class="carousel-caption d-none d-md-block"></div>
                             </div>
                         </div>
@@ -76,7 +96,7 @@ function windowScroll() {
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next" id="seenextBanner">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -91,10 +111,10 @@ function windowScroll() {
             <!-- curreny price section end -->
             <!-- about section start -->
 
-            <HomeEventOffers />
+            <HomeEventOffers :last3Movies="props.last3Movies" :last3Events="props.last3Events"/>
 
             <div id="sampleHomePopularEvents">
-                <HomePopularEvents />
+                <HomePopularEvents :upcomingmovies="props.upcomingmovies" :upcomingevents="props.upcomingevents" />
             </div>
 
             <HomeAboutSection />

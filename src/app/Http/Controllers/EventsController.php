@@ -105,7 +105,7 @@ class EventsController extends Controller
         EventService::declineInvitation($request);
     }
     public function allEvents(Request $request) {
-        $events = Event::orderBy('created_at', 'desc')->paginate(12);
+        $events = Event::with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(12);
         return \Inertia\Inertia::render('Events/AllEventsPage', [
             'events' => $events
         ]);
