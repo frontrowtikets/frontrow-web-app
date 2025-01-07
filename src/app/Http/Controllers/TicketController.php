@@ -18,14 +18,14 @@ class TicketController extends Controller
             'paymentTransaction',
             'theatre',
             "showTimeSeats",
-             "showTimeSeats.seatmap"
-        ])->orderBy('created_at', 'desc')->paginate(12);
+            "showTimeSeats.seatmap"
+        ])->orderBy('created_at', 'desc')->paginate(6);
 
         $eventTickets = UserEventTicket::where('user_email', Auth::user()->email)->with([
             "event",
-             "userPaymentDetail",
-             "paymentTransaction"
-        ])->orderBy('created_at', 'desc')->paginate(12);
+            "userPaymentDetail",
+            "paymentTransaction"
+        ])->orderBy('created_at', 'desc')->paginate(6);
 
         return \Inertia\Inertia::render('Tickets/MyTickets', [
             "movieTickets" => $movieTickets,
@@ -33,4 +33,3 @@ class TicketController extends Controller
         ]);
     }
 }
-

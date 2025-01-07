@@ -19,12 +19,18 @@ class MoviesController extends Controller
 {
     public function homeMovies(Request $request)
     {
-        return \Inertia\Inertia::render('Movies/MoviesHomePage');
+        $movies = Movie::with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
+        $categories = MovieCategory::get();
+
+        return \Inertia\Inertia::render('Movies/MoviesHomePage', [
+            'movies' => $movies,
+            'categories' => $categories
+        ]);
     }
 
     public function myMovies(Request $request)
     {
-        $myMovies = Movie::where('beneficiary_id', Auth::id())->latest()->paginate(12);
+        $myMovies = Movie::where('beneficiary_id', Auth::id())->latest()->paginate(6);
         return \Inertia\Inertia::render('Movies/MyMovies', [
             'userMovies' => $myMovies
         ]);
@@ -122,7 +128,7 @@ class MoviesController extends Controller
 
     public function allMovies(Request $request)
     {
-        $movies = Movie::with(["showTimes"])->orderBy('created_at', 'desc')->paginate(12);
+        $movies = Movie::where('is_active', true)->with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Movies/AllMoviesPage', [
             'movies' => $movies
         ]);

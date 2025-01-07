@@ -25,12 +25,21 @@ class EventsController extends Controller
 
     public function homeEvents(Request $request)
     {
-        return \Inertia\Inertia::render('Events/EventsHomePage');
+        $events = Event::where('is_active', true)->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
+        $categories = EventCategory::get();
+
+        return \Inertia\Inertia::render(
+            'Events/EventsHomePage',
+            [
+                'events' => $events,
+                'categories' => $categories
+            ]
+        );
     }
 
     public function myEvents(Request $request)
     {
-        $myEvents = Event::where('beneficiary_id', Auth::id())->latest()->paginate(12);
+        $myEvents = Event::where('beneficiary_id', Auth::id())->latest()->paginate(6);
         return \Inertia\Inertia::render('Events/MyEvents', [
             'myEvents' => $myEvents
         ]);
@@ -116,8 +125,9 @@ class EventsController extends Controller
     {
         EventService::declineInvitation($request);
     }
-    public function allEvents(Request $request) {
-        $events = Event::with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(12);
+    public function allEvents(Request $request)
+    {
+        $events = Event::where('is_active', true)->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Events/AllEventsPage', [
             'events' => $events
         ]);

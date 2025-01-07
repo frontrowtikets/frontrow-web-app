@@ -6,17 +6,16 @@ import { router } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
 import IsUserAdmin from "../Composables/IsUserAdmin.js";
 
-
 /**
  * Sidenav component
  */
 export default {
     setup() {
         //check whether user is admin
-        const {isAdmin} = IsUserAdmin();
+        const { isAdmin } = IsUserAdmin();
         return {
             usePage,
-            isAdmin
+            isAdmin,
         };
     },
     data() {
@@ -26,7 +25,6 @@ export default {
         };
     },
     mounted: function () {
-
         //
         if (document.getElementById("side-menu")) new MetisMenu("#side-menu");
         var links = document.getElementsByClassName("side-nav-link-ref");
@@ -110,15 +108,15 @@ export default {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("dashboard"));
         },
-          toRouterEvents() {
+        toRouterEvents() {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("my_events_page"));
         },
-          toRouterMovies() {
+        toRouterMovies() {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("my_movies_page"));
         },
-         toRouterSettings() {
+        toRouterSettings() {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("settings"));
         },
@@ -126,7 +124,7 @@ export default {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("my_transactions"));
         },
-         toWallet() {
+        toWallet() {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("my_wallet"));
         },
@@ -134,8 +132,10 @@ export default {
             document.body.classList.toggle("sidebar-enable");
             router.get(route("my_tickets"));
         },
-
-
+        toRouterActivations(){
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("activations"));
+        }
     },
 };
 </script>
@@ -150,51 +150,130 @@ export default {
             <li class="" role="button">
                 <a>
                     <i class="bx bxs-dashboard" style="color: #fff"></i>
-                    <span @click="toRouterDashboard" :class="usePage().url == '/dashboard' ? 'text-white fw-bold' : 'text-grayish'">Dashboard</span>
+                    <span
+                        @click="toRouterDashboard"
+                        :class="
+                            usePage().url == '/dashboard'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        >Dashboard</span
+                    >
                 </a>
             </li>
-               <li class="" role="button" v-if="isAdmin == true">
+            <li class="" role="button" v-if="isAdmin == true">
                 <a>
                     <i class="bx bx-user-pin" style="color: #fff"></i>
-                    <span :class="usePage().url == '/userregister' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterRegister">Users</span>
+                    <span
+                        :class="
+                            usePage().url == '/userregister'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toRouterRegister"
+                        >Users</span
+                    >
+                </a>
+            </li>
+            <li class="" role="button" v-if="isAdmin == true">
+                <a>
+                    <i class="bx bx-bolt-circle" style="color: #fff"></i>
+                    <span
+                        :class="
+                            usePage().url == '/activations'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toRouterActivations"
+                        >Activations</span
+                    >
                 </a>
             </li>
             <li class="" role="button">
                 <a>
-                    <i class="mdi mdi-ticket " style="color: #ffffff"></i>
-                    <span :class="usePage().url == '/mytickets' ? 'text-white fw-bold' : 'text-grayish'" @click="toTickets" >Tickets</span>
+                    <i class="mdi mdi-ticket" style="color: #ffffff"></i>
+                    <span
+                        :class="
+                            usePage().url == '/mytickets'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toTickets"
+                        >Tickets</span
+                    >
                 </a>
             </li>
-             <li class="" role="button">
+            <li class="" role="button">
                 <a>
-                    <i class=" bx bx-play-circle" style="color: #fff"></i>
-                    <span :class="(usePage().url == '/mymovies' ||usePage().url == '/schedulemovies'  ) ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterMovies">Movies</span>
+                    <i class="bx bx-play-circle" style="color: #fff"></i>
+                    <span
+                        :class="
+                            usePage().url == '/mymovies' ||
+                            usePage().url == '/schedulemovies'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toRouterMovies"
+                        >Movies</span
+                    >
                 </a>
             </li>
             <li class="" role="button">
                 <a>
                     <i class="mdi mdi-movie-roll" style="color: #fff"></i>
-                    <span :class="(usePage().url == '/myevents' || usePage().url == '/scheduleevents') ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterEvents">Events</span>
+                    <span
+                        :class="
+                            usePage().url == '/myevents' ||
+                            usePage().url == '/scheduleevents'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toRouterEvents"
+                        >Events</span
+                    >
                 </a>
             </li>
 
-
-            <li class="" role="button" >
+            <li class="" role="button">
                 <a>
                     <i class="bx bx-money" style="color: #fff"></i>
-                    <span :class="usePage().url == '/mywallet' ? 'text-white fw-bold' : 'text-grayish'" @click="toWallet">My Wallet</span>
+                    <span
+                        :class="
+                            usePage().url == '/mywallet'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toWallet"
+                        >My Wallet</span
+                    >
                 </a>
             </li>
-            <li class="" role="button" >
+            <li class="" role="button">
                 <a>
                     <i class="bx bxs-report" style="color: #fff"></i>
-                    <span :class="usePage().url == '/mytransactions' ? 'text-white fw-bold' : 'text-grayish'" @click="toTransactions">My Transactions</span>
+                    <span
+                        :class="
+                            usePage().url == '/mytransactions'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toTransactions"
+                        >My Transactions</span
+                    >
                 </a>
             </li>
             <li class="" role="button" v-if="isAdmin == true">
                 <a>
                     <i class="bx bxs-cog" style="color: #fff"></i>
-                    <span :class="usePage().url == '/settings' ? 'text-white fw-bold' : 'text-grayish'" @click="toRouterSettings" >Settings</span>
+                    <span
+                        :class="
+                            usePage().url == '/settings'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toRouterSettings"
+                        >Settings</span
+                    >
                 </a>
             </li>
         </ul>

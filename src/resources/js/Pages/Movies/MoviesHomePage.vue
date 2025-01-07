@@ -1,136 +1,93 @@
 <script setup>
 import HomeHeader from "../../Components/HomeHeader.vue";
 import FooterSection from "../../Components/FooterSection.vue";
+import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
+import MovieCard from "../../Components/MovieCard.vue";
+import { router } from "@inertiajs/vue3";
+
+import { ref } from "vue";
+
+const props = defineProps({
+    movies: {
+        type: Array,
+        default: [],
+    },
+    categories: {
+        type: Array,
+    },
+});
+const movieListBottom = ref(null);
+
+const { paginatedItems, nextPageExists } = useInfiniteScroll("movies", movieListBottom);
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+}
+function viewEvent(title, id) {
+    router.visit(`/home/movie/${slugify(title)}/${id}`);
+}
 </script>
 <template>
     <b-container class="mt-5">
         <HomeHeader />
 
-        <div class="row" style="margin-top: 22vh;margin-bottom: 10vh;">
-            <div class="col-lg-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="mb-4 card-title">Filter</h4>
-
-                        <div>
-                            <h5 class="mb-3 font-size-14">Type</h5>
-                            <ul class="list-unstyled product-list">
-                                <li>
-                                    <a href="javascript: void(0);"> <i class="mdi mdi-chevron-right me-1"></i> Physical Event </a>
-                                </li>
-                                <li>
-                                    <a href="javascript: void(0);"> <i class="mdi mdi-chevron-right me-1"></i> Online Event </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="pt-3 mt-4">
-                            <div class="form-check" v-for="(price, index) in prices" :key="index">
-                                <input class="form-check-input" type="checkbox" :value="index" :id="'price' + index" v-model="selected.prices" />
-                                <label class="form-check-label" :for="'price' + index"> {{ price.name }}{{ price.products_count }} </label>
-                            </div>
-                            <h5 class="mb-3 font-size-14">Price</h5>
-                            <Slider v-model="sliderPrice" :min="0" :max="1000" @change="valuechange" />
-                        </div>
-
-                        <div class="pt-3 mt-4">
-                            <h5 class="mb-3 font-size-14">Category</h5>
-
-                            <b-form-checkbox id="productdiscountCheck1" value="accepted" unchecked-value="not_accepted" @change="discountLessFilter($event, 10)">Music</b-form-checkbox>
-
-                            <b-form-checkbox id="productdiscountCheck2" value="accepted" unchecked-value="not_accepted" @change="discountMoreFilter($event, 10)">Arts & Culture</b-form-checkbox>
-
-                            <b-form-checkbox id="productdiscountCheck3" value="accepted" unchecked-value="not_accepted" @change="discountMoreFilter($event, 20)">Food & Drink</b-form-checkbox>
-
-                            <b-form-checkbox id="productdiscountCheck4" value="accepted" unchecked-value="not_accepted" @change="discountMoreFilter($event, 30)">Charity & Causes</b-form-checkbox>
-
-                            <b-form-checkbox id="productdiscountCheck5" value="accepted" unchecked-value="not_accepted" @change="discountMoreFilter($event, 40)">Community</b-form-checkbox>
-
-                            <b-form-checkbox id="productdiscountCheck6" value="accepted" unchecked-value="not_accepted" @change="discountMoreFilter($event, 50)">Film & Media</b-form-checkbox>
-                        </div>
-
-                        <div class="pt-3 mt-4">
-                            <h5 class="mb-3 font-size-14">Region</h5>
-                            <div>
-                                <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted"> Central Region </b-form-checkbox>
-
-                                <b-form-checkbox id="checkbox-2" name="checkbox-2" value="accepted" unchecked-value="not_accepted"> Western Region </b-form-checkbox>
-
-                                <b-form-checkbox id="checkbox-3" name="checkbox-3" value="accepted" unchecked-value="not_accepted"> Eastern Region </b-form-checkbox>
-                                <b-form-checkbox id="checkbox-4" name="checkbox-4" value="accepted" unchecked-value="not_accepted"> Eastern Region </b-form-checkbox>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <div class="mb-3 row">
-                    <div class="col-xl-4 col-sm-6">
+        <div style="margin-top: 22vh; margin-bottom: 10vh">
+            <div class="col-12">
+                <div class="mb-4 col-12 d-flex justify-content-between align-items-center">
+                    <div class="">
                         <div class="mt-2">
                             <h5>Movies</h5>
                         </div>
                     </div>
-                    <div class="col-lg-8 col-sm-6">
-                        <form class="mt-4 mt-sm-0 float-sm-end d-flex align-items-center">
-                            <!-- <div class="search-box me-2">
-                                <div class="position-relative">
-                                    <input type="text" class="border-0 form-control" placeholder="Search..." @input="searchFilter($event)" />
-                                    <i class="bx bx-search-alt search-icon"></i>
-                                </div>
-                            </div> -->
-                            <ul class="nav nav-pills product-view-nav">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="javascript: void(0);">
-                                        <i class="bx bx-grid-alt"></i>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="javascript: void(0);">
-                                        <i class="bx bx-list-ul"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </form>
+                    <div class="">
+                        <b-dropdown variant="light" right>
+                            <template v-slot:button-content>
+                                Filter
+                                <i class="mdi mdi-chevron-down"></i>
+                            </template>
+                            <b-dropdown-item>
+                                <b-form-checkbox id="checkbox-1" name="checkbox-1" :value="true" :unchecked-value="false" checked>
+                                    All
+                                </b-form-checkbox>
+                                <b-form-checkbox
+                                    v-for="(cat, index) in props.categories"
+                                    :key="`${index}_${cat.id}`"
+                                    id="checkbox-1"
+                                    name="checkbox-1"
+                                    :value="true"
+                                    :unchecked-value="false"
+                                >
+                                    {{ cat.name }}
+                                </b-form-checkbox>
+                            </b-dropdown-item>
+                        </b-dropdown>
                     </div>
                 </div>
 
-                <div class="row">
-                    <!-- <div v-for="(item, index) in clothsData" :key="index" class="col-xl-4 col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="product-img position-relative">
-                                <div v-if="item.discount" class="avatar-sm product-ribbon">
-                                    <span class="avatar-title rounded-circle bg-primary">-{{ item.discount }}%</span>
-                                </div>
-                                <router-link to="/ecommerce/product-detail/">
-                                    <img :src="`${item.product}`" alt class="mx-auto img-fluid d-block" />
-                                </router-link>
-                            </div>
-                            <div class="mt-4 text-center">
-                                <h5 class="mb-3 text-truncate">
-                                    <router-link class="text-dark" to="/ecommerce/product-detail">{{ item.name }}</router-link>
-                                </h5>
-                                <p class="text-muted">
-                                    <i class="bx bx-star text-warning"></i>
-                                    <i class="bx bx-star text-warning"></i>
-                                    <i class="bx bx-star text-warning"></i>
-                                    <i class="bx bx-star text-warning"></i>
-                                    <i class="bx bx-star text-warning"></i>
-                                </p>
-                                <h5 class="my-0">
-                                    <b>${{ item.newprice }}</b>
-                                </h5>
-                            </div>
+                <b-container>
+                    <div class="flex-wrap gap-4 pt-4 d-flex align-items-center justify-content-center">
+                        <div v-for="(item, index) in paginatedItems" :key="index" class="col-xl-3 col-md-4 col-sm-6">
+                            <MovieCard
+                                :movieName="item.title"
+                                :movieImageLink="item.thumbnail_url"
+                                :movieDate="item.release_date"
+                                :movieId="item.id"
+                                :showTimes="item.show_times"
+                                :overallRating="item.overallRating"
+                                @view="viewEvent"
+                            />
                         </div>
                     </div>
-                </div> -->
-                </div>
-                <!-- end row -->
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- <b-pagination  class="justify-content-center" pills v-model="currentPage" :total-rows="clothsData.length" :per-page="6" aria-controls="my-table"></b-pagination> -->
+                    <div ref="movieListBottom"></div>
+                    <div v-if="nextPageExists" class="mt-4 text-center text-success">
+                        <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                     </div>
-                </div>
+                    <div v-else class="mt-4 text-center text-primary">No More Data</div>
+
+                    <!-- end row -->
+                </b-container>
             </div>
         </div>
     </b-container>

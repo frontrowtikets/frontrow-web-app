@@ -31,6 +31,7 @@ class Event extends Model implements HasMedia
         'currency',
         'access_type',
         'status',
+        'is_active'
     ];
 
     protected $appends = ['reg_status'];

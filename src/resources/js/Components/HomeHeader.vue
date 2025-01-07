@@ -17,14 +17,17 @@ function goHome() {
     router.visit("/");
 }
 
-function goLogin() {
-    router.visit("/login");
+function goEvents() {
+    router.visit("/myevents");
 }
-function goToEventsPage(){
-    router.visit("/events")
+function goCinema() {
+    router.visit("/mymovies");
 }
-function goToMoviesPage(){
-    router.visit("/movies")
+function goToEventsPage() {
+    router.visit("/events");
+}
+function goToMoviesPage() {
+    router.visit("/movies");
 }
 </script>
 <template>
@@ -83,10 +86,11 @@ function goToMoviesPage(){
                     <li class="nav-item" @click="goToEventsPage">
                         <a class="nav-link" href="#features">Events</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#team">Buy Tickets</a>
+
+                    <li class="nav-item" @click="goCinema">
+                        <a class="nav-link" href="#team">Cinema</a>
                     </li>
-                    <li class="nav-item" @click="goLogin">
+                    <li class="nav-item" @click="goEvents">
                         <a class="nav-link" href="#faqs">Create Event</a>
                     </li>
                 </ul>
@@ -159,6 +163,6 @@ function goToMoviesPage(){
 </template>
 <style scoped>
 .nav-link:hover {
-      color: #fff !important; /* Text color on hover */
-    }
+    color: #fff !important; /* Text color on hover */
+}
 </style>

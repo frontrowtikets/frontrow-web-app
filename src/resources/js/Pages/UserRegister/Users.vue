@@ -250,6 +250,7 @@ function assignPermission() {
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                     <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                     <div>No Registered Users.</div>
+                                    <div ref="usersTableBottom"></div>
                                 </div>
                             </b-tab>
                             <b-tab title="Beneficiary Requests">
@@ -323,6 +324,7 @@ function assignPermission() {
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                     <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                     <div>No Beneficiaries Requests.</div>
+                                    <div ref="beneficiaryRequestsTableBottom"></div>
                                 </div>
                             </b-tab>
                             <b-tab title="Deactivated ">
@@ -390,6 +392,7 @@ function assignPermission() {
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
                                     <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
                                     <div>No Deactivated beneficiaries.</div>
+                                    <div ref="deactivatedTableBottom"></div>
                                 </div>
                             </b-tab>
                         </b-tabs>

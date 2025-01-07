@@ -12,11 +12,11 @@ class UserRegister extends Controller
     public function index()
     {
 
-        $users = User::orderBy('created_at', 'desc')->paginate(12);
+        $users = User::orderBy('created_at', 'desc')->paginate(6);
         $userAssignPermission = User::select('name', 'id', 'email')->get();
         $seededPermissions = Permission::select('name')->get();
-        $inactiveDeneficiaries = User::where('beneficiary_status','inactive')->paginate(12);
-        $deactiveDeneficiaries = User::where('beneficiary_status', 'deactivated')->paginate(12);
+        $inactiveDeneficiaries = User::where('beneficiary_status', 'inactive')->paginate(6);
+        $deactiveDeneficiaries = User::where('beneficiary_status', 'deactivated')->paginate(6);
 
 
         return   \Inertia\Inertia::render('UserRegister/Users', [
@@ -55,11 +55,11 @@ class UserRegister extends Controller
 
         $theUser->revokePermissionTo('beneficiary');
     }
-    public function userbeneficiaryrequest( Request $request){
+    public function userbeneficiaryrequest(Request $request)
+    {
         $theUser = User::where('id', $request->userId)->first();
         $theUser->user_type = 'beneficiary';
         $theUser->beneficiary_status = 'inactive';
         $theUser->save();
-
     }
 }
