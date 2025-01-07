@@ -9,6 +9,12 @@ import { router } from "@inertiajs/vue3";
 const props = defineProps(["last3Movies", "last3Events"]);
 
 onMounted(() => {});
+function slugify(title){
+     return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+}
 function viewMovie(title, id) {
     router.visit(`/home/movie/${slugify(title)}/${id}`);
 }

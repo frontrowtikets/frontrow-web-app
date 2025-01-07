@@ -113,7 +113,7 @@ function downloadTicket() {
     <div
         class="card2"
         :style="{
-            backgroundImage: `url(${props.event.banner_image_url})`,
+            backgroundImage: `url(${props?.event?.banner_image_url})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -134,23 +134,23 @@ function downloadTicket() {
                     >
                 </div>
 
-                <span class="text-truncate">{{ props.event.title }}</span>
-                <small class="fw-light">{{ props.event.location_name }}</small>
+                <span class="text-truncate">{{ props.event?.title }}</span>
+                <small class="fw-light">{{ props.event?.location_name }}</small>
                 <small class="fw-light">
                     {{
-                        moment(props.event.start_date).format(
+                        moment(props.event?.start_date).format(
                             " DD MMM YYYY"
                         )
                     }} - {{
-                        moment(props.event.end_date).format(
+                        moment(props.event?.end_date).format(
                             " DD MMM YYYY"
                         )
                     }}
                 </small>
                  <small class="fw-light">
                     From: {{
-                        moment(props.event.start_time, "HH:mm:ss").format("h:mm A")
-                    }} to: {{ moment(props.event.end_time, "HH:mm:ss").format("h:mm A") }}
+                        moment(props.event?.start_time, "HH:mm:ss").format("h:mm A")
+                    }} to: {{ moment(props?.event?.end_time, "HH:mm:ss").format("h:mm A") }}
                 </small>
             </div>
         </div>

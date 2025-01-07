@@ -69,7 +69,7 @@ function allMovies() {
 
                                 <div v-if="paginatedItems.length > 0">
                                     <div class="flex-wrap gap-5 mt-5 d-flex justify-content-center">
-                                        <EventTicketCard
+                                        <MovieTicketCard
                                             v-for="(ticket, index) in paginatedItems"
                                             :key="`${index}_${ticket.id}`"
                                             :ticketId="ticket.ticket_id"

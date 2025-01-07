@@ -67,6 +67,20 @@ class MoviesController extends Controller
         ]);
     }
 
+    public function movieDetailHome(Request $request)
+    {
+        $movieDetail = Movie::where('id', $request->id)->with([
+            'beneficiary',
+            'showTimes',
+            'genres',
+            'reviews.user',
+            'moviecasts'
+        ])->first();
+        return \Inertia\Inertia::render('Movies/MovieDetailsHomePage', [
+            'movieDetails' => $movieDetail
+        ]);
+    }
+
     public function buyMovieTicket(Request $request)
     {
         $movieDetail = Movie::where('id', $request->id)->with([
@@ -74,6 +88,17 @@ class MoviesController extends Controller
             'seatmap',
         ])->first();
         return \Inertia\Inertia::render('Movies/BuyMovieTicket', [
+            'buyMovieDetails' => $movieDetail
+        ]);
+    }
+
+    public function buyMovieTicketHome(Request $request)
+    {
+        $movieDetail = Movie::where('id', $request->id)->with([
+            'showTimes',
+            'seatmap',
+        ])->first();
+        return \Inertia\Inertia::render('Movies/BuyMovieTicketHome', [
             'buyMovieDetails' => $movieDetail
         ]);
     }

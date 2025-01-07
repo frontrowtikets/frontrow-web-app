@@ -5,6 +5,7 @@ import creditCard from "../../../images/creditCard.svg";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import { ref, computed, onMounted } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
 import axios from "axios";
 
 const props = defineProps(["paymentDetails", "currency", "total", "movieId"]);
@@ -69,7 +70,27 @@ async function payTicket() {
     await axios
         .post("/api/v1/buyMovieTicket", paymentDetailsCleaned.value)
         .then((res) => {
-            router.visit("/mytickets");
+            if (usePage().props.auth.user) {
+                router.visit("/mytickets");
+            } else {
+                isProcessing.value = false;
+
+                Swal.fire({
+                    title: "Payment Successful",
+                    icon: "success",
+                    html: `<p style="font-size: 14px">Your payment was successful, Login to download your ticket(s) and invoice(s). Check your email for more details.</p>`,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    focusConfirm: true,
+                    confirmButtonText: "Okay",
+                    confirmButtonColor: "#43ad60",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    closeOnClickOutside: false,
+                }).then((result) => {
+                    router.visit("/login");
+                });
+            }
         })
         .catch((err) => {
             responseError.value = err.response.data.message;

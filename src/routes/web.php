@@ -18,7 +18,9 @@ Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('events_hom
 Route::get('/verify/movie/ticket/{ticketId}/{transactionId}/{userDetailsId}', [MoviesController::class, 'verifyTicket'])->name('verifyTicket');
 Route::get('/verify/event/ticket/{ticketId}/{transactionId}/{userDetailsId}', [EventsController::class, 'verifyTicket'])->name('verifyTicket');
 
-
+Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHome'])->name('movie_detail_home');
+Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
+Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 
 
 

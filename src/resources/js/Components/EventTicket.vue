@@ -16,25 +16,25 @@ const props = defineProps([
 const qrcode = useQRCode(`${appURL}/verify/event/ticket/${props.ticketId}/${props.transactionDetails.id}/${props.userDetails.id}`);
 
 const screeningDate = computed(() => {
-    const thedate = moment(props.event.start_date).format(
+    const thedate = moment(props.event?.start_date).format(
         "ddd, DD MMM YYYY"
     );
     return thedate;
 });
 const screeningDate2 = computed(() => {
-    const thedate = moment(props.event.end_date).format(
+    const thedate = moment(props.event?.end_date).format(
         "ddd, DD MMM YYYY"
     );
     return thedate;
 });
 const startTime = computed(() =>{
-    const starts = moment(props.event.start_time, "HH:mm:ss").format("h:mm A")
+    const starts = moment(props.event?.start_time, "HH:mm:ss").format("h:mm A")
     return starts
 }
 
 );
 const endTime = computed(() =>{
-    const ends = moment(props.event.end_time, "HH:mm:ss").format("h:mm A");
+    const ends = moment(props.event?.end_time, "HH:mm:ss").format("h:mm A");
     return ends
 }
 
@@ -52,10 +52,10 @@ const endTime = computed(() =>{
                         class="p-3 text-center text-white ticket-header bg-secondary"
                     >
                         <h2 class="mb-0 cinema-name">
-                            {{ props.event.title }}
+                            {{ props.event?.title }}
                         </h2>
                         <p class="mb-0">
-                            {{ props.event.location_name }}
+                            {{ props.event?.location_name }}
                         </p>
                     </div>
 
@@ -92,7 +92,7 @@ const endTime = computed(() =>{
                             <img :src="qrcode" alt="QR Code" />
                             <div class="p-3 text-center stub-content">
                                 <p class="mb-1 small">
-                                    {{ props.event.title }}
+                                    {{ props.event?.title }}
                                 </p>
                                 <p class="mb-1 small">{{ screeningDate }}</p>
                                 <p class="mb-0 small">

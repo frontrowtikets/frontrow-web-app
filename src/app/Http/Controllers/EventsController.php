@@ -65,6 +65,18 @@ class EventsController extends Controller
             'eventDetails' => $eventDetail
         ]);
     }
+    public function eventDetailHome(Request $request)
+    {
+        $eventDetail = Event::where('id', $request->id)->with([
+            'beneficiary',
+            'categories',
+            'reviews.user',
+            'eventTickets',
+        ])->first();
+        return \Inertia\Inertia::render('Events/EventDetailsHomePage', [
+            'eventDetails' => $eventDetail
+        ]);
+    }
 
     public function CreateEventReview(CreateEventReview $request)
     {
