@@ -11,7 +11,7 @@ class LandingPageController extends Controller
     public function index(Request $request)
     {
         $last3Movies = Movie::where('is_active', true)->where('is_active', true)->with(["showTimes"])->latest()->take(3)->get();
-        $last3Events = Event::with(["eventTickets"])->latest()->take(3)->get();
+        $last3Events = Event::where('is_active', true)->with(["eventTickets"])->latest()->take(3)->get();
 
         $upcomingmovies = Movie::where('is_active', true)->with(['showTimes' => function ($query) {
             $query->where('screening_date', '>=', now())
@@ -23,7 +23,7 @@ class LandingPageController extends Controller
             ->take(3)
             ->get();
 
-        $upcomingevents = Event::where('is_active', true)->with(['eventTickets'])
+        $upcomingevents = Event::where('is_active', true)->where('is_active', true)->with(['eventTickets'])
             ->where('start_date', '>=', now())
             ->orderBy('start_date', 'asc')
             ->take(3)
