@@ -19,12 +19,18 @@ class MoviesController extends Controller
 {
     public function homeMovies(Request $request)
     {
-        return \Inertia\Inertia::render('Movies/MoviesHomePage');
+        $movies = Movie::with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
+        $categories = MovieCategory::get();
+
+        return \Inertia\Inertia::render('Movies/MoviesHomePage', [
+            'movies' => $movies,
+            'categories' => $categories
+        ]);
     }
 
     public function myMovies(Request $request)
     {
-        $myMovies = Movie::where('beneficiary_id', Auth::id())->latest()->paginate(12);
+        $myMovies = Movie::where('beneficiary_id', Auth::id())->latest()->paginate(6);
         return \Inertia\Inertia::render('Movies/MyMovies', [
             'userMovies' => $myMovies
         ]);
@@ -67,6 +73,20 @@ class MoviesController extends Controller
         ]);
     }
 
+    public function movieDetailHome(Request $request)
+    {
+        $movieDetail = Movie::where('id', $request->id)->with([
+            'beneficiary',
+            'showTimes',
+            'genres',
+            'reviews.user',
+            'moviecasts'
+        ])->first();
+        return \Inertia\Inertia::render('Movies/MovieDetailsHomePage', [
+            'movieDetails' => $movieDetail
+        ]);
+    }
+
     public function buyMovieTicket(Request $request)
     {
         $movieDetail = Movie::where('id', $request->id)->with([
@@ -74,6 +94,17 @@ class MoviesController extends Controller
             'seatmap',
         ])->first();
         return \Inertia\Inertia::render('Movies/BuyMovieTicket', [
+            'buyMovieDetails' => $movieDetail
+        ]);
+    }
+
+    public function buyMovieTicketHome(Request $request)
+    {
+        $movieDetail = Movie::where('id', $request->id)->with([
+            'showTimes',
+            'seatmap',
+        ])->first();
+        return \Inertia\Inertia::render('Movies/BuyMovieTicketHome', [
             'buyMovieDetails' => $movieDetail
         ]);
     }
@@ -97,7 +128,7 @@ class MoviesController extends Controller
 
     public function allMovies(Request $request)
     {
-        $movies = Movie::orderBy('created_at', 'desc')->paginate(12);
+        $movies = Movie::where('is_active', true)->with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Movies/AllMoviesPage', [
             'movies' => $movies
         ]);

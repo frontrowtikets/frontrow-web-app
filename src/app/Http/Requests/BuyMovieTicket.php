@@ -30,12 +30,12 @@ class BuyMovieTicket extends FormRequest
             'email' => 'required|string',
             'phoneNumber' => 'required|string',
             'paymentType' => 'required|string',
-            'cardNumber' => 'required',
-            'expiryDate' => 'required|string',
-            'cvv' => 'required',
+            'cardNumber' => '',
+            'expiryDate' => 'string',
+            'cvv' => '',
             'currency' => 'required|string',
             'total' => 'required|integer',
-            'movieId' => 'required'
+            'movieId' => 'required',
         ];
     }
 }

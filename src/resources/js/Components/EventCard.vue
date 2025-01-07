@@ -1,23 +1,35 @@
 <script setup>
-const props = defineProps([
-    "discount",
-    "eventName",
-    "eventImageLink",
-    "eventDate",
-    "eventLocation",
-    "eventPrice",
-    "eventCurrency",
-    "eventId"
-]);
-const emit = defineEmits(["view"])
-const viewDetails = ()  => {
-    emit('view',props.eventName);
-}
+import moment from "moment";
+import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
+const props = defineProps({
+     discount:{
+
+     },
+    eventName:{
+
+    },
+    eventImageLink:{},
+    eventDate:{},
+    eventLocation:{},
+    eventTickets:{
+        default:[]
+    },
+    eventId:{
+
+    },
+});
+const emit = defineEmits(["view"]);
+const viewDetails = () => {
+    emit("view", props.eventName);
+};
 </script>
 
 <template>
     <b-container>
-        <div class="rounded shadow card w-100" @click="()=>$emit('view',eventName,eventId)">
+        <div
+            class="rounded shadow card w-100"
+            @click="() => $emit('view', eventName, eventId)"
+        >
             <div class="p-2">
                 <div
                     class="overflow-hidden rounded position-relative"
@@ -62,15 +74,25 @@ const viewDetails = ()  => {
                     </h5>
                     <div class="mb-1 text-primary text-start">
                         <i class="bx bx-calendar-event me-1"></i
-                        ><span>{{ eventDate }}</span>
+                        ><span>{{
+                            moment(eventDate).format("ddd, DD MMM YYYY")
+                        }}</span>
                     </div>
                     <div class="text-truncate text-start">
                         <i class="bx bx-map me-1"></i
                         ><span>{{ eventLocation }} </span>
                     </div>
+                    <span class="invisible ms-3 badge badge-soft-secondary"
+                        >See More</span
+                    >
 
                     <h5 class="mt-3 text-end">
-                        <b>{{ eventCurrency }} {{ eventPrice }}</b>
+                        <b
+                            >{{ props.eventTickets[0]?.currency }}
+                            {{
+                                useCurrencyFormat(props.eventTickets[0]?.price)
+                            }}</b
+                        >
                     </h5>
                 </div>
             </div>

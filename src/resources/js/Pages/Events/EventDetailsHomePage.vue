@@ -1,11 +1,11 @@
 <script setup>
 import { Head, usePage, useForm, router } from "@inertiajs/vue3";
-import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, onMounted, computed, ref, watch } from "vue";
 import IsUserAdmin from "../../Composables/IsUserAdmin.js";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
-import useInertiaFormSubmit from "../../Composables/useInertiaFormSubmit.js";
+import HomeHeader from "../../Components/HomeHeader.vue";
+import FooterSection from "../../Components/FooterSection.vue";
 import EventCheckout from "../../Components/EventCheckout.vue";
 import { useWindowSize } from "@vueuse/core";
 
@@ -16,7 +16,16 @@ import "vue-select/dist/vue-select.css";
 
 const props = defineProps(["eventDetails"]);
 const state = reactive({
-
+    items: [
+        {
+            text: "Back",
+            // href: "javascript:void(0)"
+        },
+        {
+            text: "Event",
+            active: true,
+        },
+    ],
 });
 
 const { height } = useWindowSize();
@@ -54,8 +63,8 @@ const ticketTotal = computed(() => {
 const form = useForm({
     review: "",
     event_id: props.eventDetails.id,
-    user_id: usePage().props.auth.user.id,
-    submitted_by: usePage().props.auth.user.name,
+    user_id: usePage()?.props?.auth?.user?.id,
+    submitted_by: usePage()?.props?.auth?.user?.name,
 });
 
 const eventRegisterForm = useForm({
@@ -65,6 +74,17 @@ const eventRegisterForm = useForm({
     terms: false,
     event_id: props.eventDetails.id,
 });
+
+function goback() {
+    showCheckout.value = false;
+    if (window.history.length > 1) {
+        window.history.back();
+    }
+}
+
+function goLogin() {
+    router.visit("/login");
+}
 
 const submit = () => {
     form.post("/createeventreview", {
@@ -147,26 +167,23 @@ function checkValidity() {
         invalidPhoneNumberMsg.value = "";
     }
 }
-function goToEventManager() {
-    router.visit(`/eventmanager/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`);
-}
+
 function checkoutMovie() {
     showCheckout.value = true;
 }
 </script>
 <template>
     <Head :title="props.eventDetails.title" />
-    <DashboardLayout>
-        <PageHeader :title="props.eventDetails.title" :items="state.items" role="button" @click="showCheckout = false" />
+    <div v-scroll-spy>
+        <b-container class="" style="margin-top: 16em">
+        <HomeHeader />
+        <PageHeader :title="props.eventDetails.title" :items="state.items" role="button" @click="goback" />
 
         <div v-if="showCheckout">
             <div class="col-12">
                 <div class="card" :style="{ height: `${height - 100}px` }">
                     <div class="card-body d-flex align-items-center justify-content-center">
-                        <EventCheckout
-                        :quantity="ticketQuantity"
-                        :selectedTicket="selectedTicket"
-                        />
+                        <EventCheckout :quantity="ticketQuantity" :selectedTicket="selectedTicket" />
                     </div>
                 </div>
             </div>
@@ -213,7 +230,7 @@ function checkoutMovie() {
                             </table>
                         </div>
                         <div class="gap-2 hstack">
-                            <div v-if="props.eventDetails.beneficiary_id != currentUser.id">
+                            <div >
                                 <button class="btn btn-soft-primary w-100" @click="buyTicket" v-if="props.eventDetails.access_type == 'paid'">
                                     Buy Ticket
                                 </button>
@@ -233,8 +250,6 @@ function checkoutMovie() {
                                     </button>
                                 </div>
                             </div>
-
-                            <button class="btn btn-soft-danger w-100" v-if="props.eventDetails.beneficiary_id == currentUser.id">Edit</button>
                         </div>
                     </div>
                 </div>
@@ -288,9 +303,7 @@ function checkoutMovie() {
                                 </div>
                             </li>
                         </ul>
-                        <div class="mt-4" v-if="props.eventDetails.beneficiary_id == currentUser.id" @click="goToEventManager">
-                            <a class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -308,9 +321,7 @@ function checkoutMovie() {
                                     category.name
                                 }}</span>
                             </div>
-                            <div class="" v-if="props.eventDetails.beneficiary_id == currentUser.id || isAdmin">
-                                <button class="btn btn-soft-primary w-100" @click="goToEventManager">Manage Event</button>
-                            </div>
+
                         </div>
 
                         <h5 class="mt-5 mb-3 fw-semibold">Description</h5>
@@ -344,7 +355,7 @@ function checkoutMovie() {
                             </div>
                         </div>
 
-                        <div v-if="props.eventDetails.beneficiary_id != currentUser.id">
+                        <div>
                             <b-button variant="primary" class="mt-4" @click="buyTicket" v-if="props.eventDetails.access_type == 'paid'"
                                 >Buy Ticket
                             </b-button>
@@ -386,7 +397,7 @@ function checkoutMovie() {
                                     </div>
                                 </div>
                             </div>
-                            <form>
+                            <form v-if="usePage().props.auth.user">
                                 <div class="gap-4 mt-5 mb-5 col-12 c d-flex align-items-end">
                                     <div class="col-10 col-md-8">
                                         <textarea
@@ -415,6 +426,9 @@ function checkoutMovie() {
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.review" />
                                 </div>
                             </form>
+                            <div v-else class="mt-3 mb-3 text-center text-muted">
+                                <div><span class="text-primary" role="button" @click="goLogin">Sign in</span> to sumbmit a review</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -547,7 +561,12 @@ function checkoutMovie() {
                 </b-modal>
             </div>
         </div>
-    </DashboardLayout>
+    </b-container>
+    </div>
+
+    <div class="mt-5">
+        <FooterSection />
+    </div>
 </template>
 <style scoped>
 .background-container {

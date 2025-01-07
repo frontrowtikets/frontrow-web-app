@@ -56,8 +56,8 @@ function viewEvent(title, id) {
                                     :movieImageLink="item.thumbnail_url"
                                     :movieDate="item.release_date"
                                     :movieId="item.id"
-                                    :moviePrice="''"
-                                    :movieCurrency="''"
+                                    :showTimes="item.show_times"
+                                    :overallRating = "item.overallRating"
                                     @view="viewEvent"
                                 />
                             </div>

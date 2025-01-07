@@ -11,7 +11,9 @@ export function useObserveHitBottom(ref, callback, options={}) {
   }, options);
 
   onMounted(() => {
-        hitBottomObserver.observe(ref.value);
+    if (ref.value){
+         hitBottomObserver.observe(ref.value);
+    }
   });
   onUnmounted(() => {
       hitBottomObserver.disconnect();

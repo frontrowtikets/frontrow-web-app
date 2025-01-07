@@ -98,7 +98,7 @@ function allEvents(){
                                                     aria-controls="categories-collapse"
                                                 >
                                                     <i class="mdi mdi-folder font-size-16 text-warning me-2"></i>
-                                                    My Movies
+                                                    My Events
                                                     <i
                                                         class="mdi mdi-chevron-up accor-down-icon ms-auto"
                                                         @click="showMyEventsDropdown = !showMyEventsDropdown"
@@ -138,12 +138,7 @@ function allEvents(){
                                                 <i class="mdi mdi-circle-medium text-danger ms-2"></i>
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="javascript: void(0);" class="text-body d-flex align-items-center">
-                                                <i class="mdi mdi-star-outline text-muted font-size-16 me-2"></i>
-                                                <span class="me-auto">Ratings</span>
-                                            </a>
-                                        </li>
+
                                         <li @click="allEvents" role="button">
                                             <a  class="text-body d-flex align-items-center">
                                                 <i class="mdi mdi-movie-roll text-danger font-size-16 me-2"></i>

@@ -55,8 +55,7 @@ function viewEvent(title, id) {
                                     :eventDate="item.start_date"
                                     :eventLocation="item.location_name"
                                     :eventId="item.id"
-                                    :eventPrice="''"
-                                    :eventCurrency="''"
+                                    :eventTickets = "item.event_tickets"
                                     @view="viewEvent"
                                 />
                             </div>

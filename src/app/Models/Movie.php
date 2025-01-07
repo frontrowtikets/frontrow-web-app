@@ -33,8 +33,10 @@ class Movie extends Model implements HasMedia
         'movie_status',
         'currency',
         'maturity_rating',
+
     ];
-  
+
+    protected $appends = ['overallRating', 'hasSeatMap'];
 
     public function getoverallRatingAttribute()
     {

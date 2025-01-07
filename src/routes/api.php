@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserRegister;
+use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\v1\BuyEventTicketController;
 use App\Http\Controllers\Api\v1\BuyMovieTicketController;
 
@@ -15,6 +16,9 @@ Route::group(['namespace' => 'Api'], function () {
 
     Route::post('/v1/buyMovieTicket', [BuyMovieTicketController::class, 'buyTicket']);
     Route::post('/v1/buyEventTicket', [BuyEventTicketController::class, 'buyTicket']);
+    Route::post('/rating', [RatingController::class, 'saveRating']);
+
+
 
 
     Route::group(['middleware' => [

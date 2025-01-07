@@ -21,5 +21,20 @@ class UserEventTicket extends Model
         'ticket_id',
         'booking_id',
         'event_ticket_id',
+        'user_payment_detail_id',
+        'payment_transaction_id',
     ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
+    public function userPaymentDetail()
+    {
+        return $this->belongsTo(UserPaymentDetail::class);
+    }
+    public function paymentTransaction()
+    {
+        return $this->belongsTo(PaymentTransaction::class);
+    }
 }

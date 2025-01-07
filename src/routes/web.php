@@ -9,6 +9,7 @@ use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\UserRegister;
+use App\Http\Controllers\ActivationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
@@ -16,7 +17,11 @@ Route::get('/events', [EventsController::class, 'homeEvents'])->name('events_hom
 Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('events_home_page');
 
 Route::get('/verify/movie/ticket/{ticketId}/{transactionId}/{userDetailsId}', [MoviesController::class, 'verifyTicket'])->name('verifyTicket');
+Route::get('/verify/event/ticket/{ticketId}/{transactionId}/{userDetailsId}', [EventsController::class, 'verifyTicket'])->name('verifyTicket');
 
+Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHome'])->name('movie_detail_home');
+Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
+Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 
 
 
@@ -56,6 +61,8 @@ Route::middleware([
     Route::get('/mytickets', [TicketController::class, 'myTickets'])->name('my_tickets');
     Route::post('/saveseatmap', [MoviesController::class, 'saveSeatMap'])->name('save_seat_map');
     Route::post('/deleteseatmap', [MoviesController::class, 'deleteSeatMap'])->name('delete_seat_map');
+    Route::get('/activations', [ActivationController::class, 'activationPage'])->name('activations');
+
 
 
 
@@ -63,6 +70,11 @@ Route::middleware([
     Route::prefix('admin')->group(function () {
         Route::post('/saveeventssettings', [EventsController::class, 'saveEventsSettings'])->name('eventsSettins');
         Route::post('/savemoviessettings', [MoviesController::class, 'savemoviesSettings'])->name('moviesSettins');
+        Route::post('/activateEvent', [ActivationController::class, 'activateEvent'])->name('activate_Event');
+        Route::post('/deactivateEvent', [ActivationController::class, 'deactivateEvent'])->name('deactivate_Event');
+        Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
+        Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
+
     });
 });
 
