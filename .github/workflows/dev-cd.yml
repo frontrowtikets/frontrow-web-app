@@ -33,51 +33,48 @@ jobs:
 
       - name: Build Vite Assets
         working-directory: src
-        env:
-          BUILD_PATH: public/build
-        run: |
-          echo "Setting build output path to $BUILD_PATH"
-          npm run build -- --outDir=$BUILD_PATH
+        run: npm run build
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
-      - name: Deploy to Server
+      - name: Deploy Application Code
         env:
           REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_DEV_HOST }}
           REMOTE_PATH: /home/u964704866/public_html/fontrow
         run: |
-          # Define the remote SRC and BUILD folder paths
           REMOTE_SRC_PATH=$REMOTE_PATH
           REMOTE_BUILD_PATH=$REMOTE_PATH/public/build
 
           echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 65002..."
 
-          # Add the server to known hosts (to avoid manual confirmation)
+          # Add the server to known hosts
           ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
-
-          # Ensure Composer 2 on the remote server
-          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "composer self-update --2 || echo 'Composer is already version 2'"
 
           # Create the necessary directory structure on the remote server
           ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH $REMOTE_BUILD_PATH"
 
-          # Sync the src folder (excluding build folder) to the remote server
-          rsync -avz -e "ssh -p 65002" --exclude="public/build" --delete src/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_SRC_PATH
+          # Sync the src folder (excluding the build and node_modules folders) to the remote server
+          rsync -avz -e "ssh -p 65002" \
+            --exclude="node_modules" \
+            --exclude="public/build" \
+            --delete src/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_SRC_PATH
 
-          echo "Repository synced. Transferring built assets..."
-
-          # Transfer built Vite assets to the remote server
+          echo "Transferring built assets..."
           rsync -avz -e "ssh -p 65002" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
 
-          echo "Assets transferred. Running Laravel commands on the remote server..."
-
-          # Run Laravel commands on the remote server
-          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST bash << 'EOF'
-            cd $REMOTE_SRC_PATH
+      - name: Run Remote Commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_DEV_HOST }}
+          username: ${{ secrets.REMOTE_DEV_USER }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          port: 65002
+          script: |
+            cd /home/u964704866/public_html/fontrow
             if [ -f artisan ]; then
               composer install --no-interaction --prefer-dist
               php artisan migrate --force
@@ -89,6 +86,3 @@ jobs:
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
             fi
-            EOF
-
-          echo "Deployment successful!"
