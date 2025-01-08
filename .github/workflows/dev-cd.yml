@@ -1,0 +1,65 @@
+name: Deploy to Staging Server
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Server
+        env:
+          REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
+          REMOTE_HOST: ${{ secrets.REMOTE_DEV_HOST }}
+          REMOTE_PATH: /home/u964704866/public_html/fontrow
+        run: |
+          # Define the remote SRC folder path
+          REMOTE_SRC_PATH=$REMOTE_PATH
+
+          echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 65002..."
+
+          # Add the server to known hosts (to avoid manual confirmation)
+          ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
+
+          # Create the necessary directory structure on the remote server
+          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH"
+
+          # Sync the src folder to the remote server
+          rsync -avz -e "ssh -p 65002" --delete src/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_SRC_PATH
+
+          echo "Repository synced. Now building assets on the remote server..."
+
+          # Run build commands on the remote server
+          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST bash << 'EOF'
+            cd $REMOTE_SRC_PATH
+            composer install --no-interaction --prefer-dist
+            npm install && npm run build
+            php artisan migrate --force
+            php artisan storage:link
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan config:cache
+            php artisan route:cache
+            EOF
+
+          echo "Build complete. Finalizing deployment..."
+
+          # Define paths for transferring built assets
+          REMOTE_BUILD_PATH=$REMOTE_PATH/build
+          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_BUILD_PATH"
+
+          # Transfer built assets to the remote server
+          rsync -avz -e "ssh -p 65002" $REMOTE_SRC_PATH/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
+
+          echo "Deployment successful!"
