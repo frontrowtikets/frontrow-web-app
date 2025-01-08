@@ -49,6 +49,8 @@ jobs:
           port: 65002
           script: |
             cd /home/u964704866/public_html/frontrow/src
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_rsa_git
             git pull origin development
 
             if [ -f artisan ]; then
