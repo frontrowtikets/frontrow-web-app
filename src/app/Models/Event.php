@@ -34,6 +34,10 @@ class Event extends Model implements HasMedia
         'is_active'
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     protected $appends = ['reg_status'];
 
     public function beneficiary()
