@@ -77,12 +77,14 @@ jobs:
             cd /home/u964704866/public_html/fontrow
             if [ -f artisan ]; then
               composer install --no-interaction --prefer-dist
-              php artisan migrate --force
+              chmod -R 755 vendor
+              composer dump-autoload
+              chmod -R 777 storage
+              chmod -R 777 bootstrap
               php artisan storage:link
-              php artisan cache:clear
-              php artisan config:clear
-              php artisan config:cache
-              php artisan route:cache
+              php artisan optimize:clear
+              php artisan migrate --force
+              php artisan schedule-monitor:sync
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
             fi
