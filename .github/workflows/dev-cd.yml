@@ -48,7 +48,7 @@ jobs:
           key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
           port: 65002
           script: |
-            cd /home/u964704866/public_html/fontrow
+            cd /home/u964704866/public_html/frontrow/src
             git pull origin development
 
             if [ -f artisan ]; then
@@ -68,7 +68,7 @@ jobs:
         env:
           REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_DEV_HOST }}
-          REMOTE_PATH: /home/u964704866/public_html/fontrow
+          REMOTE_PATH: /home/u964704866/public_html/frontrow/src
         run: |
           REMOTE_SRC_PATH=$REMOTE_PATH
           REMOTE_BUILD_PATH=$REMOTE_PATH/public/build
