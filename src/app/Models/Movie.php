@@ -36,6 +36,10 @@ class Movie extends Model implements HasMedia
 
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     protected $appends = ['overallRating', 'hasSeatMap'];
 
     public function getoverallRatingAttribute()
