@@ -40,7 +40,31 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
-      - name: Deploy Application Code
+      - name: Sync to Staging Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_DEV_HOST }}
+          username: ${{ secrets.REMOTE_DEV_USER }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          port: 65002
+          script: |
+            cd /home/u964704866/public_html/fontrow
+            git pull origin development
+
+            if [ -f artisan ]; then
+              composer install --no-interaction --prefer-dist
+              chmod -R 755 vendor
+              composer dump-autoload
+              chmod -R 777 storage
+              chmod -R 777 bootstrap
+              php artisan storage:link
+              php artisan optimize:clear
+              php artisan migrate --force
+              php artisan schedule-monitor:sync
+            else
+              echo "artisan file not found! Ensure the project was correctly deployed."
+            fi
+      - name: Transfer Built Assets
         env:
           REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_DEV_HOST }}
@@ -57,34 +81,5 @@ jobs:
           # Create the necessary directory structure on the remote server
           ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH $REMOTE_BUILD_PATH"
 
-          # Sync the src folder (excluding the build and node_modules folders) to the remote server
-          rsync -avz -e "ssh -p 65002" \
-            --exclude="node_modules" \
-            --exclude="public/build" \
-            --delete src/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_SRC_PATH
-
           echo "Transferring built assets..."
           rsync -avz -e "ssh -p 65002" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
-
-      - name: Run Remote Commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.REMOTE_DEV_HOST }}
-          username: ${{ secrets.REMOTE_DEV_USER }}
-          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
-          port: 65002
-          script: |
-            cd /home/u964704866/public_html/fontrow
-            if [ -f artisan ]; then
-              composer install --no-interaction --prefer-dist
-              chmod -R 755 vendor
-              composer dump-autoload
-              chmod -R 777 storage
-              chmod -R 777 bootstrap
-              php artisan storage:link
-              php artisan optimize:clear
-              php artisan migrate --force
-              php artisan schedule-monitor:sync
-            else
-              echo "artisan file not found! Ensure the project was correctly deployed."
-            fi
