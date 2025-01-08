@@ -52,9 +52,9 @@ jobs:
             git pull origin development
 
             if [ -f artisan ]; then
-              composer install --no-interaction --prefer-dist
+              ~/bin/composer install --no-interaction --prefer-dist
               chmod -R 755 vendor
-              composer dump-autoload
+              ~/bin/composer dump-autoload
               chmod -R 777 storage
               chmod -R 777 bootstrap
               php artisan storage:link
