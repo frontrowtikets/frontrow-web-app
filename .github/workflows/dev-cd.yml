@@ -19,9 +19,11 @@ jobs:
           node-version: "20"
 
       - name: Install Node.js Dependencies
+        working-directory: src
         run: npm install
 
       - name: Build Vite Assets
+        working-directory: src
         env:
           BUILD_PATH: public/build
         run: |
@@ -34,6 +36,7 @@ jobs:
           php-version: "8.1"
 
       - name: Install Composer Dependencies
+        working-directory: src
         run: composer install --no-interaction --prefer-dist
 
       - name: Set up SSH
@@ -65,7 +68,7 @@ jobs:
           echo "Repository synced. Transferring built assets..."
 
           # Transfer built Vite assets to the remote server
-          rsync -avz -e "ssh -p 65002" public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
+          rsync -avz -e "ssh -p 65002" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
 
           echo "Assets transferred. Running Laravel commands on the remote server..."
 
