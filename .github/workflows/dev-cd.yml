@@ -3,7 +3,7 @@ name: Deploy to Staging Server
 on:
   push:
     branches:
-      - development # Trigger deployment on the development branch
+      - development
 
 jobs:
   deploy:
@@ -59,6 +59,9 @@ jobs:
           # Add the server to known hosts (to avoid manual confirmation)
           ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
 
+          # Ensure Composer 2 on the remote server
+          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "composer self-update --2 || echo 'Composer is already version 2'"
+
           # Create the necessary directory structure on the remote server
           ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH $REMOTE_BUILD_PATH"
 
@@ -75,13 +78,17 @@ jobs:
           # Run Laravel commands on the remote server
           ssh -p 65002 $REMOTE_USER@$REMOTE_HOST bash << 'EOF'
             cd $REMOTE_SRC_PATH
-            composer install --no-interaction --prefer-dist
-            php artisan migrate --force
-            php artisan storage:link
-            php artisan cache:clear
-            php artisan config:clear
-            php artisan config:cache
-            php artisan route:cache
+            if [ -f artisan ]; then
+              composer install --no-interaction --prefer-dist
+              php artisan migrate --force
+              php artisan storage:link
+              php artisan cache:clear
+              php artisan config:clear
+              php artisan config:cache
+              php artisan route:cache
+            else
+              echo "artisan file not found! Ensure the project was correctly deployed."
+            fi
             EOF
 
           echo "Deployment successful!"
