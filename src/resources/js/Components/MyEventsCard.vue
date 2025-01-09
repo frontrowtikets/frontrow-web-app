@@ -50,6 +50,12 @@ useInertiaFormSubmit(
         "Changes have successfully deactivated the event"
     );
 }
+function editEvent() {
+    router.get(`/edit_event/${props.eventDetails.id}`);
+}
+function deleteEvent() {
+    router.get(`/delete_event/${props.eventDetails.id}`);
+}
 </script>
 <template>
     <div class="col-xl-4 col-sm-6">
@@ -83,11 +89,11 @@ useInertiaFormSubmit(
                             <b-dropdown-item v-if="props.eventDetails?.is_active == true && isAdmin" @click="deactivateEvent"
                                 >Deactivate</b-dropdown-item
                             >
-                            <b-dropdown-item href="#">Edit</b-dropdown-item>
+                            <b-dropdown-item @click="editEvent">Edit</b-dropdown-item>
                             <b-dropdown-item href="#">Tickets Sold</b-dropdown-item>
                             <b-dropdown-item href="#">Manage Event</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item href="#" ><span class="text-danger">Delete</span></b-dropdown-item>
+                            <b-dropdown-item @click="deleteEvent" ><span class="text-danger">Delete</span></b-dropdown-item>
                         </b-dropdown>
                     </div>
                     <div class="mb-3 avatar-xs me-3" @click="viewEventsDetails">

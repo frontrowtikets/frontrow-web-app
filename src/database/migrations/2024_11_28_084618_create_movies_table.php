@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('languange', 100)->default('English')->nullable();
             $table->string('poster_url')->nullable();
             $table->string('trailer_url')->nullable();
-            $table->boolean('is_active')->nullable();
+            $table->integer('is_active');
             $table->string('status', 100);
             $table->string('currency', 100)->default('UGX')->nullable();
             $table->string('maturity_rating')->default('13+')->nullable();

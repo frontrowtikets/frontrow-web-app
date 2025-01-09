@@ -48,6 +48,12 @@ function deactivateMovie() {
         "Changes have successfully deactivated the movie"
     );
 }
+function editMovie() {
+    router.get(`/edit_movie/${props.movieDetails.id}`);
+}
+function deleteMovie() {
+    router.get(`/delete_movie/${props.movieDetails.id}`);
+}
 </script>
 <template>
     <div class="col-xl-4 col-sm-6">
@@ -89,15 +95,15 @@ function deactivateMovie() {
                                 @click="deactivateMovie"
                                 >Deactivate</b-dropdown-item
                             >
-                            <b-dropdown-item href="#">Edit</b-dropdown-item>
+                            <b-dropdown-item @click="editMovie">Edit</b-dropdown-item>
                             <b-dropdown-item href="#"
                                 >Tickets Sold</b-dropdown-item
                             >
                             <b-dropdown-item href="#"
-                                >Manager Movie</b-dropdown-item
+                                >Manage Movie</b-dropdown-item
                             >
                             <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item href="#"
+                            <b-dropdown-item @click="deleteMovie"
                                 ><span class="text-danger"
                                     >Delete</span
                                 ></b-dropdown-item

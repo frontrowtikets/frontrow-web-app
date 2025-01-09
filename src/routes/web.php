@@ -48,7 +48,11 @@ Route::middleware([
     Route::post('/registerforevent', [EventsController::class, 'RegisterForEvent'])->name('register_for_event');
     Route::get("/movie/{title}/{id}", [MoviesController::class, 'movieDetail'])->name('movie_detail');
     Route::get("/moviemanager/{title}/{id}", [MoviesController::class, 'movieManager'])->name('movie_manager');
-    Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+    Route::get("/moviemanager/{title}/{id}", [MoviesController::class, 'movieManager'])->name('movie_manager');
+    Route::get("/edit_movie/{id}", [MoviesController::class, 'editMovie'])->name('edit_movie');
+    Route::get("/delete_movie/{id}", [MoviesController::class, 'deleteMovie'])->name('delete_movie');
+    Route::get("/edit_event/{id}", [EventsController::class, 'editEvent'])->name('edit_event');
+    Route::get("/delete_event/{id}", [EventsController::class, 'deleteEvent'])->name('delete_event');
     Route::get("/seat-map/{id}", [MoviesController::class, 'seatMap'])->name('seat_map');
     Route::get("/event/{title}/{id}", [EventsController::class, 'eventDetail'])->name('event_detail');
     Route::post("/event/acceptinvitation", [EventsController::class, 'acceptInvitation'])->name('accept_invitation');

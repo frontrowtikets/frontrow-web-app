@@ -49,8 +49,13 @@ class MovieService
     public static function createMovie($movieDetails)
     {
 
+        $isEdit = null;
+        if (isset($movieDetails['id']) && $movieDetails['id'] != '') {
+            $isEdit = $movieDetails['id'];
+        }
+
         $createdMovie = Movie::updateOrCreate([
-            'id' => isset($movieDetails['id']) ? $movieDetails['id'] : null
+            'id' => $isEdit
         ], [
             'beneficiary_id' => isset($movieDetails['beneficiary_id']) && !is_null($movieDetails['beneficiary_id']) ? $movieDetails['beneficiary_id']  :  Auth::user()->id,
             'title' => $movieDetails['title'],
@@ -64,11 +69,14 @@ class MovieService
             'maturity_rating' => $movieDetails['maturity_rating'],
         ]);
 
-        $cardImage = $createdMovie->addMedia($movieDetails['cardImage'])->toMediaCollection('movie_images');
-        $cardImageUrl = $cardImage->getUrl();
-        $createdMovie->thumbnail_url = $cardImageUrl;
+        if (isset($movieDetails['cardImage']) && !is_null($movieDetails['cardImage'])) {
+            $cardImage = $createdMovie->addMedia($movieDetails['cardImage'])->toMediaCollection('movie_images');
+            $cardImageUrl = $cardImage->getUrl();
+            $createdMovie->thumbnail_url = $cardImageUrl;
+        }
 
-        if (isset($movieDetails['bannerImage'])) {
+
+        if (isset($movieDetails['bannerImage']) && !is_null($movieDetails['bannerImage'])) {
             $bannerImage = $createdMovie->addMedia($movieDetails['bannerImage'])->toMediaCollection('movie_images');
             $bannerImageUrl = $bannerImage->getUrl();
             $createdMovie->poster_url = $bannerImageUrl;
@@ -101,7 +109,14 @@ class MovieService
 
         if (count($movieDetails['casts']) > 0) {
             foreach ($movieDetails['casts'] as $cast) {
-                $moviecast = MovieCast::updateOrCreate(['id' => isset($cast['id']) ? $cast['id'] : null], [
+
+                $isCastEdit = null;
+                if (isset($cast['id']) && $cast['id'] != '') {
+                    $isCastEdit = $cast['id'];
+                }
+
+
+                $moviecast = MovieCast::updateOrCreate(['id' => $isCastEdit], [
                     'movie_id' => $createdMovie->id,
                     'name' => $cast['castName'],
                     'role' => $cast['role'],
@@ -240,7 +255,6 @@ class MovieService
                 ]);
             }
         }
-
     }
     private static  function generateRandomMovieTicketId()
     {

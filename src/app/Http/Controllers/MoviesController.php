@@ -174,4 +174,28 @@ class MoviesController extends Controller
 
         ]);
     }
+
+    public function editMovie(Request $request){
+        $movieDetail = Movie::where('id', $request->id)->with([
+            'beneficiary',
+            'showTimes',
+            'genres',
+            'reviews.user',
+            'moviecasts'
+        ])->first();
+        $movieCategories = MovieCategory::select('id', 'name')->get();
+        $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
+
+        return \Inertia\Inertia::render('Movies/ScheduleMovie', [
+            'movieCategories' => $movieCategories,
+            'beneficiaries' => $beneficiaries,
+            'editDetails' => $movieDetail
+        ]);
+
+    }
+
+    public function deleteMovie(Request $request){
+        $movie = Movie::where('id', $request->id)->first();
+        $movie->delete();
+    }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { Head, useForm, router,usePage } from "@inertiajs/vue3";
-import { reactive, onMounted, ref, watch } from "vue";
+import { reactive, onMounted, ref, watch,computed } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import InputError from "@/js/Components/InputError.vue";
 import Stepper from "@/js/Components/Stepper.vue";
@@ -15,7 +15,7 @@ import useInertiaFormSubmit from "@/js/Composables//useInertiaFormSubmit.js";
 import Swal from "sweetalert2";
 
 
-const props = defineProps(["eventCategories","beneficiaries"]);
+const props = defineProps(["eventCategories","beneficiaries", "editDetails"]);
 
 const state = reactive({
     items: [
@@ -64,6 +64,7 @@ const form = useForm({
     bannerImage: null,
     cardImage: null,
     tickets: [],
+    id:""
 });
 
 const bannerImageData = ref(null);
@@ -82,6 +83,46 @@ onMounted(() => {
         timeout: 5000,
         maximumAge: 0,
     });
+
+    if(props.editDetails){
+        const editData = props.editDetails;
+          form['beneficiary_id'] = editData.beneficiary_id
+    form['title'] = editData.title
+    form['description'] = editData.description
+    form['location_name'] = editData.location_name
+    form['gps_location'] = editData.gps_location
+    form['start_date'] = editData.start_date
+    form['end_date'] = editData.end_date
+    form['start_time'] = editData.start_time
+    form['end_time'] =editData.end_time
+    form['status'] =editData.status
+    form['thumbnail_url'] = editData.thumbnail_url
+    form['currency'] = editData.currency
+    form['access_type'] = editData.access_type
+    form["id"] =  editData.id
+
+
+
+    //categories
+        editData.categories.forEach((category)=>{
+            const eventCats= [];
+            eventCats.push({id:category.id,name:category.name})
+            form["categories"] = eventCats;
+        })
+
+        // tickets
+         eventTickets.value = editData.event_tickets.map((ticket)=>{
+            const cleaned = {
+                id: ticket.id,
+                category: ticket.category,
+                currency: ticket.currency,
+                price: ticket.price,
+                quantity: ticket.available_quantity
+            }
+            return cleaned;
+         })
+
+    }
 });
 
 watch(
@@ -98,6 +139,10 @@ function currentCoords(pos) {
     const crd = pos.coords;
     form["gps_location"] = `${crd.longitude},${crd.latitude}`;
 }
+
+const isEdit = computed(()=>{
+    return props.editDetails?true:false;
+})
 
 
 function saveImage(event, cardType) {
@@ -182,7 +227,7 @@ const submit = () => {
 
                                     <div class="mb-4" v-if="isAdmin">
 
-                                <div class="mb-2 align-middle form-check font-size-16">
+                                <div class="mb-2 align-middle form-check font-size-16" v-if="!isEdit">
                                     <input class="form-check-input" type="checkbox" id="transactionCheck01"  v-model="scheduleForBeneficiary"/>
                                     <small class="form-check-label" for="transactionCheck01"> Schedule for another beneficiary </small>
                                 </div>
@@ -347,6 +392,21 @@ const submit = () => {
                                                         <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete image
                                                     </div>
                                                 </div>
+                                                <div v-else-if="!cardImageData && isEdit">
+                                                    <img
+                                                        id="cardImage"
+                                                        :src="props.editDetails.thumbnail_url"
+                                                        style="
+                                                            object-fit: cover;
+                                                            object-position: center;
+                                                            height: 180px;
+                                                            width: 150px;
+                                                            border-radius: 5px;
+                                                            background-color: lightgray;
+                                                        "
+                                                    />
+
+                                                </div>
                                             </div>
                                         </div>
 
@@ -386,6 +446,21 @@ const submit = () => {
                                                         <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete image
                                                     </div>
                                                 </div>
+                                                 <div v-else-if="!bannerImageData && isEdit">
+                                                    <img
+                                                        id="bannerImage"
+                                                        :src="props.editDetails.banner_image_url"
+                                                        style="
+                                                            object-fit: cover;
+                                                            object-position: center;
+                                                            height: 150px;
+                                                            width: 300px;
+                                                            border-radius: 5px;
+                                                            background-color: lightgray;
+                                                        "
+                                                    />
+
+                                                </div>
                                             </div>
                                         </div>
 
@@ -410,7 +485,7 @@ const submit = () => {
                                                     </select>
                                                 </div>
 
-                                                <div class="mb-3 col-lg-2">
+                                              <div class="mb-3 col-lg-2">
                                                     <label for="quantity">Available Qty</label>
                                                     <input id="quantity " v-model="field.quantity" type="number" class="form-control" />
                                                 </div>
@@ -453,7 +528,7 @@ const submit = () => {
                                                 <div class="row">
                                                     <div class="col-xl-6">
                                                         <div class="product-detai-imgs">
-                                                            <div class="product-img">
+                                                            <div v-if="cardImageData" class="product-img">
                                                                 <img
                                                                     :src="cardImageData"
                                                                     alt
@@ -466,6 +541,21 @@ const submit = () => {
                                                                     "
                                                                 />
                                                             </div>
+                                                                                  <div v-else-if="!cardImageData && isEdit">
+                                                    <img
+                                                        id="cardImage"
+                                                        :src="props.editDetails.thumbnail_url"
+                                                        alt
+                                                                    class="mx-auto img-fluid d-block"
+                                                                    style="
+                                                                        object-fit: cover;
+                                                                        object-position: center;
+                                                                        height: 320px;
+                                                                        background-color: lightgray;
+                                                                    "
+                                                    />
+
+                                                </div>
                                                         </div>
                                                     </div>
 
