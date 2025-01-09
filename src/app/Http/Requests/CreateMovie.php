@@ -36,18 +36,19 @@ class CreateMovie extends FormRequest
             'beneficiary_id' => 'numeric',
             'description' => 'string',
             'release_date' => 'date',
-            'duration' => 'string',
+            'duration' => '',
             'categories' => 'array',
             'language' => 'string',
             'trailer_url' => 'string',
             'is_active' => 'boolean',
             'status' => 'required',
             'maturity_rating' => 'string',
-            'bannerImage' => 'file',
-            'cardImage' => 'required',
+            'bannerImage' => '',
+            'cardImage' => '',
             'tickets' => 'array',
             'rating' => 'numeric',
             'casts' => 'array',
+            'id' => ''
         ];
     }
 }

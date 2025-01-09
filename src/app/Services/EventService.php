@@ -47,8 +47,13 @@ class EventService
     public static function creteEvent($eventDetails)
     {
 
+        $isEdit = null;
+         if(isset($eventDetails['id']) && $eventDetails['id'] != ''){
+            $isEdit = $eventDetails['id'];
+         }
+
         $createdEvent = Event::updateOrCreate([
-            'id' => isset($eventDetails['id']) ? $eventDetails['id'] : null
+            'id' => $isEdit
         ], [
             'beneficiary_id' => isset($eventDetails['beneficiary_id']) ? $eventDetails['beneficiary_id']  :  Auth::user()->id,
             'title' => $eventDetails['title'],
@@ -64,11 +69,14 @@ class EventService
             'is_active' => false
         ]);
 
-        $cardImage = $createdEvent->addMedia($eventDetails['cardImage'])->toMediaCollection('event_images');
-        $cardImageUrl = $cardImage->getUrl();
-        $createdEvent->thumbnail_url = $cardImageUrl;
+        if (isset($eventDetails['cardImage']) && !is_null($eventDetails['cardImage'])) {
+            $cardImage = $createdEvent->addMedia($eventDetails['cardImage'])->toMediaCollection('event_images');
+            $cardImageUrl = $cardImage->getUrl();
+            $createdEvent->thumbnail_url = $cardImageUrl;
+        }
 
-        if (isset($eventDetails['bannerImage'])) {
+
+        if (isset($eventDetails['bannerImage']) && !is_null($eventDetails['bannerImage'])) {
             $bannerImage = $createdEvent->addMedia($eventDetails['bannerImage'])->toMediaCollection('event_images');
             $bannerImageUrl = $bannerImage->getUrl();
             $createdEvent->banner_image_url = $bannerImageUrl;

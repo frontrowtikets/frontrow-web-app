@@ -35,18 +35,19 @@ class CreateEvent extends FormRequest
             'location_name' => 'required',
             'start_date' => 'required',
             'end_date' => 'required',
-            'cardImage' => 'required',
+            'cardImage' => '',
             'status' => 'required',
             'start_time' => 'required',
             'end_time' => 'required',
             'access_type' => 'required',
-            'bannerImage' => 'file',
+            'bannerImage' => '',
             'tickets' => 'required',
             'description' =>'string',
             'gps_location' => 'string',
             'categories' => 'array',
             'beneficiary_id' => 'numeric',
             'tickets'=> 'array',
-        ];
+            'id' =>''
+               ];
     }
 }
