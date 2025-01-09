@@ -157,4 +157,27 @@ class EventsController extends Controller
 
         ]);
     }
+    public function editEvent(Request $request)
+    {
+        $eventDetail = Event::where('id', $request->id)->with([
+            'beneficiary',
+            'categories',
+            'reviews.user',
+            'eventTickets',
+        ])->first();
+        $eventCategories = EventCategory::select('id', 'name')->get();
+        $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
+
+        return \Inertia\Inertia::render('Events/ScheduleEvent', [
+            "eventCategories" => $eventCategories,
+            "beneficiaries" => $beneficiaries,
+            "editDetails" => $eventDetail
+        ]);
+    }
+
+    public function deleteEvent(Request $request)
+    {
+        $event = Event::where('id', $request->id)->first();
+        $event->delete();
+    }
 }

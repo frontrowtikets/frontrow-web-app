@@ -10,11 +10,10 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import { Money3Component } from "v-money3";
 import IsUserAdmin from "@/js/Composables/IsUserAdmin.js"
-import useInertiaFormSubmit from "@/js/Composables//useInertiaFormSubmit.js";
 import Swal from "sweetalert2";
 
 
-const props = defineProps(["movieCategories","beneficiaries"]);
+const props = defineProps(["movieCategories","beneficiaries", "editDetails"]);
 
 const state = reactive({
     items: [
@@ -63,6 +62,7 @@ const form = useForm({
     cardImage: null,
     tickets: [],
     casts:[],
+    id:''
 });
 
 const bannerImageData = ref(null);
@@ -78,6 +78,47 @@ const fileInputs = ref([]);
 
 onMounted(() => {
     form["beneficiary_id"] = usePage().props.auth.user.id;
+
+    if(props.editDetails){
+        const editData = props.editDetails;
+    form["beneficiary_id"] = editData.beneficiary_id;
+        form["title"] = editData.title;
+        form["maturity_rating"] = editData.maturity_rating;
+        form["status"] = editData.status;
+        form["description"] = editData.description;
+        form["language"] = editData.languange;
+        form["trailer_url"] = editData.trailer_url;
+        form["release_date"] = editData.release_date;
+        form["duration"] = editData.duration;
+        form["rating"] = movieRating.value;
+        form["id"] = editData.duration;
+
+
+
+        //genres
+        editData.genres.forEach((genre)=>{
+            const moviegenres = [];
+            moviegenres.push({id:genre.id,name:genre.name})
+            form["categories"] = moviegenres;
+        })
+
+        //show times
+        movieTheatres.value = editData.show_times
+        //casts
+        movieCasts.value = editData.moviecasts.map((cast)=>{
+            const cleaned = {
+                castName: cast.name,
+                role: cast.role,
+                imageUrl:cast.profile_image_url,
+                id:cast.id
+            }
+
+            return cleaned;
+        })
+
+    }
+
+
 
 });
 
@@ -96,12 +137,20 @@ watch(movieRating,(newVal)=>{
 })
 watch(movieCasts,(newVal)=>{
     const cleaned  = newVal.map((cast)=>{
-        return {castName:cast.castName,role:cast.role,image:cast.image}
+        const castObj = {castName:cast.castName,role:cast.role,image:cast.image}
+
+        if(cast.hasOwnProperty("id")){
+            castObj.id = cast.id
+        }
+        return castObj
     })
 
     form['casts'] = cleaned;
 }, { deep: true } )
 
+const isEdit = computed(()=>{
+    return props.editDetails?true:false;
+})
 
 function saveImage(event, cardType) {
 
@@ -141,6 +190,9 @@ function updateRating(star){
 movieRating.value = star
 }
 const submit = () => {
+    if(isEdit.value){
+        form ["id"] = props.editDetails.id
+    }
     form.post("/createmovie", {
     onSuccess:()=>{
         router.visit("/mymovies")
@@ -213,7 +265,7 @@ function handleImageUpload(event, index) {
                             <template #default="{ currentStep }">
                                 <div v-if="currentStep === 1">
 
-                                    <div class="mb-4" v-if="isAdmin">
+                                    <div class="mb-4" v-if="isAdmin && !isEdit">
 
                                 <div class="mb-2 align-middle form-check font-size-16">
                                     <input class="form-check-input" type="checkbox" id="transactionCheck01"  v-model="scheduleForBeneficiary"/>
@@ -360,6 +412,21 @@ function handleImageUpload(event, index) {
                                                         <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete image
                                                     </div>
                                                 </div>
+                                                <div v-else-if="!cardImageData && isEdit">
+                                                    <img
+                                                        id="cardImage"
+                                                        :src="props.editDetails.thumbnail_url"
+                                                        style="
+                                                            object-fit: cover;
+                                                            object-position: center;
+                                                            height: 180px;
+                                                            width: 150px;
+                                                            border-radius: 5px;
+                                                            background-color: lightgray;
+                                                        "
+                                                    />
+
+                                                </div>
                                             </div>
                                         </div>
 
@@ -398,6 +465,21 @@ function handleImageUpload(event, index) {
                                                     <div class="mt-4 text-danger" role="button" @click="deleteBannerImage">
                                                         <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete image
                                                     </div>
+                                                </div>
+                                                <div v-else-if="!bannerImageData && isEdit">
+                                                    <img
+                                                        id="bannerImage"
+                                                        :src="props.editDetails.poster_url"
+                                                        style="
+                                                            object-fit: cover;
+                                                            object-position: center;
+                                                            height: 150px;
+                                                            width: 300px;
+                                                            border-radius: 5px;
+                                                            background-color: lightgray;
+                                                        "
+                                                    />
+
                                                 </div>
                                             </div>
                                         </div>
@@ -490,9 +572,14 @@ function handleImageUpload(event, index) {
 
                                                 </div>
   <div v-if="field.imagePreview" class="">
-                <img v-if="field.imageUrl != ''" :src="field.imageUrl" :alt="'img'" class="rounded-circle avatar-sm object-fit-cover" />
 
-                <img v-else :src="field.imagePreview" :alt="'img'" class="rounded-circle avatar-sm object-fit-cover" />
+                <img v-if="field.imagePreview" :src="field.imagePreview" :alt="'img'" class="rounded-circle avatar-sm object-fit-cover" />
+
+            </div>
+            <div v-else>
+
+                <img v-if="!field.imagePreview && isEdit && field.imageUrl" :src="field.imageUrl" :alt="'img'" class="rounded-circle avatar-sm object-fit-cover" />
+
             </div>
 
 
@@ -516,7 +603,7 @@ function handleImageUpload(event, index) {
                                                 <div class="row">
                                                     <div class="col-xl-6">
                                                         <div class="product-detai-imgs">
-                                                            <div class="product-img">
+                                                            <div v-if="cardImageData" class="product-img">
                                                                 <img
                                                                     :src="cardImageData"
                                                                     alt
@@ -529,6 +616,21 @@ function handleImageUpload(event, index) {
                                                                     "
                                                                 />
                                                             </div>
+                                                            <div v-else-if="!cardImageData && isEdit">
+                                                    <img
+                                                        id="cardImage"
+                                                        :src="props.editDetails.thumbnail_url"
+                                                        alt
+                                                                    class="mx-auto img-fluid d-block"
+                                                                    style="
+                                                                        object-fit: cover;
+                                                                        object-position: center;
+                                                                        height: 320px;
+                                                                        background-color: lightgray;
+                                                                    "
+                                                    />
+
+                                                </div>
                                                         </div>
                                                     </div>
 

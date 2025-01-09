@@ -9,6 +9,7 @@ import useInertiaFormSubmit from "../../Composables/useInertiaFormSubmit.js";
 import EventCheckout from "../../Components/EventCheckout.vue";
 import { useWindowSize } from "@vueuse/core";
 
+
 import moment from "moment";
 import Swal from "sweetalert2";
 import vSelect from "vue-select";
@@ -153,6 +154,9 @@ function goToEventManager() {
 function checkoutMovie() {
     showCheckout.value = true;
 }
+function editEvent() {
+    router.get(`/edit_event/${props.eventDetails.id}`);
+}
 </script>
 <template>
     <Head :title="props.eventDetails.title" />
@@ -234,7 +238,7 @@ function checkoutMovie() {
                                 </div>
                             </div>
 
-                            <button class="btn btn-soft-danger w-100" v-if="props.eventDetails.beneficiary_id == currentUser.id">Edit</button>
+                            <button class="btn btn-soft-danger w-100" v-if="props.eventDetails.beneficiary_id == currentUser.id || isAdmin" @click="editEvent">Edit</button>
                         </div>
                     </div>
                 </div>

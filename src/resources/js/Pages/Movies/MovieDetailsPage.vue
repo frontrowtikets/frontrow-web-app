@@ -4,8 +4,10 @@ import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, computed, ref } from "vue";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
+import IsUserAdmin from "../../Composables/IsUserAdmin.js";
+
 import moment from "moment";
-import YouTube from "vue3-youtube";
+// import YouTube from "vue3-youtube";
 import Swal from "sweetalert2";
 import "vue-select/dist/vue-select.css";
 
@@ -16,6 +18,8 @@ const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
+
+const { isAdmin } = IsUserAdmin();
 
 const form = useForm({
     review: "",
@@ -71,7 +75,10 @@ function configureSeatMap() {
 }
 function capitalizeFirstCharacter(str) {
     if (!str) return "";
-    return str.charAt(0).toUpperCase() ;
+    return str.charAt(0).toUpperCase();
+}
+function editMovie() {
+    router.get(`/edit_movie/${props.movieDetails.id}`);
 }
 </script>
 <template>
@@ -141,7 +148,7 @@ function capitalizeFirstCharacter(str) {
                         </div>
                         <div class="gap-2 hstack">
                             <button class="btn btn-soft-primary w-100" @click="buyTicket">Buy Ticket</button>
-                            <button class="btn btn-soft-danger w-100" v-if="props.movieDetails.beneficiary_id == currentUser.id">Edit</button>
+                                <button class="btn btn-soft-danger w-100" @click="editMovie" v-if="props.movieDetails.beneficiary_id == currentUser.id || isAdmin">Edit</button>
                         </div>
                     </div>
                 </div>
@@ -224,7 +231,7 @@ function capitalizeFirstCharacter(str) {
 
                         <div class="mb-5">
                             <h5 class="mb-3 fw-semibold">Description</h5>
-                        <p class="text-muted" v-html="props.movieDetails.description"></p>
+                            <p class="text-muted" v-html="props.movieDetails.description"></p>
                         </div>
 
                         <div v-if="props.movieDetails.moviecasts.length > 0" class="mb-5">
@@ -254,7 +261,7 @@ function capitalizeFirstCharacter(str) {
 
                         <div class="mb-5" v-if="props.movieDetails.trailer_url">
                             <h5 class="mb-3 fw-semibold">Trailer:</h5>
-                            <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" />
+                            <!-- <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" /> -->
                         </div>
 
                         <h5 class="mb-3 fw-semibold">Show Times</h5>
