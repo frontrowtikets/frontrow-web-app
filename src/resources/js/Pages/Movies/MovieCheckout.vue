@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 const props = defineProps(["paymentDetails", "currency", "total", "movieId"]);
-const paymentMethod = ref("card");
+const paymentMethod = ref("mtn");
 const buyerName = ref("");
 const buyerEmail = ref("");
 const cardNumber = ref("");
@@ -97,20 +97,43 @@ async function payTicket() {
             isProcessing.value = false;
         });
 }
+
+const checkoutDisabled = computed(()=>{
+    if(buyerEmail.value && buyerName.value && userPhoneNumber.value){
+        return false;
+    }else{
+        return  true;
+    }
+})
+
 </script>
 
 <template>
     <div class="modalCheckout">
         <form class="form">
-            <div class="payment--options">
-                <button name="paypal" type="button" @click="paymentMethod = 'card'">
+            <div class="gap-5 d-flex justify-content-center payment--options">
+               <!-- <button
+                    name="paypal"
+                    type="button"
+                    @click="paymentMethod = 'card'"
+                >
                     <img :src="creditCard" height="40" />
+                </button> -->
+                <button
+                    name="apple-pay"
+                    type="button"
+                    @click="paymentMethod = 'mtn'"
+                    :style="{backgroundColor:paymentMethod === 'mtn'?'#aaf3f7':''}"
+                >
+                    <img :src="mtnLogo" height="50"  width="50"/>
                 </button>
-                <button name="apple-pay" type="button" @click="paymentMethod = 'mtn'">
-                    <img :src="mtnLogo" height="40" />
-                </button>
-                <button name="google-pay" type="button" @click="paymentMethod = 'airtel'">
-                    <img :src="airtelMoney" height="40" />
+                <button
+                    name="google-pay"
+                    type="button"
+                    @click="paymentMethod = 'airtel'"
+                    :style="{backgroundColor:paymentMethod === 'airtel'?'#aaf3f7':''}"
+                >
+                    <img :src="airtelMoney" height="50"  width="50" />
                 </button>
             </div>
             <div v-if="responseError" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
@@ -285,7 +308,7 @@ async function payTicket() {
                 <span class="me-2">UGX</span><span>{{ useCurrencyFormat(props.total) }}</span>
             </div>
 
-            <button class="purchase--btn" @click.prevent="payTicket">
+            <button class="purchase--btn" @click.prevent="payTicket" :disabled="checkoutDisabled">
                 <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Checkout</span>
             </button>
         </form>
@@ -309,19 +332,13 @@ async function payTicket() {
     padding: 20px;
 }
 
-.payment--options {
-    width: calc(100% - 40px);
-    display: grid;
-    grid-template-columns: 33% 34% 33%;
-    gap: 20px;
-    padding: 10px;
-}
+
 
 .payment--options button {
-    height: 55px;
+    /* height: 55px; */
     background: #f2f2f2;
     border-radius: 11px;
-    padding: 0;
+    padding: 10px;
     border: 0;
     outline: none;
 }

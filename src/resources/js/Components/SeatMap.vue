@@ -82,7 +82,7 @@ const getSeatStatus = (seatId) => {
                             @click="toggleSeat(`${row}${seatNumber}`)"
                             style="width: 40px; height: 40px"
                         >
-                            {{ seatNumber }}
+                            {{row}}{{ seatNumber }}
                         </button>
                     </div>
                 </div>

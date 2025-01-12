@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import { reactive, onMounted, ref } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";

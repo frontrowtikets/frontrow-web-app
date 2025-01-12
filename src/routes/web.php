@@ -66,6 +66,8 @@ Route::middleware([
     Route::post('/saveseatmap', [MoviesController::class, 'saveSeatMap'])->name('save_seat_map');
     Route::post('/deleteseatmap', [MoviesController::class, 'deleteSeatMap'])->name('delete_seat_map');
     Route::get('/activations', [ActivationController::class, 'activationPage'])->name('activations');
+    Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+
 
 
 

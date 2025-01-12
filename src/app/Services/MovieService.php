@@ -166,6 +166,7 @@ class MovieService
                     'seat_map_id' => $createdSeatMap->id,
                     'seat_number' => $seatLabel['label'],
                     'seat_status' => in_array($seatLabel['label'], $seatmapDetail['reserved']) ? 'reserved' : 'available',
+                    'row_name' => $seatLabel['label'][0]
                 ]);
             }
         }
@@ -216,8 +217,7 @@ class MovieService
         }
 
         //Movie Tickets
-        foreach ($paymentDetails['selectedSeatsDetails'] as $ticket) {
-            $userPaymentDetails = UserPaymentDetail::create([
+        $userPaymentDetails = UserPaymentDetail::create([
                 'user_id' => $currentUser->id,
                 'full_name' => $paymentDetails['name'],
                 'user_email' => $paymentDetails['email'],
@@ -225,19 +225,27 @@ class MovieService
                 'visa_card' => $paymentDetails['cardNumber'],
                 'payment_type' => $paymentDetails['paymentType'],
             ]);
-            $paymentTransactions = PaymentTransaction::create([
-                'txn_ref' => 'test',
-                'mfscode' => 'test',
-                'txn_type' => 'ticket_purchase',
-                'txn_channel' => 'web',
-                'txn_status' => 'pending',
-                'amount' => $paymentDetails['total'],
-                'currency' => $paymentDetails['currency'],
-                'reason' => 'test',
-                'phone_number' => $paymentDetails['phoneNumber'],
-                'user_id' => $currentUser->id,
-                'txn_hash' => 'test'
-            ]);
+
+            //TODO: Modify with payments api
+        $paymentTransactions = PaymentTransaction::create([
+            'txn_ref' => 'test',
+            'mfscode' => 'test',
+            'txn_type' => 'ticket_purchase',
+            'txn_channel' => 'web',
+            'txn_status' => 'pending',
+            'amount' => $paymentDetails['total'],
+            'currency' => $paymentDetails['currency'],
+            'reason' => 'test',
+            'phone_number' => $paymentDetails['phoneNumber'],
+            'user_id' => $currentUser->id,
+            'txn_hash' => 'test'
+        ]);
+
+        // get transaction details
+        // $paymentTransactions = PaymentService::collect(60000, '0782033409', $user)->max_attempts(1)->pay();
+        foreach ($paymentDetails['selectedSeatsDetails'] as $ticket) {
+
+
             foreach ($ticket['selectedSeats'] as $seat) {
                 $showTimeSeat = MovieShowTimeSeat::where('movie_show_time_id', $ticket['theatreId'])->where('seat_map_id', $ticket['roomId'])->where('seat_number', $seat)->first();
                 $showTimeSeat->seat_status = 'reserved';
