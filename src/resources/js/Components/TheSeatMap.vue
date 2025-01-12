@@ -115,9 +115,9 @@ function markReserved() {
                         class="mb-2 d-flex align-items-center"
                         style="min-width: fit-content"
                     >
-                        <span class="me-2 fw-bold" style="width: 30px">
+                        <!-- <span class="me-2 fw-bold" style="width: 30px">
                             {{ rowInfo.row }}
-                        </span>
+                        </span> -->
 
                         <button
                             v-for="seatNumber in rowInfo.seatCount"
@@ -147,7 +147,7 @@ function markReserved() {
                             @click="toggleSeat(`${rowInfo.row}${seatNumber}`)"
                             style="width: 40px; height: 40px"
                         >
-                            {{ seatNumber }}
+                            {{rowInfo.row}}{{ seatNumber }}
                         </button>
                     </div>
                 </div>

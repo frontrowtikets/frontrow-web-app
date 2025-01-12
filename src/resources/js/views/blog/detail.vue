@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 import img2 from "../../../images/small/img-2.jpg";
 import avatar2 from "../../../images/users/avatar-2.jpg";
 

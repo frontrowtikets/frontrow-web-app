@@ -48,9 +48,9 @@ class EventService
     {
 
         $isEdit = null;
-         if(isset($eventDetails['id']) && $eventDetails['id'] != ''){
+        if (isset($eventDetails['id']) && $eventDetails['id'] != '') {
             $isEdit = $eventDetails['id'];
-         }
+        }
 
         $createdEvent = Event::updateOrCreate([
             'id' => $isEdit
@@ -152,6 +152,44 @@ class EventService
         $attendanceDetail = EventAttendee::where('id', $requestDetails->attendace_id)->first();
         $attendanceDetail->reg_status = 'approved';
         $attendanceDetail->save();
+
+        $currentUser = User::where('id', $attendanceDetail->user_id)->first();
+        //creating ticket
+        $userPaymentDetails = UserPaymentDetail::create([
+            'user_id' => $currentUser->id,
+            'full_name' => $currentUser->name,
+            'user_email' => $currentUser->email,
+            'user_phone_number' => $currentUser->phone_number,
+            'payment_type' => 'free',
+        ]);
+        $paymentTransactions = PaymentTransaction::create([
+            'txn_ref' => 'test',
+            'mfscode' => 'test',
+            'txn_type' => 'ticket_purchase',
+            'txn_channel' => 'web',
+            'txn_status' => 'pending',
+            'amount' => 0,
+            'currency' => 'UGX',
+            'reason' => 'test',
+            'phone_number' => $currentUser->phone_number,
+            'user_id' => $currentUser->id,
+            'txn_hash' => 'test'
+        ]);
+
+
+            $eventTicket = UserEventTicket::create([
+                'user_id' => $currentUser->id,
+                'event_id' => $attendanceDetail->event_id,
+                'quantity' => 1,
+                'total_amount' =>0,
+                'ticket_status' => 'paid',
+                'booking_date' => now(),
+                'user_email' => $currentUser->email,
+                'ticket_id' => self::generateRandomEventTicketId(),
+                'user_payment_detail_id' => $userPaymentDetails->id,
+                'payment_transaction_id' => $paymentTransactions->id,
+
+            ]);
     }
 
     public static function declineInvitation($requestDetails)
@@ -204,7 +242,7 @@ class EventService
             'full_name' => $paymentDetails['name'],
             'user_email' => $paymentDetails['email'],
             'user_phone_number' => $paymentDetails['phoneNumber'],
-            'visa_card' => $paymentDetails['cardNumber'],
+            'visa_card' => '',
             'payment_type' => $paymentDetails['paymentType'],
         ]);
         $paymentTransactions = PaymentTransaction::create([
@@ -214,27 +252,29 @@ class EventService
             'txn_channel' => 'web',
             'txn_status' => 'pending',
             'amount' => $paymentDetails['total'],
-            'currency' => $paymentDetails['selectedTicket']['currency'],
+            'currency' => $paymentDetails['selectedTicket'][0]['currency'],
             'reason' => 'test',
             'phone_number' => $paymentDetails['phoneNumber'],
             'user_id' => $currentUser->id,
             'txn_hash' => 'test'
         ]);
 
-        $eventTicket = UserEventTicket::create([
-            'user_id' => $currentUser->id,
-            'event_id'=> $paymentDetails['selectedTicket']['event_id'],
-            'quantity' => $paymentDetails['quantity'],
-            'total_amount' => $paymentDetails['total'],
-            'ticket_status' => 'paid',
-            'booking_date' => now(),
-            'user_email' => $paymentDetails['email'],
-            'ticket_id' => self::generateRandomEventTicketId(),
-            'event_ticket_id' => $paymentDetails['selectedTicket']['id'],
-            'user_payment_detail_id' => $userPaymentDetails->id,
-            'payment_transaction_id' => $paymentTransactions->id,
+        foreach ($paymentDetails['selectedTicket'] as $seat) {
+            $eventTicket = UserEventTicket::create([
+                'user_id' => $currentUser->id,
+                'event_id' => $seat['event_id'],
+                'quantity' => $seat['selectedQuantity'],
+                'total_amount' => $paymentDetails['total'],
+                'ticket_status' => 'paid',
+                'booking_date' => now(),
+                'user_email' => $paymentDetails['email'],
+                'ticket_id' => self::generateRandomEventTicketId(),
+                'event_ticket_id' => $seat['id'],
+                'user_payment_detail_id' => $userPaymentDetails->id,
+                'payment_transaction_id' => $paymentTransactions->id,
 
-        ]);
+            ]);
+        }
     }
 
     private static  function generateRandomEventTicketId()
