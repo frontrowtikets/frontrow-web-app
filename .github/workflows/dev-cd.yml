@@ -56,7 +56,7 @@ jobs:
             if [ -f artisan ]; then
               ~/bin/composer install --no-interaction --prefer-dist
               chmod -R 755 vendor
-              ~/bin/composer dump-autoload
+              ~/bin/composer -o dump-autoload
               chmod -R 777 storage
               chmod -R 777 bootstrap
               php artisan storage:link
