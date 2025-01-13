@@ -14,10 +14,39 @@ class EventReview extends Model
         'event_id',
         'user_id',
         'review',
-        'submitted_by'
+        'submitted_by',
+        'parent_id',
     ];
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($review) {
+            $review->replies()->delete();
+        });
+
+        static::restoring(function ($review) {
+            $review->replies()->restore();
+        });
+
+        // on creating a review we will set the submitted_by attribute as the first parts of logged in user's email
+        static::creating(function ($review) {
+            $review->submitted_by = explode('@', auth()->user()->email)[0];
+        });
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(EventReview::class, 'parent_id');
     }
 }

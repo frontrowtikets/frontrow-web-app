@@ -54,7 +54,6 @@ class WalletService
     {
         try {
             $this->setApiKey();
-            dd(self::$collection);
             $txn = (object) Beyonic_Collection_Request::create(self::$collection);
 
             $collection = [
