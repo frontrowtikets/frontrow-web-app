@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import moment from "moment";
 import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
 import { debounce } from "lodash";
+import { router, usePage } from "@inertiajs/vue3";
 
 const props = defineProps([
     "discount",
@@ -27,28 +28,48 @@ const viewDetails = () => {
 };
 
 const updateRating = debounce(async (rating) => {
-      try {
-        await fetch('/api/rating', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            movieId: props.movieId,
-            rating: rating
-          })
-        })
+    try {
+        await fetch("/api/rating", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                movieId: props.movieId,
+                rating: rating,
+            }),
+        });
 
-        movieRating.value = rating
-      } catch (error) {
-        console.error('Failed to save rating:', error)
-        movieRating.value = props.overallRating
-      }
+        movieRating.value = rating;
+    } catch (error) {
+        console.error("Failed to save rating:", error);
+        movieRating.value = props.overallRating;
+    }
 }, 1500);
 
 onBeforeUnmount(() => {
     updateRating.cancel();
 });
+function slugify(title){
+     return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+}
+
+function buyTicket() {
+    if (usePage().props.auth.user) {
+        router.visit(
+            `/movie/buy-ticket/${slugify(props.movieName)}/${
+                props.movieId
+            }`
+        );
+    } else {
+        router.visit(
+            `/home/movie/buy-ticket/${slugify(props.movieName)}/${props.movieId}`
+        );
+    }
+}
 </script>
 
 <template>
@@ -59,7 +80,7 @@ onBeforeUnmount(() => {
                     class="overflow-hidden rounded position-relative"
                     style="height: 320px"
                     role="button"
-                    @click="() => $emit('view', movieName, movieId)"
+                    @click=" buyTicket"
                 >
                     <div
                         v-if="discount"
@@ -96,7 +117,7 @@ onBeforeUnmount(() => {
                         <div
                             class="text-hover-warning"
                             role="button"
-                            @click="() => $emit('view', movieName, movieId)"
+                            @click=" buyTicket"
                         >
                             {{ movieName }}
                         </div>
@@ -119,7 +140,7 @@ onBeforeUnmount(() => {
                         </div>
                     </div>
                     <div
-                        @click="() => $emit('view', movieName, movieId)"
+                        @click=" buyTicket"
                         role="button"
                     >
                         <div class="mb-1 text-primary text-start">
