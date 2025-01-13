@@ -19,7 +19,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/v1/buyMovieTicket', [BuyMovieTicketController::class, 'buyTicket']);
     Route::post('/v1/buyEventTicket', [BuyEventTicketController::class, 'buyTicket']);
     Route::post('/rating', [RatingController::class, 'saveRating']);
-    Route::post('/collections/initiate', [PaymentController::class, 'initiateCollection']);
+    Route::post('/v1/collections/initiate', [PaymentController::class, 'initiateCollection']);
 
 
 
