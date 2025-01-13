@@ -115,7 +115,32 @@ async function payTicket() {
 </script>
 
 <template>
-    <div class="modalCheckout2">
+      <div class="pt-4 flex-column justify-content-center d-flex flex-md-row col-12">
+        <div class="mb-4 col-12 col-md-5 flex-column pe-md-5">
+             <div class="shadow-lg card w-100">
+                <div class="card-body">
+                    <h5 class="mb-4 card-title">Your Order </h5>
+
+                    <div class="mt-4 text-start">
+                        <div v-for="(item, index) in props.selectedTickets" :key="`${item.id}_${index}`" class="pt-2 pb-2 mb-4 border-top border-bottom">
+                            <div class="mb-2"><span class="fw-bold me-3">Category:</span>{{ item?.category }}</div>
+                            <div class=""><span class="fw-bold me-3">Price:</span>{{ item?.currency }} {{ item.price }} X {{ item.selectedQuantity }}</div>
+
+
+                        </div>
+
+                        <div class="mb-4 text-end">
+                            <div class="mb-2 fw-bold me-3">Total</div>
+                            <div>
+                                <h4>{{ props.selectedTickets[0].currency || "UGX" }} {{ useCurrencyFormat(totalAmount) }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-5" id="eventsdetailsfrom">
+               <div class="modalCheckout2">
         <form class="form">
             <div class="gap-5 d-flex justify-content-center payment--options">
                 <!-- <button
@@ -361,10 +386,7 @@ async function payTicket() {
                     </div>
                 </div>
             </div>
-            <div class="text-end text-muted fw-bold">
-                <span class="me-2">{{ props.selectedTickets[0].currency }}</span
-                ><span>{{ useCurrencyFormat(totalAmount) }}</span>
-            </div>
+
             <button class="purchase--btn" @click.prevent="payTicket" :disabled="checkoutDisabled">
                 <i
                     class="align-middle bx bx-loader bx-spin font-size-16 me-2"
@@ -374,6 +396,9 @@ async function payTicket() {
             </button>
         </form>
     </div>
+        </div>
+    </div>
+
 </template>
 <style scoped>
 .modalCheckout2 {
@@ -383,7 +408,7 @@ async function payTicket() {
     box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01),
         0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09),
         0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
-    border-radius: 26px;
+    border-radius: 5px;
     max-width: 450px;
 }
 

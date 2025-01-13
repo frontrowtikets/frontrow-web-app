@@ -206,6 +206,19 @@ function checkoutMovie() {
 function editEvent() {
     router.get(`/edit_event/${props.eventDetails.id}`);
 }
+function decreaseTicket(index) {
+    if (selectedTickets.value[index].selectedQuantity !== 0) {
+        selectedTickets.value[index].selectedQuantity -= 1;
+    }
+}
+
+function increaseTicket(index) {
+    selectedTickets.value[index].selectedQuantity += 1;
+}
+
+function getEventTicket(){
+    router.visit("/mytickets")
+}
 </script>
 <template>
     <Head :title="props.eventDetails.title" />
@@ -411,7 +424,7 @@ function editEvent() {
                                         <h5>Available Tickets</h5>
                                         <div class="flex-wrap gap-3 mt-4 col-12 d-flex">
                                             <div style="width: 47%" v-for="(field, index) in selectedTickets" :key="field.id">
-                                                <div class="text-center card">
+                                                <div class="text-center shadow-lg dotted-border card">
                                                     <div class="card-body">
                                                         <h5 class="font-size-15">
                                                             <a href="javascript: void(0);" class="text-dark"
@@ -422,7 +435,7 @@ function editEvent() {
                                                     </div>
                                                     <div class="bg-transparent card-footer border-top">
                                                         <div class="contact-links d-flex font-size-20">
-                                                            <div class="flex-fill pe-3">
+                                                            <div class="flex-fill pe-3" @click="decreaseTicket(index)">
                                                                 <a v-b-tooltip.hover.top title="Reduce Tickets" href="javascript: void(0);">
                                                                     <i class="bx bx-minus"></i>
                                                                 </a>
@@ -437,7 +450,7 @@ function editEvent() {
                                                                     v-model="field.selectedQuantity"
                                                                 />
                                                             </div>
-                                                            <div class="flex-fill ps-3">
+                                                            <div class="flex-fill ps-3" @click="increaseTicket(index)">
                                                                 <a v-b-tooltip.hover.top title="Add Tickets" href="javascript: void(0);">
                                                                     <i class="bx bx-plus"></i>
                                                                 </a>
@@ -472,7 +485,7 @@ function editEvent() {
                                         >
                                             Request Pending Approval
                                         </div>
-                                        <b-button variant="primary" class="mt-4" v-else-if="props.eventDetails.reg_status == 'approved'"
+                                        <b-button variant="primary" class="mt-4" v-else-if="props.eventDetails.reg_status == 'approved'" @click="getEventTicket"
                                             >Get Ticket</b-button
                                         >
                                         <div v-else>
@@ -837,5 +850,10 @@ function editEvent() {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+}
+.dotted-border {
+    border: 1px dotted #d3d3d3;
+    padding: 10px;
+    border-radius: 4px;
 }
 </style>
