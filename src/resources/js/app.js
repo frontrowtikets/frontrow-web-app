@@ -19,6 +19,8 @@ import "leaflet/dist/leaflet.css";
 import TagInput from "@mayank1513/vue-tag-input";
 import "@mayank1513/vue-tag-input/style.css";
 
+import VueApexCharts from "vue3-apexcharts";
+
 
 
 
@@ -64,6 +66,7 @@ createInertiaApp({
             .use(Vuelidate)
             .use(vSelect)
             .use(Vue3Signature)
+            .use(VueApexCharts)
             .use(BootstrapVueNext)
             .use(CKEditor)
             .use(TagInput)

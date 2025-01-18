@@ -35,5 +35,7 @@ class LandingPageController extends Controller
             'upcomingmovies' => $upcomingmovies,
             'upcomingevents' => $upcomingevents
         ]);
+
+
     }
 }

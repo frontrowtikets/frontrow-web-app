@@ -3,7 +3,7 @@ name: FRONTROW TIKETS CI
 on:
   pull_request:
     branches:
-      - deployment
+      - development
 
 jobs:
   build:

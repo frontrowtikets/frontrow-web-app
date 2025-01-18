@@ -1,6 +1,6 @@
 <script setup>
 
-import { Head, Link, useForm,router } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 
 function downloadApk() {
     const fileUrl = `/FRONTROW_V1.0.1.apk`;
@@ -20,28 +20,43 @@ function toLogin(){
 function toRegister(){
      router.visit("/register");
 }
+function goEvents() {
+    router.visit("/myevents");
+}
+function createEvent() {
+    router.visit("/scheduleevents");
+}
+function goToEventsPage() {
+    router.visit("/events");
+}
+function goToMoviesPage() {
+    router.visit("/movies");
+}
+function goDashboard() {
+    router.visit("/dashboard");
+}
 </script>
 
 <template>
     <!-- Footer start -->
-    <footer class="landing-footer bg-primary">
+    <footer class="pt-5 landing-footer bg-primary">
         <b-container>
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
                     <div class="mb-4 mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Platform</h5>
                         <ul class="list-unstyled footer-list-menu">
-                            <li>
-                                <a href="#">Buy Tickets</a>
+                            <li @click="goToMoviesPage" role="button">
+                                <a>Buy Tickets</a>
                             </li>
-                            <li>
-                                <a href="#">Create Event</a>
+                            <li @click="createEvent" role="button">
+                                <a >Create Event</a>
                             </li>
-                            <li>
-                                <a href="#">Events</a>
+                            <li @click="goToEventsPage" role="button">
+                                <a >Events</a>
                             </li>
-                            <li>
-                                <a href="#">Cinemas</a>
+                            <li @click="goToMoviesPage" role="button">
+                                <a>Cinemas</a>
                             </li>
                         </ul>
                     </div>
@@ -57,8 +72,8 @@ function toRegister(){
                             <li @click="toLogin" role="button">
                                 <a >Sign in </a>
                             </li>
-                            <li>
-                                <a href="#">Go to Dashboard</a>
+                            <li @click="goDashboard">
+                                <a >Go to Dashboard</a>
                             </li>
                         </ul>
                     </div>

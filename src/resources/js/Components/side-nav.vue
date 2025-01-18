@@ -199,7 +199,7 @@ export default {
                                 : 'text-grayish'
                         "
                         @click="toTickets"
-                        >Tickets</span
+                        >My Tickets</span
                     >
                 </a>
             </li>
@@ -214,7 +214,7 @@ export default {
                                 : 'text-grayish'
                         "
                         @click="toRouterMovies"
-                        >Movies</span
+                        >My Movies</span
                     >
                 </a>
             </li>
@@ -229,7 +229,7 @@ export default {
                                 : 'text-grayish'
                         "
                         @click="toRouterEvents"
-                        >Events</span
+                        >My Events</span
                     >
                 </a>
             </li>
@@ -258,7 +258,7 @@ export default {
                                 : 'text-grayish'
                         "
                         @click="toTransactions"
-                        >My Transactions</span
+                        >{{isAdmin?'Transactions':'My Transactions'}}</span
                     >
                 </a>
             </li>

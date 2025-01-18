@@ -1,24 +1,271 @@
 <script setup>
-import { Head,  usePage } from "@inertiajs/vue3";
+import { Head, usePage, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
-import { reactive, onMounted, computed } from "vue";
+import { reactive, onMounted, computed, ref, watch } from "vue";
 import icondata from "@/images/icondata.png";
 import IsUserBeneficiary from "../../Composables/IsUserBeneficiary.js";
+import IsUserAdmin from "../../Composables/IsUserAdmin.js";
 import useRequestBeneficiaryStatus from "../../Composables/useRequestBeneficiaryStatus.js";
-import useScheduleMoviesPage from "../../Composables/useScheduleMoviesPage.js"
+import useScheduleMoviesPage from "../../Composables/useScheduleMoviesPage.js";
 import useScheduleEventsPage from "../../Composables/useScheduleEventsPage";
+import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 
-// defineOptions({ layout: DashboardLayout });
-const props = defineProps(["incidentCount"]);
+const props = defineProps([
+    "eventsChart",
+    "moviesChart",
+    "transactionsChart",
+    "events",
+    "movies",
+    "allTransactions",
+    "successTransactions",
+    "failedTransactions",
+]);
 const state = reactive({});
 const { isBeneficiary } = IsUserBeneficiary();
-
+const { isAdmin } = IsUserAdmin();
 const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
 
+const eventsChartOptions = ref({
+    chart: {
+        id: "eventsChat",
+        toolbar: {
+            show: false,
+        },
+    },
+
+    xaxis: {
+        categories: [],
+        labels: {
+            show: false,
+        },
+        axisBorder: {
+            show: false,
+        },
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            show: false,
+        },
+    },
+    grid: {
+        show: false,
+    },
+    colors: ["#0198A1"],
+    fill: {
+        type: "gradient",
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 100],
+        },
+    },
+    dataLabels: {
+        enabled: false,
+        enabledOnSeries: undefined,
+    },
+});
+
+const eventSeries = ref([
+    {
+        name: "Events",
+        data: [],
+    },
+]);
+
+const moviesChartOptions = ref({
+    chart: {
+        id: "moviesChat",
+        toolbar: {
+            show: false,
+        },
+    },
+
+    xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996],
+        labels: {
+            show: false,
+        },
+        axisBorder: {
+            show: false,
+        },
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            show: false,
+        },
+    },
+    grid: {
+        show: false,
+    },
+    colors: ["#0198A1"],
+    fill: {
+        type: "gradient",
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 100],
+        },
+    },
+    dataLabels: {
+        enabled: false,
+        enabledOnSeries: undefined,
+    },
+});
+
+const movieseries = ref([
+    {
+        name: "Moviesovies",
+        data: [30, 40, 35, 50, 20, 30],
+    },
+]);
+
+const transactionsChartOptions = ref({
+    chart: {
+        id: "transactionsChat",
+        toolbar: {
+            show: false,
+        },
+    },
+
+    xaxis: {
+        categories: [1991, 1992, 1993, 1994, 1995, 1996],
+        labels: {
+            show: false,
+        },
+        axisBorder: {
+            show: false,
+        },
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        labels: {
+            show: false,
+        },
+    },
+    grid: {
+        show: false,
+    },
+    colors: ["#0198A1"],
+    fill: {
+        type: "gradient",
+        gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 100],
+        },
+    },
+    dataLabels: {
+        enabled: false,
+        enabledOnSeries: undefined,
+    },
+});
+const transactionsSeries = ref([
+    {
+        name: "Transactions",
+        data: [0, 0, 0, 0, 0, 0],
+    },
+]);
+
+watch(
+    props.eventsChart,
+    (newVal) => {
+        const chartData = newVal;
+        const months = [];
+        const monthsRecords = [];
+        chartData.map((eventData) => {
+            months.push(eventData.month);
+        });
+        chartData.map((eventData) => {
+            monthsRecords.push(eventData.records);
+        });
+        eventsChartOptions.value.xaxis.categories = months;
+        eventSeries.value[0].data = monthsRecords;
+    },
+    {
+        immediate: true,
+    }
+);
+
+watch(
+    props.moviesChart,
+    (newVal) => {
+        const chartData = newVal;
+        const months = [];
+        const monthsRecords = [];
+        chartData.map((eventData) => {
+            months.push(eventData.month);
+        });
+        chartData.map((eventData) => {
+            monthsRecords.push(eventData.records);
+        });
+        moviesChartOptions.value.xaxis.categories = months;
+        movieseries.value[0].data = monthsRecords;
+    },
+    {
+        immediate: true,
+    }
+);
+
+watch(
+    props.transactionsChart,
+    (newVal) => {
+        const chartData = newVal;
+        const months = [];
+        const monthsRecords = [];
+        chartData.map((eventData) => {
+            months.push(eventData.month);
+        });
+        chartData.map((eventData) => {
+            monthsRecords.push(eventData.records);
+        });
+        transactionsChartOptions.value.xaxis.categories = months;
+        transactionsSeries.value[0].data = monthsRecords;
+    },
+    {
+        immediate: true,
+    }
+);
+
+function myWallet() {
+    router.visit("/mywallet");
+}
+function allEvents() {
+    router.visit("/allevents");
+}
+function allMovies() {
+    router.visit("/allmovies");
+}
+function myTransaction(){
+    router.visit("/mytransactions")
+}
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+}
+
+function viewMovie(movie) {
+    router.visit(`/movie/${slugify(movie.title)}/${movie.id}`);
+}
+function viewEvent(event) {
+    router.visit(`/event/${slugify(event.title)}/${event.id}`);
+}
 </script>
 <template>
     <Head title="Dashboard" />
@@ -26,13 +273,17 @@ const currentUser = computed(() => {
     <DashboardLayout>
         <PageHeader title="Dashboard" :items="state.items" />
         <div class="row">
-            <div class="col-xl-4">
-                <div class="card">
+            <div class="col-xl-4 d-flex align-items-stretch" Style="">
+                <div class="card w-100">
                     <div class="card-body">
                         <div>
                             <div>
                                 <!-- <img class="rounded-circle header-profile-user" :src="avatar1" alt="Header Avatar" /> -->
-                                <img :src="usePage().props.auth.user.profile_photo_url" :alt="'p'" class="rounded-circle header-profile-user object-fit-cover" />
+                                <img
+                                    :src="usePage().props.auth.user.profile_photo_url"
+                                    :alt="'p'"
+                                    class="rounded-circle header-profile-user object-fit-cover"
+                                />
                             </div>
 
                             <div class="mt-2">
@@ -40,7 +291,6 @@ const currentUser = computed(() => {
                                 <p class="mb-1 text-muted">
                                     {{ usePage().props.auth.user.email }}
                                 </p>
-                                <p class="mb-0 text-muted">Id no: #SK0234</p>
                             </div>
                         </div>
                     </div>
@@ -50,7 +300,7 @@ const currentUser = computed(() => {
                             <div class="col-12 text-end">
                                 <div>
                                     <p class="mb-2 fw-medium">Wallet Balance :</p>
-                                    <h4>UGX 6134.39</h4>
+                                    <h4>UGX 0.00</h4>
                                 </div>
                             </div>
                         </div>
@@ -58,8 +308,8 @@ const currentUser = computed(() => {
 
                     <div class="bg-transparent card-footer border-top">
                         <div class="text-center">
-                            <a href="#" class="btn btn-light me-2 w-md">Deposit</a>
-                            <a href="#" class="btn btn-primary me-2 w-md">Buy Ticket</a>
+                            <a @click="myWallet" class="btn btn-light me-2 w-md">My Wallet</a>
+                            <a href="#" class="btn btn-primary me-2 w-md">Deposit</a>
                         </div>
                     </div>
                 </div>
@@ -102,14 +352,10 @@ const currentUser = computed(() => {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="mb-4 text-muted">My Tickets</p>
+                                <div class="text-muted">{{ isAdmin ? "Events" : "My Events" }}</div>
 
-                                <div class="row">
-                                    <div class="">
-                                        <div>
-                                            <h5>12</h5>
-                                        </div>
-                                    </div>
+                                <div class="">
+                                    <apexchart height="90%" width="100%" type="area" :options="eventsChartOptions" :series="eventSeries"></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -117,14 +363,10 @@ const currentUser = computed(() => {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="mb-4 text-muted">Total Balance</p>
+                                <div class="text-muted">{{ isAdmin ? "Movies" : "My Movies" }}</div>
 
-                                <div class="row">
-                                    <div class="">
-                                        <div class="">
-                                            <h5>UGX 10,000</h5>
-                                        </div>
-                                    </div>
+                                <div class="">
+                                    <apexchart height="90%" width="100%" type="area" :options="moviesChartOptions" :series="movieseries"></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -132,22 +374,16 @@ const currentUser = computed(() => {
                     <div class="col-sm-4">
                         <div class="card">
                             <div class="card-body">
-                                <p class="mb-4 text-muted">
-                                    <!-- <i class="mb-0 align-middle mdi mdi-litecoin h2 text-info me-3"></i> -->
-                                    Overview
-                                </p>
+                                <div class="text-muted">{{ isAdmin ? "Transactions" : "My Transactions" }}</div>
 
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div>
-                                            <h5>{{}} //</h5>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
-                                            <!-- <apexchart class="apex-charts" height="40" type="area" dir="ltr" :series="litecoinChart.series" :options="litecoinChart.chartOptions"></apexchart> -->
-                                        </div>
-                                    </div>
+                                <div class="">
+                                    <apexchart
+                                        height="90%"
+                                        width="100%"
+                                        type="area"
+                                        :options="transactionsChartOptions"
+                                        :series="transactionsSeries"
+                                    ></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -169,159 +405,177 @@ const currentUser = computed(() => {
             <div class="col-4 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body w-100">
-                        <h4 class="mb-4 card-title">Transactions</h4>
+                        <h4 class="mb-4 card-title">{{ isAdmin ? "Transactions" : "My Transactions" }}</h4>
                         <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="All" active>
-                                <b-card-text>
-                                    <!-- <simpleBar style="max-height: 100vh"> -->
-                                    <!-- <table class="table align-middle table-centered table-nowrap">
-                                             <tbody>
-                                                <tr v-for="data of transactionsData" :key="data.icon">
-                                                    <td style="width: 50px">
-                                                        <div :class="`font-size-22 text-${data.color}`">
-                                                            <i
-                                                                :class="{
-                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
-                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
-                                                                }"
-                                                            ></i>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
-                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14 text-muted">
-                                                                {{ data.price }}
-                                                            </h5>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table> -->
-                                    <div class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <b-card-text class="mt-5">
+                                    <table v-if="props.allTransactions.length > 0" class="table align-middle table-centered table-nowrap">
+                                        <tbody>
+                                            <tr v-for="data of props.allTransactions" :key="data.id">
+                                                <td>
+                                                    <div>
+                                                        <h5 class="mb-1 font-size-14">{{ data.user.name }}</h5>
+                                                        <p class="mb-0 text-muted">{{ data.currency }} {{ useCurrencyFormat(data.amount) }}</p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-end">
+                                                        <span v-if="(data.txn_status = 'pending')" class="badge badge-soft-warning font-size-11"
+                                                            >Pending</span
+                                                        >
+                                                        <span v-else-if="(data.txn_status = 'paid')" class="badge badge-soft-success font-size-11"
+                                                            >Paid</span
+                                                        >
+                                                        <span v-else-if="(data.txn_status = 'failed')" class="badge badge-soft-danger font-size-11"
+                                                            >Failed</span
+                                                        >
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
-                                    <!-- </simpleBar> -->
                                 </b-card-text>
                             </b-tab>
 
                             <b-tab title="Successful">
-                                <b-card-text>
-                                    <!-- <simpleBar style="max-height: 330px"> -->
-                                    <!-- <table class="table align-middle table-centered table-nowrap">
-                                            <tbody>
-                                                <tr v-for="data of transactionsData" :key="data.id">
-                                                    <td style="width: 50px">
-                                                        <div :class="`font-size-22 text-${data.color}`">
-                                                            <i
-                                                                :class="{
-                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
-                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
-                                                                }"
-                                                            ></i>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
-                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14 text-muted">
-                                                                {{ data.price }}
-                                                            </h5>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table> -->
-                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <b-card-text class="mt-5">
+                                    <table v-if="props.successTransactions.length > 0" class="table align-middle table-centered table-nowrap">
+                                        <tbody>
+                                            <tr v-for="data of props.successTransactions" :key="data.id">
+                                                <td>
+                                                    <div>
+                                                        <h5 class="mb-1 font-size-14">{{ data.user.name }}</h5>
+                                                        <p class="mb-0 text-muted">{{ data.currency }} {{ useCurrencyFormat(data.amount) }}</p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-end">
+                                                        <span v-if="(data.txn_status = 'pending')" class="badge badge-soft-warning font-size-11"
+                                                            >Pending</span
+                                                        >
+                                                        <span v-else-if="(data.txn_status = 'paid')" class="badge badge-soft-success font-size-11"
+                                                            >Paid</span
+                                                        >
+                                                        <span v-else-if="(data.txn_status = 'failed')" class="badge badge-soft-danger font-size-11"
+                                                            >Failed</span
+                                                        >
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
-                                    <!-- </simpleBar> -->
                                 </b-card-text>
                             </b-tab>
                             <b-tab title="Failed">
-                                <b-card-text>
-                                    <!-- <simpleBar style="max-height: 330px"> -->
-                                    <!-- <table class="table align-middle table-centered table-nowrap">
-                                            <tbody>
-                                                <tr v-for="data of transactionsData" :key="data.id">
-                                                    <td style="width: 50px">
-                                                        <div :class="`font-size-22 text-${data.color}`">
-                                                            <i
-                                                                :class="{
-                                                                    'bx bx-down-arrow-circle': `${data.color}` === 'primary',
-                                                                    'bx bx-up-arrow-circle': `${data.color}` === 'danger',
-                                                                }"
-                                                            ></i>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <h5 class="mb-1 font-size-14">{{ data.name }}</h5>
-                                                            <p class="mb-0 text-muted">{{ data.date }}</p>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14">{{ data.text }}</h5>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-end">
-                                                            <h5 class="mb-0 font-size-14 text-muted">
-                                                                {{ data.price }}
-                                                            </h5>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table> -->
+                                <b-card-text class="mt-5">
+                                    <table v-if="props.failedTransactions.length > 0" class="table align-middle table-centered table-nowrap">
+                                        <tbody>
+                                            <tr v-for="data of props.failedTransactions" :key="data.id">
+                                                <td>
+                                                    <div>
+                                                        <h5 class="mb-1 font-size-14">{{ data.user.name }}</h5>
+                                                        <p class="mb-0 text-muted">{{ data.currency }} {{ useCurrencyFormat(data.amount) }}</p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-end">
+                                                        <span v-if="(data.txn_status = 'pending')" class="badge badge-soft-warning font-size-11"
+                                                            >Pending</span
+                                                        >
+                                                        <span v-else-if="(data.txn_status = 'paid')" class="badge badge-soft-success font-size-11"
+                                                            >Paid</span
+                                                        >
+                                                        <span v-else-if="(data.txn_status = 'failed')" class="badge badge-soft-danger font-size-11"
+                                                            >Failed</span
+                                                        >
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                     <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                        <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
-                                    <!-- </simpleBar> -->
+
                                 </b-card-text>
                             </b-tab>
                         </b-tabs>
+
+                        <div class="mt-4">
+                                    <a @click="myTransaction" class="btn btn-light me-2 w-md">See More</a>
+                                </div>
                     </div>
                 </div>
             </div>
             <div class="col-4 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body w-100">
-                        <h4 class="mb-4 card-title">My Movies</h4>
+                        <h4 class="mb-4 card-title">{{ isAdmin ? "Movies" : "My Movies" }}</h4>
                         <div v-if="isBeneficiary">
                             <div class="text-end"><b-button variant="primary" @click="useScheduleMoviesPage">Schedule Movie</b-button></div>
-                            <div v class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+
+                            <div v-if="props.movies.length > 0" class="mt-5">
+                                <div v-for="(movie, index) in props.movies" :key="movie.id" class="p-3 mb-3 rounded bg-light d-flex">
+                                    <img :src="movie.thumbnail_url" alt="" class="rounded avatar-sm me-3" />
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-2 font-size-15" role="button" @click="viewMovie(movie)">
+                                            {{ movie.title }}
+                                        </h5>
+                                        <div class="flex-row gap-2 mb-1 d-flex" role="button">
+                                            <div
+                                                v-for="star in 5"
+                                                :key="star"
+                                                class="movie-item-star-icon-button"
+                                                :class="star <= movie.overallRating ? 'text-warning' : 'text-grey'"
+                                                :disabled="star === movie.overallRating"
+                                                @click="updateRating(star)"
+                                                @mouseover="() => (movie.overallRating = star)"
+                                            >
+                                                <i class="bx bxs-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="dropdown">
+                                            <button
+                                                class="btn btn-soft-primary"
+                                                type="button"
+                                                id="dropdownMenuButton11"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton11">
+                                                <li class="p-1 ps-3" role="button" @click="viewMovie(movie)">View Details</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <a @click="allMovies" class="btn btn-light me-2 w-md">See More</a>
+                                </div>
+                            </div>
+                            <div v-else class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Movies Yet.</div>
                             </div>
                         </div>
                         <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
                             <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
-                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">Beneficiary Status <span class="text-primary">Pending Approval</span></div>
+                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                                    Beneficiary Status <span class="text-primary">Pending Approval</span>
+                                </div>
                             </div>
                         </div>
                         <div v-else>
@@ -332,99 +586,55 @@ const currentUser = computed(() => {
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <ul class="list-group">
-                                <li class="border-0 list-group-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title rounded-circle bg-light">
-                                                <img src="@/images/companies/img-1.png" alt height="18" />
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h5 class="font-size-14">Donec vitae sapien ut</h5>
-                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
-
-                                            <div class="float-end">
-                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Joseph</p>
-                                            </div>
-                                            <p class="mb-0 text-muted">12 Mar, 2020</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="border-0 list-group-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title rounded-circle bg-light">
-                                                <img src="@/images/companies/img-2.png" alt height="18" />
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h5 class="font-size-14">Cras ultricies mi eu turpis</h5>
-                                            <p class="text-muted">To an English person, it will seem like simplified English, as a skeptical cambridge</p>
-
-                                            <div class="float-end">
-                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Jerry</p>
-                                            </div>
-                                            <p class="mb-0 text-muted">13 Mar, 2020</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="border-0 list-group-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title rounded-circle bg-light">
-                                                <img src="@/images/companies/img-3.png" alt height="18" />
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h5 class="font-size-14">Duis arcu tortor suscipit</h5>
-                                            <p class="text-muted">It va esser tam simplic quam occidental in fact, it va esser occidental.</p>
-
-                                            <div class="float-end">
-                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Calvin</p>
-                                            </div>
-                                            <p class="mb-0 text-muted">14 Mar, 2020</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="border-0 list-group-item">
-                                    <div class="d-flex">
-                                        <div class="avatar-xs me-3">
-                                            <span class="avatar-title rounded-circle bg-light">
-                                                <img src="@/images/companies/img-1.png" alt height="18" />
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h5 class="font-size-14">Donec vitae sapien ut</h5>
-                                            <p class="text-muted">If several languages coalesce, the grammar of the resulting language</p>
-
-                                            <div class="float-end">
-                                                <p class="mb-0 text-muted"><i class="mdi mdi-account me-1"></i> Joseph</p>
-                                            </div>
-                                            <p class="mb-0 text-muted">12 Mar, 2020</p>
-                                        </div>
-                                    </div>
-                                </li>
-                        </ul> -->
                     </div>
                 </div>
             </div>
             <div class="col-4 d-flex align-items-stretch">
                 <div class="card w-100">
                     <div class="card-body w-100">
-                        <h4 class="mb-4 card-title">My Events</h4>
+                        <h4 class="mb-4 card-title">{{ isAdmin ? "Events" : "My Events" }}</h4>
                         <div v-if="isBeneficiary">
                             <div class="text-end"><b-button variant="primary" @click="useScheduleEventsPage">Schedule Event</b-button></div>
-
-                            <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                            <div v-if="props.events.length > 0" class="mt-5">
+                                <div v-for="(event, index) in props.events" :key="event.id" class="p-3 mb-3 rounded bg-light d-flex">
+                                    <img :src="event.thumbnail_url" alt="" class="rounded avatar-sm me-3" />
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-2 font-size-15" role="button" @click="viewEvent(event)">
+                                            {{ event.title }}
+                                        </h5>
+                                        <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> {{ event.location_name }}</p>
+                                    </div>
+                                    <div>
+                                        <div class="dropdown">
+                                            <button
+                                                class="btn btn-soft-primary"
+                                                type="button"
+                                                id="dropdownMenuButton11"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton11">
+                                                <li class="p-1 ps-3" role="button" @click="viewEvent(event)">View Details</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <a class="btn btn-light me-2 w-md" @click="allEvents">See More</a>
+                                </div>
+                            </div>
+                            <div v-else class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Events Yet.</div>
                             </div>
                         </div>
                         <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
                             <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
-                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">Beneficiary Status <span class="text-primary">Pending Approval</span></div>
+                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                                    Beneficiary Status <span class="text-primary">Pending Approval</span>
+                                </div>
                             </div>
                         </div>
                         <div v-else>
@@ -435,116 +645,6 @@ const currentUser = computed(() => {
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
-                            <b-tab title="Buy" active>
-                                <b-card-text>
-                                    <div class="float-end ms-2">
-                                        <h5 class="font-size-14">
-                                            <i class="align-middle bx bx-wallet text-primary font-size-16 me-1"></i>
-                                            $4235.23
-                                        </h5>
-                                    </div>
-                                    <h5 class="mb-4 font-size-14">Buy Coin</h5>
-
-                                    <div>
-                                        <div class="mb-3 form-group">
-                                            <label>Payment method :</label>
-                                            <select class="form-select">
-                                                <option>Credit / Debit Card</option>
-                                                <option>Paypal</option>
-                                            </select>
-                                        </div>
-
-                                        <div>
-                                            <label>Add Amount :</label>
-                                            <div class="mb-3 input-group">
-                                                <label class="input-group-text">Amount</label>
-                                                <select class="form-select" style="max-width: 90px">
-                                                    <option value="BT" selected>BTC</option>
-                                                    <option value="ET">ETH</option>
-                                                    <option value="LT">LTC</option>
-                                                </select>
-                                                <input type="text" class="form-control" />
-                                            </div>
-
-                                            <div class="mb-3 input-group">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text">Price</label>
-                                                </div>
-                                                <input type="text" class="form-control" />
-                                                <div class="input-group-append">
-                                                    <label class="input-group-text">$</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-3 input-group">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text">Total</label>
-                                                </div>
-                                                <input type="text" class="form-control" />
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center">
-                                            <button type="button" class="btn btn-success w-md">Buy Coin</button>
-                                        </div>
-                                    </div>
-                                </b-card-text>
-                            </b-tab>
-                            <b-tab title="Sell">
-                                <b-card-text>
-                                    <div class="float-end ms-2">
-                                        <h5 class="font-size-14">
-                                            <i class="align-middle bx bx-wallet text-primary font-size-16 me-1"></i>
-                                            $4235.23
-                                        </h5>
-                                    </div>
-                                    <h5 class="mb-4 font-size-14">Sell Coin</h5>
-
-                                    <div>
-                                        <div class="mb-3 form-group">
-                                            <label>Email :</label>
-                                            <input type="email" class="form-control" />
-                                        </div>
-                                        <div>
-                                            <label>Add Amount :</label>
-                                            <div class="mb-3 input-group">
-                                                <label class="input-group-text">Amount</label>
-
-                                                <select class="form-select" style="max-width: 90px">
-                                                    <option value="BT" selected>BTC</option>
-                                                    <option value="ET">ETH</option>
-                                                    <option value="LT">LTC</option>
-                                                </select>
-                                                <input type="text" class="form-control" />
-                                            </div>
-
-                                            <div class="mb-3 input-group">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text">Price</label>
-                                                </div>
-                                                <input type="text" class="form-control" />
-                                                <div class="input-group-append">
-                                                    <label class="input-group-text">$</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-3 input-group">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text">Total</label>
-                                                </div>
-                                                <input type="text" class="form-control" />
-                                            </div>
-                                        </div>
-
-                                        <div class="text-center">
-                                            <button type="button" class="btn btn-danger w-md">Sell Coin</button>
-                                        </div>
-                                    </div>
-                                </b-card-text>
-                            </b-tab>
-                        </b-tabs> -->
                     </div>
                 </div>
             </div>

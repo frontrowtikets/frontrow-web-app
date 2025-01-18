@@ -75,7 +75,6 @@ function goLogin() {
     router.visit("/login");
 }
 
-
 function slugify(title) {
     return title
         .toLowerCase()
@@ -86,8 +85,6 @@ function buyTicket() {
     router.visit(`/home/movie/buy-ticket/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`);
 }
 
-
-
 function capitalizeFirstCharacter(str) {
     if (!str) return "";
     return str.charAt(0).toUpperCase();
@@ -97,7 +94,7 @@ function capitalizeFirstCharacter(str) {
     <Head :title="props.movieDetails.title" />
 
     <b-container class="" style="margin-top: 16em">
-            <HomeHeader />
+        <HomeHeader />
         <PageHeader :title="props.movieDetails.title" :items="state.items" @click="goback" />
 
         <div class="row">
@@ -214,7 +211,6 @@ function capitalizeFirstCharacter(str) {
                                 </div>
                             </li>
                         </ul>
-
                     </div>
                 </div>
             </div>
@@ -369,7 +365,7 @@ function capitalizeFirstCharacter(str) {
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.review" />
                                 </div>
                             </form>
-                              <div v-else class="mt-3 mb-3 text-center text-muted">
+                            <div v-else class="mt-3 mb-3 text-center text-muted">
                                 <div><span class="text-primary" role="button" @click="goLogin">Sign in</span> to sumbmit a review</div>
                             </div>
                         </div>

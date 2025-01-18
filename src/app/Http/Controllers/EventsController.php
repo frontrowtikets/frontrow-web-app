@@ -106,13 +106,19 @@ class EventsController extends Controller
         $attendanceRequests = EventAttendee::where('event_id', $request->id)->where('reg_status', 'pending')->with(['user'])->paginate(15);
         $declinedRequests = EventAttendee::where('event_id', $request->id)->where('reg_status', 'declined')->with(['user'])->paginate(15);
         $eventDetails = Event::select('id', 'access_type', 'title')->where('id', $request->id)->first();
+        $eventTickets = UserEventTicket::where('event_id', $request->id)->with([
+            "event",
+            "userPaymentDetail",
+            "paymentTransaction"
+        ])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Events/EventManager', [
             'attendanceList' => $attendanceList,
             'attendanceRequests' => $attendanceRequests,
             'declinedRequests' => $declinedRequests,
             'event_id' => $eventDetails->id,
             'event_type' => $eventDetails->access_type,
-            'event_title' => $eventDetails->title
+            'event_title' => $eventDetails->title,
+            'eventTickets' => $eventTickets
         ]);
     }
 

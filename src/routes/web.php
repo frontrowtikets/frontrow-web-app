@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 Route::get('/events', [EventsController::class, 'homeEvents'])->name('events_home_page');
-Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('events_home_page');
+Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('movies_home_page');
 
 Route::get('/verify/movie/ticket/{ticketId}/{transactionId}/{userDetailsId}', [MoviesController::class, 'verifyTicket'])->name('verifyTicket');
 Route::get('/verify/event/ticket/{ticketId}/{transactionId}/{userDetailsId}', [EventsController::class, 'verifyTicket'])->name('verifyTicket');
@@ -66,6 +66,8 @@ Route::middleware([
     Route::post('/saveseatmap', [MoviesController::class, 'saveSeatMap'])->name('save_seat_map');
     Route::post('/deleteseatmap', [MoviesController::class, 'deleteSeatMap'])->name('delete_seat_map');
     Route::get('/activations', [ActivationController::class, 'activationPage'])->name('activations');
+    Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+
 
 
 
@@ -78,7 +80,5 @@ Route::middleware([
         Route::post('/deactivateEvent', [ActivationController::class, 'deactivateEvent'])->name('deactivate_Event');
         Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
         Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
-
     });
 });
-

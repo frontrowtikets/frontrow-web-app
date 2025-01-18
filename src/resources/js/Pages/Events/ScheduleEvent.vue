@@ -73,6 +73,8 @@ const eventTickets = ref([{ currency: "UGX" }]);
 const scheduleForBeneficiary = ref(false);
 const selectedBeneficiary = ref(null)
 
+const selectedTickets = ref([]);
+
 
  const {isAdmin} = IsUserAdmin();
 
@@ -479,6 +481,9 @@ const submit = () => {
                                                         <option value="VVIP">VVIP</option>
                                                         <option value="Ordinary">Ordinary</option>
                                                         <option value="Standard">Standard</option>
+                                                        <option value="Standard">Early Bird</option>
+                                                        <option value="Standard">Corporate</option>
+                                                        <option value="Standard">First Class</option>
                                                         <option value="Charity Supporter">Charity Supporter</option>
                                                         <option value="Regular">Regular</option>
                                                         <option value="Workshop Pass">Workshop Pass</option>

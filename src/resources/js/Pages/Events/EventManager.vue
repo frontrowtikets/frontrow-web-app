@@ -7,6 +7,7 @@ import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 import Swal from "sweetalert2";
 import icondata from "@/images/icondata.png";
 import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
+import EventTicketCard from "@/js/Components/EventTicketCard.vue";
 
 const props = defineProps({
     attendanceList: {
@@ -21,6 +22,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    eventTickets: {
+        type: Object,
+        required: true,
+    },
     event_id: {
         required: true,
     },
@@ -31,6 +36,9 @@ const props = defineProps({
         required: true,
     },
 });
+
+const movieEventsBottom = ref(null);
+const { paginatedItems: eventpaginatedItems, nextPageExists: eventNextPageExists } = useInfiniteScroll("eventTickets", movieEventsBottom);
 
 const state = reactive({
     items: [
@@ -57,7 +65,7 @@ const attendenceRequestsListBottom = ref(null);
 const attendenceDeclinedListBottom = ref(null);
 const registerForEventModal = ref(false);
 
-const { paginatedItems, nextPageExists } = useInfiniteScroll("attendanceList", );
+const { paginatedItems, nextPageExists } = useInfiniteScroll("attendanceList");
 const { paginatedItems: requestspaginatedItems, nextPageExists: requestsPageExists } = useInfiniteScroll(
     "attendanceRequests",
     attendenceRequestsListBottom
@@ -140,9 +148,30 @@ function declineRequest(userID) {
                     </div>
                     <b-tabs>
                         <b-tab title="Tickets Sold" active>
-                            <div class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                            <div v-if="eventpaginatedItems.length > 0">
+                                <div class="flex-wrap gap-5 mt-5 d-flex justify-content-center">
+                                    <EventTicketCard
+                                        v-for="(ticket, index) in eventpaginatedItems"
+                                        :key="`${index}_${ticket.id}`"
+                                        :ticketId="ticket.ticket_id"
+                                        :status="ticket.ticket_status"
+                                        :event="ticket?.event"
+                                        :userDetails="ticket?.user_payment_detail"
+                                        :transactionDetails="ticket?.payment_transaction"
+                                    />
+                                </div>
+                                <div>
+                                    <div ref="movieEventsBottom"></div>
+                                    <div v-if="eventNextPageExists" class="mt-4 text-center text-success">
+                                        <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
+                                    </div>
+                                    <div v-else class="mt-4 text-center text-primary">No More Data</div>
+                                </div>
+                            </div>
+                            <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No tickets yet.</div>
+                                <div ref="movieEventsBottom"></div>
                             </div>
                         </b-tab>
                         <b-tab title="Attendance List" v-if="props.event_type != 'paid'">
@@ -209,10 +238,9 @@ function declineRequest(userID) {
                                 <div v-else class="mt-4 text-center text-primary">No More Data</div>
                             </div>
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No attendance yet.</div>
                                 <div ref="attendenceListBottom"></div>
-
                             </div>
                         </b-tab>
                         <b-tab title="Attendance Requests" v-if="props.event_type != 'paid'">
@@ -287,10 +315,9 @@ function declineRequest(userID) {
                                 <div v-else class="mt-4 text-center text-primary">No More Data</div>
                             </div>
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No attendance requests yet.</div>
                                 <div ref="attendenceRequestsListBottom"></div>
-
                             </div>
                         </b-tab>
                         <b-tab title="Declined" v-if="props.event_type != 'paid'">
@@ -349,17 +376,16 @@ function declineRequest(userID) {
                                         </tr>
                                     </tbody>
                                 </table>
-                                 <div ref="attendenceDeclinedListBottom"></div>
+                                <div ref="attendenceDeclinedListBottom"></div>
                                 <div v-if="declinedPageExists" class="mt-4 text-center text-success">
                                     <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                 </div>
                                 <div v-else class="mt-4 text-center text-primary">No More Data</div>
                             </div>
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Data.</div>
-                                 <div ref="attendenceDeclinedListBottom"></div>
-
+                                <div ref="attendenceDeclinedListBottom"></div>
                             </div>
                         </b-tab>
                     </b-tabs>
@@ -464,5 +490,6 @@ function declineRequest(userID) {
                     </b-modal>
                 </div>
             </div>
-        </div></DashboardLayout>
+        </div></DashboardLayout
+    >
 </template>
