@@ -123,7 +123,18 @@ class MoviesController extends Controller
 
     public function movieManager(Request $request)
     {
-        return \Inertia\Inertia::render('Movies/MovieManager',);
+        $movieTickets = MovieTicket::where('movie_id', $request->id)->with([
+            'movie',
+            'userPaymentDetail',
+            'paymentTransaction',
+            'theatre',
+            "showTimeSeats",
+            "showTimeSeats.seatmap"
+        ])->orderBy('created_at', 'desc')->paginate(6);
+        return \Inertia\Inertia::render(
+            'Movies/MovieManager',
+            ['movieTickets' => $movieTickets]
+        );
     }
 
     public function allMovies(Request $request)
@@ -175,7 +186,8 @@ class MoviesController extends Controller
         ]);
     }
 
-    public function editMovie(Request $request){
+    public function editMovie(Request $request)
+    {
         $movieDetail = Movie::where('id', $request->id)->with([
             'beneficiary',
             'showTimes',
@@ -191,10 +203,10 @@ class MoviesController extends Controller
             'beneficiaries' => $beneficiaries,
             'editDetails' => $movieDetail
         ]);
-
     }
 
-    public function deleteMovie(Request $request){
+    public function deleteMovie(Request $request)
+    {
         $movie = Movie::where('id', $request->id)->first();
         $movie->delete();
     }

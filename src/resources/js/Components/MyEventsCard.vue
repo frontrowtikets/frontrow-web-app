@@ -28,6 +28,10 @@ function viewEventsDetails(){
 
     router.visit(`/event/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`)
 }
+function viewEventsManager(){
+
+    router.visit(`/eventmanager/${slugify(props.eventDetails.title)}/${props.eventDetails.id}`)
+}
 function activateEvent(){
 useInertiaFormSubmit(
         {
@@ -90,8 +94,8 @@ function deleteEvent() {
                                 >Deactivate</b-dropdown-item
                             >
                             <b-dropdown-item @click="editEvent">Edit</b-dropdown-item>
-                            <b-dropdown-item href="#">Tickets Sold</b-dropdown-item>
-                            <b-dropdown-item href="#">Manage Event</b-dropdown-item>
+                            <b-dropdown-item @click="viewEventsManager">Tickets Sold</b-dropdown-item>
+                            <b-dropdown-item @click="viewEventsManager">Manage Event</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item @click="deleteEvent" ><span class="text-danger">Delete</span></b-dropdown-item>
                         </b-dropdown>
