@@ -1,6 +1,6 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
-import { reactive,ref } from "vue";
+import { reactive, ref } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
 import icondata from "@/images/icondata.png";
@@ -74,7 +74,9 @@ const { paginatedItems, nextPageExists } = useInfiniteScroll("transationDetails"
                                             <span class="badge text-bg-warning">Failed</span>
                                         </div>
                                     </td>
-                                    <td :style="{ backgroundColor: '#fff' }" class="text-end">{{ item.currency }} {{ useCurrencyFormat(item.amount) }}</td>
+                                    <td :style="{ backgroundColor: '#fff' }" class="text-end">
+                                        {{ item.currency }} {{ useCurrencyFormat(item.amount) }}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -85,7 +87,7 @@ const { paginatedItems, nextPageExists } = useInfiniteScroll("transationDetails"
                         <div v-else class="mt-4 text-center text-primary">No More Data</div>
                     </div>
                     <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                        <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                        <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                         <div>No Transactions Yet.</div>
                     </div>
                 </div>

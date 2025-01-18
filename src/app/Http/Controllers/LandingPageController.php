@@ -36,5 +36,6 @@ class LandingPageController extends Controller
             'upcomingevents' => $upcomingevents
         ]);
 
+
     }
 }

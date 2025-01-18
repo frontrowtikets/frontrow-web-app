@@ -143,10 +143,10 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                 <div class="card" :style="{ height: `${height - 100}px` }">
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <MovieCheckout
-                        :paymentDetails="selectedTheatres"
-                        :currency="selectedTheatre?.currency"
-                        :total="totalPrice"
-                        :movieId="props.buyMovieDetails.id"
+                            :paymentDetails="selectedTheatres"
+                            :currency="selectedTheatre?.currency"
+                            :total="totalPrice"
+                            :movieId="props.buyMovieDetails.id"
                         />
                     </div>
                 </div>
@@ -181,7 +181,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                             </div>
 
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Seat Map</div>
                             </div>
                         </div>

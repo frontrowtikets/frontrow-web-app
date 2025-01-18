@@ -47,8 +47,8 @@ const currentUser = computed(() => {
     return theUser;
 });
 
-function allEvents(){
-    router.visit('/allevents')
+function allEvents() {
+    router.visit("/allevents");
 }
 </script>
 
@@ -67,14 +67,13 @@ function allEvents(){
                                     <div class="mb-3 d-grid">
                                         <b-dropdown toggle-class="w-100 btn-block" variant="light" v-if="isBeneficiary">
                                             <template #button-content> <i class="mdi mdi-plus me-1"></i> Create New </template>
-                                             <b-dropdown-item @click="useScheduleEventsPage"
+                                            <b-dropdown-item @click="useScheduleEventsPage"
                                                 ><i class="mdi mdi-movie-roll me-1"></i> Event</b-dropdown-item
                                             >
                                             <b-dropdown-item @click="useScheduleMoviesPage">
                                                 <i class="mdi mdi-play-circle-outline"></i>
                                                 Movie</b-dropdown-item
                                             >
-
                                         </b-dropdown>
 
                                         <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
@@ -122,7 +121,8 @@ function allEvents(){
                                                             </li>
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"
-                                                                    ><span class="me-auto">Invite Only Events</span> <i class="mdi mdi-pin ms-auto"></i
+                                                                    ><span class="me-auto">Invite Only Events</span>
+                                                                    <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
                                                             </li>
                                                         </ul>
@@ -131,16 +131,8 @@ function allEvents(){
                                             </div>
                                         </li>
 
-                                        <li>
-                                            <a href="javascript: void(0);" class="text-body d-flex align-items-center">
-                                                <i class="mdi mdi-share-variant font-size-16 me-2"></i>
-                                                <span class="me-auto">Reviews</span>
-                                                <i class="mdi mdi-circle-medium text-danger ms-2"></i>
-                                            </a>
-                                        </li>
-
                                         <li @click="allEvents" role="button">
-                                            <a  class="text-body d-flex align-items-center">
+                                            <a class="text-body d-flex align-items-center">
                                                 <i class="mdi mdi-movie-roll text-danger font-size-16 me-2"></i>
                                                 <span class="me-auto">Other Events</span>
                                             </a>
@@ -197,7 +189,7 @@ function allEvents(){
                                     </div>
                                     <div v-else>
                                         <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                            <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                             <div>No Events Yet.</div>
                                             <div ref="myEventsBottom"></div>
                                         </div>

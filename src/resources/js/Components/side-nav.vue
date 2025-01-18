@@ -258,7 +258,7 @@ export default {
                                 : 'text-grayish'
                         "
                         @click="toTransactions"
-                        >My Transactions</span
+                        >{{isAdmin?'Transactions':'My Transactions'}}</span
                     >
                 </a>
             </li>

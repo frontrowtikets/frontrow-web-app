@@ -23,4 +23,8 @@ class PaymentTransaction extends Model
         'user_id',
         'txn_hash'
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

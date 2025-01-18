@@ -127,7 +127,6 @@ function transformSeats(seats) {
     }));
 }
 
-
 function getSelectedSeats(seats, theatre, roomId, roomName) {
     const index = selectedTheatres.value.findIndex((item) => item.roomID === roomId);
     if (index !== -1) {
@@ -186,7 +185,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                             </div>
 
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Seat Map</div>
                             </div>
                         </div>

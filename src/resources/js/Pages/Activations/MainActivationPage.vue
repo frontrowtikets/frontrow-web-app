@@ -57,13 +57,22 @@ const pendingEventsBottom = ref(null);
 const activatedMoviesBottom = ref(null);
 const activatedEventsBottom = ref(null);
 
-const {paginatedItems:pendingMoviesPaginatedItems,nextPageExists:pendingMoviesNextPageExists} = useInfiniteScroll('pendingMovies',pendingMoviesBottom);
-const {paginatedItems:pendingEventsPaginatedItems,nextPageExists:pendingEventsNextPageExists} = useInfiniteScroll('pendingEvents',pendingEventsBottom);
-const {paginatedItems:activatedMoviesPaginatedItems,nextPageExists:activatedMoviesNextPageExists} = useInfiniteScroll('activatedMovies',activatedMoviesBottom);
-const {paginatedItems:activatedEventsPaginatedItems,nextPageExists:activatedEventsNextPageExists} = useInfiniteScroll('activatedEvents',activatedEventsBottom);
-
-
-
+const { paginatedItems: pendingMoviesPaginatedItems, nextPageExists: pendingMoviesNextPageExists } = useInfiniteScroll(
+    "pendingMovies",
+    pendingMoviesBottom
+);
+const { paginatedItems: pendingEventsPaginatedItems, nextPageExists: pendingEventsNextPageExists } = useInfiniteScroll(
+    "pendingEvents",
+    pendingEventsBottom
+);
+const { paginatedItems: activatedMoviesPaginatedItems, nextPageExists: activatedMoviesNextPageExists } = useInfiniteScroll(
+    "activatedMovies",
+    activatedMoviesBottom
+);
+const { paginatedItems: activatedEventsPaginatedItems, nextPageExists: activatedEventsNextPageExists } = useInfiniteScroll(
+    "activatedEvents",
+    activatedEventsBottom
+);
 
 function allEvents() {
     router.visit("/allevents");
@@ -177,7 +186,7 @@ function setOption(theOption) {
                                     </div>
                                     <div v-else>
                                         <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                            <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                             <div>No Movies Yet.</div>
                                             <div ref="pendingMoviesBottom"></div>
                                         </div>
@@ -227,7 +236,7 @@ function setOption(theOption) {
                                     </div>
                                     <div v-else>
                                         <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                            <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                             <div>No Events Yet.</div>
                                             <div ref="pendingEventsBottom"></div>
                                         </div>
@@ -277,7 +286,7 @@ function setOption(theOption) {
                                     </div>
                                     <div v-else>
                                         <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                            <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                             <div>No Movies Yet.</div>
                                             <div ref="activatedMoviesBottom"></div>
                                         </div>
@@ -327,7 +336,7 @@ function setOption(theOption) {
                                     </div>
                                     <div v-else>
                                         <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                            <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                             <div>No Events Yet.</div>
                                             <div ref="activatedEventsBottom"></div>
                                         </div>
