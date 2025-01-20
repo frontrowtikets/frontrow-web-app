@@ -24,7 +24,7 @@ Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHom
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 
 // payment callback
-Route::get('/payment-callback', function($request) {
+Route::get('/payment-callback', function() {
     return response('success');
 });
 
