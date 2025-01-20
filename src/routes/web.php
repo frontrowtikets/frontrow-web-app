@@ -23,6 +23,10 @@ Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHom
 Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 
+// payment callback
+Route::get('/payment-callback', function($request) {
+    return response('success');
+});
 
 
 
@@ -80,11 +84,5 @@ Route::middleware([
         Route::post('/deactivateEvent', [ActivationController::class, 'deactivateEvent'])->name('deactivate_Event');
         Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
         Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
-    });
-
-    // payment callback
-
-    Route::get('/payment-callback', function($request) {
-        return response('success');
     });
 });
