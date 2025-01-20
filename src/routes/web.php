@@ -81,4 +81,10 @@ Route::middleware([
         Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
         Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
     });
+
+    // payment callback
+
+    Route::get('/payment-callback', function($request) {
+        return response('success');
+    });
 });
