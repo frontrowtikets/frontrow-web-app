@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Str;
 
 class PesapalService
@@ -25,17 +26,29 @@ class PesapalService
 
     public function getAuthJWT()
     {
-        $response = Http::post($this->baseUrl . '/api/Auth/RequestToken', [
-            'consumer_key' => $this->consumerKey,
-            'consumer_secret' => $this->consumerSecret
-        ]);
+        try {
+            $response = Http::timeout(30)
+                ->retry(3, 100)
+                ->withOptions([
+                    'verify' => false, //TODO: Change this in prod
+                    'connect_timeout' => 30,
+                ])
+                ->post($this->baseUrl . '/api/Auth/RequestToken', [
+                    'consumer_key' => $this->consumerKey,
+                    'consumer_secret' => $this->consumerSecret
+                ]);
 
-        if ($response->successful()) {
-            $this->token = $response->json('token');
-            return $this->token;
+            if ($response->successful()) {
+                $this->token = $response->json('token');
+                return $this->token;
+            }
+
+            throw new \Exception('PesaPal authentication failed: ' . $response->body());
+        } catch (ConnectionException $e) {
+            throw new \Exception('Connection to PesaPal failed: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception('PesaPal authentication error: ' . $e->getMessage());
         }
-
-        throw new \Exception('PesaPal authentication failed: ' . $response->body());
     }
 
     public  function submitOrder($orderData)
@@ -62,11 +75,11 @@ class PesapalService
         $response = Http::withToken($this->token)
             ->post($this->baseUrl . '/api/Transactions/SubmitOrder', $payload);
 
-        if ($response->successful()) {
+        // if ($response->successful()) {
             return $response->json();
-        }
+        // }
 
-        throw new \Exception('Failed to submit order: ' . $response->body());
+        // throw new \Exception('Failed to submit order: ' . $response->body());
     }
 
     public function getPaymentStatus($orderTrackingId)

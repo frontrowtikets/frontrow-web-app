@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\UserRegister;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\v1\BuyEventTicketController;
 use App\Http\Controllers\Api\v1\BuyMovieTicketController;
-use App\Http\Controllers\Api\V1\PaymentController;
+use App\Http\Controllers\Api\v1\PaymentController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();

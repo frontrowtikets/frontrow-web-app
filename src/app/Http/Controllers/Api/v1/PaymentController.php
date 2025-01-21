@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\MovieTicket;
@@ -137,7 +137,7 @@ class PaymentController extends Controller
         $orderDetails = $request->validated();
 
         $response = $this->pesapal->submitOrder($orderDetails);
-
+        Log::alert($response);
         return redirect($response['redirect_url']); //redirecting to payment page
     }
 

@@ -23,7 +23,7 @@ class PesaPalPayment extends FormRequest
     {
         return [
             'amount' => 'required',
-            'description' => ['required', 'string', 'default:Ticket Payment'],
+             'description' =>  'required',
             'email' => 'required',
             'phone' => 'required',
             'first_name' => 'required',
