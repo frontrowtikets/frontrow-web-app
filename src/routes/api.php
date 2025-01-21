@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\UserRegister;
 use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\v1\BuyEventTicketController;
 use App\Http\Controllers\Api\v1\BuyMovieTicketController;
-use App\Http\Controllers\Api\V1\PaymentController;
+use App\Http\Controllers\Api\v1\PaymentController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,6 +20,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/v1/buyEventTicket', [BuyEventTicketController::class, 'buyTicket']);
     Route::post('/rating', [RatingController::class, 'saveRating']);
     Route::post('/v1/collections/initiate', [PaymentController::class, 'initiateCollection']);
+    Route::post('/v1/payments/makepayment', [PaymentController::class, 'makePayment']);
+    Route::get('/v1/payments/callback', [PaymentController::class, 'handleCallback']);
 
 
 

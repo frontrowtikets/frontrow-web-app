@@ -12,6 +12,7 @@ const props = defineProps(["selectedTickets", "quantity"]);
 
 const paymentMethod = ref("mtn");
 const buyerName = ref("");
+const buyerLastName = ref("");
 const buyerEmail = ref("");
 const cardNumber = ref("");
 const expiryDate = ref("");
@@ -49,18 +50,36 @@ const checkoutDisabled = computed(()=>{
     }
 })
 
+// const paymentDetailsCleaned = computed(() => {
+//     const cleaned = {
+//         name: buyerName.value,
+//         email: buyerEmail.value,
+//         phoneNumber: userPhoneNumber.value,
+//         paymentType: paymentMethod.value,
+//         cardNumber: cardNumber.value,
+//         expiryDate: expiryDate.value,
+//         cvv: cvv.value,
+//         selectedTicket: props.selectedTickets,
+//         amount: totalAmount.value,
+//         quantity: props.quantity,
+//     };
+
+//     return cleaned;
+// });
 const paymentDetailsCleaned = computed(() => {
     const cleaned = {
-        name: buyerName.value,
+        first_name: buyerName.value,
+         last_name: buyerLastName.value,
         email: buyerEmail.value,
-        phoneNumber: userPhoneNumber.value,
+        phone: userPhoneNumber.value,
         paymentType: paymentMethod.value,
         cardNumber: cardNumber.value,
         expiryDate: expiryDate.value,
         cvv: cvv.value,
         selectedTicket: props.selectedTickets,
-        total: totalAmount.value,
+        amount: totalAmount.value,
         quantity: props.quantity,
+        description:'Ticket Payment'
     };
 
     return cleaned;
@@ -83,7 +102,7 @@ function checkValidity() {
 async function payTicket() {
     isProcessing.value = true;
     await axios
-        .post("/api/v1/buyEventTicket", paymentDetailsCleaned.value)
+        .post("/api/v1/payments/makepayment", paymentDetailsCleaned.value)
         .then((res) => {
             if (usePage().props.auth.user) {
                 router.visit("/mytickets");
@@ -282,7 +301,7 @@ async function payTicket() {
                 <div class="mb-4 credit-card-info--form">
                     <div class="input_container">
                         <label for="password_field" class="input_label"
-                            >Full name</label
+                            >First name</label
                         >
                         <input
                             id="password_field"
@@ -292,6 +311,20 @@ async function payTicket() {
                             title="Enter Card Holder Name"
                             placeholder="Enter your full name"
                             v-model="buyerName"
+                        />
+                    </div>
+                     <div class="input_container">
+                        <label for="password_field" class="input_label"
+                            >Last name</label
+                        >
+                        <input
+                            id="password_field"
+                            class="input_field"
+                            type="text"
+                            name="input-name"
+                            title="Enter Card Holder Name"
+                            placeholder="Enter your full name"
+                            v-model="buyerLastName"
                         />
                     </div>
                     <div class="input_container">
@@ -336,7 +369,7 @@ async function payTicket() {
                 <div class="mb-4 credit-card-info--form">
                     <div class="input_container">
                         <label for="password_field" class="input_label"
-                            >Full name</label
+                            >First name</label
                         >
                         <input
                             id="password_field"
@@ -346,6 +379,20 @@ async function payTicket() {
                             title="Enter Card Holder Name"
                             placeholder="Enter your full name"
                             v-model="buyerName"
+                        />
+                    </div>
+                     <div class="input_container">
+                        <label for="password_field" class="input_label"
+                            >Last name</label
+                        >
+                        <input
+                            id="password_field"
+                            class="input_field"
+                            type="text"
+                            name="input-name"
+                            title="Enter Card Holder Name"
+                            placeholder="Enter your full name"
+                            v-model="buyerLastName"
                         />
                     </div>
                     <div class="input_container">

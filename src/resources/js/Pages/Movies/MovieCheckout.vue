@@ -11,6 +11,7 @@ import axios from "axios";
 const props = defineProps(["paymentDetails", "currency", "total", "movieId"]);
 const paymentMethod = ref("mtn");
 const buyerName = ref("");
+const buyerLastName = ref("");
 const buyerEmail = ref("");
 const cardNumber = ref("");
 const expiryDate = ref("");
@@ -23,6 +24,31 @@ const invalidPhoneNumberMsg = ref("");
 const responseError = ref("");
 
 const isProcessing = ref(false);
+// const paymentDetailsCleaned = computed(() => {
+//     const details = props.paymentDetails;
+//     const selectedSeatsDetails = details.map((item) => {
+//         return {
+//             roomId: item.roomID,
+//             theatreId: item.theatre.id,
+//             selectedSeats: item.selectedSeats,
+//         };
+//     });
+//     const cleaned = {
+//         name: buyerName.value,
+//         email: buyerEmail.value,
+//         phoneNumber: userPhoneNumber.value,
+//         paymentType: paymentMethod.value,
+//         cardNumber: cardNumber.value,
+//         expiryDate: expiryDate.value,
+//         cvv: cvv.value,
+//         currency: "UGX",
+//         total: props.total,
+//         movieId: props.movieId,
+//         selectedSeatsDetails: selectedSeatsDetails,
+//     };
+
+//     return cleaned;
+// });
 const paymentDetailsCleaned = computed(() => {
     const details = props.paymentDetails;
     const selectedSeatsDetails = details.map((item) => {
@@ -33,15 +59,16 @@ const paymentDetailsCleaned = computed(() => {
         };
     });
     const cleaned = {
-        name: buyerName.value,
+        first_name: buyerName.value,
+        last_name: buyerLastName.value,
         email: buyerEmail.value,
-        phoneNumber: userPhoneNumber.value,
+        phone: userPhoneNumber.value,
         paymentType: paymentMethod.value,
         cardNumber: cardNumber.value,
         expiryDate: expiryDate.value,
         cvv: cvv.value,
         currency: "UGX",
-        total: props.total,
+        amount: props.total,
         movieId: props.movieId,
         selectedSeatsDetails: selectedSeatsDetails,
     };
@@ -255,18 +282,34 @@ const checkoutDisabled = computed(() => {
                     </div>
                     <div class="" v-else-if="paymentMethod == 'mtn'">
                         <div class="mb-4 credit-card-info--form">
-                            <div class="input_container">
-                                <label for="password_field" class="input_label">Full name</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="text"
-                                    name="input-name"
-                                    title="Enter Card Holder Name"
-                                    placeholder="Enter your full name"
-                                    v-model="buyerName"
-                                />
-                            </div>
+                             <div class="input_container">
+                        <label for="password_field" class="input_label"
+                            >First name</label
+                        >
+                        <input
+                            id="password_field"
+                            class="input_field"
+                            type="text"
+                            name="input-name"
+                            title="Enter Card Holder Name"
+                            placeholder="Enter your full name"
+                            v-model="buyerName"
+                        />
+                    </div>
+                     <div class="input_container">
+                        <label for="password_field" class="input_label"
+                            >Last name</label
+                        >
+                        <input
+                            id="password_field"
+                            class="input_field"
+                            type="text"
+                            name="input-name"
+                            title="Enter Card Holder Name"
+                            placeholder="Enter your full name"
+                            v-model="buyerLastName"
+                        />
+                    </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Email</label>
                                 <div class="split">

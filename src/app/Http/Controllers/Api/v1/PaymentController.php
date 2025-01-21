@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\MovieTicket;
@@ -9,9 +9,18 @@ use Illuminate\Http\Request;
 use App\Services\PaymentService;
 use App\Models\UserEventTicket;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\PesaPalPayment;
+use App\Services\PesapalService;
 
 class PaymentController extends Controller
 {
+
+    private $pesapal;
+
+    public function __construct(PesapalService $pesapal)
+    {
+        $this->pesapal = $pesapal;
+    }
 
     public function initiateCollection(Request $request)
     {
@@ -95,11 +104,11 @@ class PaymentController extends Controller
                 ]
             )->max_attempts(1)->pay();
 
-            // update tickets with a transaction id payment details id 
+            // update tickets with a transaction id payment details id
             if ($booking_id) {
                 $booking = MovieTicket::find($booking_id);
                 if (!$booking) {
-                    // check in UserEventTicket 
+                    // check in UserEventTicket
                     $booking = UserEventTicket::find($booking_id);
                 }
                 $booking->update([
@@ -117,5 +126,26 @@ class PaymentController extends Controller
                 'message' => 'An error occurred while processing your request',
             ], 500);
         }
+    }
+
+    /**
+     * Pesapal
+     */
+
+    public function makePayment(PesaPalPayment $request)
+    {
+        $orderDetails = $request->validated();
+
+        $response = $this->pesapal->submitOrder($orderDetails);
+        Log::alert($response);
+        return redirect($response['redirect_url']); //redirecting to payment page
+    }
+
+    public function handleCallback(Request $request)
+    {
+        $orderTrackingId = $request->orderTrackingId;
+        $status = $this->pesapal->getPaymentStatus($orderTrackingId);
+
+        //TODO: Update Database status
     }
 }
