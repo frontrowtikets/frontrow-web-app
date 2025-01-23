@@ -16,6 +16,7 @@ class PesapalService
     private $ipnUrl;
     private $token;
     private $ipn_id;
+    private $notification_id;
 
     public function __construct()
     {
@@ -24,6 +25,8 @@ class PesapalService
         $this->baseUrl = config('services.pesapal.base_url');
         $this->callbackUrl = config('services.pesapal.callback_url');
         $this->ipnUrl = config('services.pesapal.ipn_url');
+        $this->notification_id = config('services.pesapal.notification_id');
+
     }
 
     public function getAuthJWT()
@@ -102,9 +105,9 @@ class PesapalService
             $this->getAuthJWT();
         }
 
-        if(!$this->ipn_id){
-            $this->registerIPN();
-        }
+        // if(!$this->ipn_id){
+        //     $this->registerIPN();
+        // }
 
         $payload = [
             'id' => Str::uuid()->toString(),
@@ -112,7 +115,7 @@ class PesapalService
             'amount' => $orderData['amount'],
             'description' => $orderData['description'],
             'callback_url' => $this->callbackUrl,
-            'notification_id' => $this->ipn_id,
+            'notification_id' => $this->notification_id,
             'billing_address' => [
                 'email_address' => $orderData['email'],
                 'phone_number' => $orderData['phone'],
