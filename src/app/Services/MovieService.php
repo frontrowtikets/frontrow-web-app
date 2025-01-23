@@ -218,49 +218,49 @@ class MovieService
 
         //Movie Tickets
         $userPaymentDetails = UserPaymentDetail::create([
-                'user_id' => $currentUser->id,
-                'full_name' => $paymentDetails['name'],
-                'user_email' => $paymentDetails['email'],
-                'user_phone_number' => $paymentDetails['email'],
-                'visa_card' => $paymentDetails['cardNumber'],
-                'payment_type' => $paymentDetails['paymentType'],
-            ]);
+            'user_id' => $currentUser->id,
+            'full_name' => $paymentDetails['name'],
+            'user_email' => $paymentDetails['email'],
+            'user_phone_number' => $paymentDetails['email'],
+            'visa_card' => $paymentDetails['payment_account'],
+            'payment_type' => $paymentDetails['payment_method'],
+        ]);
 
-            //TODO: Modify with payments api
         $paymentTransactions = PaymentTransaction::create([
-            'txn_ref' => 'test',
-            'mfscode' => 'test',
-            'txn_type' => 'ticket_purchase',
+            'txn_ref' => $paymentDetails['merchant_reference'],
+            'mfscode' => $paymentDetails['confirmation_code'],
+            'txn_type' => $paymentDetails['purpose'],
             'txn_channel' => 'web',
-            'txn_status' => 'pending',
+            'txn_status' => $paymentDetails['status'] == 1 || $paymentDetails['status'] == '1' ? 'paid' : 'failed',
             'amount' => $paymentDetails['total'],
             'currency' => $paymentDetails['currency'],
-            'reason' => 'test',
+            'reason' => 'Paying for event tickets',
             'phone_number' => $paymentDetails['phoneNumber'],
             'user_id' => $currentUser->id,
-            'txn_hash' => 'test'
+            'txn_hash' => $currentUser['call_back_url']
         ]);
 
         // get transaction details
         // $paymentTransactions = PaymentService::collect(60000, '0782033409', $user)->max_attempts(1)->pay();
-        foreach ($paymentDetails['selectedSeatsDetails'] as $ticket) {
+        if ($paymentDetails['status'] == 1 || $paymentDetails['status'] == '1') {
+            foreach ($paymentDetails['selectedSeatsDetails'] as $ticket) {
 
-
-            foreach ($ticket['selectedSeats'] as $seat) {
-                $showTimeSeat = MovieShowTimeSeat::where('movie_show_time_id', $ticket['theatreId'])->where('seat_map_id', $ticket['roomId'])->where('seat_number', $seat)->first();
-                $showTimeSeat->seat_status = 'reserved';
-                $showTimeSeat->save();
-                MovieTicket::create([
-                    'movie_id' => $paymentDetails['movieId'],
-                    'user_email' => $paymentDetails['email'],
-                    'movie_show_time_id' => $ticket['theatreId'],
-                    'movie_show_time_seat_id' => $showTimeSeat->id,
-                    'purchase_date' => now(),
-                    'user_payment_detail_id' => $userPaymentDetails->id,
-                    'payment_transaction_id' => $paymentTransactions->id,
-                    'ticket_id' => self::generateRandomMovieTicketId(),
-                    'ticket_status' => 'paid'
-                ]);
+                foreach ($ticket['selectedSeats'] as $seat) {
+                    $showTimeSeat = MovieShowTimeSeat::where('movie_show_time_id', $ticket['theatreId'])->where('seat_map_id', $ticket['roomId'])->where('seat_number', $seat)->first();
+                    $showTimeSeat->seat_status = 'reserved';
+                    $showTimeSeat->save();
+                    MovieTicket::create([
+                        'movie_id' => $paymentDetails['movieId'],
+                        'user_email' => $paymentDetails['email'],
+                        'movie_show_time_id' => $ticket['theatreId'],
+                        'movie_show_time_seat_id' => $showTimeSeat->id,
+                        'purchase_date' => now(),
+                        'user_payment_detail_id' => $userPaymentDetails->id,
+                        'payment_transaction_id' => $paymentTransactions->id,
+                        'ticket_id' => self::generateRandomMovieTicketId(),
+                        'ticket_status' => 'paid'
+                    ]);
+                }
             }
         }
     }
@@ -272,4 +272,3 @@ class MovieService
         return substr($uniqueId, 0, 18);
     }
 }
-

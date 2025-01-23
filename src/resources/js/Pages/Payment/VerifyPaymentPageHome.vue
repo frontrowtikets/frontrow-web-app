@@ -33,7 +33,12 @@ onMounted(() => {
     const details = localStorage.getItem("paymentDetails");
     paymentDetails.value = details ? JSON.parse(details) : null;
 
-    const paymentStatus = getPaymentStatus();
+    let paymentStatus = null;
+    if (paymentDetails.value.ticketType == "event") {
+        paymentStatus = getPaymentStatus();
+    } else {
+        paymentStatus = getMoviePaymentStatus();
+    }
     if (paymentStatus) {
         paymentStatusdetails.value = paymentStatus;
     } else {
@@ -54,6 +59,38 @@ const isPaymentSuccessfull = computed(() => {
         }
     }
 });
+async function getMoviePaymentStatus() {
+    await axios
+        .post(
+            "/api/v1/payments/getStatus",
+            {
+                orderTrackingId: props.OrderTrackingId,
+                username: `${paymentDetails.value.first_name} ${paymentDetails.value.last_name}`,
+                userEmail: paymentDetails.value.email,
+                phone: paymentDetails.value.phone,
+                purpose: paymentDetails.value.ticketType,
+                selectedSeatsDetails: paymentDetails.value.selectedSeatsDetails,
+                movieId:paymentDetails.value.movieId
+            },
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            if (res.success) {
+                return res.data;
+            } else {
+                return null;
+            }
+        })
+
+        .catch((err) => {
+            errorMessage.value = "Something Went Wrong, Please try again.";
+            return null;
+        });
+}
 async function getPaymentStatus() {
     await axios
         .post(

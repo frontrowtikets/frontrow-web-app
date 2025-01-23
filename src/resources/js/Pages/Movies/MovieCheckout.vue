@@ -18,6 +18,11 @@ const expiryDate = ref("");
 const userPhoneNumber = ref("");
 const cvv = ref("");
 
+const showPaymentPage = ref(false);
+const paymentRedirectURL = ref(null);
+
+
+
 const isPhoneNumberValid = ref(true);
 const invalidPhoneNumberMsg = ref("");
 
@@ -71,13 +76,13 @@ const paymentDetailsCleaned = computed(() => {
         amount: props.total,
         movieId: props.movieId,
         selectedSeatsDetails: selectedSeatsDetails,
+         description: "Ticket Payment",
     };
 
     return cleaned;
 });
 onMounted(() => {
     if (usePage().props.auth.user != null) {
-        buyerName.value = usePage().props.auth.user.name;
         buyerEmail.value = usePage().props.auth.user.email;
     }
 });
@@ -94,39 +99,55 @@ function checkValidity() {
 }
 async function payTicket() {
     isProcessing.value = true;
+      const details = {...paymentDetailsCleaned.value,ticketType:"movie"};
+    localStorage.setItem('paymentDetails',JSON.stringify(details))
     await axios
-        .post("/api/v1/buyMovieTicket", paymentDetailsCleaned.value)
+        .post("/api/v1/payments/makepayment", paymentDetailsCleaned.value,{
+            headers: {
+                Accept: "application/json",
+            }})
         .then((res) => {
-            if (usePage().props.auth.user) {
-                router.visit("/mytickets");
-            } else {
-                isProcessing.value = false;
+            if (res.status == 200) {
+                paymentRedirectURL.value = res.data;
+            }
+            // if (usePage().props.auth.user) {
+            //     router.visit("/mytickets");
+            // } else {
+            //     isProcessing.value = false;
 
-                Swal.fire({
-                    title: "Payment Successful",
-                    icon: "success",
-                    html: `<p style="font-size: 14px">Your payment was successful, Login to download your ticket(s) and invoice(s). Check your email for more details.</p>`,
-                    showCloseButton: false,
-                    showCancelButton: false,
-                    focusConfirm: true,
-                    confirmButtonText: "Okay",
-                    confirmButtonColor: "#43ad60",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    closeOnClickOutside: false,
-                }).then((result) => {
-                    router.visit("/login");
-                });
+            //     Swal.fire({
+            //         title: "Payment Successful",
+            //         icon: "success",
+            //         html: `<p style="font-size: 14px">Your payment was successful, Login to download your ticket(s) and invoice(s). Check your email for more details.</p>`,
+            //         showCloseButton: false,
+            //         showCancelButton: false,
+            //         focusConfirm: true,
+            //         confirmButtonText: "Okay",
+            //         confirmButtonColor: "#43ad60",
+            //         allowOutsideClick: false,
+            //         allowEscapeKey: false,
+            //         closeOnClickOutside: false,
+            //     }).then((result) => {
+            //         router.visit("/login");
+            //     });
+            // }
+        })
+         .then(() => {
+            if (paymentRedirectURL.value) {
+                showPaymentPage.value = true;
+            } else {
+                responseError.value = "Oops!,Please try again";
+                isProcessing.value = false;
             }
         })
         .catch((err) => {
-            responseError.value = err.response.data.message;
+            responseError.value = err;
             isProcessing.value = false;
         });
 }
 
 const checkoutDisabled = computed(() => {
-    if (buyerEmail.value && buyerName.value && userPhoneNumber.value) {
+    if (buyerEmail.value && buyerName.value && userPhoneNumber.value &&  isPhoneNumberValid.value) {
         return false;
     } else {
         return true;
@@ -135,11 +156,21 @@ const checkoutDisabled = computed(() => {
 </script>
 
 <template>
-    <div class="pt-4 flex-column justify-content-center d-flex flex-md-row col-12 ">
-        <div class="mb-4 col-12 col-md-5 flex-column pe-md-5 ">
+      <div v-if="showPaymentPage" class="card-body">
+        <div class="payment-container">
+            <iframe
+                id="payment_page"
+                ref="paymentPageIframe"
+                :src="paymentRedirectURL"
+                style="width: 100%; height: 100%"
+            ></iframe>
+        </div>
+    </div>
+    <div v-else class="pt-4 flex-column justify-content-center d-flex flex-md-row col-12">
+        <div class="mb-4 col-12 col-md-5 flex-column pe-md-5">
             <div class="shadow-lg card w-100">
                 <div class="card-body">
-                    <h5 class="mb-4 card-title">Your Order </h5>
+                    <h5 class="mb-4 card-title">Your Order</h5>
 
                     <div class="mt-4 text-start">
                         <div v-for="(item, index) in props.paymentDetails" :key="`${item.roomId}_${index}`">
@@ -167,14 +198,10 @@ const checkoutDisabled = computed(() => {
         <div class="col-12 col-md-5" id="eventsdetailsfrom ">
             <div class="modalCheckout">
                 <form class="form">
-                    <div class="gap-5 d-flex justify-content-center payment--options">
-                        <!-- <button
-                    name="paypal"
-                    type="button"
-                    @click="paymentMethod = 'card'"
-                >
-                    <img :src="creditCard" height="40" />
-                </button> -->
+                    <!-- <div class="gap-5 d-flex justify-content-center payment--options">
+                        <button name="paypal" type="button" @click="paymentMethod = 'card'">
+                            <img :src="creditCard" height="40" />
+                        </button>
                         <button
                             name="apple-pay"
                             type="button"
@@ -191,14 +218,14 @@ const checkoutDisabled = computed(() => {
                         >
                             <img :src="airtelMoney" height="50" width="50" />
                         </button>
-                    </div>
+                    </div> -->
                     <div v-if="responseError" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
                         {{ responseError }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <div class="separator">
                         <hr class="line" />
-                        <p>Select Payment Method</p>
+                        <p>Payment Details</p>
                         <hr class="line" />
                     </div>
                     <div class="" v-if="paymentMethod == 'card'">
@@ -282,34 +309,30 @@ const checkoutDisabled = computed(() => {
                     </div>
                     <div class="" v-else-if="paymentMethod == 'mtn'">
                         <div class="mb-4 credit-card-info--form">
-                             <div class="input_container">
-                        <label for="password_field" class="input_label"
-                            >First name</label
-                        >
-                        <input
-                            id="password_field"
-                            class="input_field"
-                            type="text"
-                            name="input-name"
-                            title="Enter Card Holder Name"
-                            placeholder="Enter your full name"
-                            v-model="buyerName"
-                        />
-                    </div>
-                     <div class="input_container">
-                        <label for="password_field" class="input_label"
-                            >Last name</label
-                        >
-                        <input
-                            id="password_field"
-                            class="input_field"
-                            type="text"
-                            name="input-name"
-                            title="Enter Card Holder Name"
-                            placeholder="Enter your full name"
-                            v-model="buyerLastName"
-                        />
-                    </div>
+                            <div class="input_container">
+                                <label for="password_field" class="input_label">First name</label>
+                                <input
+                                    id="password_field"
+                                    class="input_field"
+                                    type="text"
+                                    name="input-name"
+                                    title="Enter Card Holder Name"
+                                    placeholder="Enter your full name"
+                                    v-model="buyerName"
+                                />
+                            </div>
+                            <div class="input_container">
+                                <label for="password_field" class="input_label">Last name</label>
+                                <input
+                                    id="password_field"
+                                    class="input_field"
+                                    type="text"
+                                    name="input-name"
+                                    title="Enter Card Holder Name"
+                                    placeholder="Enter your full name"
+                                    v-model="buyerLastName"
+                                />
+                            </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Email</label>
                                 <div class="split">
@@ -385,9 +408,8 @@ const checkoutDisabled = computed(() => {
                         </div>
                     </div>
 
-
                     <button class="purchase--btn" @click.prevent="payTicket" :disabled="checkoutDisabled">
-                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Checkout</span>
+                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Make Payment</span>
                     </button>
                 </form>
             </div>
@@ -530,5 +552,21 @@ const checkoutDisabled = computed(() => {
 
 .input_field[type="number"] {
     -moz-appearance: textfield;
+}
+
+.payment-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.payment_page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
 }
 </style>

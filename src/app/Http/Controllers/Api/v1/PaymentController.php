@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\PesaPalPayment;
 use App\Services\PesapalService;
 use App\Services\EventService;
+use App\Services\MovieService;
 
 class PaymentController extends Controller
 {
@@ -164,6 +165,26 @@ class PaymentController extends Controller
                     'confirmation_code' => $status->confirmation_code,
                     'call_back_url' => $status->call_back_url
                 ];
+                EventService::buyTicket($paymentDetails);
+            }
+            elseif ($request->purpose == 'movie') {
+                $paymentDetails = [
+                    'name' => $request->username,
+                    'email' => $request->userEmail,
+                    'phoneNumber' => $request->phone,
+                    'movieId' => $request->movieId,
+                    'purpose' => 'movie_ticket',
+                    'selectedSeatsDetails' => $request->selectedSeatsDetails,
+                    'status' => $status->status_code,
+                    'payment_account' => $status->payment_account,
+                    'payment_method' => $status->payment_method,
+                    'currency' => $status->currency,
+                    'total' => $status->amount,
+                    'merchant_reference' => $status->merchant_reference,
+                    'confirmation_code' => $status->confirmation_code,
+                    'call_back_url' => $status->call_back_url
+                ];
+                MovieService::buyTicket($paymentDetails);
             }
             return response()->json([
                 'success' => true,

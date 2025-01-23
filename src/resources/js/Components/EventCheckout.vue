@@ -152,7 +152,7 @@ async function payTicket() {
             }
         })
         .catch((err) => {
-            responseError.value = err.response.data.message;
+            responseError.value = err;
             isProcessing.value = false;
         });
 }
@@ -504,7 +504,7 @@ async function payTicket() {
                             class="align-middle bx bx-loader bx-spin font-size-16 me-2"
                             v-if="isProcessing"
                         ></i
-                        ><span>Checkout</span>
+                        ><span>Make Payment</span>
                     </button>
                 </form>
             </div>
