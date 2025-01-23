@@ -10,6 +10,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\UserRegister;
 use App\Http\Controllers\ActivationController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
@@ -23,10 +24,10 @@ Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHom
 Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 
-// payment callback
-Route::get('/payment-callback', function() {
-    return response('success');
-});
+//web payments callback
+Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');
+
+
 
 
 

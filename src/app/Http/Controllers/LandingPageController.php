@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Movie;
+use App\Models\BannerImage;
 
 class LandingPageController extends Controller
 {
@@ -29,11 +30,18 @@ class LandingPageController extends Controller
             ->take(3)
             ->get();
 
+        $bannerImages = BannerImage::all()->map(function ($image) {
+            return [
+                'url' => asset('storage/' . $image->path)
+            ];
+        });
+
         return \Inertia\Inertia::render('LandingPage', [
             'last3Movies' => $last3Movies,
             'last3Events' => $last3Events,
             'upcomingmovies' => $upcomingmovies,
-            'upcomingevents' => $upcomingevents
+            'upcomingevents' => $upcomingevents,
+            'bannerImages' => $bannerImages
         ]);
 
 

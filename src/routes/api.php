@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\RatingController;
 use App\Http\Controllers\Api\v1\BuyEventTicketController;
 use App\Http\Controllers\Api\v1\BuyMovieTicketController;
 use App\Http\Controllers\Api\v1\PaymentController;
+use App\Http\Controllers\Api\BannerImagesController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -21,7 +22,9 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/rating', [RatingController::class, 'saveRating']);
     Route::post('/v1/collections/initiate', [PaymentController::class, 'initiateCollection']);
     Route::post('/v1/payments/makepayment', [PaymentController::class, 'makePayment']);
-    Route::get('/v1/payments/callback', [PaymentController::class, 'handleCallback']);
+    Route::get('/payments/getStatus', [PaymentController::class, 'getPaymentStatus']);
+
+
 
 
 
@@ -29,6 +32,10 @@ Route::group(['namespace' => 'Api'], function () {
         'auth:sanctum'
 
     ]], function () {
+        Route::post("/images", [BannerImagesController::class, 'saveBannerImages']);
+        Route::get('/images', [BannerImagesController::class, 'index']);
+        Route::delete('/images/{image}', [BannerImagesController::class, 'deleteImage']);
+
         Route::prefix('userRegister')->group(function () {
             Route::post("/revokePermission", [UserRegister::class, 'revokePermission']);
             Route::post("/assignPermissions", [UserRegister::class, 'assignPermissions']);

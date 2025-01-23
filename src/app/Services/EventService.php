@@ -177,19 +177,19 @@ class EventService
         ]);
 
 
-            $eventTicket = UserEventTicket::create([
-                'user_id' => $currentUser->id,
-                'event_id' => $attendanceDetail->event_id,
-                'quantity' => 1,
-                'total_amount' =>0,
-                'ticket_status' => 'paid',
-                'booking_date' => now(),
-                'user_email' => $currentUser->email,
-                'ticket_id' => self::generateRandomEventTicketId(),
-                'user_payment_detail_id' => $userPaymentDetails->id,
-                'payment_transaction_id' => $paymentTransactions->id,
+        $eventTicket = UserEventTicket::create([
+            'user_id' => $currentUser->id,
+            'event_id' => $attendanceDetail->event_id,
+            'quantity' => 1,
+            'total_amount' => 0,
+            'ticket_status' => 'paid',
+            'booking_date' => now(),
+            'user_email' => $currentUser->email,
+            'ticket_id' => self::generateRandomEventTicketId(),
+            'user_payment_detail_id' => $userPaymentDetails->id,
+            'payment_transaction_id' => $paymentTransactions->id,
 
-            ]);
+        ]);
     }
 
     public static function declineInvitation($requestDetails)
@@ -242,44 +242,45 @@ class EventService
             'full_name' => $paymentDetails['name'],
             'user_email' => $paymentDetails['email'],
             'user_phone_number' => $paymentDetails['phoneNumber'],
-            'visa_card' => '',
-            'payment_type' => $paymentDetails['paymentType'],
+            'visa_card' => $paymentDetails['payment_account'],
+            'payment_type' => $paymentDetails['payment_method'],
         ]);
         $paymentTransactions = PaymentTransaction::create([
-            'txn_ref' => 'test',
-            'mfscode' => 'test',
-            'txn_type' => 'ticket_purchase',
+            'txn_ref' => $paymentDetails['merchant_reference'],
+            'mfscode' => $paymentDetails['confirmation_code'],
+            'txn_type' => $paymentDetails['purpose'],
             'txn_channel' => 'web',
-            'txn_status' => 'pending',
+            'txn_status' => $paymentDetails['status'] == 1 || $paymentDetails['status'] == '1' ? 'paid' : 'failed',
             'amount' => $paymentDetails['total'],
-            'currency' => $paymentDetails['selectedTicket'][0]['currency'],
-            'reason' => 'test',
+            'currency' => $paymentDetails['currency'],
+            'reason' => 'Paying for event tickets',
             'phone_number' => $paymentDetails['phoneNumber'],
             'user_id' => $currentUser->id,
-            'txn_hash' => 'test'
+            'txn_hash' => $currentUser['call_back_url']
         ]);
 
-        foreach ($paymentDetails['selectedTicket'] as $seat) {
-            $eventTicket = UserEventTicket::create([
-                'user_id' => $currentUser->id,
-                'event_id' => $seat['event_id'],
-                'quantity' => $seat['selectedQuantity'],
-                'total_amount' => $paymentDetails['total'],
-                'ticket_status' => 'paid',
-                'booking_date' => now(),
-                'user_email' => $paymentDetails['email'],
-                'ticket_id' => self::generateRandomEventTicketId(),
-                'event_ticket_id' => $seat['id'],
-                'user_payment_detail_id' => $userPaymentDetails->id,
-                'payment_transaction_id' => $paymentTransactions->id,
-
-            ]);
+        if ($paymentDetails['status'] == 1 || $paymentDetails['status'] == '1') {
+            foreach ($paymentDetails['selectedTicket'] as $seat) {
+                $eventTicket = UserEventTicket::create([
+                    'user_id' => $currentUser->id,
+                    'event_id' => $seat['event_id'],
+                    'quantity' => $seat['selectedQuantity'],
+                    'total_amount' => $paymentDetails['total'],
+                    'ticket_status' => 'paid',
+                    'booking_date' => now(),
+                    'user_email' => $paymentDetails['email'],
+                    'ticket_id' => self::generateRandomEventTicketId(),
+                    'event_ticket_id' => $seat['id'],
+                    'user_payment_detail_id' => $userPaymentDetails->id,
+                    'payment_transaction_id' => $paymentTransactions->id,
+                ]);
+            }
         }
     }
 
     private static  function generateRandomEventTicketId()
     {
-        $prefix = "FRET";
+        $prefix = "FRE";
         $uniqueId = uniqid($prefix, true);
         $uniqueId = str_replace('.', '', $uniqueId);
         return substr($uniqueId, 0, 18);
