@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PesapalService
@@ -14,6 +15,7 @@ class PesapalService
     private $callbackUrl;
     private $ipnUrl;
     private $token;
+    private $ipn_id;
 
     public function __construct()
     {
@@ -51,10 +53,57 @@ class PesapalService
         }
     }
 
+    public function registerIPN()
+    {
+        try {
+            if (!$this->token) {
+                $this->getAuthJWT();
+            }
+
+            $payload = [
+                'url' => $this->ipnUrl,
+                'ipn_notification_type' => 'GET'
+            ];
+
+
+            $response = Http::timeout(30)
+                ->retry(3, 100)
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->token
+                ])
+                ->withOptions([
+                    'verify' => false,
+                    'connect_timeout' => 30,
+                ])
+                ->post($this->baseUrl . '/api/URLSetup/RegisterIPN', $payload);
+
+            Log::info('PesaPal IPN Registration Response', [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            if ($response->successful()) {
+                $ipn_details = $response->json();
+                $this->ipn_id = $ipn_details['ipn_id'];
+                return;
+            }
+
+            throw new \Exception('Failed to register IPN: ' . $response->body());
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to register IPN URL: ' . $e->getMessage());
+        }
+    }
+
     public  function submitOrder($orderData)
     {
         if (!$this->token) {
             $this->getAuthJWT();
+        }
+
+        if(!$this->ipn_id){
+            $this->registerIPN();
         }
 
         $payload = [
@@ -63,7 +112,7 @@ class PesapalService
             'amount' => $orderData['amount'],
             'description' => $orderData['description'],
             'callback_url' => $this->callbackUrl,
-            'notification_id' => Str::random(20),
+            'notification_id' => $this->ipn_id,
             'billing_address' => [
                 'email_address' => $orderData['email'],
                 'phone_number' => $orderData['phone'],
@@ -73,13 +122,13 @@ class PesapalService
         ];
 
         $response = Http::withToken($this->token)
-            ->post($this->baseUrl . '/api/Transactions/SubmitOrder', $payload);
+            ->post($this->baseUrl . '/api/Transactions/SubmitOrderRequest', $payload);
 
-        // if ($response->successful()) {
+     if ($response->successful()) {
             return $response->json();
-        // }
+         }
 
-        // throw new \Exception('Failed to submit order: ' . $response->body());
+         throw new \Exception('Failed to submit order: ' . $response->body());
     }
 
     public function getPaymentStatus($orderTrackingId)

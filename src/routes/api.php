@@ -21,7 +21,9 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/rating', [RatingController::class, 'saveRating']);
     Route::post('/v1/collections/initiate', [PaymentController::class, 'initiateCollection']);
     Route::post('/v1/payments/makepayment', [PaymentController::class, 'makePayment']);
-    Route::get('/v1/payments/callback', [PaymentController::class, 'handleCallback']);
+    Route::get('/payments/getStatus', [PaymentController::class, 'getPaymentStatus']);
+
+
 
 
 

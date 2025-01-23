@@ -266,9 +266,10 @@ class MovieService
     }
     private static  function generateRandomMovieTicketId()
     {
-        $prefix = "FRMT";
+        $prefix = "FRM";
         $uniqueId = uniqid($prefix, true);
         $uniqueId = str_replace('.', '', $uniqueId);
         return substr($uniqueId, 0, 18);
     }
 }
+

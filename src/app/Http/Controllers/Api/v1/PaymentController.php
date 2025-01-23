@@ -11,6 +11,7 @@ use App\Models\UserEventTicket;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\PesaPalPayment;
 use App\Services\PesapalService;
+use App\Services\EventService;
 
 class PaymentController extends Controller
 {
@@ -138,14 +139,41 @@ class PaymentController extends Controller
 
         $response = $this->pesapal->submitOrder($orderDetails);
         Log::alert($response);
-        return redirect($response['redirect_url']); //redirecting to payment page
+
+        return response($response['redirect_url']);
     }
 
-    public function handleCallback(Request $request)
+    public function getPaymentStatus(Request $request)
     {
-        $orderTrackingId = $request->orderTrackingId;
-        $status = $this->pesapal->getPaymentStatus($orderTrackingId);
-
-        //TODO: Update Database status
+        try {
+            $orderTrackingId = $request->orderTrackingId;
+            $status = $this->pesapal->getPaymentStatus($orderTrackingId);
+            if($request->purpose == 'event' ){
+                $paymentDetails = [
+                    'name' => $request->username,
+                    'email' => $request->userEmail,
+                    'phoneNumber' => $request->phone,
+                    'purpose' => 'event_ticket',
+                    'selectedTicket' => $request->selectedTicket,
+                    'status' => $status->status_code,
+                    'payment_account' => $status->payment_account,
+                    'payment_method' => $status->payment_method,
+                    'currency' => $status->currency,
+                    'total' => $status->amount,
+                    'merchant_reference' => $status->merchant_reference,
+                    'confirmation_code' => $status->confirmation_code,
+                    'call_back_url' => $status->call_back_url
+                ];
+            }
+            return response()->json([
+                'success' => true,
+                'data' => $status
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
