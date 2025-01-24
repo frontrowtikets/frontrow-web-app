@@ -156,14 +156,14 @@ class PaymentController extends Controller
                     'phoneNumber' => $request->phone,
                     'purpose' => 'event_ticket',
                     'selectedTicket' => $request->selectedTicket,
-                    'status' => $status->status_code,
-                    'payment_account' => $status->payment_account,
-                    'payment_method' => $status->payment_method,
-                    'currency' => $status->currency,
-                    'total' => $status->amount,
-                    'merchant_reference' => $status->merchant_reference,
-                    'confirmation_code' => $status->confirmation_code,
-                    'call_back_url' => $status->call_back_url
+                    'status' => $status['status_code'],
+                    'payment_account' => $status['payment_account'],
+                    'payment_method' => $status['payment_method'],
+                    'currency' => $status['currency'],
+                    'total' => $status['amount'],
+                    'merchant_reference' => $status['merchant_reference'],
+                    'confirmation_code' => $status['confirmation_code'],
+                    'call_back_url' => $status['call_back_url']
                 ];
                 EventService::buyTicket($paymentDetails);
             }
@@ -175,14 +175,14 @@ class PaymentController extends Controller
                     'movieId' => $request->movieId,
                     'purpose' => 'movie_ticket',
                     'selectedSeatsDetails' => $request->selectedSeatsDetails,
-                    'status' => $status->status_code,
-                    'payment_account' => $status->payment_account,
-                    'payment_method' => $status->payment_method,
-                    'currency' => $status->currency,
-                    'total' => $status->amount,
-                    'merchant_reference' => $status->merchant_reference,
-                    'confirmation_code' => $status->confirmation_code,
-                    'call_back_url' => $status->call_back_url
+                    'status' => $status['status_code'],
+                    'payment_account' => $status['payment_account'],
+                    'payment_method' => $status['payment_method'],
+                    'currency' => $status['currency'],
+                    'total' => $status['amount'],
+                    'merchant_reference' => $status['merchant_reference'],
+                    'confirmation_code' => $status['confirmation_code'],
+                    'call_back_url' => $status['call_back_url']
                 ];
                 MovieService::buyTicket($paymentDetails);
             }
