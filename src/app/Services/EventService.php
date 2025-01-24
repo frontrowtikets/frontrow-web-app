@@ -256,7 +256,7 @@ class EventService
             'reason' => 'Paying for event tickets',
             'phone_number' => $paymentDetails['phoneNumber'],
             'user_id' => $currentUser->id,
-            'txn_hash' => $currentUser['call_back_url']
+            'txn_hash' => $paymentDetails['merchant_reference']
         ]);
 
         if ($paymentDetails['status'] == 1 || $paymentDetails['status'] == '1') {
