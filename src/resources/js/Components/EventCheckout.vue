@@ -159,7 +159,7 @@ async function payTicket() {
 </script>
 
 <template>
-    <div v-if="showPaymentPage" class="card-body">
+    <div v-if="showPaymentPage" class="container">
         <div class="payment-container">
             <iframe
                 id="payment_page"

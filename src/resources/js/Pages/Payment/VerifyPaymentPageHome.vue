@@ -175,7 +175,7 @@ function returnHome() {
                                     </div>
 
                                     <div class="flex mb-3 text-center d-flex-column">
-                                        <div class="mb-4 mt-4">
+                                        <div class="mt-4 mb-4">
                                             <label>{{ paymentStatusdetails.description }}</label>
                                         </div>
                                         <div></div>
@@ -207,8 +207,8 @@ function returnHome() {
                                     </div>
 
                                     <div class="flex mb-3 text-center d-flex-column">
-                                        <div class="mb-4 mt-4">
-                                            <label>{{ paymentStatusdetails.description }} This i ss comlese</label>
+                                        <div class="mt-4 mb-4">
+                                            <label>{{ paymentStatusdetails.description }}</label>
                                         </div>
                                         <div></div>
                                     </div>

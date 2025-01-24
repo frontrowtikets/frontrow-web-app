@@ -144,7 +144,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
         <PageHeader :title="props.buyMovieDetails.title" :items="state.items" role="button" @click="showCheckout = false" />
         <div v-if="showCheckout">
             <div class="col-12">
-                <div class="card" :style="{ height: `${height - 100}px` }">
+                <div class="card" >
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <MovieCheckout
                             :paymentDetails="selectedTheatres"

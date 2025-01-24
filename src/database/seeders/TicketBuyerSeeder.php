@@ -20,7 +20,7 @@ class TicketBuyerSeeder extends Seeder
                 'email_verified_at' => date("Y-m-d H:i:s"),
                 "phone_number" => '0722222222',
                 "user_type" => 'ticket_buyer',
-                "password" => bcrypt("frontrow@123"),
+                "password" => bcrypt("buyer@123"),
             ]
         );
 

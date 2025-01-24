@@ -20,7 +20,7 @@ class BenficiarySeeder extends Seeder
                 'email_verified_at' => date("Y-m-d H:i:s"),
                 "phone_number" => '0711111111',
                 "user_type" => 'beneficiary',
-                "password" => bcrypt("frontrow@123"),
+                "password" => bcrypt("beneficiary@123"),
             ]
         );
 
