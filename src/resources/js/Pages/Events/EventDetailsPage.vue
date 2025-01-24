@@ -227,7 +227,7 @@ function getEventTicket(){
 
         <div v-if="showCheckout">
             <div class="col-12">
-                <div class="card" :style="{ height: `${height - 100}px` }">
+                <div class="card" >
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <EventCheckout :quantity="ticketQuantity" :selectedTickets="theSetectedTickets" />
                     </div>
