@@ -36,6 +36,7 @@ onMounted(() => {
     let paymentStatus = null;
     if (paymentDetails.value.ticketType == "event") {
         paymentStatus = getPaymentStatus();
+        console.log("responseStatus",paymentStatus)
     } else {
         paymentStatus = getMoviePaymentStatus();
     }
@@ -111,6 +112,7 @@ async function getPaymentStatus() {
         )
         .then((res) => {
             if (res.success) {
+                console.log("theresponse", res)
                 return res.data;
             } else {
                 return null;
@@ -140,6 +142,8 @@ function returnHome() {
                     <div class="d-flex align-items-center justify-content-center vh-100">
                         <div class="card" style="width: 24rem">
                             <div class="card-body">
+                                {{ isPaymentSuccessfull }}
+                                {{ paymentStatus }}
                                 <div v-if="isPaymentSuccessfull">
                                     <div class="mb-4 d-flex align-items-center justify-content-center">
                                         <div>
