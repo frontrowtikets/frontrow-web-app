@@ -25,6 +25,7 @@ const isLoading = ref(true);
 const errorMessage = ref("");
 const paymentStatusdetails = ref(null);
 const paymentDetails = ref(null);
+const paymentStatus = ref(null);
 
 onMounted(async() => {
     //verify Payment
@@ -33,15 +34,14 @@ onMounted(async() => {
     const details = localStorage.getItem("paymentDetails");
     paymentDetails.value = details ? JSON.parse(details) : null;
 
-    let paymentStatus = null;
     if (paymentDetails.value.ticketType == "event") {
-        paymentStatus = await getPaymentStatus();
-        console.log("responseStatus",paymentStatus)
+        await getPaymentStatus();
+
     } else {
-        paymentStatus = getMoviePaymentStatus();
+        await getMoviePaymentStatus();
     }
-    if (paymentStatus) {
-        paymentStatusdetails.value = paymentStatus;
+    if (paymentStatus.value) {
+        paymentStatusdetails.value = paymentStatus.value;
     } else {
         errorMessage.value = "Something Went Wrong, Please try again.";
     }
@@ -81,7 +81,7 @@ async function getMoviePaymentStatus() {
         )
         .then((res) => {
             if (res.success) {
-                return res.data;
+                paymentStatus.value = res.data;
             } else {
                 return null;
             }
@@ -113,7 +113,7 @@ async function getPaymentStatus() {
         .then((res) => {
             if (res.success) {
                 console.log("theresponse", res)
-                return res.data;
+                paymentStatus.value = res.data;
             } else {
                 return null;
             }
