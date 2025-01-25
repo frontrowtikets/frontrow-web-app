@@ -80,8 +80,10 @@ async function getMoviePaymentStatus() {
             }
         )
         .then((res) => {
-            if (res.success) {
+
+            if (res.status == 200 || res.status == '200' ) {
                 paymentStatus.value = res.data;
+
             } else {
                 return null;
             }
@@ -111,9 +113,11 @@ async function getPaymentStatus() {
             }
         )
         .then((res) => {
-            if (res.success) {
-                console.log("theresponse", res)
+              console.log("theresponse", res)
+            if (res.status == 200 || res.status == '200') {
+
                 paymentStatus.value = res.data;
+                  console.log("saved ress", paymentStatus.value)
             } else {
                 return null;
             }
