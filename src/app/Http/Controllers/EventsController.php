@@ -88,11 +88,10 @@ class EventsController extends Controller
             'reviews.user',
             'eventTickets',
         ])->first();
-        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
 
         return \Inertia\Inertia::render('Events/EventDetailsHomePage', [
             'eventDetails' => $eventDetail,
-            'myWallet' => $myWallet
 
         ]);
     }

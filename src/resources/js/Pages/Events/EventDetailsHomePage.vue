@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
-const props = defineProps(["eventDetails","myWallet"]);
+const props = defineProps(["eventDetails"]);
 const state = reactive({
     items: [
         {
@@ -237,7 +237,7 @@ function getEventTicket(){
                 <div class="col-12">
                     <div class="card" >
                         <div class="card-body d-flex align-items-center justify-content-center">
-                            <EventCheckout :quantity="ticketQuantity" :selectedTickets="theSetectedTickets" :myWallet="props.myWallet"/>
+                            <EventCheckout :quantity="ticketQuantity" :selectedTickets="theSetectedTickets" />
                         </div>
                     </div>
                 </div>

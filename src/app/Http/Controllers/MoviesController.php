@@ -88,11 +88,9 @@ class MoviesController extends Controller
             'reviews.user',
             'moviecasts'
         ])->first();
-        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
 
         return \Inertia\Inertia::render('Movies/MovieDetailsHomePage', [
             'movieDetails' => $movieDetail,
-            'myWallet' => $myWallet
 
         ]);
     }
