@@ -26,7 +26,7 @@ const errorMessage = ref("");
 const paymentStatusdetails = ref(null);
 const paymentDetails = ref(null);
 
-onMounted(() => {
+onMounted(async() => {
     //verify Payment
     const store = useStore();
     // paymentDetails.value = store.getters["PaymentDetails/getPaymentDetails"];
@@ -35,7 +35,7 @@ onMounted(() => {
 
     let paymentStatus = null;
     if (paymentDetails.value.ticketType == "event") {
-        paymentStatus = getPaymentStatus();
+        paymentStatus = await getPaymentStatus();
         console.log("responseStatus",paymentStatus)
     } else {
         paymentStatus = getMoviePaymentStatus();
