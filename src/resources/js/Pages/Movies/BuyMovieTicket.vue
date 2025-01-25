@@ -11,7 +11,7 @@ import { useWindowSize } from "@vueuse/core";
 import TheSeatMap from "@/js/Components/TheSeatMap.vue";
 import icondata from "@/images/icondata.png";
 
-const props = defineProps(["buyMovieDetails"]);
+const props = defineProps(["buyMovieDetails", "myWallet"]);
 
 const state = reactive({
     items: [
@@ -147,6 +147,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                             :currency="selectedTheatre?.currency"
                             :total="totalPrice"
                             :movieId="props.buyMovieDetails.id"
+                            :myWallet="props.myWallet"
                         />
                     </div>
                 </div>

@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
-const props = defineProps(["eventDetails"]);
+const props = defineProps(["eventDetails","myWallet"]);
 const state = reactive({});
 
 const { height } = useWindowSize();
@@ -229,7 +229,7 @@ function getEventTicket(){
             <div class="col-12">
                 <div class="card" >
                     <div class="card-body d-flex align-items-center justify-content-center">
-                        <EventCheckout :quantity="ticketQuantity" :selectedTickets="theSetectedTickets" />
+                        <EventCheckout :quantity="ticketQuantity" :selectedTickets="theSetectedTickets" :myWallet="props.myWallet" />
                     </div>
                 </div>
             </div>

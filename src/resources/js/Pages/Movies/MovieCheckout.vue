@@ -3,12 +3,14 @@ import mtnLogo from "../../../images/mtnMobileMoney.png";
 import airtelMoney from "../../../images/airtelMoney.png";
 import creditCard from "../../../images/creditCard.svg";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
+import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
+
 import { ref, computed, onMounted } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-const props = defineProps(["paymentDetails", "currency", "total", "movieId"]);
+const props = defineProps(["paymentDetails", "currency", "total", "movieId", "myWallet"]);
 const paymentMethod = ref("mtn");
 const buyerName = ref("");
 const buyerLastName = ref("");
@@ -21,14 +23,14 @@ const cvv = ref("");
 const showPaymentPage = ref(false);
 const paymentRedirectURL = ref(null);
 
-
-
 const isPhoneNumberValid = ref(true);
 const invalidPhoneNumberMsg = ref("");
 
 const responseError = ref("");
 
 const isProcessing = ref(false);
+const isProcessingWallet = ref(false);
+
 // const paymentDetailsCleaned = computed(() => {
 //     const details = props.paymentDetails;
 //     const selectedSeatsDetails = details.map((item) => {
@@ -76,7 +78,7 @@ const paymentDetailsCleaned = computed(() => {
         amount: props.total,
         movieId: props.movieId,
         selectedSeatsDetails: selectedSeatsDetails,
-         description: "Ticket Payment",
+        description: "Ticket Payment",
     };
 
     return cleaned;
@@ -99,13 +101,14 @@ function checkValidity() {
 }
 async function payTicket() {
     isProcessing.value = true;
-      const details = {...paymentDetailsCleaned.value,ticketType:"movie"};
-    localStorage.setItem('paymentDetails',JSON.stringify(details))
+    const details = { ...paymentDetailsCleaned.value, ticketType: "movie" };
+    localStorage.setItem("paymentDetails", JSON.stringify(details));
     await axios
-        .post("/api/v1/payments/makepayment", paymentDetailsCleaned.value,{
+        .post("/api/v1/payments/makepayment", paymentDetailsCleaned.value, {
             headers: {
                 Accept: "application/json",
-            }})
+            },
+        })
         .then((res) => {
             if (res.status == 200) {
                 paymentRedirectURL.value = res.data;
@@ -132,7 +135,7 @@ async function payTicket() {
             //     });
             // }
         })
-         .then(() => {
+        .then(() => {
             if (paymentRedirectURL.value) {
                 showPaymentPage.value = true;
             } else {
@@ -147,23 +150,30 @@ async function payTicket() {
 }
 
 const checkoutDisabled = computed(() => {
-    if (buyerEmail.value && buyerName.value && userPhoneNumber.value &&  isPhoneNumberValid.value) {
+    if (buyerEmail.value && buyerName.value && userPhoneNumber.value && isPhoneNumberValid.value) {
         return false;
     } else {
         return true;
     }
 });
+function payTicketWithWallet() {
+    isProcessingWallet.value = true;
+    useInertiaFormSubmit(
+        {
+            ...paymentDetailsCleaned.value
+        },
+        "/payMovie/wallet",
+        "/mytickets",
+        "You are make a payment using your wallet balance",
+        "Payment Successful"
+    );
+}
 </script>
 
 <template>
-      <div v-if="showPaymentPage" class="card-body">
+    <div v-if="showPaymentPage" class="card-body">
         <div class="payment-container">
-            <iframe
-                id="payment_page"
-                ref="paymentPageIframe"
-                :src="paymentRedirectURL"
-                style="width: 100%; height: 100%"
-            ></iframe>
+            <iframe id="payment_page" ref="paymentPageIframe" :src="paymentRedirectURL" style="width: 100%; height: 100%"></iframe>
         </div>
     </div>
     <div v-else class="pt-4 flex-column justify-content-center d-flex flex-md-row col-12">
@@ -410,6 +420,15 @@ const checkoutDisabled = computed(() => {
 
                     <button class="purchase--btn" @click.prevent="payTicket" :disabled="checkoutDisabled">
                         <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Make Payment</span>
+                    </button>
+                    <button
+                        v-if="props.myWallet "
+                        class="mt-4 btn btn-primary"
+                        style="padding: 13px"
+                        @click.prevent="payTicketWithWallet"
+                        :disabled="checkoutDisabled"
+                    >
+                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessingWallet"></i><span>Pay with Wallet</span>
                     </button>
                 </form>
             </div>

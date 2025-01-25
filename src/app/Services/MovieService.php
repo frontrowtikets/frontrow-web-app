@@ -21,6 +21,7 @@ use App\Models\MovieTicket;
 use App\Models\UserPaymentDetail;
 use App\Models\PaymentTransaction;
 use Illuminate\Support\Facades\Log;
+use App\Models\UserWallet;
 
 /**
  * Event Service.
@@ -262,6 +263,60 @@ class MovieService
                     ]);
                 }
             }
+        }
+    }
+
+    public static  function payWithWallet($paymentDetails)
+    {
+        $currentUser = User::where('email', $paymentDetails['email'])->first();
+        $userWallet = UserWallet::where('user_id', $currentUser->id)->first();
+
+        if ($userWallet->balance >  $paymentDetails['amount']) {
+            //Movie Tickets
+            $userPaymentDetails = UserPaymentDetail::create([
+                'user_id' => $currentUser->id,
+                'full_name' => $paymentDetails['first_name'] . ' ' . $paymentDetails['last_name'],
+                'user_email' => $paymentDetails['email'],
+                'user_phone_number' => $paymentDetails['phone'],
+                'visa_card' => 'wallet',
+                'payment_type' => 'wallet',
+            ]);
+            $paymentTransactions = PaymentTransaction::create([
+                'txn_ref' => $userWallet->id,
+                'mfscode' => $userWallet->id,
+                'txn_type' => 'movie_ticket',
+                'txn_channel' => 'web',
+                'txn_status' =>  'paid',
+                'amount' => $paymentDetails['amount'],
+                'currency' => 'UGX',
+                'reason' => 'Paying for event tickets',
+                'phone_number' => $paymentDetails['phone'],
+                'user_id' => $currentUser->id,
+                'txn_hash' => $userWallet->id
+            ]);
+
+
+            foreach ($paymentDetails['selectedSeatsDetails'] as $ticket) {
+
+                foreach ($ticket['selectedSeats'] as $seat) {
+                    $showTimeSeat = MovieShowTimeSeat::where('movie_show_time_id', $ticket['theatreId'])->where('seat_map_id', $ticket['roomId'])->where('seat_number', $seat)->first();
+                    $showTimeSeat->seat_status = 'reserved';
+                    $showTimeSeat->save();
+                    MovieTicket::create([
+                        'movie_id' => $paymentDetails['movieId'],
+                        'user_email' => $paymentDetails['email'],
+                        'movie_show_time_id' => $ticket['theatreId'],
+                        'movie_show_time_seat_id' => $showTimeSeat->id,
+                        'purchase_date' => now(),
+                        'user_payment_detail_id' => $userPaymentDetails->id,
+                        'payment_transaction_id' => $paymentTransactions->id,
+                        'ticket_id' => self::generateRandomMovieTicketId(),
+                        'ticket_status' => 'paid'
+                    ]);
+                }
+            }
+            $userWallet->balance = $userWallet->balance - $paymentDetails['amount'];
+            $userWallet->save();
         }
     }
     private static  function generateRandomMovieTicketId()

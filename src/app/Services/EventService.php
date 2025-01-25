@@ -18,7 +18,7 @@ use App\Models\UserEventTicket;
 use App\Mail\NewUserTempPasswordMail;
 use App\Models\UserPaymentDetail;
 use App\Models\PaymentTransaction;
-
+use App\Models\UserWallet;
 
 /**
  * Event Service.
@@ -277,7 +277,56 @@ class EventService
             }
         }
     }
+    public static  function payWithWallet($paymentDetails)
+    {
+        $currentUser = User::where('email', $paymentDetails['email'])->first();
+        $userWallet = UserWallet::where('user_id', $currentUser->id)->first();
 
+        if ($userWallet->balance >  $paymentDetails['amount']) {
+            $userPaymentDetails = UserPaymentDetail::create([
+                'user_id' => $currentUser->id,
+                'full_name' => $paymentDetails['first_name'].' ' .$paymentDetails['last_name'],
+                'user_email' => $paymentDetails['email'],
+                'user_phone_number' => $paymentDetails['phone'],
+                'visa_card' => 'wallet',
+                'payment_type' => 'wallet',
+            ]);
+            $paymentTransactions = PaymentTransaction::create([
+                'txn_ref' => $userWallet->id,
+                'mfscode' => $userWallet->id,
+                'txn_type' => 'event_ticket',
+                'txn_channel' => 'web',
+                'txn_status' =>  'paid' ,
+                'amount' => $paymentDetails['amount'],
+                'currency' => 'UGX',
+                'reason' => 'Paying for event tickets',
+                'phone_number' => $paymentDetails['phone'],
+                'user_id' => $currentUser->id,
+                'txn_hash' => $userWallet->id
+            ]);
+
+
+            foreach ($paymentDetails['selectedTicket'] as $seat) {
+                $eventTicket = UserEventTicket::create([
+                    'user_id' => $currentUser->id,
+                    'event_id' => $seat['event_id'],
+                    'quantity' => $seat['selectedQuantity'],
+                    'total_amount' => $paymentDetails['amount'],
+                    'ticket_status' => 'paid',
+                    'booking_date' => now(),
+                    'user_email' => $paymentDetails['email'],
+                    'ticket_id' => self::generateRandomEventTicketId(),
+                    'event_ticket_id' => $seat['id'],
+                    'user_payment_detail_id' => $userPaymentDetails->id,
+                    'payment_transaction_id' => $paymentTransactions->id,
+                ]);
+            }
+
+            $userWallet->balance = $userWallet->balance - $paymentDetails['amount'];
+            $userWallet->save();
+
+        }
+    }
     private static  function generateRandomEventTicketId()
     {
         $prefix = "FRE";

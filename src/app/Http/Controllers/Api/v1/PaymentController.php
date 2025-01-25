@@ -13,6 +13,7 @@ use App\Http\Requests\PesaPalPayment;
 use App\Services\PesapalService;
 use App\Services\EventService;
 use App\Services\MovieService;
+use App\Http\Controllers\WalletController;
 
 class PaymentController extends Controller
 {
@@ -149,7 +150,7 @@ class PaymentController extends Controller
         try {
             $orderTrackingId = $request->orderTrackingId;
             $status = $this->pesapal->getPaymentStatus($orderTrackingId);
-            if($request->purpose == 'event' ){
+            if ($request->purpose == 'event') {
                 $paymentDetails = [
                     'name' => $request->username,
                     'email' => $request->userEmail,
@@ -166,8 +167,7 @@ class PaymentController extends Controller
                     'call_back_url' => $status['call_back_url']
                 ];
                 EventService::buyTicket($paymentDetails);
-            }
-            elseif ($request->purpose == 'movie') {
+            } elseif ($request->purpose == 'movie') {
                 $paymentDetails = [
                     'name' => $request->username,
                     'email' => $request->userEmail,
@@ -185,6 +185,22 @@ class PaymentController extends Controller
                     'call_back_url' => $status['call_back_url']
                 ];
                 MovieService::buyTicket($paymentDetails);
+            } elseif ($request->purpose == 'wallet') {
+                $wallet = new  WalletController();
+                $paymentDetails = [
+                    'userId' => $request->userId,
+                    'amount' => $request->amount,
+                    'purpose' => 'wallet_topup',
+                    'status' => $status['status_code'],
+                    'payment_account' => $status['payment_account'],
+                    'payment_method' => $status['payment_method'],
+                    'currency' => $status['currency'],
+                    'total' => $status['amount'],
+                    'merchant_reference' => $status['merchant_reference'],
+                    'confirmation_code' => $status['confirmation_code'],
+                    'call_back_url' => $status['call_back_url']
+                ];
+                $wallet->topUp($paymentDetails);
             }
             return response()->json([
                 'success' => true,

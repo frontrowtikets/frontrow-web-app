@@ -7,11 +7,15 @@ import icondata from "@/images/icondata.png";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import { Money3Component } from "v-money3";
 import axios from "axios";
+import moment from "moment";
 
 const props = defineProps({
     transactions: {
         type: Array,
         default: [],
+    },
+    myWallet: {
+        type: Object,
     },
 });
 
@@ -103,6 +107,8 @@ function myTransaction() {
 }
 
 async function submitDeposit() {
+    const details = { ticketType: "wallet", amount: form["amount"], userId: usePage().props.auth.user.id };
+    localStorage.setItem("paymentDetails", JSON.stringify(details));
     if (form["amount"] > 0) {
         isProcessing.value = true;
         const details = {
@@ -163,14 +169,14 @@ async function submitDeposit() {
                                     <div class="col-sm-6">
                                         <div>
                                             <p class="mb-2 text-muted">Available Balance</p>
-                                            <h5>UGX 0.00</h5>
+                                            <h5>UGX {{ props.myWallet ? useCurrencyFormat(props.myWallet.balance) : "0.00" }}</h5>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="card-body border-top">
-                                <p class="mb-4 text-muted">In this month</p>
+                                <p class="mb-4 text-muted">Topup</p>
                                 <div class="text-center">
                                     <div class="d-flex justify-content-between">
                                         <!-- <div class="col-sm-4">
@@ -194,7 +200,7 @@ async function submitDeposit() {
                                                 </div>
 
                                                 <p class="mb-2 text-muted">Last Deposit</p>
-                                                <h5>UGX 0.00</h5>
+                                                <p>{{ props.myWallet?moment(props.myWallet.updated_at).format("ddd, DD MMM YYYY"):'Never' }}</p>
 
                                                 <div class="mt-3">
                                                     <a @click="walletModal = true" class="btn btn-primary btn-sm w-md">Deposit</a>
@@ -308,7 +314,7 @@ async function submitDeposit() {
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
-                            <div class="mb-3 mt-4 col-12 row">
+                            <div class="mt-4 mb-3 col-12 row">
                                 <div class="mb-3 col-3">
                                     <label for="currency">Currency</label>
                                     <select class="form-select form-control" id="currency" disabled>
