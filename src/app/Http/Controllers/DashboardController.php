@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Movie;
 use App\Models\PaymentTransaction;
+use App\Models\UserWallet;
 
 class DashboardController extends Controller
 {
@@ -25,6 +26,7 @@ class DashboardController extends Controller
         $currentUser = User::where('id', $user->id)->first();
         $currentUser->api_token =  $userApiToken;
         $currentUser->save();
+        $myWallet = UserWallet::where('user_id', $user->id)->first();
 
         //charts data
         list(
@@ -47,7 +49,8 @@ class DashboardController extends Controller
             "movies" => $movies,
             "allTransactions" => $allTransactions,
             "successTransactions" => $successTransactions,
-            "failedTransactions"=>$failedTransactions
+            "failedTransactions"=>$failedTransactions,
+            "myWallet" => $myWallet
         ]);
     }
 

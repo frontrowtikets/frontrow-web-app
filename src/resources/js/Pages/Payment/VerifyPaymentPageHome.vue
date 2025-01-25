@@ -27,7 +27,7 @@ const paymentStatusdetails = ref(null);
 const paymentDetails = ref(null);
 const paymentStatus = ref(null);
 
-onMounted(async() => {
+onMounted(async () => {
     //verify Payment
     const store = useStore();
     // paymentDetails.value = store.getters["PaymentDetails/getPaymentDetails"];
@@ -36,7 +36,6 @@ onMounted(async() => {
 
     if (paymentDetails.value.ticketType == "event") {
         await getPaymentStatus();
-
     } else {
         await getMoviePaymentStatus();
     }
@@ -71,7 +70,7 @@ async function getMoviePaymentStatus() {
                 phone: paymentDetails.value.phone,
                 purpose: paymentDetails.value.ticketType,
                 selectedSeatsDetails: paymentDetails.value.selectedSeatsDetails,
-                movieId:paymentDetails.value.movieId
+                movieId: paymentDetails.value.movieId,
             },
             {
                 headers: {
@@ -80,10 +79,8 @@ async function getMoviePaymentStatus() {
             }
         )
         .then((res) => {
-
-            if (res.status == 200 || res.status == '200' ) {
+            if (res.status == 200 || res.status == "200") {
                 paymentStatus.value = res.data.data;
-
             } else {
                 return null;
             }
@@ -113,11 +110,8 @@ async function getPaymentStatus() {
             }
         )
         .then((res) => {
-              console.log("theresponse", res)
-            if (res.status == 200 || res.status == '200') {
-
+            if (res.status == 200 || res.status == "200") {
                 paymentStatus.value = res.data.data;
-                  console.log("saved ress", paymentStatus.value)
             } else {
                 return null;
             }
@@ -146,8 +140,6 @@ function returnHome() {
                     <div class="d-flex align-items-center justify-content-center vh-100">
                         <div class="card" style="width: 24rem">
                             <div class="card-body">
-                                {{ isPaymentSuccessfull }}
-                                {{ paymentStatus }}
                                 <div v-if="isPaymentSuccessfull">
                                     <div class="mb-4 d-flex align-items-center justify-content-center">
                                         <div>
@@ -184,9 +176,9 @@ function returnHome() {
 
                                     <div class="flex mb-3 text-center d-flex-column">
                                         <div class="mt-4 mb-4">
-                                            <label>{{ paymentStatusdetails.description }}</label>
+                                            <label>{{ paymentStatusdetails.message ? paymentStatusdetails.message : "Payment successfull" }}</label>
                                         </div>
-                                        <div></div>
+                                        <div>Check your email or login in to access your ticket</div>
                                     </div>
                                 </div>
                                 <div v-else>
@@ -216,9 +208,12 @@ function returnHome() {
 
                                     <div class="flex mb-3 text-center d-flex-column">
                                         <div class="mt-4 mb-4">
-                                            <label>{{ paymentStatusdetails.description }}</label>
+                                            <label>{{
+                                                paymentStatusdetails.message ? paymentStatusdetails.message : "Something wrong happen"
+                                            }}</label>
                                         </div>
-                                        <div></div>
+
+                                        <div>{{ paymentStatusdetails.description }}</div>
                                     </div>
                                 </div>
                                 <div class="text-center">

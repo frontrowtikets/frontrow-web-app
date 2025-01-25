@@ -14,6 +14,8 @@ use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Models\UserPaymentDetail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserWallet;
+
 
 class MoviesController extends Controller
 {
@@ -68,8 +70,12 @@ class MoviesController extends Controller
             'reviews.user',
             'moviecasts'
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
         return \Inertia\Inertia::render('Movies/MovieDetailsPage', [
-            'movieDetails' => $movieDetail
+            'movieDetails' => $movieDetail,
+            'myWallet' => $myWallet
+
         ]);
     }
 
@@ -82,8 +88,12 @@ class MoviesController extends Controller
             'reviews.user',
             'moviecasts'
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
         return \Inertia\Inertia::render('Movies/MovieDetailsHomePage', [
-            'movieDetails' => $movieDetail
+            'movieDetails' => $movieDetail,
+            'myWallet' => $myWallet
+
         ]);
     }
 
@@ -93,8 +103,10 @@ class MoviesController extends Controller
             'showTimes',
             'seatmap',
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
         return \Inertia\Inertia::render('Movies/BuyMovieTicket', [
-            'buyMovieDetails' => $movieDetail
+            'buyMovieDetails' => $movieDetail,
+            'myWallet' => $myWallet
         ]);
     }
 
@@ -209,5 +221,10 @@ class MoviesController extends Controller
     {
         $movie = Movie::where('id', $request->id)->first();
         $movie->delete();
+    }
+
+    public function walletPay(Request $details)
+    {
+        MovieService::payWithWallet($details);
     }
 }

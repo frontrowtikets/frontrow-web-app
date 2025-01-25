@@ -16,6 +16,7 @@ use App\Models\UserEventTicket;
 use App\Models\PaymentTransaction;
 use App\Models\UserPaymentDetail;
 use App\Models\EventAttendee;
+use App\Models\UserWallet;
 
 
 
@@ -70,8 +71,13 @@ class EventsController extends Controller
             'reviews.user',
             'eventTickets',
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
+
+
         return \Inertia\Inertia::render('Events/EventDetailsPage', [
-            'eventDetails' => $eventDetail
+            'eventDetails' => $eventDetail,
+            'myWallet' => $myWallet
         ]);
     }
     public function eventDetailHome(Request $request)
@@ -82,8 +88,12 @@ class EventsController extends Controller
             'reviews.user',
             'eventTickets',
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
         return \Inertia\Inertia::render('Events/EventDetailsHomePage', [
-            'eventDetails' => $eventDetail
+            'eventDetails' => $eventDetail,
+            'myWallet' => $myWallet
+
         ]);
     }
 
@@ -185,5 +195,9 @@ class EventsController extends Controller
     {
         $event = Event::where('id', $request->id)->first();
         $event->delete();
+    }
+
+    public function walletPay(Request $details){
+        EventService::payWithWallet($details);
     }
 }

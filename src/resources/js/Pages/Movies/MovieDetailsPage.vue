@@ -11,7 +11,7 @@ import moment from "moment";
 import Swal from "sweetalert2";
 import "vue-select/dist/vue-select.css";
 
-const props = defineProps(["movieDetails"]);
+const props = defineProps(["movieDetails","myWallet"]);
 const state = reactive({});
 
 const currentUser = computed(() => {

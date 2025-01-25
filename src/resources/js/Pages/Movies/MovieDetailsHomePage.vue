@@ -10,7 +10,7 @@ import YouTube from "vue3-youtube";
 import Swal from "sweetalert2";
 import "vue-select/dist/vue-select.css";
 
-const props = defineProps(["movieDetails"]);
+const props = defineProps(["movieDetails", "myWallet"]);
 const state = reactive({
     items: [
         {

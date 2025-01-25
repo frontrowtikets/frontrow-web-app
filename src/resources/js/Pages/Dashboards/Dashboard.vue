@@ -20,6 +20,7 @@ const props = defineProps([
     "allTransactions",
     "successTransactions",
     "failedTransactions",
+    "myWallet"
 ]);
 const state = reactive({});
 const { isBeneficiary } = IsUserBeneficiary();
@@ -300,7 +301,7 @@ function viewEvent(event) {
                             <div class="col-12 text-end">
                                 <div>
                                     <p class="mb-2 fw-medium">Wallet Balance :</p>
-                                    <h4>UGX 0.00</h4>
+                                    <h4>UGX {{ props.myWallet ? useCurrencyFormat(props.myWallet.balance) : "0.00" }}</h4>
                                 </div>
                             </div>
                         </div>
@@ -308,8 +309,8 @@ function viewEvent(event) {
 
                     <div class="bg-transparent card-footer border-top">
                         <div class="text-center">
-                            <a @click="myWallet" class="btn btn-light me-2 w-md">My Wallet</a>
-                            <a href="#" class="btn btn-primary me-2 w-md">Deposit</a>
+                            <a @click="myWallet" class="btn btn-primary me-2 w-md">My Wallet</a>
+                            <!-- <a href="#" class="btn btn-primary me-2 w-md">Deposit</a> -->
                         </div>
                     </div>
                 </div>

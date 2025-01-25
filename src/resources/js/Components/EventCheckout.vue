@@ -3,13 +3,15 @@ import mtnLogo from "../../images/mtnMobileMoney.png";
 import airtelMoney from "../../images/airtelMoney.png";
 import creditCard from "../../images/creditCard.svg";
 import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
+import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
+
 import { ref, computed, onMounted } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useStore } from "vuex";
 
-const props = defineProps(["selectedTickets", "quantity"]);
+const props = defineProps(["selectedTickets", "quantity", "myWallet"]);
 const store = useStore();
 const paymentMethod = ref("mtn");
 const buyerName = ref("");
@@ -28,6 +30,7 @@ const paymentRedirectURL = ref(null);
 const showPaymentPage = ref(false);
 
 const isProcessing = ref(false);
+const isProcessingWallet = ref(false);
 
 onMounted(() => {
     if (usePage().props.auth.user != null) {
@@ -109,8 +112,8 @@ function checkValidity() {
 async function payTicket() {
     isProcessing.value = true;
     //store.commit("PaymentDetails/savePaymentDetails", {...paymentDetailsCleaned.value,ticketType:"event"});
-    const details = {...paymentDetailsCleaned.value,ticketType:"event"};
-    localStorage.setItem('paymentDetails',JSON.stringify(details))
+    const details = { ...paymentDetailsCleaned.value, ticketType: "event" };
+    localStorage.setItem("paymentDetails", JSON.stringify(details));
     await axios
         .post("/api/v1/payments/makepayment", paymentDetailsCleaned.value, {
             headers: {
@@ -155,6 +158,19 @@ async function payTicket() {
             responseError.value = err;
             isProcessing.value = false;
         });
+}
+
+function payTicketWithWallet() {
+    isProcessingWallet.value = true;
+     useInertiaFormSubmit(
+        {
+            ...paymentDetailsCleaned.value
+        },
+        "/payEvent/wallet",
+        "/mytickets",
+        "You are make a payment using your wallet balance",
+        "Payment Successful"
+    );
 }
 </script>
 
@@ -505,6 +521,23 @@ async function payTicket() {
                             v-if="isProcessing"
                         ></i
                         ><span>Make Payment</span>
+                    </button>
+
+                    <button
+                        v-if="
+                            props.myWallet &&
+                            props.myWallet.balance >= totalAmount
+                        "
+                        style="padding: 13px"
+                        class="mt-4 btn btn-primary"
+                        @click.prevent="payTicketWithWallet"
+                        :disabled="checkoutDisabled"
+                    >
+                        <i
+                            class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                            v-if="isProcessingWallet"
+                        ></i
+                        ><span>Pay with Wallet</span>
                     </button>
                 </form>
             </div>

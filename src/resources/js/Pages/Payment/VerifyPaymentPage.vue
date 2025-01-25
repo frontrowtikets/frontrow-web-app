@@ -26,15 +26,22 @@ const isLoading = ref(true);
 const errorMessage = ref("");
 const paymentStatusdetails = ref(null);
 const paymentDetails = ref(null);
+const paymentStatus = ref(null);
 
-onMounted(() => {
+onMounted(async () => {
     //verify Payment
     const store = useStore();
     // paymentDetails.value = store.getters["PaymentDetails/getPaymentDetails"];
     const details = localStorage.getItem("paymentDetails");
     paymentDetails.value = details ? JSON.parse(details) : null;
 
-    const paymentStatus = getPaymentStatus();
+    if (paymentDetails.value.ticketType == "event") {
+        await getPaymentStatus();
+    } else if (paymentDetails.value.ticketType == "wallet") {
+        await getWalletPaymentStatus();
+    } else {
+        await getMoviePaymentStatus();
+    }
     if (paymentStatus) {
         paymentStatusdetails.value = paymentStatus;
     } else {
@@ -56,6 +63,40 @@ const isPaymentSuccessfull = computed(() => {
         }
     }
 });
+
+async function getMoviePaymentStatus() {
+    await axios
+        .post(
+            "/api/v1/payments/getStatus",
+            {
+                orderTrackingId: props.OrderTrackingId,
+                username: `${paymentDetails.value.first_name} ${paymentDetails.value.last_name}`,
+                userEmail: paymentDetails.value.email,
+                phone: paymentDetails.value.phone,
+                purpose: paymentDetails.value.ticketType,
+                selectedSeatsDetails: paymentDetails.value.selectedSeatsDetails,
+                movieId: paymentDetails.value.movieId,
+            },
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            if (res.status == 200 || res.status == "200") {
+                paymentStatus.value = res.data.data;
+            } else {
+                return null;
+            }
+        })
+
+        .catch((err) => {
+            errorMessage.value = "Something Went Wrong, Please try again.";
+            return null;
+        });
+}
+
 async function getPaymentStatus() {
     await axios
         .post(
@@ -75,8 +116,36 @@ async function getPaymentStatus() {
             }
         )
         .then((res) => {
-            if (res.success) {
-                return res.data;
+            if (res.status == 200 || res.status == "200") {
+                paymentStatus.value = res.data.data;
+            } else {
+                return null;
+            }
+        })
+
+        .catch((err) => {
+            errorMessage.value = "Something Went Wrong, Please try again.";
+            return null;
+        });
+}
+async function getWalletPaymentStatus() {
+    await axios
+        .post(
+            "/api/v1/payments/getStatus",
+            {
+                userId: paymentDetails.value.userId,
+                amount: paymentDetails.value.amount,
+                purpose: paymentDetails.value.ticketType,
+            },
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            if (res.status == 200 || res.status == "200") {
+                paymentStatus.value = res.data.data;
             } else {
                 return null;
             }
@@ -140,10 +209,10 @@ function returnHome() {
                                 </div>
 
                                 <div class="flex mb-3 text-center d-flex-column">
-                                    <div class="mb-4 mt-4">
-                                        <label>{{ paymentStatusdetails.description }}</label>
+                                    <div class="mt-4 mb-4">
+                                        <label>{{ paymentStatusdetails.message ? paymentStatusdetails.message : "Payment successfull" }}</label>
                                     </div>
-                                    <div></div>
+                                    <div>{{ paymentDetails.ticketType == "wallet" ? "Your wallet has been topped up" : "Check your email or login in to access your ticket" }}</div>
                                 </div>
                             </div>
                             <div v-else>
@@ -172,10 +241,11 @@ function returnHome() {
                                 </div>
 
                                 <div class="flex mb-3 text-center d-flex-column">
-                                    <div class="mb-4 mt-4">
-                                        <label>{{ paymentStatusdetails.description }}</label>
+                                    <div class="mt-4 mb-4">
+                                        <label>{{ paymentStatusdetails.message ? paymentStatusdetails.message : "Something wrong happen" }}</label>
                                     </div>
-                                    <div></div>
+
+                                    <div>{{ paymentStatusdetails.description }}</div>
                                 </div>
                             </div>
                             <div class="text-center">
