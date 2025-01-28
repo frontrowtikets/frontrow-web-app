@@ -33,8 +33,8 @@ Route::get('/test-mail-dispatch', function () {
         'title' => 'Mail from ItSolutionStuff.com',
         'body' => 'This is for testing email using smtp'
     ];
-
-    $sent = Mail::to('godwintumuhimbise96@gmail.com')->send(new \App\Mail\TestMail($details));
+    $to = request()->query('to', 'godwintumuhimbise96@gmail.com');
+    $sent = Mail::to($to)->send(new \App\Mail\TestMail($details));
     if($sent){
         return "Email sent successfully";
     }else{
