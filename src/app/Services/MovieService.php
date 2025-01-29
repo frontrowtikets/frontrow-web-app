@@ -66,6 +66,10 @@ class MovieService
             'languange' => $movieDetails['language'],
             'trailer_url' => $movieDetails['trailer_url'],
             'status' => $movieDetails['status'],
+            'director' => $movieDetails['director'],
+            'writer' => $movieDetails['writer'],
+            'producer' => $movieDetails['producer'],
+            'viewingFormat' => $movieDetails['viewingFormat'],
             'is_active' => false,
             'maturity_rating' => $movieDetails['maturity_rating'],
         ]);

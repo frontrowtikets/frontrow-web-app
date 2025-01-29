@@ -48,6 +48,10 @@ class CreateMovie extends FormRequest
             'tickets' => 'array',
             'rating' => 'numeric',
             'casts' => 'array',
+            'producer' => '',
+            'director' => '',
+            'writer' => '',
+            'viewingFormat' => 'string',
             'id' => ''
         ];
     }

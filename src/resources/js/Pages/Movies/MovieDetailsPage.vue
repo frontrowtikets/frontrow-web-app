@@ -7,7 +7,7 @@ import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import IsUserAdmin from "../../Composables/IsUserAdmin.js";
 
 import moment from "moment";
-// import YouTube from "vue3-youtube";
+import YouTube from "vue3-youtube";
 import Swal from "sweetalert2";
 import "vue-select/dist/vue-select.css";
 
@@ -261,7 +261,7 @@ function editMovie() {
 
                         <div class="mb-5" v-if="props.movieDetails.trailer_url">
                             <h5 class="mb-3 fw-semibold">Trailer:</h5>
-                            <!-- <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" /> -->
+                            <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" />
                         </div>
 
                         <h5 class="mb-3 fw-semibold">Show Times</h5>
