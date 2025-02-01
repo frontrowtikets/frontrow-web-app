@@ -368,7 +368,7 @@ function handleImageUpload(event, index) {
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.viewingFormat" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="event_description" class="mb-2">Description</label>
+                                            <label for="event_description" class="mb-2">Synopsis</label>
                                             <VueEditor v-model="form.description" id="event_description"></VueEditor>
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.description" />
                                         </div>

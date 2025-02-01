@@ -229,9 +229,25 @@ function editMovie() {
                             </div>
                         </div>
 
-                        <div class="mb-5">
-                            <h5 class="mb-3 fw-semibold">Description</h5>
+                        <div class="mb-4">
+                            <h5 class="mb-3 fw-semibold">Synopsis</h5>
                             <p class="text-muted" v-html="props.movieDetails.description"></p>
+                        </div>
+
+                          <div class="mb-4 d-flex d-flex-wrap">
+                            <div class="d-flex me-5"  v-if="props.movieDetails.director">
+                                <div class="me-2"><label>Director:</label></div>
+                                <div>{{ props.movieDetails.director }}</div>
+                            </div>
+                             <div class="d-flex me-5" v-if="props.movieDetails.writer">
+                                <div class="me-2"><label>Writer:</label></div>
+                                <div>{{ props.movieDetails.writer }}</div>
+                            </div>
+                             <div class="d-flex me-5" v-if="props.movieDetails.producer">
+                                <div class="me-2"><label>Producer:</label></div>
+                                <div>{{ props.movieDetails.producer}}</div>
+                            </div>
+
                         </div>
 
                         <div v-if="props.movieDetails.moviecasts.length > 0" class="mb-5">
