@@ -12,7 +12,7 @@ import { useWindowSize } from "@vueuse/core";
 import TheSeatMap from "@/js/Components/TheSeatMap.vue";
 import icondata from "@/images/icondata.png";
 
-const props = defineProps(["buyMovieDetails","myWallet"]);
+const props = defineProps(["buyMovieDetails", "myWallet"]);
 
 const state = reactive({
     items: [
@@ -135,6 +135,15 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
         selectedTheatres.value.push({ selectedSeats: seats, roomID: roomId, theatre, roomName });
     }
 }
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+}
+function movieDetails() {
+    router.visit(`/home/movie/${slugify(props.buyMovieDetails.title)}/${props.buyMovieDetails.id}`);
+}
 </script>
 <template>
     <Head title="checkout" />
@@ -144,7 +153,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
         <PageHeader :title="props.buyMovieDetails.title" :items="state.items" role="button" @click="showCheckout = false" />
         <div v-if="showCheckout">
             <div class="col-12">
-                <div class="card" >
+                <div class="card">
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <MovieCheckout
                             :paymentDetails="selectedTheatres"
@@ -163,8 +172,8 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                     <div class="card-body">
                         <div class="w-100 d-flex justify-content-between">
                             <div><h5 class="mb-4 card-title">Seat Map</h5></div>
-                            <div class="" @click="goback">
-                                <a class="btn btn-light"> <i class="mdi mdi-arrow-left me-1"></i> View Movie Details </a>
+                            <div class="" @click="movieDetails">
+                                <a class="btn btn-light"> <i class="mdi mdi-eye-outline"></i> View Movie Details </a>
                             </div>
                         </div>
                         <div class="mt-4">

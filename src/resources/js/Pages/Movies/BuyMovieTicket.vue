@@ -132,6 +132,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
         selectedTheatres.value.push({ selectedSeats: seats, roomID: roomId, theatre, roomName });
     }
 }
+
 </script>
 <template>
     <Head title="checkout" />
@@ -160,7 +161,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                         <div class="w-100 d-flex justify-content-between">
                             <div><h5 class="mb-4 card-title">Seat Map</h5></div>
                             <div class="" @click="viewDetails">
-                                <a class="btn btn-light"> <i class="mdi mdi-arrow-left me-1"></i> View Movie Details </a>
+                                <a class="btn btn-light"> <i class="mdi mdi-eye-outline"></i> View Movie Details </a>
                             </div>
                         </div>
                         <div class="mt-4">
