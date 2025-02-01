@@ -304,7 +304,7 @@ export default {
 
 <template>
     <header id="page-topbar">
-        <div class="navbar-header" style="background-color: #01676C">
+        <div class="navbar-header" style="background-color: #01676c">
             <div class="d-flex">
                 <!-- LOGO -->
                 <div
@@ -313,11 +313,13 @@ export default {
                     <Link :href="route('landing')">
                         <div class="avatar-sm">
                             <span class="avatar-title rounded-circle bg-light">
-                                <!-- <img
-                                    src="@/images/FRONTROWLogo.svg"
+                                <img
+                                    src="@/images/logos/small2.png"
+                                    class="avatar-title rounded-circle"
+                                    style="background-color: #ffffff"
                                     alt
-                                    height="48"
-                                /> -->
+                                    height="70"
+                                />
                             </span>
                         </div>
                     </Link>

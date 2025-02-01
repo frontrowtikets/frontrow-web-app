@@ -1,19 +1,22 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, computed } from "vue";
 import "@vueform/slider/themes/default.css";
 import EventCard from "./EventCard.vue";
 import MovieCard from "./MovieCard.vue";
 import { router } from "@inertiajs/vue3";
 
-
 const props = defineProps(["last3Movies", "last3Events"]);
 
 onMounted(() => {});
-function slugify(title){
-     return title
+const itemsNumber = computed(() => {
+    const itemCount = props.last3Movies.length + props.last3Movies.length;
+    return itemCount;
+});
+function slugify(title) {
+    return title
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
 }
 function viewMovie(title, id) {
     router.visit(`/home/movie/${slugify(title)}/${id}`);
@@ -37,10 +40,12 @@ function viewEvent(title, id) {
             </div>
 
             <!-- end row -->
+             <div class="pt-5 pb-5 mt-5 mb-5 text-center" v-if="itemsNumber==0"> No Items Yet.</div>
             <div
+            v-else
                 class="flex-wrap gap-4 d-flex align-items-center justify-content-center"
             >
-            <div
+                <div
                     v-for="(item, index) in props.last3Movies"
                     :key="index"
                     class="col-xl-3 col-md-4 col-sm-6"
@@ -70,7 +75,6 @@ function viewEvent(title, id) {
                         @view="viewEvent"
                     />
                 </div>
-
             </div>
 
             <!-- end row -->

@@ -119,7 +119,7 @@ function goDashboard() {
                         {{ new Date().getFullYear() }} © FRONTROW. Design &
                         Developed by the CinemaUg
                     </p>
-                    <p>Movies & Beyound</p>
+                    <p>Movies & Beyond</p>
                 </div>
             </div>
         </b-container>

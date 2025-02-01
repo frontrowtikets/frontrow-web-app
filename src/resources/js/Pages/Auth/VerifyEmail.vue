@@ -26,13 +26,13 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="account-pages my-5 pt-sm-5">
+    <div class="my-5 account-pages pt-sm-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="text-center mb-5 text-muted">
+                    <div class="mb-5 text-center text-muted">
                         <Link :href="route('landing')" class="d-block auth-logo">
-                            <img src="@/images/FRONTROWLogo.svg" alt height="65" />
+                            <img src="@/images/logos/large.png" alt height="100" />
                         </Link>
                     </div>
                 </div>
@@ -44,13 +44,13 @@ const submit = () => {
                         <div class="card-body">
                             <div class="p-2">
                                 <div class="text-center">
-                                    <div class="avatar-md mx-auto">
+                                    <div class="mx-auto avatar-md">
                                         <div class="avatar-title rounded-circle bg-light">
-                                            <i class="bx bxs-envelope h1 mb-0 text-primary"></i>
+                                            <i class="mb-0 bx bxs-envelope h1 text-primary"></i>
                                         </div>
                                     </div>
                                     <div class="p-2 mt-4">
-                                        <h4>Verify your email</h4>
+                                        <h4>Verify your email </h4>
 
                                         <p v-if="verificationLinkSent" variant="success" class="mt-3" dismissible>
                                             A new verification link has been sent to the email address you provided in your profile settings.
