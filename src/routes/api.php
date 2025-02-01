@@ -24,6 +24,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/v1/payments/makepayment', [PaymentController::class, 'makePayment']);
     Route::post('/v1/payments/getStatus', [PaymentController::class, 'getPaymentStatus']);
 
+    Route::post('/testthismail', [PaymentController::class, 'testMail']);
+
 
 
 

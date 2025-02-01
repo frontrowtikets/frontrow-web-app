@@ -41,15 +41,15 @@ function goToMoviesPage() {
         >
             <a class="navbar-logo" href="/">
                 <img
-                    src="../../images/FRONTROWLogo.svg"
+                    src="../../images/logos/logo4.svg"
                     alt
-                    height="25"
+                    height="50"
                     class="logo logo-dark"
                 />
                 <img
-                    src="../../images/FRONTROWLogo.svg"
+                    src="../../images/logos/logo4.svg"
                     alt
-                    height="25"
+                    height="50"
                     class="logo logo-light"
                 />
             </a>

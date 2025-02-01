@@ -6,6 +6,8 @@ import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
 import icondata from "@/images/icondata.png";
 import MovieTicketCard from "@/js/Components/MovieTicketCard.vue";
 import EventTicketCard from "@/js/Components/EventTicketCard.vue";
+
+
 import { useInfiniteScroll } from "@/js/Composables/useInfiniteScroll.js";
 
 const props = defineProps({
@@ -66,6 +68,7 @@ function allMovies() {
                                 <div class="mt-4 text-end">
                                     <b-button class="btn btn-soft-primary" @click="allMovies">More Movies</b-button>
                                 </div>
+
 
                                 <div v-if="paginatedItems.length > 0">
                                     <div class="flex-wrap gap-5 mt-5 d-flex justify-content-center">

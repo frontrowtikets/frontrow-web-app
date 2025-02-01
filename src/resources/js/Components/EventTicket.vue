@@ -42,7 +42,7 @@ const endTime = computed(() =>{
 </script>
 
 <template>
-    <div class="container py-4" id="eventticket">
+    <div class="container py-4" id="eventticketx">
         <div class="ticket-container">
             <div class="purple-border">
                 <div class="shadow ticket-main">

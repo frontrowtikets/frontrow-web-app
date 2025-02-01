@@ -5,6 +5,7 @@ import MovieTicket from "./MovieTicket.vue";
 import moment from "moment";
 import Swal from "sweetalert2";
 import html2pdf from "html2pdf.js";
+import MovieTicketNew from "./MovieTicketNew.vue";
 
 const props = defineProps([
     "ticketId",
@@ -57,7 +58,7 @@ function downloadInvoice() {
             unit: "in",
             format: "a4",
             // orientation: "landscape",
-            compress: true,
+            compress: false,
         },
     };
     html2pdf()
@@ -87,19 +88,20 @@ function downloadTicket() {
         pagebreak: {
             after: "#break",
         },
-        // image: {
-        //     type: "jpeg",
-        //     quality: 2.0,
-        // },
+        image: {
+            type: "jpeg",
+            quality: 1.0,
+        },
         html2canvas: {
-            scale: 1.0,
-            useCORS: true,
+         scale: 3.0,
+        useCORS: true,
+        logging: false,
         },
         jsPDF: {
             unit: "in",
             format: "a4",
             // orientation: "landscape",
-            compress: true,
+            compress: false,
         },
     };
     html2pdf()
@@ -210,14 +212,14 @@ function downloadTicket() {
                     <li>
                         <a class="dropdown-item" role="button"  @click="downloadTicket">Download Ticket</a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a
                             class="dropdown-item"
                         role="button"
                             @click="downloadInvoice"
                             >Download Invoice</a
                         >
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -230,7 +232,7 @@ function downloadTicket() {
             />
         </div>
         <div class="d-none">
-            <MovieTicket
+            <MovieTicketNew
             :ticketId="props.ticketId"
             :movie="props.movie"
             :theatre="props.theatre"

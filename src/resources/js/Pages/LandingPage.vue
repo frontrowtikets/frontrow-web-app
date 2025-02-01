@@ -12,6 +12,7 @@ import img4 from "../../images/movies/banner4.png";
 import img5 from "../../images/movies/banner5.png";
 import img6 from "../../images/movies/banner6.png";
 import { breakpointsTailwind, useBreakpoints, useWindowSize } from "@vueuse/core";
+import axios from "axios";
 
 // defineOptions({ layout: HorizontalHomeLayout });
 
@@ -53,6 +54,26 @@ function windowScroll() {
             navbar.classList.remove("nav-sticky");
         }
     }
+}
+function testMail(){
+        axios
+        .post(
+            "/api/testthismail",
+            {
+            },
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+           console.log('ress',res)
+        })
+
+        .catch((err) => {
+
+        });
 }
 </script>
 
@@ -99,6 +120,7 @@ function windowScroll() {
                                 aria-label="Slide 4"
                             ></button>
                         </div> -->
+                        <!-- <b-button @click="testMail">This is</b-button> -->
                         <div v-if="props.bannerImages" class="rounded carousel-inner" style="max-height: 45vh; overflow: hidden">
                             <div
                                 v-for="(banner, index) in props.bannerImages"

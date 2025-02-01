@@ -14,6 +14,10 @@ use App\Services\PesapalService;
 use App\Services\EventService;
 use App\Services\MovieService;
 use App\Http\Controllers\WalletController;
+use App\Mail\TicketPurchaseMail;
+use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+
 
 class PaymentController extends Controller
 {
@@ -26,6 +30,7 @@ class PaymentController extends Controller
     }
 
     public function initiateCollection(Request $request)
+
     {
         try {
             $transaction = PaymentService::collect(
@@ -202,6 +207,16 @@ class PaymentController extends Controller
                 ];
                 $wallet->topUp($paymentDetails);
             }
+
+            //payment confirmation email
+            $formattedDate = Carbon::now()->format('D, M d Y H:i:s');
+            $message = (new TicketPurchaseMail($request->username, $status['amount'], $status['merchant_reference'], $status['confirmation_code'], $status['payment_method'], $formattedDate))
+                ->onQueue('emails');
+
+            Mail::to($request->userEmail)
+                ->queue($message);
+
+
             return response()->json([
                 'success' => true,
                 'data' => $status
@@ -211,6 +226,20 @@ class PaymentController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function testMail(Request $request)
+    {
+        try {
+            $timestamp = strtotime('2025-01-22 20:24:30');
+            $formattedDate = date('D, M d Y H:i:s', $timestamp);
+            $message = (new TicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate))
+                ->onQueue('emails');
+
+            Mail::to('test2@gmail.com')
+                ->queue($message);
+        } catch (\Exception $e) {
         }
     }
 }

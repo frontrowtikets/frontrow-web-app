@@ -15,13 +15,21 @@ use App\Models\User;
 use App\Models\UserPaymentDetail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserWallet;
+use Carbon\Carbon;
 
 
 class MoviesController extends Controller
 {
     public function homeMovies(Request $request)
     {
-        $movies = Movie::with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
+        $movies = Movie::where('is_active', true)->with(["showTimes" => function ($query) {
+            $query->where('screening_date', '>=', Carbon::now());
+        }])
+            ->whereHas('showTimes', function ($query) {
+                $query->where('screening_date', '>=', Carbon::now());
+            })
+            ->orderBy('created_at', 'desc')->paginate(6);
+
         $categories = MovieCategory::get();
 
         return \Inertia\Inertia::render('Movies/MoviesHomePage', [
@@ -149,7 +157,12 @@ class MoviesController extends Controller
 
     public function allMovies(Request $request)
     {
-        $movies = Movie::where('is_active', true)->with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
+        $movies = Movie::where('is_active', true)->with(["showTimes" => function ($query) {
+            $query->where('screening_date', '>=', Carbon::now());
+        }])
+            ->whereHas('showTimes', function ($query) {
+                $query->where('screening_date', '>=', Carbon::now());
+            })->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Movies/AllMoviesPage', [
             'movies' => $movies
         ]);

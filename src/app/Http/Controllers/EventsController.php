@@ -26,7 +26,7 @@ class EventsController extends Controller
 
     public function homeEvents(Request $request)
     {
-        $events = Event::where('is_active', true)->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
+        $events = Event::where('is_active', true)->where('end_date', '>=', now())->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
         $categories = EventCategory::get();
 
         return \Inertia\Inertia::render(
@@ -142,7 +142,7 @@ class EventsController extends Controller
     }
     public function allEvents(Request $request)
     {
-        $events = Event::where('is_active', true)->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
+        $events = Event::where('is_active', true)->where('end_date', '>=', now())->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Events/AllEventsPage', [
             'events' => $events
         ]);
