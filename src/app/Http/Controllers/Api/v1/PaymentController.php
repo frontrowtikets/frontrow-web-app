@@ -297,7 +297,7 @@ class PaymentController extends Controller
             $message = (new TicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData))
                 ->onQueue('emails');
 
-            Mail::to('test2@gmail.com')
+            Mail::to('jjembatony@gmail.com')
                 ->queue($message);
         } catch (\Exception $e) {
             Log::alert($e);
@@ -323,7 +323,7 @@ class PaymentController extends Controller
             $message = (new EventTicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData))
                 ->onQueue('emails');
 
-            Mail::to('test2@gmail.com')
+            Mail::to('jjembatony@gmail.com')
                 ->queue($message);
         } catch (\Exception $e) {
             Log::alert($e);
@@ -356,7 +356,7 @@ class PaymentController extends Controller
             $message = new TicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData);
 
 
-            Mail::to('test2@gmail.com')->send($message);
+            Mail::to('jjembatony@gmail.com')->send($message);
         } catch (\Exception $e) {
             Log::alert($e);
         }
@@ -381,7 +381,7 @@ class PaymentController extends Controller
             $message = new EventTicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData);
 
 
-            Mail::to('test2@gmail.com')->send($message);
+            Mail::to('jjembatony@gmail.com')->send($message);
         } catch (\Exception $e) {
             Log::alert($e);
         }
