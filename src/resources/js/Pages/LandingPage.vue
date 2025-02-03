@@ -55,26 +55,7 @@ function windowScroll() {
         }
     }
 }
-function testMail(){
-        axios
-        .post(
-            "/api/testthismail",
-            {
-            },
-            {
-                headers: {
-                    Accept: "application/json",
-                },
-            }
-        )
-        .then((res) => {
-           console.log('ress',res)
-        })
 
-        .catch((err) => {
-
-        });
-}
 </script>
 
 <template>
@@ -120,7 +101,6 @@ function testMail(){
                                 aria-label="Slide 4"
                             ></button>
                         </div> -->
-                        <!-- <b-button @click="testMail">This is</b-button> -->
                         <div v-if="props.bannerImages" class="rounded carousel-inner" style="max-height: 45vh; overflow: hidden">
                             <div
                                 v-for="(banner, index) in props.bannerImages"

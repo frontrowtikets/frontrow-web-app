@@ -4,10 +4,17 @@ const LoggedInUser = {
         userDetails: {},
         staffRegisterProfiles: [],
         iwillSign: 1,
-        currentUrl:""
+        currentUrl: "",
+        searchVal: "",
     }),
 
     mutations: {
+        setSearchVal(state, data) {
+            state.searchVal = data;
+        },
+        resetSearchVal(state) {
+            state.searchVal = "";
+        },
         storeLoggedInUserDetails(state, data) {
             state.userDetails = data;
         },
@@ -31,6 +38,9 @@ const LoggedInUser = {
     getters: {
         getUserDetails(state) {
             return state.userDetails;
+        },
+        getSearchVal(state) {
+            return state.searchVal;
         },
     },
 };

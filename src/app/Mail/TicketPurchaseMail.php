@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Attachment;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TicketPurchaseMail extends Mailable
 {
@@ -17,16 +18,42 @@ class TicketPurchaseMail extends Mailable
     /**
      * Create a new message instance.
      */
+
+    protected array $pdfContents = [];
+    public $ticketDetails;
+    public $clientName;
+    public $amount;
+    public $merchant_reference;
+    public $confirmation_code;
+    public $payment_method;
+    public $paymentDate;
+
     public function __construct(
-        public $clientName,
-        public $amount,
-        public $merchant_reference,
-        public $confirmation_code,
-        public $payment_method,
-        public $paymentDate
+        $clientName,
+        $amount,
+        $merchant_reference,
+        $confirmation_code,
+        $payment_method,
+        $paymentDate,
+        $ticketDetails,
     )
     {
-        //
+
+        $this->clientName          = $clientName;
+        $this->amount              = $amount;
+        $this->merchant_reference  = $merchant_reference;
+        $this->confirmation_code   = $confirmation_code;
+        $this->payment_method      = $payment_method;
+        $this->paymentDate         = $paymentDate;
+        $this->ticketDetails       = $ticketDetails;
+
+        foreach ($ticketDetails as $index => $ticketData) {
+            $pdfContent = Pdf::loadView('MovieTicket', $ticketData)->output();
+            $this->pdfContents[] = [
+                'content'  => base64_encode($pdfContent) ,
+                'filename' => 'ticket_' . ($index + 1) . '.pdf',
+            ];
+        }
     }
 
     /**
@@ -56,10 +83,17 @@ class TicketPurchaseMail extends Mailable
      */
     public function attachments(): array
     {
-        return [
+        $attachments = [];
 
-            //TODO Generate Ticket from the server
-            Attachment::fromPath('http://localhost:8000/storage/38/car-show-template-.avif')->as('Ticket.pdf')->withMime('application/pdf'),
-        ];
+        foreach ($this->pdfContents as $pdf) {
+            $attachments[] =
+            Attachment::fromData(
+                fn() => base64_decode($pdf['content']),
+                $pdf['filename'],
+                'application/pdf'
+            );
+        }
+
+        return $attachments;
     }
 }

@@ -2,11 +2,14 @@
 import { Link, usePage, router } from "@inertiajs/vue3";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
 import { ref } from "vue";
+import { useStore } from "vuex";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 const greaterThanMd = breakpoints.greater("md");
 
+const store = useStore();
 const isMenuOpen = ref(false);
+const searchVal = ref("");
 
 function toggleMenu() {
     document.getElementById("topnav-menu-content").classList.toggle("show");
@@ -28,6 +31,12 @@ function goToEventsPage() {
 }
 function goToMoviesPage() {
     router.visit("/movies");
+}
+
+function goToSearch($event) {
+    console.log()
+    store.commit("LoggedInUser/setSearchVal", searchVal.value);
+    router.visit("/search");
 }
 </script>
 <template>
@@ -128,6 +137,8 @@ function goToMoviesPage() {
                                 class="pt-4 pb-4 shadow-lg form-control"
                                 id="searched_place"
                                 :placeholder="'Search'"
+                                @input="goToSearch"
+                                v-model="searchVal"
                             />
                             <span class="pt-1 pb-1 bx bx-search-alt"></span>
                         </div>

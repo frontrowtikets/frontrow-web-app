@@ -1,6 +1,6 @@
 <script setup>
-
 import { router } from "@inertiajs/vue3";
+import axios from "axios";
 
 function downloadApk() {
     const fileUrl = `/FRONTROW_V1.0.1.apk`;
@@ -14,11 +14,11 @@ function downloadApk() {
     document.body.removeChild(a);
 }
 
-function toLogin(){
-     router.visit("/login");
+function toLogin() {
+    router.visit("/login");
 }
-function toRegister(){
-     router.visit("/register");
+function toRegister() {
+    router.visit("/register");
 }
 function goEvents() {
     router.visit("/myevents");
@@ -35,6 +35,40 @@ function goToMoviesPage() {
 function goDashboard() {
     router.visit("/dashboard");
 }
+function testMail1() {
+    axios
+        .post(
+            "/api/testthismail",
+            {},
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            console.log("ress", res);
+        })
+
+        .catch((err) => {});
+}
+function testMail2() {
+    axios
+        .post(
+            "/api/testthismail2",
+            {},
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            console.log("ress", res);
+        })
+
+        .catch((err) => {});
+}
 </script>
 
 <template>
@@ -50,10 +84,10 @@ function goDashboard() {
                                 <a>Buy Tickets</a>
                             </li>
                             <li @click="createEvent" role="button">
-                                <a >Create Event</a>
+                                <a>Create Event</a>
                             </li>
                             <li @click="goToEventsPage" role="button">
-                                <a >Events</a>
+                                <a>Events</a>
                             </li>
                             <li @click="goToMoviesPage" role="button">
                                 <a>Cinemas</a>
@@ -67,24 +101,29 @@ function goDashboard() {
                         <h5 class="mb-3 footer-list-title">Links</h5>
                         <ul class="list-unstyled footer-list-menu">
                             <li @click="toRegister" role="button">
-                                <a >Create Account</a>
+                                <a>Create Account</a>
                             </li>
                             <li @click="toLogin" role="button">
-                                <a >Sign in </a>
+                                <a>Sign in </a>
                             </li>
-                            <li @click="goDashboard">
-                                <a >Go to Dashboard</a>
+                            <li @click="goDashboard" role="button">
+                                <a>Go to Dashboard</a>
+                            </li>
+                            <li @click="testMail1" >
+                                <a>TestMail1</a>
+                            </li>
+                            <li @click="testMail2">
+                                <a>Testmail2</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class=" mb-lg-0">
-                        <h5 class=" footer-list-title">
+                    <div class="mb-lg-0">
+                        <h5 class="footer-list-title">
                             Download Our Application
                         </h5>
                         <div class="blog-post">
-
                             <div class="flex-row gap-5 d-flex">
                                 <div @click="downloadApk" role="button">
                                     <img

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\PaymentTransaction;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserWallet;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WalletDepostMail;
+use App\Models\User;
 
 
 class WalletController extends Controller
@@ -24,6 +27,7 @@ class WalletController extends Controller
      public function topUp($paymentDetails){
 
         $walletDetails = UserWallet::where('user_id', $paymentDetails['userId'])->first();
+        $currentUser = User::where('id', Auth::user()->id)->first();
 
         if(is_null($walletDetails)){
             UserWallet::create([
@@ -48,6 +52,17 @@ class WalletController extends Controller
             'user_id' => $paymentDetails['userId'],
             'txn_hash' => $paymentDetails['merchant_reference']
         ]);
+
+        try {
+            $message = (new WalletDepostMail($currentUser->name, $paymentTransactions->currency, $paymentTransactions->amount))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
 
      }
 }
