@@ -12,6 +12,7 @@ use App\Http\Controllers\UserRegister;
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
@@ -30,7 +31,19 @@ Route::get("/search", [SearchController::class, 'search'])->name('search');
 //web payments callback
 Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');
 
-
+Route::get('/test-mail-dispatch', function () {
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+    $to = request()->query('to', 'godwintumuhimbise96@gmail.com');
+    $sent = Mail::to($to)->send(new \App\Mail\TestMail($details));
+    if($sent){
+        return "Email sent successfully";
+    }else{
+        return "Email not sent";
+    }
+});
 
 
 
