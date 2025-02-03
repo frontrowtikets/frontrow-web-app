@@ -11,6 +11,7 @@ use App\Http\Controllers\WalletController;
 use App\Http\Controllers\UserRegister;
 use App\Http\Controllers\ActivationController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
@@ -23,6 +24,8 @@ Route::get('/verify/event/ticket/{ticketId}/{transactionId}/{userDetailsId}', [E
 Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHome'])->name('movie_detail_home');
 Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
+Route::get("/search", [SearchController::class, 'search'])->name('search');
+
 
 //web payments callback
 Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');

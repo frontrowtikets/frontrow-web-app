@@ -19,6 +19,11 @@ use App\Mail\NewUserTempPasswordMail;
 use App\Models\UserPaymentDetail;
 use App\Models\PaymentTransaction;
 use App\Models\UserWallet;
+use App\Mail\EventRegistrationOwnerMail;
+use App\Mail\EventRegistrationUserMail;
+use App\Mail\AcceptEventRegistrationUserMail;
+use App\Mail\DeclineEventRegistrationUserMail;
+use App\Mail\EventTicketPurchaseMail;
 
 /**
  * Event Service.
@@ -134,6 +139,7 @@ class EventService
                 //throw $th;
             }
         }
+        $theEvent = Event::where('id', $requestDetails['event_id'])->with(['beneficiary'])->first();
 
         EventAttendee::updateOrCreate(
             [
@@ -145,6 +151,24 @@ class EventService
                 'reg_status' => 'pending'
             ]
         );
+        try {
+            $message = (new EventRegistrationOwnerMail($theEvent->beneficiary->name))
+                ->onQueue('emails');
+
+            Mail::to($theEvent->beneficiary->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        try {
+            $message = (new EventRegistrationUserMail($currentUser->name, $theEvent->title))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function approveInvitation($requestDetails)
@@ -190,6 +214,17 @@ class EventService
             'payment_transaction_id' => $paymentTransactions->id,
 
         ]);
+
+        try {
+            $theEvent = Event::where('id', $attendanceDetail->event_id)->first();
+            $message = (new AcceptEventRegistrationUserMail($currentUser->name, $theEvent->title))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function declineInvitation($requestDetails)
@@ -197,6 +232,18 @@ class EventService
         $attendanceDetail = EventAttendee::where('id', $requestDetails->attendace_id)->first();
         $attendanceDetail->reg_status = 'declined';
         $attendanceDetail->save();
+
+        try {
+            $theEvent = Event::where('id', $attendanceDetail->event_id)->first();
+            $currentUser = User::where('id', $attendanceDetail->user_id)->first();
+            $message = (new DeclineEventRegistrationUserMail($currentUser->name, $theEvent->title))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function createReview($reviewDetails)
@@ -211,6 +258,8 @@ class EventService
 
     public static function buyTicket($paymentDetails)
     {
+        $eventTickets = [];
+
         //create account if user doesnt exist
         $currentUser = User::where('email', $paymentDetails['email'])->first();
         if (is_null($currentUser)) {
@@ -274,8 +323,11 @@ class EventService
                     'user_payment_detail_id' => $userPaymentDetails->id,
                     'payment_transaction_id' => $paymentTransactions->id,
                 ]);
+                array_push($eventTickets, $eventTicket);
             }
         }
+
+        return $eventTickets;
     }
     public static  function payWithWallet($paymentDetails)
     {
@@ -283,9 +335,10 @@ class EventService
         $userWallet = UserWallet::where('user_id', $currentUser->id)->first();
 
         if ($userWallet->balance >  $paymentDetails['amount']) {
+            $eventTickets = [];
             $userPaymentDetails = UserPaymentDetail::create([
                 'user_id' => $currentUser->id,
-                'full_name' => $paymentDetails['first_name'].' ' .$paymentDetails['last_name'],
+                'full_name' => $paymentDetails['first_name'] . ' ' . $paymentDetails['last_name'],
                 'user_email' => $paymentDetails['email'],
                 'user_phone_number' => $paymentDetails['phone'],
                 'visa_card' => 'wallet',
@@ -296,7 +349,7 @@ class EventService
                 'mfscode' => $userWallet->id,
                 'txn_type' => 'event_ticket',
                 'txn_channel' => 'web',
-                'txn_status' =>  'paid' ,
+                'txn_status' =>  'paid',
                 'amount' => $paymentDetails['amount'],
                 'currency' => 'UGX',
                 'reason' => 'Paying for event tickets',
@@ -320,11 +373,37 @@ class EventService
                     'user_payment_detail_id' => $userPaymentDetails->id,
                     'payment_transaction_id' => $paymentTransactions->id,
                 ]);
+                array_push($eventTickets, $eventTicket);
             }
 
             $userWallet->balance = $userWallet->balance - $paymentDetails['amount'];
             $userWallet->save();
 
+            //Ticket Email
+            try {
+                $cleanedTicketData = [];
+                foreach ($eventTickets as $createdTicket) {
+                    $event = Event::where('id', $createdTicket->event_id)->first();
+                    $transactionDetails = PaymentTransaction::where('id', $createdTicket->payment_transaction_id)->first();
+
+                    $cleaned = [
+                        'event' => $event,
+                        'transactionDetails' => $transactionDetails,
+                        'ticketId' => $createdTicket->ticket_id
+                    ];
+                    array_push($cleanedTicketData, $cleaned);
+                }
+
+                $timestamp = strtotime(now());
+                $formattedDate = date('D, M d Y H:i:s', $timestamp);
+                $message = (new EventTicketPurchaseMail($paymentDetails['name'], $paymentDetails['total'], $paymentDetails['merchant_reference'], $paymentDetails['confirmation_code'], $paymentDetails['payment_method'], $formattedDate, $cleanedTicketData))
+                    ->onQueue('emails');
+
+                Mail::to($paymentDetails['email'])
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
     }
     private static  function generateRandomEventTicketId()

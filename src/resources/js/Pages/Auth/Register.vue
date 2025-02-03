@@ -50,6 +50,9 @@ function checkValidity() {
         invalidPhoneNumberMsg.value = "";
     }
 }
+function registerAsEventsManager(val){
+form['asEventsManager'] = val
+}
 </script>
 
 <template>
@@ -101,6 +104,29 @@ function checkValidity() {
                         </div>
 
                         <div class="mt-4">
+                            <div><label>Register As</label></div>
+                            <div>
+                                <b-tabs pills justified content-class="p-3 text-muted">
+                                    <b-tab active class="border-0" @click="registerAsEventsManager(false)">
+                                        <template v-slot:title>
+                                            <span class="d-inline-block d-sm-none">
+                                                <i class="fas fa-home"></i>
+                                            </span>
+                                            <span class="d-none d-sm-inline-block">Ticket Buyer</span>
+                                        </template>
+                                        {{ text }}
+                                    </b-tab>
+                                    <b-tab @click="registerAsEventsManager(true)">
+                                        <template v-slot:title>
+                                            <span class="d-inline-block d-sm-none">
+                                                <i class="far fa-user"></i>
+                                            </span>
+                                            <span class="d-none d-sm-inline-block">Events Manager</span>
+                                        </template>
+                                        {{ content }}
+                                    </b-tab>
+                                </b-tabs>
+                            </div>
                             <form>
                                 <div v-if="form.errors.email" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
                                     {{ form.errors.email }}
@@ -192,12 +218,12 @@ function checkValidity() {
                                     />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.password_confirmation" />
                                 </div>
-                                <div class="">
+                                <!-- <div class="">
                                     <div class="mb-3 form-check form-check-left">
                                         <input class="form-check-input" type="checkbox" id="formCheckRight1" v-model="form.asEventsManager" />
                                         <label class="form-check-label" for="formCheckRight1"> Register as Events Manager </label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- <div>
                                     <b-form-checkbox id="customControlInline" name="remember" value="true" v-model="registerAsEventsManager" unchecked-value="false">
                                         Signup as Events Manager

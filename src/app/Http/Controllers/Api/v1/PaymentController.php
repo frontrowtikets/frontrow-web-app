@@ -15,7 +15,13 @@ use App\Services\EventService;
 use App\Services\MovieService;
 use App\Http\Controllers\WalletController;
 use App\Mail\TicketPurchaseMail;
+use App\Models\Movie;
+use App\Models\Event;
+use App\Models\MovieShowTime;
+use App\Models\MovieShowTimeSeat;
+use App\Models\PaymentTransaction;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\EventTicketPurchaseMail;
 use Carbon\Carbon;
 
 
@@ -171,7 +177,27 @@ class PaymentController extends Controller
                     'confirmation_code' => $status['confirmation_code'],
                     'call_back_url' => $status['call_back_url']
                 ];
-                EventService::buyTicket($paymentDetails);
+                $createdTickets = EventService::buyTicket($paymentDetails);
+                $cleanedTicketData = [];
+                foreach ($createdTickets as $createdTicket) {
+                    $event = Event::where('id', $createdTicket->event_id)->first();
+                    $transactionDetails = PaymentTransaction::where('id', $createdTicket->payment_transaction_id)->first();
+
+                    $cleaned = [
+                        'event' => $event,
+                        'transactionDetails' => $transactionDetails,
+                        'ticketId' => $createdTicket->ticket_id
+                    ];
+                    array_push($cleanedTicketData, $cleaned);
+                }
+
+                $timestamp = strtotime(now());
+                $formattedDate = date('D, M d Y H:i:s', $timestamp);
+                $message = (new EventTicketPurchaseMail($paymentDetails['name'], $paymentDetails['total'], $paymentDetails['merchant_reference'], $paymentDetails['confirmation_code'], $paymentDetails['payment_method'], $formattedDate, $cleanedTicketData))
+                    ->onQueue('emails');
+
+                Mail::to($paymentDetails['email'])
+                    ->queue($message);
             } elseif ($request->purpose == 'movie') {
                 $paymentDetails = [
                     'name' => $request->username,
@@ -189,7 +215,31 @@ class PaymentController extends Controller
                     'confirmation_code' => $status['confirmation_code'],
                     'call_back_url' => $status['call_back_url']
                 ];
-                MovieService::buyTicket($paymentDetails);
+                $createdTickets = MovieService::buyTicket($paymentDetails);
+                $cleanedTicketData = [];
+                foreach ($createdTickets as $createdTicket) {
+                    $movie = Movie::where('id', $createdTicket->movie_id)->first();
+                    $theatre = MovieShowTime::where('id', $createdTicket->movie_show_time_id)->first();
+                    $transactionDetails = PaymentTransaction::where('id', $createdTicket->payment_transaction_id)->first();
+                    $seatDetails = MovieShowTimeSeat::where('id', $createdTicket->movie_show_time_seat_id)->first();
+
+                    $cleaned = [
+                        'theatre' => $theatre,
+                        'transactionDetails' => $transactionDetails,
+                        'movie' => $movie,
+                        'seatDetails' => $seatDetails,
+                        'ticketId' => $createdTicket->ticket_id
+                    ];
+                    array_push($cleanedTicketData, $cleaned);
+                }
+
+                $timestamp = strtotime(now());
+                $formattedDate = date('D, M d Y H:i:s', $timestamp);
+                $message = (new TicketPurchaseMail($paymentDetails['name'], $paymentDetails['total'], $paymentDetails['merchant_reference'], $paymentDetails['confirmation_code'], $paymentDetails['payment_method'], $formattedDate, $cleanedTicketData))
+                    ->onQueue('emails');
+
+                Mail::to($paymentDetails['email'])
+                    ->queue($message);
             } elseif ($request->purpose == 'wallet') {
                 $wallet = new  WalletController();
                 $paymentDetails = [
@@ -208,14 +258,6 @@ class PaymentController extends Controller
                 $wallet->topUp($paymentDetails);
             }
 
-            //payment confirmation email
-            $formattedDate = Carbon::now()->format('D, M d Y H:i:s');
-            $message = (new TicketPurchaseMail($request->username, $status['amount'], $status['merchant_reference'], $status['confirmation_code'], $status['payment_method'], $formattedDate))
-                ->onQueue('emails');
-
-            Mail::to($request->userEmail)
-                ->queue($message);
-
 
             return response()->json([
                 'success' => true,
@@ -232,14 +274,116 @@ class PaymentController extends Controller
     public function testMail(Request $request)
     {
         try {
+            $testMovieTickets = MovieTicket::take(2)->latest()->get();
+            $cleanedTicketData = [];
+            foreach ($testMovieTickets as $testMovieTicket) {
+                $movie = Movie::where('id', $testMovieTicket->movie_id)->first();
+                $theatre = MovieShowTime::where('id', $testMovieTicket->movie_show_time_id)->first();
+                $transactionDetails = PaymentTransaction::where('id', $testMovieTicket->payment_transaction_id)->first();
+                $seatDetails = MovieShowTimeSeat::where('id', $testMovieTicket->movie_show_time_seat_id)->first();
+
+                $cleaned = [
+                    'theatre' => $theatre,
+                    'transactionDetails' => $transactionDetails,
+                    'movie' => $movie,
+                    'seatDetails' => $seatDetails,
+                    'ticketId' => $testMovieTicket->ticket_id
+                ];
+                array_push($cleanedTicketData, $cleaned);
+            }
+
             $timestamp = strtotime('2025-01-22 20:24:30');
             $formattedDate = date('D, M d Y H:i:s', $timestamp);
-            $message = (new TicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate))
+            $message = (new TicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData))
                 ->onQueue('emails');
 
             Mail::to('test2@gmail.com')
                 ->queue($message);
         } catch (\Exception $e) {
+            Log::alert($e);
+        }
+
+        try {
+            $testMovieTickets = UserEventTicket::take(2)->latest()->get();
+            $cleanedTicketData = [];
+            foreach ($testMovieTickets as $testMovieTicket) {
+                $event = Event::where('id', $testMovieTicket->event_id)->first();
+                $transactionDetails = PaymentTransaction::where('id', $testMovieTicket->payment_transaction_id)->first();
+
+                $cleaned = [
+                    'event' => $event,
+                    'transactionDetails' => $transactionDetails,
+                    'ticketId' => $testMovieTicket->ticket_id
+                ];
+                array_push($cleanedTicketData, $cleaned);
+            }
+
+            $timestamp = strtotime(now());
+            $formattedDate = date('D, M d Y H:i:s', $timestamp);
+            $message = (new EventTicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData))
+                ->onQueue('emails');
+
+            Mail::to('test2@gmail.com')
+                ->queue($message);
+        } catch (\Exception $e) {
+            Log::alert($e);
+        }
+    }
+
+    public function testMail2(Request $request)
+    {
+        try {
+            $testMovieTickets = MovieTicket::take(2)->latest()->get();
+            $cleanedTicketData = [];
+            foreach ($testMovieTickets as $testMovieTicket) {
+                $movie = Movie::where('id', $testMovieTicket->movie_id)->first();
+                $theatre = MovieShowTime::where('id', $testMovieTicket->movie_show_time_id)->first();
+                $transactionDetails = PaymentTransaction::where('id', $testMovieTicket->payment_transaction_id)->first();
+                $seatDetails = MovieShowTimeSeat::where('id', $testMovieTicket->movie_show_time_seat_id)->first();
+
+                $cleaned = [
+                    'theatre' => $theatre,
+                    'transactionDetails' => $transactionDetails,
+                    'movie' => $movie,
+                    'seatDetails' => $seatDetails,
+                    'ticketId' => $testMovieTicket->ticket_id
+                ];
+                array_push($cleanedTicketData, $cleaned);
+            }
+
+            $timestamp = strtotime('2025-01-22 20:24:30');
+            $formattedDate = date('D, M d Y H:i:s', $timestamp);
+            $message = new TicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData);
+
+
+            Mail::to('test2@gmail.com')->send($message);
+        } catch (\Exception $e) {
+            Log::alert($e);
+        }
+
+        try {
+            $testMovieTickets = UserEventTicket::take(2)->latest()->get();
+            $cleanedTicketData = [];
+            foreach ($testMovieTickets as $testMovieTicket) {
+                $event = Event::where('id', $testMovieTicket->event_id)->first();
+                $transactionDetails = PaymentTransaction::where('id', $testMovieTicket->payment_transaction_id)->first();
+
+                $cleaned = [
+                    'event' => $event,
+                    'transactionDetails' => $transactionDetails,
+                    'ticketId' => $testMovieTicket->ticket_id
+                ];
+                array_push($cleanedTicketData, $cleaned);
+            }
+
+            $timestamp = strtotime(now());
+            $formattedDate = date('D, M d Y H:i:s', $timestamp);
+            $message = new EventTicketPurchaseMail('jemy Knd', 1200, 'this is the ref', 'thecode', 'MTNUG', $formattedDate, $cleanedTicketData);
+
+
+            Mail::to('test2@gmail.com')->send($message);
+        } catch (\Exception $e) {
+            Log::alert($e);
         }
     }
 }

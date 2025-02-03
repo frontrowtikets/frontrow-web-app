@@ -16,6 +16,9 @@ use App\Models\UserPaymentDetail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserWallet;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MovieCreationAdminMail;
+use App\Mail\MovieCreationOriginatorMail;
 
 
 class MoviesController extends Controller
@@ -60,6 +63,32 @@ class MoviesController extends Controller
     {
         $movieDetails = $request->validated();
         MovieService::createMovie($movieDetails);
+
+        $admins = User::permission('admin')->get();
+        $currentUser =  User::where('id', Auth::user()->id)->first();
+        
+        foreach ($admins as $admin) {
+            try {
+                $message = (new MovieCreationAdminMail($admin->name))
+                    ->onQueue('emails');
+
+                Mail::to($admin->email)
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        try {
+            $message = (new MovieCreationOriginatorMail($currentUser->name))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return \Inertia\Inertia::render('Movies/MyMovies');
     }
 

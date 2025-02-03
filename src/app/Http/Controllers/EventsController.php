@@ -17,6 +17,10 @@ use App\Models\PaymentTransaction;
 use App\Models\UserPaymentDetail;
 use App\Models\EventAttendee;
 use App\Models\UserWallet;
+use App\Mail\EventCreationAdminMail;
+use App\Mail\EventCreationOriginatorMail;
+use Illuminate\Support\Facades\Mail;
+
 
 
 
@@ -60,6 +64,32 @@ class EventsController extends Controller
     {
         $eventDetails = $request->validated();
         EventService::creteEvent($eventDetails);
+
+        $admins = User::permission('admin')->get();
+        $currentUser =  User::where('id', Auth::user()->id)->first();
+
+        foreach ($admins as $admin) {
+            try {
+                $message = (new EventCreationAdminMail($admin->name))
+                    ->onQueue('emails');
+
+                Mail::to($admin->email)
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        try {
+            $message = (new EventCreationOriginatorMail($currentUser->name))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return \Inertia\Inertia::render('Events/MyEvents');
     }
 
@@ -107,6 +137,8 @@ class EventsController extends Controller
 
         $requestDetails = $request->validated();
         EventService::registerForEvent($requestDetails);
+
+
     }
 
     public function eventManager(Request $request)

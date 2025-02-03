@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
+use App\Mail\MakeUserBeneficiaryMail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserBeneficiaryrRequestMail;
+use App\Mail\UserBeneficiaryRequestOriginatorMail;
+
 
 
 class UserRegister extends Controller
@@ -44,6 +49,16 @@ class UserRegister extends Controller
         $theUser->save();
 
         $theUser->givePermissionTo('beneficiary');
+
+        try {
+            $message = (new MakeUserBeneficiaryMail($theUser->name))
+                ->onQueue('emails');
+
+            Mail::to($theUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public function deactivateBeneficiary(Request $request)
@@ -61,5 +76,29 @@ class UserRegister extends Controller
         $theUser->user_type = 'beneficiary';
         $theUser->beneficiary_status = 'inactive';
         $theUser->save();
+
+        $admins = User::permission('admin')->get();
+
+        foreach ($admins as $admin) {
+            try {
+                $message = (new UserBeneficiaryrRequestMail($admin->name, $theUser->name))
+                    ->onQueue('emails');
+
+                Mail::to($admin->email)
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        try {
+            $message = (new UserBeneficiaryRequestOriginatorMail($theUser->name))
+                ->onQueue('emails');
+
+            Mail::to($theUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }
