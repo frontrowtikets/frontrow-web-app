@@ -5,33 +5,24 @@ import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 import MovieCard from "../../Components/MovieCard.vue";
 import { router } from "@inertiajs/vue3";
 import { useStore } from "vuex";
+import { ref, onMounted } from "vue";
 
 
-import { ref } from "vue";
 
-const props = defineProps({
-    movies: {
-        type: Array,
-        default: [],
-    },
-    categories: {
-        type: Array,
-    },
-});
+const props = defineProps(['searchVal']);
 
 const store = useStore();
 
 const isSearching = ref(true);
 
-function slugify(title) {
-    return title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
+onMounted(()=>{
+    searchItems();
+})
+
+function searchItems(){
+
 }
-function viewEvent(title, id) {
-    router.visit(`/home/movie/${slugify(title)}/${id}`);
-}
+
 </script>
 <template>
     <b-container class="mt-5">

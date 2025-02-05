@@ -6,11 +6,15 @@ const LoggedInUser = {
         iwillSign: 1,
         currentUrl: "",
         searchVal: "",
+        isSearching: false
     }),
 
     mutations: {
         setSearchVal(state, data) {
             state.searchVal = data;
+        },
+        setSearching(state, data){
+             state.isSearching = data;
         },
         resetSearchVal(state) {
             state.searchVal = "";
@@ -42,6 +46,9 @@ const LoggedInUser = {
         getSearchVal(state) {
             return state.searchVal;
         },
+        getIsSearching(state){
+            return state.isSearching
+        }
     },
 };
 

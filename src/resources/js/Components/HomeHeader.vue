@@ -1,7 +1,7 @@
 <script setup>
 import { Link, usePage, router } from "@inertiajs/vue3";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
@@ -10,6 +10,15 @@ const greaterThanMd = breakpoints.greater("md");
 const store = useStore();
 const isMenuOpen = ref(false);
 const searchVal = ref("");
+
+const searchValue = computed(() => {
+    const searchVal = store.getters["LoggedInUser/getSearchVal"];
+    return searchVal;
+});
+const isSearching = computed(() => {
+    const searchVal = store.getters["LoggedInUser/getIsSearching"];
+    return searchVal;
+});
 
 function toggleMenu() {
     document.getElementById("topnav-menu-content").classList.toggle("show");
@@ -34,9 +43,15 @@ function goToMoviesPage() {
 }
 
 function goToSearch($event) {
-    console.log()
-    store.commit("LoggedInUser/setSearchVal", searchVal.value);
-    router.visit("/search");
+    const searchVal = $event.target.value;
+    store.commit("LoggedInUser/setSearchVal", searchVal);
+    if (searchVal.length > 3) {
+         store.commit("LoggedInUser/setSearching", true);
+            router.visit(`/search`);
+    }else{
+         store.commit("LoggedInUser/setSearching", false);
+    }
+
 }
 </script>
 <template>
@@ -131,16 +146,19 @@ function goToSearch($event) {
             >
                 <div class="col-12">
                     <form class="app-search">
-                        <div class="position-relative">
+                        <div class="position-relative ">
                             <input
                                 type="text"
                                 class="pt-4 pb-4 shadow-lg form-control"
                                 id="searched_place"
                                 :placeholder="'Search'"
                                 @input="goToSearch"
-                                v-model="searchVal"
+                                :value="searchValue"
                             />
+
                             <span class="pt-1 pb-1 bx bx-search-alt"></span>
+                            <span  style="left: 93%;" class="mt-2 " v-if="isSearching"> <i class=" bx bx-loader bx-spin font-size-16" ></i></span>
+
                         </div>
                     </form>
                 </div>
