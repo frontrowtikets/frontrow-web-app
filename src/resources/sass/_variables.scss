@@ -91,6 +91,7 @@ $gray-700: #495057;
 $gray-800: #343a40;
 $gray-900: #212529;
 $black:    #000;
+$indicatorColor: #01B3BD;
 // scss-docs-end gray-color-variables
 
 // fusv-disable
@@ -1610,7 +1611,7 @@ $breadcrumb-border-radius:          null;
 // Carousel
 
 // scss-docs-start carousel-variables
-$carousel-control-color:             #002804;
+$carousel-control-color:             $blue;
 $carousel-control-width:             15%;
 $carousel-control-opacity:           .5;
 $carousel-control-hover-opacity:     .9;
@@ -1638,8 +1639,8 @@ $carousel-control-next-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://
 $carousel-transition-duration:       .6s;
 $carousel-transition:                transform $carousel-transition-duration ease-in-out; // Define transform transition first if using multiple transitions (e.g., `transform 2s ease, opacity .5s ease-out`)
 
-$carousel-dark-indicator-active-bg:  $black;
-$carousel-dark-caption-color:        $black;
+$carousel-dark-indicator-active-bg:  $blue;
+$carousel-dark-caption-color:        $blue;
 $carousel-dark-control-icon-filter:  invert(1) grayscale(100);
 // scss-docs-end carousel-variables
 

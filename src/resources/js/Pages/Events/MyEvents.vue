@@ -109,7 +109,7 @@ function allEvents() {
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"><span class="me-auto">All</span></a>
                                                             </li>
-                                                            <li>
+                                                            <!-- <li>
                                                                 <a href="#" class="d-flex align-items-center"
                                                                     ><span class="me-auto">paid Events</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
@@ -124,7 +124,7 @@ function allEvents() {
                                                                     ><span class="me-auto">Invite Only Events</span>
                                                                     <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
-                                                            </li>
+                                                            </li> -->
                                                         </ul>
                                                     </div>
                                                 </b-collapse>

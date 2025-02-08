@@ -20,6 +20,14 @@ const isSearching = computed(() => {
     return searchVal;
 });
 
+const vFocus = {
+  mounted: (el) => {
+    if(searchValue.value.length > 3){
+        el.focus()
+    }
+  }
+}
+
 function toggleMenu() {
     document.getElementById("topnav-menu-content").classList.toggle("show");
     isMenuOpen.value = !isMenuOpen.value;
@@ -33,7 +41,7 @@ function goEvents() {
     router.visit("/myevents");
 }
 function goCinema() {
-    router.visit("/mymovies");
+    router.visit("/mytickets");
 }
 function goToEventsPage() {
     router.visit("/events");
@@ -65,15 +73,15 @@ function goToSearch($event) {
         >
             <a class="navbar-logo" href="/">
                 <img
-                    src="../../images/logos/logo4.svg"
+                    src="../../images/logos/logo6.png"
                     alt
-                    height="50"
+                    height="40"
                     class="logo logo-dark"
                 />
                 <img
-                    src="../../images/logos/logo4.svg"
+                    src="../../images/logos/logo6.png"
                     alt
-                    height="50"
+                    height="40"
                     class="logo logo-light"
                 />
             </a>
@@ -101,21 +109,21 @@ function goToSearch($event) {
                     id="topnav-menu"
                     v-scroll-spy-active="{ selector: 'a.nav-link' }"
                 >
-                    <li class="nav-item" @click="goHome">
-                        <a class="nav-link" href="#home">Home</a>
+                    <li class="nav-item" role="button" @click="goHome">
+                        <a class="nav-link">Home</a>
                     </li>
-                    <li class="nav-item" @click="goToMoviesPage">
-                        <a class="nav-link" href="#about">Movies</a>
+                    <li class="nav-item" role="button" @click="goToMoviesPage">
+                        <a class="nav-link" >Movies</a>
                     </li>
-                    <li class="nav-item" @click="goToEventsPage">
-                        <a class="nav-link" href="#features">Events</a>
+                    <li class="nav-item" role="button" @click="goToEventsPage">
+                        <a class="nav-link" >Events</a>
                     </li>
 
-                    <li class="nav-item" @click="goCinema">
-                        <a class="nav-link" href="#team">Cinema</a>
+                    <li class="nav-item" role="button" @click="goCinema">
+                        <a class="nav-link" >My Tickets</a>
                     </li>
-                    <li class="nav-item" @click="goEvents">
-                        <a class="nav-link" href="#faqs">Create Event</a>
+                    <li class="nav-item" role="button" @click="goEvents">
+                        <a class="nav-link" >Create Event</a>
                     </li>
                 </ul>
                 <Link
@@ -129,7 +137,7 @@ function goToSearch($event) {
                 </Link>
 
                 <Link :href="route('login')" class="fw-medium" v-else>
-                    <b-button variant="light" class="w-md" pill>
+                    <b-button variant="secondary" class="w-md" pill>
                         Sign In</b-button
                     >
                 </Link>
@@ -154,6 +162,7 @@ function goToSearch($event) {
                                 :placeholder="'Search'"
                                 @input="goToSearch"
                                 :value="searchValue"
+                                v-focus
                             />
 
                             <span class="pt-1 pb-1 bx bx-search-alt"></span>

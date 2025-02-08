@@ -10,6 +10,8 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Attachment;
 use Barryvdh\DomPDF\Facade\Pdf;
+// use Spatie\Browsershot\Browsershot;
+// use Illuminate\Support\Facades\View;
 
 class TicketPurchaseMail extends Mailable
 {
@@ -54,6 +56,24 @@ class TicketPurchaseMail extends Mailable
                 'filename' => 'ticket_' . ($index + 1) . '.pdf',
             ];
         }
+        // foreach ($ticketDetails as $index => $ticketData) {
+        //     $html = View::make('MovieTicket', $ticketData)->render();
+
+        //     // Generate PDF using Browsershot
+        //     $pdfContent = Browsershot::html($html)
+        //         ->setNodeBinary('/home/tony/.nvm/versions/node/v20.15.0/bin/node') // Adjust path if necessary
+        //         ->setNpmBinary('/home/tony/.nvm/versions/node/v20.15.0/bin/npm')
+        //         ->format('A4')
+        //         ->margins(10, 10, 10, 10)
+        //         ->showBackground()
+        //         ->disableJavascript() // Optional: Disable JS if not needed
+        //         ->pdf();
+
+        //     $this->pdfContents[] = [
+        //         'content'  => base64_encode($pdfContent),
+        //         'filename' => 'ticket_' . ($index + 1) . '.pdf',
+        //     ];
+        // }
     }
 
     /**

@@ -29,6 +29,28 @@ const currentUser = computed(() => {
     return theUser;
 });
 
+const movieCasts = computed(()=>{
+    const casts = props.movieDetails.moviecasts;
+    const theCasts = casts.filter((item)=>{
+        if(item.type !== 'crew'){
+            return item
+        }
+    })
+
+    return theCasts;
+})
+
+const movieCrew = computed(()=>{
+    const casts = props.movieDetails.moviecasts;
+    const theCasts = casts.filter((item)=>{
+        if(item.type == 'crew'){
+            return item
+        }
+    })
+
+    return theCasts;
+})
+
 const form = useForm({
     review: "",
     movie_id: props.movieDetails.id,
@@ -231,15 +253,30 @@ function capitalizeFirstCharacter(str) {
                         </div>
 
                         <div class="mb-5">
-                            <h5 class="mb-3 fw-semibold">Description</h5>
+                            <h5 class="mb-3 fw-semibold">Synopsis</h5>
                             <p class="text-muted" v-html="props.movieDetails.description"></p>
                         </div>
+                           <div class="mb-4 d-flex d-flex-wrap">
+                            <div class="d-flex me-5"  v-if="props.movieDetails.director">
+                                <div class="me-2"><label>Director:</label></div>
+                                <div>{{ props.movieDetails.director }}</div>
+                            </div>
+                             <div class="d-flex me-5" v-if="props.movieDetails.writer">
+                                <div class="me-2"><label>Writer:</label></div>
+                                <div>{{ props.movieDetails.writer }}</div>
+                            </div>
+                             <div class="d-flex me-5" v-if="props.movieDetails.producer">
+                                <div class="me-2"><label>Producer:</label></div>
+                                <div>{{ props.movieDetails.producer}}</div>
+                            </div>
 
-                        <div v-if="props.movieDetails.moviecasts.length > 0" class="mb-5">
+                        </div>
+
+                        <div v-if="movieCasts.length > 0" class="mb-5">
                             <h6 class="mb-3 fw-semibold">Casts</h6>
 
                             <div class="flex-wrap gap-5 w-100 d-flex">
-                                <div class="text-center" v-for="(moviecasts, index) in props.movieDetails.moviecasts" :key="index">
+                                <div class="text-center" v-for="(moviecasts, index) in movieCasts" :key="index">
                                     <div v-if="moviecasts.profile_image_url" class="mb-4">
                                         <img
                                             :src="`${moviecasts.profile_image_url}`"
@@ -252,7 +289,32 @@ function capitalizeFirstCharacter(str) {
                                             capitalizeFirstCharacter(moviecasts.name)
                                         }}</span>
                                     </div>
-                                    <h5 class="font-size-15">
+                                    <h5 class="font-size-13">
+                                        <a href="javascript: void(0);" class="text-dark">{{ moviecasts.name }}</a>
+                                    </h5>
+                                    <p class="text-muted">{{ moviecasts.role }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="movieCrew.length > 0" class="mb-5">
+                            <h6 class="mb-3 fw-semibold">Crew Members</h6>
+
+                            <div class="flex-wrap gap-5 w-100 d-flex">
+                                <div class="text-center" v-for="(moviecasts, index) in movieCrew" :key="index">
+                                    <div v-if="moviecasts.profile_image_url" class="mb-4">
+                                        <img
+                                            :src="`${moviecasts.profile_image_url}`"
+                                            :alt="'img'"
+                                            class="rounded-circle avatar-sm object-fit-cover"
+                                        />
+                                    </div>
+                                    <div v-else class="mx-auto mb-4 avatar-sm">
+                                        <span class="avatar-title rounded-circle bg-soft bg-primary text-primary font-size-16">{{
+                                            capitalizeFirstCharacter(moviecasts.name)
+                                        }}</span>
+                                    </div>
+                                    <h5 class="font-size-13">
                                         <a href="javascript: void(0);" class="text-dark">{{ moviecasts.name }}</a>
                                     </h5>
                                     <p class="text-muted">{{ moviecasts.role }}</p>

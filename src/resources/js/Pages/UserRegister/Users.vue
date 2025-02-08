@@ -122,7 +122,7 @@ function assignPermission() {
             }).then((result) => {
                 if (result.value) {
                     Swal.close();
-                    router.reload();
+                    router.visit('/userregister');
                 }
             });
         })

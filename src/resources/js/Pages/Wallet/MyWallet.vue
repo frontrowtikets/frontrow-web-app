@@ -17,6 +17,10 @@ const props = defineProps({
     myWallet: {
         type: Object,
     },
+    monthlyTransactionCounts: {
+        type: Array,
+        default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    },
 });
 
 const walletModal = ref(false);
@@ -61,18 +65,8 @@ const form = useForm({
 const series = ref([
     {
         type: "area",
-        name: "Deposit",
-        data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47],
-    },
-    {
-        type: "area",
-        name: "Withdraw",
-        data: [28, 41, 52, 42, 13, 18, 29, 18, 36, 51, 55, 35],
-    },
-    {
-        type: "line",
-        name: "Balance",
-        data: [45, 52, 38, 24, 33, 65, 45, 75, 54, 18, 28, 10],
+        name: "Transactions",
+        data: props.monthlyTransactionCounts,
     },
 ]);
 
@@ -162,7 +156,7 @@ async function submitDeposit() {
         <div v-else>
             <div class="col-12">
                 <div class="row">
-                    <div class="col-xl-4">
+                    <div class="col-4">
                         <div class="card">
                             <div class="card-body border-top">
                                 <div class="row">
@@ -200,7 +194,7 @@ async function submitDeposit() {
                                                 </div>
 
                                                 <p class="mb-2 text-muted">Last Deposit</p>
-                                                <p>{{ props.myWallet?moment(props.myWallet.updated_at).format("ddd, DD MMM YYYY"):'Never' }}</p>
+                                                <p>{{ props.myWallet ? moment(props.myWallet.updated_at).format("ddd, DD MMM YYYY") : "Never" }}</p>
 
                                                 <div class="mt-3">
                                                     <a @click="walletModal = true" class="btn btn-primary btn-sm w-md">Deposit</a>

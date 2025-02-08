@@ -20,4 +20,10 @@ class SearchController extends Controller
             );
         }
     }
+
+    // public function searchItem(Request $request){
+    //     $searchItem = $request->searchText;
+
+    //     return $searchItem;
+    // }
 }

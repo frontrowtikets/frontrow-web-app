@@ -109,7 +109,7 @@ function allMovies() {
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"><span class="me-auto">All</span></a>
                                                             </li>
-                                                            <li>
+                                                            <!-- <li>
                                                                 <a href="#" class="d-flex align-items-center"
                                                                     ><span class="me-auto">Coming Soon</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
@@ -123,14 +123,14 @@ function allMovies() {
                                                                 <a href="#" class="d-flex align-items-center"
                                                                     ><span class="me-auto">Out of Theaters</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
-                                                            </li>
+                                                            </li> -->
                                                         </ul>
                                                     </div>
                                                 </b-collapse>
                                             </div>
                                         </li>
 
-                                        
+
                                         <li @click="allMovies" role="button">
                                             <a class="text-body d-flex align-items-center">
                                                 <i class="mdi mdi-play-circle-outline text-danger font-size-16 me-2"></i>

@@ -20,6 +20,7 @@ class MovieCast extends Model implements HasMedia
         'name',
         'role',
         'profile_image_url',
+        'type'
 
     ];
 }

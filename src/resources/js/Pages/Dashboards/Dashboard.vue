@@ -29,7 +29,7 @@ const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
-
+ 
 const eventsChartOptions = ref({
     chart: {
         id: "eventsChat",
