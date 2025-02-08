@@ -254,8 +254,8 @@ function movieDetails() {
                                     <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(totalPrice) }}</h4>
                                 </div>
                             </div>
-                            <div class="mt-5 text-center mt-sm-0 " @click="totalPrice > 0 ? (showCheckout = true) : null">
-                                <a class="btn btn-success ps-5 pe-5"> <i class="mdi mdi-cart-arrow-right me-1"></i> Proceed </a>
+                            <div class="mt-5 d-flex justify-content-center mt-sm-0 " @click="totalPrice > 0 ? (showCheckout = true) : null">
+                                <a class="btn btn-success flex-fill"> <i class="mdi mdi-cart-arrow-right me-1"></i> Proceed </a>
                             </div>
                         </div>
                     </div>
