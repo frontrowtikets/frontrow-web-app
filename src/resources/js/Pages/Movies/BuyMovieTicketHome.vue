@@ -51,6 +51,11 @@ const seatMapFields = ref([
 
 const selectedTheatres = ref([]);
 
+const cleanedSelectedSeats = computed(()=>{
+    const cleaned = selectedTheatres.value.filter((selectedItem)=>selectedItem.selectedSeats.length > 0)
+    return cleaned;
+})
+
 onMounted(() => {
     if (props.buyMovieDetails.seatmap.length > 0) {
         setSavedSeatMap();
@@ -156,7 +161,7 @@ function movieDetails() {
                 <div class="card">
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <MovieCheckout
-                            :paymentDetails="selectedTheatres"
+                            :paymentDetails="cleanedSelectedSeats"
                             :currency="selectedTheatre?.currency"
                             :total="totalPrice"
                             :movieId="props.buyMovieDetails.id"
@@ -209,9 +214,9 @@ function movieDetails() {
 
                         <div class="mt-5 text-start">
                             <div v-if="props.buyMovieDetails.seatmap.length > 0">
-                                <div v-if="selectedTheatres.length > 0">
+                                <div v-if="cleanedSelectedSeats.length > 0">
                                     <div class="mb-4">Summary</div>
-                                    <div v-for="(item, index) in selectedTheatres" :key="`${item.roomId}_${index}`">
+                                    <div v-for="(item, index) in cleanedSelectedSeats" :key="`${item.roomId}_${index}`">
                                         <div class="mb-2"><span class="fw-bold me-3">Theatre:</span>{{ item?.theatre.theatre }}</div>
                                         <div class="mb-2"><span class="fw-bold me-3">Room:</span>{{ item?.roomName }}</div>
                                         <div class="mb-2"><span class="fw-bold me-3">Tickets:</span>{{ item?.selectedSeats.length }}</div>
