@@ -129,6 +129,7 @@ class MovieService
                     'movie_id' => $createdMovie->id,
                     'name' => $cast['castName'],
                     'role' => $cast['role'],
+                    'type' => $cast['type']
                 ]);
 
                 if (isset($cast['image']) && !is_null($cast['image']) && $cast['image'] != 'null') {

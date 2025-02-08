@@ -171,7 +171,7 @@ function movieDetails() {
                 <div class="card w-100">
                     <div class="card-body">
                         <div class="w-100 d-flex justify-content-between">
-                            <div><h5 class="mb-4 card-title">Seat Map</h5></div>
+                            <div><h5 class="mb-4 card-title">Select seats to Proceed</h5></div>
                             <div class="" @click="movieDetails">
                                 <a class="btn btn-light"> <i class="mdi mdi-eye-outline"></i> View Movie Details </a>
                             </div>
@@ -248,14 +248,14 @@ function movieDetails() {
                                 </div> -->
                             </div>
 
-                            <div class="mb-4 text-end">
+                            <div class="mb-4 text-center">
                                 <div class="mb-2 fw-bold me-3">Total</div>
                                 <div>
                                     <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(totalPrice) }}</h4>
                                 </div>
                             </div>
-                            <div class="mt-5 text-sm-end mt-sm-0" @click="totalPrice > 0 ? (showCheckout = true) : null">
-                                <a class="btn btn-success"> <i class="mdi mdi-cart-arrow-right me-1"></i> Proceed </a>
+                            <div class="mt-5 text-center mt-sm-0 " @click="totalPrice > 0 ? (showCheckout = true) : null">
+                                <a class="btn btn-success ps-5 pe-5"> <i class="mdi mdi-cart-arrow-right me-1"></i> Proceed </a>
                             </div>
                         </div>
                     </div>

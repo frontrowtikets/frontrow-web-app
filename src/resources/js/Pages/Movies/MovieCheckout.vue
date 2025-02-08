@@ -358,7 +358,7 @@ function payTicketWithWallet() {
                                 </div>
                             </div>
                             <div class="input_container">
-                                <label for="password_field" class="input_label">MTN Phone Number</label>
+                                <label for="password_field" class="input_label">Phone Number</label>
                                 <VueTelInput
                                     class="input_field"
                                     :inputOptions.required="true"

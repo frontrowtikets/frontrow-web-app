@@ -1,7 +1,7 @@
 <script setup>
 import { Link, usePage, router } from "@inertiajs/vue3";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
@@ -10,6 +10,23 @@ const greaterThanMd = breakpoints.greater("md");
 const store = useStore();
 const isMenuOpen = ref(false);
 const searchVal = ref("");
+
+const searchValue = computed(() => {
+    const searchVal = store.getters["LoggedInUser/getSearchVal"];
+    return searchVal;
+});
+const isSearching = computed(() => {
+    const searchVal = store.getters["LoggedInUser/getIsSearching"];
+    return searchVal;
+});
+
+const vFocus = {
+  mounted: (el) => {
+    if(searchValue.value.length > 3){
+        el.focus()
+    }
+  }
+}
 
 function toggleMenu() {
     document.getElementById("topnav-menu-content").classList.toggle("show");
@@ -24,7 +41,7 @@ function goEvents() {
     router.visit("/myevents");
 }
 function goCinema() {
-    router.visit("/mymovies");
+    router.visit("/mytickets");
 }
 function goToEventsPage() {
     router.visit("/events");
@@ -34,9 +51,15 @@ function goToMoviesPage() {
 }
 
 function goToSearch($event) {
-    console.log()
-    store.commit("LoggedInUser/setSearchVal", searchVal.value);
-    router.visit("/search");
+    const searchVal = $event.target.value;
+    store.commit("LoggedInUser/setSearchVal", searchVal);
+    if (searchVal.length > 3) {
+         store.commit("LoggedInUser/setSearching", true);
+            router.visit(`/search`);
+    }else{
+         store.commit("LoggedInUser/setSearching", false);
+    }
+
 }
 </script>
 <template>
@@ -50,15 +73,15 @@ function goToSearch($event) {
         >
             <a class="navbar-logo" href="/">
                 <img
-                    src="../../images/logos/logo4.svg"
+                    src="../../images/logos/logo6.png"
                     alt
-                    height="50"
+                    height="40"
                     class="logo logo-dark"
                 />
                 <img
-                    src="../../images/logos/logo4.svg"
+                    src="../../images/logos/logo6.png"
                     alt
-                    height="50"
+                    height="40"
                     class="logo logo-light"
                 />
             </a>
@@ -86,21 +109,21 @@ function goToSearch($event) {
                     id="topnav-menu"
                     v-scroll-spy-active="{ selector: 'a.nav-link' }"
                 >
-                    <li class="nav-item" @click="goHome">
-                        <a class="nav-link" href="#home">Home</a>
+                    <li class="nav-item" role="button" @click="goHome">
+                        <a class="nav-link">Home</a>
                     </li>
-                    <li class="nav-item" @click="goToMoviesPage">
-                        <a class="nav-link" href="#about">Movies</a>
+                    <li class="nav-item" role="button" @click="goToMoviesPage">
+                        <a class="nav-link" >Movies</a>
                     </li>
-                    <li class="nav-item" @click="goToEventsPage">
-                        <a class="nav-link" href="#features">Events</a>
+                    <li class="nav-item" role="button" @click="goToEventsPage">
+                        <a class="nav-link" >Events</a>
                     </li>
 
-                    <li class="nav-item" @click="goCinema">
-                        <a class="nav-link" href="#team">Cinema</a>
+                    <li class="nav-item" role="button" @click="goCinema">
+                        <a class="nav-link" >My Tickets</a>
                     </li>
-                    <li class="nav-item" @click="goEvents">
-                        <a class="nav-link" href="#faqs">Create Event</a>
+                    <li class="nav-item" role="button" @click="goEvents">
+                        <a class="nav-link" >Create Event</a>
                     </li>
                 </ul>
                 <Link
@@ -114,7 +137,7 @@ function goToSearch($event) {
                 </Link>
 
                 <Link :href="route('login')" class="fw-medium" v-else>
-                    <b-button variant="light" class="w-md" pill>
+                    <b-button variant="secondary" class="w-md" pill>
                         Sign In</b-button
                     >
                 </Link>
@@ -131,16 +154,20 @@ function goToSearch($event) {
             >
                 <div class="col-12">
                     <form class="app-search">
-                        <div class="position-relative">
+                        <div class="position-relative ">
                             <input
                                 type="text"
                                 class="pt-4 pb-4 shadow-lg form-control"
                                 id="searched_place"
                                 :placeholder="'Search'"
                                 @input="goToSearch"
-                                v-model="searchVal"
+                                :value="searchValue"
+                                v-focus
                             />
+
                             <span class="pt-1 pb-1 bx bx-search-alt"></span>
+                            <span  style="left: 93%;" class="mt-2 " v-if="isSearching"> <i class=" bx bx-loader bx-spin font-size-16" ></i></span>
+
                         </div>
                     </form>
                 </div>

@@ -28,6 +28,9 @@ Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buy
 Route::get("/search", [SearchController::class, 'search'])->name('search');
 
 
+
+
+
 //web payments callback
 Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');
 

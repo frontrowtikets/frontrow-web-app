@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\BuyMovieTicketController;
 use App\Http\Controllers\Api\v1\PaymentController;
 use App\Http\Controllers\Api\BannerImagesController;
 use App\Http\Controllers\Api\v1\TicketEmailController;
+use App\Http\Controllers\Api\SearchController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -26,7 +27,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/v1/payments/getStatus', [PaymentController::class, 'getPaymentStatus']);
     Route::post('/v1/movie/sendTicketEmail', [TicketEmailController::class, 'sendMovieTicketEmail']);
     Route::post('/v1/event/sendTicketEmail', [TicketEmailController::class, 'sendEventTicketEmail']);
-
+    Route::post("/search", [SearchController::class, 'searchItem'])->name('searchItem');
 
 
     Route::post('/testthismail', [PaymentController::class, 'testMail']);

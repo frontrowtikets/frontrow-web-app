@@ -69,9 +69,9 @@ function windowScroll() {
                 <!-- <div class="bg-overlay"></div> -->
                 <b-container>
                     <div id="carouselExampleDark" class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel ">
-                        <!-- <div class="carousel-indicators" v-if="greaterThanMd">
+                        <div class="carousel-indicators" v-if="greaterThanMd">
                             <button
-                                v-if="banners[0]"
+                                v-if="props.bannerImages[0]"
                                 type="button"
                                 data-bs-target="#carouselExampleDark"
                                 data-bs-slide-to="0"
@@ -80,27 +80,27 @@ function windowScroll() {
                                 aria-label="Slide 1"
                             ></button>
                             <button
-                                v-if="banners[1]"
+                                v-if="props.bannerImages[1]"
                                 type="button"
                                 data-bs-target="#carouselExampleDark"
                                 data-bs-slide-to="1"
                                 aria-label="Slide 2"
                             ></button>
                             <button
-                                v-if="banners[2]"
+                                v-if="props.bannerImages[2]"
                                 type="button"
                                 data-bs-target="#carouselExampleDark"
                                 data-bs-slide-to="2"
                                 aria-label="Slide 3"
                             ></button>
                             <button
-                                v-if="banners[3]"
+                                v-if="props.bannerImages[3]"
                                 type="button"
                                 data-bs-target="#carouselExampleDark"
                                 data-bs-slide-to="3"
                                 aria-label="Slide 4"
                             ></button>
-                        </div> -->
+                        </div>
                         <div v-if="props.bannerImages" class="rounded carousel-inner" style="max-height: 45vh; overflow: hidden">
                             <div
                                 v-for="(banner, index) in props.bannerImages"

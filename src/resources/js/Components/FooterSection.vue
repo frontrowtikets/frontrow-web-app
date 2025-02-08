@@ -24,7 +24,10 @@ function goEvents() {
     router.visit("/myevents");
 }
 function createEvent() {
-    router.visit("/scheduleevents");
+    router.visit("/dashboard");
+}
+function createMovie() {
+    router.visit("/dashboard");
 }
 function goToEventsPage() {
     router.visit("/events");
@@ -75,29 +78,29 @@ function testMail2() {
     <!-- Footer start -->
     <footer class="pt-5 landing-footer bg-primary">
         <b-container>
-            <div class="row">
+            <div class="row" style="border-bottom: 1px solid #67babf">
                 <div class="col-lg-3 col-sm-6">
-                    <div class="mb-4 mb-lg-0">
+                    <div class="mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Platform</h5>
                         <ul class="list-unstyled footer-list-menu">
                             <li @click="goToMoviesPage" role="button">
                                 <a>Buy Tickets</a>
                             </li>
                             <li @click="createEvent" role="button">
-                                <a>Create Event</a>
+                                <a>Sell Event Tickets</a>
                             </li>
-                            <li @click="goToEventsPage" role="button">
-                                <a>Events</a>
+                            <li @click="createMovie" role="button">
+                                <a>Sell Movie Tickets</a>
                             </li>
-                            <li @click="goToMoviesPage" role="button">
+                            <!-- <li @click="goToMoviesPage" role="button">
                                 <a>Cinemas</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6">
-                    <div class="mb-4 mb-lg-0">
+                    <div class="mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Links</h5>
                         <ul class="list-unstyled footer-list-menu">
                             <li @click="toRegister" role="button">
@@ -109,12 +112,12 @@ function testMail2() {
                             <li @click="goDashboard" role="button">
                                 <a>Go to Dashboard</a>
                             </li>
-                            <li @click="testMail1" >
+                            <!-- <li @click="testMail1" >
                                 <a>TestMail1</a>
                             </li>
                             <li @click="testMail2">
                                 <a>Testmail2</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -129,14 +132,14 @@ function testMail2() {
                                     <img
                                         src="../../images/playstore.svg"
                                         alt
-                                        height="120"
+                                        height="100"
                                     />
                                 </div>
                                 <div @click="downloadApk" role="button">
                                     <img
                                         src="../../images/appstore.svg"
                                         alt
-                                        height="120"
+                                        height="100"
                                     />
                                 </div>
                             </div>
@@ -146,19 +149,55 @@ function testMail2() {
             </div>
             <!-- end row -->
 
-            <hr class="my-5 footer-border" />
-
-            <div class="row">
+            <div class="mt-4 d-flex justify-content-between">
                 <div class="col-lg-6">
-                    <div class="mb-2">
-                        <div class="text-lg text-white fw-bold">FRONTROW</div>
-                    </div>
+                    <div>
+                        <!-- <div class="">
+                            <div class="text-lg text-white fw-bold">
+                                FRONTROW
+                            </div>
+                        </div> -->
 
-                    <p class="mb-2">
-                        {{ new Date().getFullYear() }} © FRONTROW. Design &
-                        Developed by the CinemaUg
-                    </p>
-                    <p>Movies & Beyond</p>
+                        <p class="mb-2">
+                            {{ new Date().getFullYear() }} © FRONTROW. Design &
+                            Developed by the CinemaUg
+                        </p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="text-lg text-white fw-bold me-3">
+                        Follow us:
+                    </div>
+                    <div class="d-flex">
+                        <div @click="" role="button" class="me-3" >
+                            <img
+                                src="../../images/facebook.svg"
+                                alt
+                                height="15"
+                            />
+                        </div>
+                        <div @click="" role="button" class="me-3">
+                            <img
+                                src="../../images/instagram.svg"
+                                alt
+                                height="19"
+                            />
+                        </div>
+                        <div @click="" role="button" class="me-3">
+                            <img
+                                src="../../images/twitter.svg"
+                                alt
+                                height="15"
+                            />
+                        </div>
+                        <div @click="" role="button" class="">
+                            <img
+                                src="../../images/youtube.svg"
+                                alt
+                                height="19"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </b-container>

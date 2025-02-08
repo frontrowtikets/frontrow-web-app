@@ -27,6 +27,7 @@ const viewDetails = () => {
 <template>
     <b-container>
         <div
+        style="background-color: #a8ffff;"
             class="rounded shadow card w-100"
             @click="() => $emit('view', eventName, eventId)"
         >
