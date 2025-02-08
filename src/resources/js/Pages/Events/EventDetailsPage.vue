@@ -26,6 +26,8 @@ const invalidPhoneNumberMsg = ref("");
 const selectedTicket = ref(null);
 const ticketQuantity = ref(1);
 const showCheckout = ref(false);
+const errorMessage = ref("");
+
 
 const { isAdmin } = IsUserAdmin();
 
@@ -146,29 +148,40 @@ const submit = () => {
 };
 
 function submitEventRegisterRequest() {
-    eventRegisterForm.post(route("register_for_event"), {
-        onSuccess: () => {
-            registerForEventModal.value = false;
-            Swal.fire({
-                title: "Request Sent",
-                icon: "success",
-                html: `<p style="font-size: 14px">You have successfully submitted your request to attend the event</p>`,
-                showCloseButton: false,
-                showCancelButton: false,
-                focusConfirm: true,
-                confirmButtonText: "OK",
-                confirmButtonColor: "#43ad60",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                closeOnClickOutside: false,
-            }).then((result) => {
-                if (result.value) {
-                    router.reload();
-                }
-            });
-        },
-        onError: (err) => console.log(err),
-    });
+      if (
+        eventRegisterForm["name"] != "" &&
+        eventRegisterForm["email"] != "" &&
+        eventRegisterForm["phone_number"] != "" &&
+        eventRegisterForm["terms"] == true
+    ) {
+        errorMessage.value = ""
+
+        eventRegisterForm.post(route("register_for_event"), {
+            onFinish: () => {
+                registerForEventModal.value = false;
+                Swal.fire({
+                    title: "Request Sent",
+                    icon: "success",
+                    html: `<p style="font-size: 14px">You have successfully submitted your request to attend the event</p>`,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    focusConfirm: true,
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#43ad60",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    closeOnClickOutside: false,
+                }).then((result) => {
+                    if (result.value) {
+                        router.reload();
+                    }
+                });
+            },
+            onError: (err) => console.log(err),
+        });
+    }else{
+        errorMessage.value = "All fields are required"
+    }
 }
 
 function showEventRegModal() {
@@ -500,6 +513,14 @@ function getEventTicket(){
                                                     {{ eventRegisterForm.errors.email }}
                                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                 </div>
+                                                <div
+                                                        v-if="errorMessage"
+                                                        class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
+                                                        role="alert"
+                                                    >
+                                                        {{ errorMessage }}
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
 
                                                 <div
                                                     v-if="eventRegisterForm.errors.phone_number"
