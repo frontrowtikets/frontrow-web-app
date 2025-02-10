@@ -75,7 +75,7 @@ class MovieService
             'producer' => $movieDetails['producer'],
             'viewingFormat' => $movieDetails['viewingFormat'],
             'is_active' => false,
-            'maturity_rating' => $movieDetails['maturity_rating'],
+            'maturity_rating' => $movieDetails['maturity_rating'] ?? '13+',
         ]);
 
         if (isset($movieDetails['cardImage']) && !is_null($movieDetails['cardImage'])) {

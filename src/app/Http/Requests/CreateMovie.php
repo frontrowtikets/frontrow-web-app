@@ -42,7 +42,7 @@ class CreateMovie extends FormRequest
             'trailer_url' => 'string',
             'is_active' => 'boolean',
             'status' => 'required',
-            'maturity_rating' => 'string',
+            'maturity_rating' => 'string|nullable',
             'bannerImage' => '',
             'cardImage' => '',
             'tickets' => 'array',
