@@ -338,7 +338,7 @@ function handleImageUpload(event, index) {
                                             />
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.producer" />
                                         </div>
-                                        <div class="mb-4 col-12 col-md-9" v-if="isAdmin">
+                                        <div class="mb-4 col-12 col-md-9" >
                                             <label for="maturity_rating" class="mb-2">Maturity Rating<span class="text-danger">*</span></label>
                                             <select class="form-select form-control" id="maturity_rating" v-model="form.maturity_rating">
                                                 <option value="" disabled>Select</option>
