@@ -1,7 +1,7 @@
 <script setup>
 import { Link, usePage, router } from "@inertiajs/vue3";
 import { breakpointsTailwind, useBreakpoints } from "@vueuse/core";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted , onUnmounted } from "vue";
 import { useStore } from "vuex";
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
@@ -10,6 +10,7 @@ const greaterThanMd = breakpoints.greater("md");
 const store = useStore();
 const isMenuOpen = ref(false);
 const searchVal = ref("");
+const showSearch = ref(false);
 
 const searchValue = computed(() => {
     const searchVal = store.getters["LoggedInUser/getSearchVal"];
@@ -21,12 +22,18 @@ const isSearching = computed(() => {
 });
 
 const vFocus = {
-  mounted: (el) => {
-    if(searchValue.value.length > 3){
-        el.focus()
+    mounted: (el) => {
+        if (searchValue.value.length > 3) {
+            el.focus();
+        }
+    },
+};
+
+onMounted(()=>{
+    if(searchValue.value.length > 0){
+        showSearch.value = true
     }
-  }
-}
+})
 
 function toggleMenu() {
     document.getElementById("topnav-menu-content").classList.toggle("show");
@@ -35,6 +42,7 @@ function toggleMenu() {
 
 function goHome() {
     router.visit("/");
+    //TODO: Add using v-motions
 }
 
 function goEvents() {
@@ -54,12 +62,11 @@ function goToSearch($event) {
     const searchVal = $event.target.value;
     store.commit("LoggedInUser/setSearchVal", searchVal);
     if (searchVal.length > 3) {
-         store.commit("LoggedInUser/setSearching", true);
-            router.visit(`/search`);
-    }else{
-         store.commit("LoggedInUser/setSearching", false);
+        store.commit("LoggedInUser/setSearching", true);
+        router.visit(`/search`);
+    } else {
+        store.commit("LoggedInUser/setSearching", false);
     }
-
 }
 </script>
 <template>
@@ -109,21 +116,34 @@ function goToSearch($event) {
                     id="topnav-menu"
                     v-scroll-spy-active="{ selector: 'a.nav-link' }"
                 >
+                    <li
+                        class="pt-1 text-center nav-item"
+                        role="button"
+                        @click="showSearch = !showSearch"
+                         v-if="greaterThanMd"
+                    >
+                        <a class="nav-link">
+                            <span
+                                class=" bx bx-search-alt"
+                                style="font-size: large"
+                            ></span>
+                        </a>
+                    </li>
                     <li class="nav-item" role="button" @click="goHome">
                         <a class="nav-link">Home</a>
                     </li>
                     <li class="nav-item" role="button" @click="goToMoviesPage">
-                        <a class="nav-link" >Movies</a>
+                        <a class="nav-link">Movies</a>
                     </li>
                     <li class="nav-item" role="button" @click="goToEventsPage">
-                        <a class="nav-link" >Events</a>
+                        <a class="nav-link">Events</a>
                     </li>
 
                     <li class="nav-item" role="button" @click="goCinema">
-                        <a class="nav-link" >My Tickets</a>
+                        <a class="nav-link">My Tickets</a>
                     </li>
                     <li class="nav-item" role="button" @click="goEvents">
-                        <a class="nav-link" >Create Event</a>
+                        <a class="nav-link">Create Event</a>
                     </li>
                 </ul>
                 <Link
@@ -152,9 +172,16 @@ function goToSearch($event) {
                     left: '25%',
                 }"
             >
-                <div class="col-12">
+                <div
+                    class="col-12"
+                    v-if="showSearch || isSearching"
+                    v-motion
+                    :initial="{ opacity: 0, y: 10 }"
+                    :enter="{ opacity: 1, y: 0, scale: 1 }"
+                    :duration="200"
+                >
                     <form class="app-search">
-                        <div class="position-relative ">
+                        <div class="position-relative">
                             <input
                                 type="text"
                                 class="pt-4 pb-4 shadow-lg form-control"
@@ -166,8 +193,13 @@ function goToSearch($event) {
                             />
 
                             <span class="pt-1 pb-1 bx bx-search-alt"></span>
-                            <span  style="left: 93%;" class="mt-2 " v-if="isSearching"> <i class=" bx bx-loader bx-spin font-size-16" ></i></span>
-
+                            <span
+                                style="left: 93%"
+                                class="mt-2"
+                                v-if="isSearching"
+                            >
+                                <i class="bx bx-loader bx-spin font-size-16"></i
+                            ></span>
                         </div>
                     </form>
                 </div>
