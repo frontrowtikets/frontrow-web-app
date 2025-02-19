@@ -35,6 +35,7 @@ function toggleMenu() {
 
 function goHome() {
     router.visit("/");
+    //TODO: Add using v-motions
 }
 
 function goEvents() {
@@ -153,6 +154,7 @@ function goToSearch($event) {
                 }"
             >
                 <div class="col-12">
+
                     <form class="app-search">
                         <div class="position-relative ">
                             <input
