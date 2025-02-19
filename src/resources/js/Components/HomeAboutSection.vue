@@ -48,7 +48,7 @@ function goDashboard() {
                 </div>
             </div>
             <div class="row align-items-center">
-                <div class="col-lg-5">
+                <!-- <div class="col-lg-5">
                     <div class="text-muted">
                         <h4>Do Your Event Your Way.</h4>
                         <p>
@@ -79,6 +79,7 @@ function goDashboard() {
                             >
                         </div>
 
+
                         <div class="mt-4 row">
                             <div class="col-lg-4 col-6">
                                 <div class="mt-4">
@@ -90,6 +91,58 @@ function goDashboard() {
                                 <div class="mt-4">
                                     <h4>46245</h4>
                                     <p>Users</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="col-lg-6 ms-auto">
+                    <div class="mt-4 mt-lg-0">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="border card">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <i
+                                                class="bx bx-sticker h2 text-primary"
+                                            ></i>
+                                        </div>
+                                        <h5>Convenience</h5>
+                                        <p class="mb-0 text-muted">
+                                            Book your spot
+                            today and let the adventure begin.
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="text-center bg-transparent card-footer border-top"
+                                         @click="goToMoviesPage"
+                                        role="button"
+                                    >
+                                        <a class="text-primary">Book Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="border card">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <i
+                                                class="bx bx-group h2 text-primary"
+                                            ></i>
+                                        </div>
+                                        <h5>Join Thousands</h5>
+                                        <p class="mb-0 text-muted">
+                                             Register your events & cinemas for bookings.
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="text-center bg-transparent card-footer border-top"
+                                         @click="createMovie"
+                                        role="button"
+                                    >
+                                        <a class="text-primary">Register</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +176,7 @@ function goDashboard() {
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <div class="border card mt-lg-5">
+                                <div class="border card">
                                     <div class="card-body">
                                         <div class="mb-3">
                                             <i

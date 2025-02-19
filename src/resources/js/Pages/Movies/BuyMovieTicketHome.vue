@@ -176,7 +176,8 @@ function movieDetails() {
                 <div class="card w-100">
                     <div class="card-body">
                         <div class="w-100 d-flex justify-content-between">
-                            <div><h5 class="mb-4 card-title">Select seats to Proceed</h5></div>
+                            <b-button variant="light" disabled><h5 class="">Select seats to Proceed</h5></b-button>
+
                             <div class="" @click="movieDetails">
                                 <a class="btn btn-light"> <i class="mdi mdi-eye-outline"></i> View Movie Details </a>
                             </div>

@@ -76,9 +76,9 @@ function testMail2() {
 
 <template>
     <!-- Footer start -->
-    <footer class="pt-5 landing-footer bg-primary">
+    <footer class="pt-3 pb-2 landing-footer bg-primary">
         <b-container>
-            <div class="row" style="border-bottom: 1px solid #67babf">
+            <div class="row">
                 <div class="col-lg-3 col-sm-6">
                     <div class="mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Platform</h5>
@@ -146,6 +146,49 @@ function testMail2() {
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-3 col-sm-6 text-end">
+                    <div class="mb-lg-0 ">
+                        <h5 class="footer-list-title">Follow Us</h5>
+                        <div class="gap-3 pt-2 d-flex flex-column align-items-end " >
+                            <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                               <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`" target="_blank"> <img
+                                    src="../../images/instagram.svg"
+                                    alt
+                                    height="19"
+                                /></a>
+                                <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`" target="_blank" class="text-light">Instagram</a>
+                            </div>
+                             <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                               <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`" target="_blank"> <img
+                                    src="../../images/tiktok.svg"
+                                    alt
+                                    height="20"
+                                /></a>
+                                <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`" target="_blank" class="text-light">TikTok</a>
+                            </div>
+                             <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                               <a :href="`https://x.com/frontrowtikets?s=21`" target="_blank"> <img
+                                    src="../../images/twitter.svg"
+                                    alt
+                                    height="15"
+                                /></a>
+                                <a  :href="`https://x.com/frontrowtikets?s=21`" target="_blank" class="text-light">X(Twitter)</a>
+                            </div>
+
+
+
+                            <!-- <div @click="" role="button" class="">
+                            <img
+                                src="../../images/youtube.svg"
+                                alt
+                                height="19"
+                            />
+                             Youtube
+                        </div> -->
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- end row -->
 
@@ -158,45 +201,10 @@ function testMail2() {
                             </div>
                         </div> -->
 
-                        <p class="mb-2">
+                        <p class="">
                             {{ new Date().getFullYear() }} © FRONTROW. Design &
                             Developed by the CinemaUg
                         </p>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <div class="text-lg text-white fw-bold me-3">
-                        Follow us:
-                    </div>
-                    <div class="d-flex">
-                        <div @click="" role="button" class="me-3" >
-                            <img
-                                src="../../images/facebook.svg"
-                                alt
-                                height="15"
-                            />
-                        </div>
-                        <div @click="" role="button" class="me-3">
-                            <img
-                                src="../../images/instagram.svg"
-                                alt
-                                height="19"
-                            />
-                        </div>
-                        <div @click="" role="button" class="me-3">
-                            <img
-                                src="../../images/twitter.svg"
-                                alt
-                                height="15"
-                            />
-                        </div>
-                        <div @click="" role="button" class="">
-                            <img
-                                src="../../images/youtube.svg"
-                                alt
-                                height="19"
-                            />
-                        </div>
                     </div>
                 </div>
             </div>
