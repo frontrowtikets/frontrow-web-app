@@ -58,6 +58,8 @@ function viewEvent(title, id) {
                                     :movieId="item.id"
                                     :showTimes="item.show_times"
                                     :overallRating = "item.overallRating"
+                        :viewing_format="item.viewing_format"
+
                                     @view="viewMovie(item.title,item.id)"
                                 />
                             </div>

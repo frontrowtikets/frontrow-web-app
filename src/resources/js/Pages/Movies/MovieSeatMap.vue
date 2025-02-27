@@ -19,7 +19,7 @@ const state = reactive({
             // href: "javascript:void(0)"
         },
         {
-            text: "Manager Movie",
+            text: "Manage Movie",
             active: true,
         },
     ],
@@ -154,7 +154,7 @@ function removeTheatre(index) {
          seatMapFields.value.splice(index, 1);
     }
 
-    
+
 }
 
 function addRow(index, seatmapIndex) {

@@ -136,6 +136,8 @@ function viewMovie(title, id) {
                             :movieId="item.id"
                             :showTimes="item.show_times"
                             :overallRating="item.overallRating"
+                        :viewing_format="item.viewing_format"
+
                               @view="viewMovie"
                         />
                     </Slide>
