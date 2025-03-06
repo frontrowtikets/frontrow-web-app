@@ -1,4 +1,4 @@
-name: Deploy to Production Server
+name: FRONTROW TIKETS PR CD
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
+          php-version: "8.3"
 
       - name: Install Composer Dependencies
         working-directory: src
@@ -40,7 +40,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
-      - name: Sync to Staging Server
+      - name: Sync to Production Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_DEV_HOST }}
@@ -51,7 +51,7 @@ jobs:
             cd /home/u964704866/domains/frontrowtikets.com/public_html/src
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/id_rsa_git
-            git pull origin development
+            git pull origin main
 
             if [ -f artisan ]; then
               ~/bin/composer install --no-interaction --prefer-dist
