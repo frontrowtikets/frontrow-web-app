@@ -1,11 +1,13 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import { reactive, onMounted, ref } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
 import icondata from "@/images/icondata.png";
 import MovieTicketCard from "@/js/Components/MovieTicketCard.vue";
 import EventTicketCard from "@/js/Components/EventTicketCard.vue";
+
+
 import { useInfiniteScroll } from "@/js/Composables/useInfiniteScroll.js";
 
 const props = defineProps({
@@ -67,6 +69,7 @@ function allMovies() {
                                     <b-button class="btn btn-soft-primary" @click="allMovies">More Movies</b-button>
                                 </div>
 
+
                                 <div v-if="paginatedItems.length > 0">
                                     <div class="flex-wrap gap-5 mt-5 d-flex justify-content-center">
                                         <MovieTicketCard
@@ -90,7 +93,7 @@ function allMovies() {
                                     </div>
                                 </div>
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                    <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                    <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                     <div>No Movie Tickets Yet.</div>
                                     <div ref="movieTicketsBottom"></div>
                                 </div>
@@ -113,14 +116,14 @@ function allMovies() {
                                     </div>
                                     <div>
                                         <div ref="movieEventsBottom"></div>
-                                        <div v-if="nextPageExists" class="mt-4 text-center text-success">
+                                        <div v-if="eventNextPageExists" class="mt-4 text-center text-success">
                                             <i class="bx bx-hourglass bx-spin font-size-18 me-2"></i> Loading more
                                         </div>
                                         <div v-else class="mt-4 text-center text-primary">No More Data</div>
                                     </div>
                                 </div>
                                 <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                    <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                    <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                     <div>No Event Tickets Yet.</div>
                                     <div ref="movieEventsBottom"></div>
                                 </div>

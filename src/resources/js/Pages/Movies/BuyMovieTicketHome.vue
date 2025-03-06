@@ -12,7 +12,7 @@ import { useWindowSize } from "@vueuse/core";
 import TheSeatMap from "@/js/Components/TheSeatMap.vue";
 import icondata from "@/images/icondata.png";
 
-const props = defineProps(["buyMovieDetails"]);
+const props = defineProps(["buyMovieDetails", "myWallet"]);
 
 const state = reactive({
     items: [
@@ -50,6 +50,11 @@ const seatMapFields = ref([
 ]);
 
 const selectedTheatres = ref([]);
+
+const cleanedSelectedSeats = computed(()=>{
+    const cleaned = selectedTheatres.value.filter((selectedItem)=>selectedItem.selectedSeats.length > 0)
+    return cleaned;
+})
 
 onMounted(() => {
     if (props.buyMovieDetails.seatmap.length > 0) {
@@ -127,7 +132,6 @@ function transformSeats(seats) {
     }));
 }
 
-
 function getSelectedSeats(seats, theatre, roomId, roomName) {
     const index = selectedTheatres.value.findIndex((item) => item.roomID === roomId);
     if (index !== -1) {
@@ -135,6 +139,15 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
     } else {
         selectedTheatres.value.push({ selectedSeats: seats, roomID: roomId, theatre, roomName });
     }
+}
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+}
+function movieDetails() {
+    router.visit(`/home/movie/${slugify(props.buyMovieDetails.title)}/${props.buyMovieDetails.id}`);
 }
 </script>
 <template>
@@ -145,13 +158,14 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
         <PageHeader :title="props.buyMovieDetails.title" :items="state.items" role="button" @click="showCheckout = false" />
         <div v-if="showCheckout">
             <div class="col-12">
-                <div class="card" :style="{ height: `${height - 100}px` }">
+                <div class="card">
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <MovieCheckout
-                            :paymentDetails="selectedTheatres"
+                            :paymentDetails="cleanedSelectedSeats"
                             :currency="selectedTheatre?.currency"
                             :total="totalPrice"
                             :movieId="props.buyMovieDetails.id"
+                            :myWallet="props.myWallet"
                         />
                     </div>
                 </div>
@@ -162,9 +176,10 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                 <div class="card w-100">
                     <div class="card-body">
                         <div class="w-100 d-flex justify-content-between">
-                            <div><h5 class="mb-4 card-title">Seat Map</h5></div>
-                            <div class="" @click="goback">
-                                <a class="btn btn-light"> <i class="mdi mdi-arrow-left me-1"></i> View Movie Details </a>
+                            <b-button variant="light" disabled><h5 class="">Select seats to Proceed</h5></b-button>
+
+                            <div class="" @click="movieDetails">
+                                <a class="btn btn-light"> <i class="mdi mdi-eye-outline"></i> View Movie Details </a>
                             </div>
                         </div>
                         <div class="mt-4">
@@ -186,7 +201,7 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                             </div>
 
                             <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
-                                <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Seat Map</div>
                             </div>
                         </div>
@@ -200,9 +215,9 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
 
                         <div class="mt-5 text-start">
                             <div v-if="props.buyMovieDetails.seatmap.length > 0">
-                                <div v-if="selectedTheatres.length > 0">
+                                <div v-if="cleanedSelectedSeats.length > 0">
                                     <div class="mb-4">Summary</div>
-                                    <div v-for="(item, index) in selectedTheatres" :key="`${item.roomId}_${index}`">
+                                    <div v-for="(item, index) in cleanedSelectedSeats" :key="`${item.roomId}_${index}`">
                                         <div class="mb-2"><span class="fw-bold me-3">Theatre:</span>{{ item?.theatre.theatre }}</div>
                                         <div class="mb-2"><span class="fw-bold me-3">Room:</span>{{ item?.roomName }}</div>
                                         <div class="mb-2"><span class="fw-bold me-3">Tickets:</span>{{ item?.selectedSeats.length }}</div>
@@ -239,14 +254,14 @@ function getSelectedSeats(seats, theatre, roomId, roomName) {
                                 </div> -->
                             </div>
 
-                            <div class="mb-4 text-end">
+                            <div class="mb-4 text-center">
                                 <div class="mb-2 fw-bold me-3">Total</div>
                                 <div>
                                     <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(totalPrice) }}</h4>
                                 </div>
                             </div>
-                            <div class="mt-5 text-sm-end mt-sm-0" @click="totalPrice > 0 ? (showCheckout = true) : null">
-                                <a class="btn btn-success"> <i class="mdi mdi-cart-arrow-right me-1"></i> Proceed </a>
+                            <div class="mt-5 d-flex justify-content-center mt-sm-0 " @click="totalPrice > 0 ? (showCheckout = true) : null">
+                                <a class="btn btn-success flex-fill"> <i class="mdi mdi-cart-arrow-right me-1"></i> Proceed </a>
                             </div>
                         </div>
                     </div>

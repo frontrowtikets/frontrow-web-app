@@ -43,6 +43,10 @@ class MovieReview extends Model
         static::creating(function ($review) {
             $review->submitted_by = explode('@', auth()->user()->email)[0];
         });
-        
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(MovieReview::class, 'parent_id');
     }
 }

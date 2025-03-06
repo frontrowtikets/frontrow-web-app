@@ -18,7 +18,12 @@ use App\Models\UserEventTicket;
 use App\Mail\NewUserTempPasswordMail;
 use App\Models\UserPaymentDetail;
 use App\Models\PaymentTransaction;
-
+use App\Models\UserWallet;
+use App\Mail\EventRegistrationOwnerMail;
+use App\Mail\EventRegistrationUserMail;
+use App\Mail\AcceptEventRegistrationUserMail;
+use App\Mail\DeclineEventRegistrationUserMail;
+use App\Mail\EventTicketPurchaseMail;
 
 /**
  * Event Service.
@@ -48,9 +53,9 @@ class EventService
     {
 
         $isEdit = null;
-         if(isset($eventDetails['id']) && $eventDetails['id'] != ''){
+        if (isset($eventDetails['id']) && $eventDetails['id'] != '') {
             $isEdit = $eventDetails['id'];
-         }
+        }
 
         $createdEvent = Event::updateOrCreate([
             'id' => $isEdit
@@ -134,6 +139,7 @@ class EventService
                 //throw $th;
             }
         }
+        $theEvent = Event::where('id', $requestDetails['event_id'])->with(['beneficiary'])->first();
 
         EventAttendee::updateOrCreate(
             [
@@ -145,6 +151,24 @@ class EventService
                 'reg_status' => 'pending'
             ]
         );
+        try {
+            $message = (new EventRegistrationOwnerMail($theEvent->beneficiary->name))
+                ->onQueue('emails');
+
+            Mail::to($theEvent->beneficiary->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        try {
+            $message = (new EventRegistrationUserMail($currentUser->name, $theEvent->title))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function approveInvitation($requestDetails)
@@ -152,6 +176,55 @@ class EventService
         $attendanceDetail = EventAttendee::where('id', $requestDetails->attendace_id)->first();
         $attendanceDetail->reg_status = 'approved';
         $attendanceDetail->save();
+
+        $currentUser = User::where('id', $attendanceDetail->user_id)->first();
+        //creating ticket
+        $userPaymentDetails = UserPaymentDetail::create([
+            'user_id' => $currentUser->id,
+            'full_name' => $currentUser->name,
+            'user_email' => $currentUser->email,
+            'user_phone_number' => $currentUser->phone_number,
+            'payment_type' => 'free',
+        ]);
+        $paymentTransactions = PaymentTransaction::create([
+            'txn_ref' => 'test',
+            'mfscode' => 'test',
+            'txn_type' => 'ticket_purchase',
+            'txn_channel' => 'web',
+            'txn_status' => 'pending',
+            'amount' => 0,
+            'currency' => 'UGX',
+            'reason' => 'test',
+            'phone_number' => $currentUser->phone_number,
+            'user_id' => $currentUser->id,
+            'txn_hash' => 'test'
+        ]);
+
+
+        $eventTicket = UserEventTicket::create([
+            'user_id' => $currentUser->id,
+            'event_id' => $attendanceDetail->event_id,
+            'quantity' => 1,
+            'total_amount' => 0,
+            'ticket_status' => 'paid',
+            'booking_date' => now(),
+            'user_email' => $currentUser->email,
+            'ticket_id' => self::generateRandomEventTicketId(),
+            'user_payment_detail_id' => $userPaymentDetails->id,
+            'payment_transaction_id' => $paymentTransactions->id,
+
+        ]);
+
+        try {
+            $theEvent = Event::where('id', $attendanceDetail->event_id)->first();
+            $message = (new AcceptEventRegistrationUserMail($currentUser->name, $theEvent->title))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function declineInvitation($requestDetails)
@@ -159,6 +232,18 @@ class EventService
         $attendanceDetail = EventAttendee::where('id', $requestDetails->attendace_id)->first();
         $attendanceDetail->reg_status = 'declined';
         $attendanceDetail->save();
+
+        try {
+            $theEvent = Event::where('id', $attendanceDetail->event_id)->first();
+            $currentUser = User::where('id', $attendanceDetail->user_id)->first();
+            $message = (new DeclineEventRegistrationUserMail($currentUser->name, $theEvent->title))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
     public static function createReview($reviewDetails)
@@ -173,6 +258,8 @@ class EventService
 
     public static function buyTicket($paymentDetails)
     {
+        $eventTickets = [];
+
         //create account if user doesnt exist
         $currentUser = User::where('email', $paymentDetails['email'])->first();
         if (is_null($currentUser)) {
@@ -204,42 +291,124 @@ class EventService
             'full_name' => $paymentDetails['name'],
             'user_email' => $paymentDetails['email'],
             'user_phone_number' => $paymentDetails['phoneNumber'],
-            'visa_card' => $paymentDetails['cardNumber'],
-            'payment_type' => $paymentDetails['paymentType'],
+            'visa_card' => $paymentDetails['payment_account'],
+            'payment_type' => $paymentDetails['payment_method'],
         ]);
         $paymentTransactions = PaymentTransaction::create([
-            'txn_ref' => 'test',
-            'mfscode' => 'test',
-            'txn_type' => 'ticket_purchase',
+            'txn_ref' => $paymentDetails['merchant_reference'],
+            'mfscode' => $paymentDetails['confirmation_code'],
+            'txn_type' => $paymentDetails['purpose'],
             'txn_channel' => 'web',
-            'txn_status' => 'pending',
+            'txn_status' => $paymentDetails['status'] == 1 || $paymentDetails['status'] == '1' ? 'paid' : 'failed',
             'amount' => $paymentDetails['total'],
-            'currency' => $paymentDetails['selectedTicket']['currency'],
-            'reason' => 'test',
+            'currency' => $paymentDetails['currency'],
+            'reason' => 'Paying for event tickets',
             'phone_number' => $paymentDetails['phoneNumber'],
             'user_id' => $currentUser->id,
-            'txn_hash' => 'test'
+            'txn_hash' => $paymentDetails['merchant_reference']
         ]);
 
-        $eventTicket = UserEventTicket::create([
-            'user_id' => $currentUser->id,
-            'event_id'=> $paymentDetails['selectedTicket']['event_id'],
-            'quantity' => $paymentDetails['quantity'],
-            'total_amount' => $paymentDetails['total'],
-            'ticket_status' => 'paid',
-            'booking_date' => now(),
-            'user_email' => $paymentDetails['email'],
-            'ticket_id' => self::generateRandomEventTicketId(),
-            'event_ticket_id' => $paymentDetails['selectedTicket']['id'],
-            'user_payment_detail_id' => $userPaymentDetails->id,
-            'payment_transaction_id' => $paymentTransactions->id,
+        if ($paymentDetails['status'] == 1 || $paymentDetails['status'] == '1') {
+            foreach ($paymentDetails['selectedTicket'] as $seat) {
+                $eventTicket = UserEventTicket::create([
+                    'user_id' => $currentUser->id,
+                    'event_id' => $seat['event_id'],
+                    'quantity' => $seat['selectedQuantity'],
+                    'total_amount' => $paymentDetails['total'],
+                    'ticket_status' => 'paid',
+                    'booking_date' => now(),
+                    'user_email' => $paymentDetails['email'],
+                    'ticket_id' => self::generateRandomEventTicketId(),
+                    'event_ticket_id' => $seat['id'],
+                    'user_payment_detail_id' => $userPaymentDetails->id,
+                    'payment_transaction_id' => $paymentTransactions->id,
+                ]);
+                array_push($eventTickets, $eventTicket);
+            }
+        }
 
-        ]);
+        return $eventTickets;
     }
+    public static  function payWithWallet($paymentDetails)
+    {
+        $currentUser = User::where('email', $paymentDetails['email'])->first();
+        $userWallet = UserWallet::where('user_id', $currentUser->id)->first();
 
+        if ($userWallet->balance >  $paymentDetails['amount']) {
+            $eventTickets = [];
+            $userPaymentDetails = UserPaymentDetail::create([
+                'user_id' => $currentUser->id,
+                'full_name' => $paymentDetails['first_name'] . ' ' . $paymentDetails['last_name'],
+                'user_email' => $paymentDetails['email'],
+                'user_phone_number' => $paymentDetails['phone'],
+                'visa_card' => 'wallet',
+                'payment_type' => 'wallet',
+            ]);
+            $paymentTransactions = PaymentTransaction::create([
+                'txn_ref' => $userWallet->id,
+                'mfscode' => $userWallet->id,
+                'txn_type' => 'event_ticket',
+                'txn_channel' => 'web',
+                'txn_status' =>  'paid',
+                'amount' => $paymentDetails['amount'],
+                'currency' => 'UGX',
+                'reason' => 'Paying for event tickets',
+                'phone_number' => $paymentDetails['phone'],
+                'user_id' => $currentUser->id,
+                'txn_hash' => $userWallet->id
+            ]);
+
+
+            foreach ($paymentDetails['selectedTicket'] as $seat) {
+                $eventTicket = UserEventTicket::create([
+                    'user_id' => $currentUser->id,
+                    'event_id' => $seat['event_id'],
+                    'quantity' => $seat['selectedQuantity'],
+                    'total_amount' => $paymentDetails['amount'],
+                    'ticket_status' => 'paid',
+                    'booking_date' => now(),
+                    'user_email' => $paymentDetails['email'],
+                    'ticket_id' => self::generateRandomEventTicketId(),
+                    'event_ticket_id' => $seat['id'],
+                    'user_payment_detail_id' => $userPaymentDetails->id,
+                    'payment_transaction_id' => $paymentTransactions->id,
+                ]);
+                array_push($eventTickets, $eventTicket);
+            }
+
+            $userWallet->balance = $userWallet->balance - $paymentDetails['amount'];
+            $userWallet->save();
+
+            //Ticket Email
+            try {
+                $cleanedTicketData = [];
+                foreach ($eventTickets as $createdTicket) {
+                    $event = Event::where('id', $createdTicket->event_id)->first();
+                    $transactionDetails = PaymentTransaction::where('id', $createdTicket->payment_transaction_id)->first();
+
+                    $cleaned = [
+                        'event' => $event,
+                        'transactionDetails' => $transactionDetails,
+                        'ticketId' => $createdTicket->ticket_id
+                    ];
+                    array_push($cleanedTicketData, $cleaned);
+                }
+
+                $timestamp = strtotime(now());
+                $formattedDate = date('D, M d Y H:i:s', $timestamp);
+                $message = (new EventTicketPurchaseMail($paymentDetails['name'], $paymentDetails['total'], $paymentDetails['merchant_reference'], $paymentDetails['confirmation_code'], $paymentDetails['payment_method'], $formattedDate, $cleanedTicketData))
+                    ->onQueue('emails');
+
+                Mail::to($paymentDetails['email'])
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+    }
     private static  function generateRandomEventTicketId()
     {
-        $prefix = "FRET";
+        $prefix = "FRE";
         $uniqueId = uniqid($prefix, true);
         $uniqueId = str_replace('.', '', $uniqueId);
         return substr($uniqueId, 0, 18);

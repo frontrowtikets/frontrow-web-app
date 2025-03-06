@@ -16,6 +16,11 @@ use App\Models\UserEventTicket;
 use App\Models\PaymentTransaction;
 use App\Models\UserPaymentDetail;
 use App\Models\EventAttendee;
+use App\Models\UserWallet;
+use App\Mail\EventCreationAdminMail;
+use App\Mail\EventCreationOriginatorMail;
+use Illuminate\Support\Facades\Mail;
+
 
 
 
@@ -25,7 +30,7 @@ class EventsController extends Controller
 
     public function homeEvents(Request $request)
     {
-        $events = Event::where('is_active', true)->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
+        $events = Event::where('is_active', true)->where('end_date', '>=', now())->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
         $categories = EventCategory::get();
 
         return \Inertia\Inertia::render(
@@ -59,6 +64,32 @@ class EventsController extends Controller
     {
         $eventDetails = $request->validated();
         EventService::creteEvent($eventDetails);
+
+        $admins = User::permission('admin')->get();
+        $currentUser =  User::where('id', Auth::user()->id)->first();
+
+        foreach ($admins as $admin) {
+            try {
+                $message = (new EventCreationAdminMail($admin->name))
+                    ->onQueue('emails');
+
+                Mail::to($admin->email)
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        try {
+            $message = (new EventCreationOriginatorMail($currentUser->name))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return \Inertia\Inertia::render('Events/MyEvents');
     }
 
@@ -70,8 +101,13 @@ class EventsController extends Controller
             'reviews.user',
             'eventTickets',
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
+
+
         return \Inertia\Inertia::render('Events/EventDetailsPage', [
-            'eventDetails' => $eventDetail
+            'eventDetails' => $eventDetail,
+            'myWallet' => $myWallet
         ]);
     }
     public function eventDetailHome(Request $request)
@@ -82,8 +118,11 @@ class EventsController extends Controller
             'reviews.user',
             'eventTickets',
         ])->first();
+
+
         return \Inertia\Inertia::render('Events/EventDetailsHomePage', [
-            'eventDetails' => $eventDetail
+            'eventDetails' => $eventDetail,
+
         ]);
     }
 
@@ -98,6 +137,8 @@ class EventsController extends Controller
 
         $requestDetails = $request->validated();
         EventService::registerForEvent($requestDetails);
+
+
     }
 
     public function eventManager(Request $request)
@@ -106,13 +147,19 @@ class EventsController extends Controller
         $attendanceRequests = EventAttendee::where('event_id', $request->id)->where('reg_status', 'pending')->with(['user'])->paginate(15);
         $declinedRequests = EventAttendee::where('event_id', $request->id)->where('reg_status', 'declined')->with(['user'])->paginate(15);
         $eventDetails = Event::select('id', 'access_type', 'title')->where('id', $request->id)->first();
+        $eventTickets = UserEventTicket::where('event_id', $request->id)->with([
+            "event",
+            "userPaymentDetail",
+            "paymentTransaction"
+        ])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Events/EventManager', [
             'attendanceList' => $attendanceList,
             'attendanceRequests' => $attendanceRequests,
             'declinedRequests' => $declinedRequests,
             'event_id' => $eventDetails->id,
             'event_type' => $eventDetails->access_type,
-            'event_title' => $eventDetails->title
+            'event_title' => $eventDetails->title,
+            'eventTickets' => $eventTickets
         ]);
     }
 
@@ -127,7 +174,7 @@ class EventsController extends Controller
     }
     public function allEvents(Request $request)
     {
-        $events = Event::where('is_active', true)->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
+        $events = Event::where('is_active', true)->where('end_date', '>=', now())->with(["eventTickets"])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Events/AllEventsPage', [
             'events' => $events
         ]);
@@ -179,5 +226,9 @@ class EventsController extends Controller
     {
         $event = Event::where('id', $request->id)->first();
         $event->delete();
+    }
+
+    public function walletPay(Request $details){
+        EventService::payWithWallet($details);
     }
 }

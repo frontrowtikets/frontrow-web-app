@@ -1,0 +1,86 @@
+name: Deploy to Production Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: Install Composer Dependencies
+        working-directory: src
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install Node.js Dependencies
+        working-directory: src
+        run: npm install
+
+      - name: Build Vite Assets
+        working-directory: src
+        run: npm run build
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+
+      - name: Sync to Staging Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_DEV_HOST }}
+          username: ${{ secrets.REMOTE_DEV_USER }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          port: 65002
+          script: |
+            cd /home/u964704866/domains/frontrowtikets.com/public_html/src
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_rsa_git
+            git pull origin development
+
+            if [ -f artisan ]; then
+              ~/bin/composer install --no-interaction --prefer-dist
+              chmod -R 755 vendor
+              ~/bin/composer -o dump-autoload
+              chmod -R 777 storage
+              chmod -R 777 bootstrap
+              php artisan storage:link
+              php artisan optimize:clear
+              php artisan migrate --force
+            else
+              echo "artisan file not found! Ensure the project was correctly deployed."
+            fi
+      - name: Transfer Built Assets
+        env:
+          REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
+          REMOTE_HOST: ${{ secrets.REMOTE_DEV_HOST }}
+          REMOTE_PATH: /home/u964704866/domains/frontrowtikets.com/public_html/src
+        run: |
+          REMOTE_SRC_PATH=$REMOTE_PATH
+          REMOTE_BUILD_PATH=$REMOTE_PATH/public/build
+
+          echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 65002..."
+
+          # Add the server to known hosts
+          ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
+
+          # Create the necessary directory structure on the remote server
+          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH $REMOTE_BUILD_PATH"
+
+          echo "Transferring built assets..."
+          rsync -avz -e "ssh -p 65002" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH

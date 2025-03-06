@@ -56,7 +56,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ url('/cinemaug_logo.webp') }}" alt="frontrow" height="35px" width="auto">
+        <img src="{{ url('/large.png') }}" alt="frontrow" height="45px" width="auto">
 
         <div>The Art of Making Memories</div>
 

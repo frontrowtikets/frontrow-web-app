@@ -22,15 +22,15 @@ class BuyEventTicket extends FormRequest
     public function rules(): array
     {
         return [
-            'selectedTicket' => 'required',
+            'selectedTicket' => 'required|array',
             'total' => 'required',
             'name' => 'required|string',
             'email' => 'required|string',
             'phoneNumber' => 'required|string',
             'paymentType' => 'required|string',
-            'cardNumber' => '',
-            'expiryDate' => 'string',
-            'cvv' => '',
+            // 'cardNumber' => '',
+            // 'expiryDate' => 'string',
+            // 'cvv' => '',
             'quantity' => 'required',
 
         ];

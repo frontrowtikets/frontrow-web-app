@@ -14,12 +14,25 @@ use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Models\UserPaymentDetail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserWallet;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MovieCreationAdminMail;
+use App\Mail\MovieCreationOriginatorMail;
+
 
 class MoviesController extends Controller
 {
     public function homeMovies(Request $request)
     {
-        $movies = Movie::with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
+        $movies = Movie::where('is_active', true)->with(["showTimes" => function ($query) {
+            $query->where('screening_date', '>=', Carbon::now());
+        }])
+            ->whereHas('showTimes', function ($query) {
+                $query->where('screening_date', '>=', Carbon::now());
+            })
+            ->orderBy('created_at', 'desc')->paginate(6);
+
         $categories = MovieCategory::get();
 
         return \Inertia\Inertia::render('Movies/MoviesHomePage', [
@@ -50,6 +63,32 @@ class MoviesController extends Controller
     {
         $movieDetails = $request->validated();
         MovieService::createMovie($movieDetails);
+
+        $admins = User::permission('admin')->get();
+        $currentUser =  User::where('id', Auth::user()->id)->first();
+        
+        foreach ($admins as $admin) {
+            try {
+                $message = (new MovieCreationAdminMail($admin->name))
+                    ->onQueue('emails');
+
+                Mail::to($admin->email)
+                    ->queue($message);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        try {
+            $message = (new MovieCreationOriginatorMail($currentUser->name))
+                ->onQueue('emails');
+
+            Mail::to($currentUser->email)
+                ->queue($message);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return \Inertia\Inertia::render('Movies/MyMovies');
     }
 
@@ -68,8 +107,12 @@ class MoviesController extends Controller
             'reviews.user',
             'moviecasts'
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
+
         return \Inertia\Inertia::render('Movies/MovieDetailsPage', [
-            'movieDetails' => $movieDetail
+            'movieDetails' => $movieDetail,
+            'myWallet' => $myWallet
+
         ]);
     }
 
@@ -82,8 +125,10 @@ class MoviesController extends Controller
             'reviews.user',
             'moviecasts'
         ])->first();
+
         return \Inertia\Inertia::render('Movies/MovieDetailsHomePage', [
-            'movieDetails' => $movieDetail
+            'movieDetails' => $movieDetail,
+
         ]);
     }
 
@@ -93,8 +138,10 @@ class MoviesController extends Controller
             'showTimes',
             'seatmap',
         ])->first();
+        $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
         return \Inertia\Inertia::render('Movies/BuyMovieTicket', [
-            'buyMovieDetails' => $movieDetail
+            'buyMovieDetails' => $movieDetail,
+            'myWallet' => $myWallet
         ]);
     }
 
@@ -123,12 +170,28 @@ class MoviesController extends Controller
 
     public function movieManager(Request $request)
     {
-        return \Inertia\Inertia::render('Movies/MovieManager',);
+        $movieTickets = MovieTicket::where('movie_id', $request->id)->with([
+            'movie',
+            'userPaymentDetail',
+            'paymentTransaction',
+            'theatre',
+            "showTimeSeats",
+            "showTimeSeats.seatmap"
+        ])->orderBy('created_at', 'desc')->paginate(6);
+        return \Inertia\Inertia::render(
+            'Movies/MovieManager',
+            ['movieTickets' => $movieTickets]
+        );
     }
 
     public function allMovies(Request $request)
     {
-        $movies = Movie::where('is_active', true)->with(["showTimes"])->orderBy('created_at', 'desc')->paginate(6);
+        $movies = Movie::where('is_active', true)->with(["showTimes" => function ($query) {
+            $query->where('screening_date', '>=', Carbon::now());
+        }])
+            ->whereHas('showTimes', function ($query) {
+                $query->where('screening_date', '>=', Carbon::now());
+            })->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Movies/AllMoviesPage', [
             'movies' => $movies
         ]);
@@ -175,7 +238,8 @@ class MoviesController extends Controller
         ]);
     }
 
-    public function editMovie(Request $request){
+    public function editMovie(Request $request)
+    {
         $movieDetail = Movie::where('id', $request->id)->with([
             'beneficiary',
             'showTimes',
@@ -191,11 +255,16 @@ class MoviesController extends Controller
             'beneficiaries' => $beneficiaries,
             'editDetails' => $movieDetail
         ]);
-
     }
 
-    public function deleteMovie(Request $request){
+    public function deleteMovie(Request $request)
+    {
         $movie = Movie::where('id', $request->id)->first();
         $movie->delete();
+    }
+
+    public function walletPay(Request $details)
+    {
+        MovieService::payWithWallet($details);
     }
 }

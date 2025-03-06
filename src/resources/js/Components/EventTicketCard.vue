@@ -5,6 +5,8 @@ import EventTicket from "./EventTicket.vue";
 import moment from "moment";
 import Swal from "sweetalert2";
 import html2pdf from "html2pdf.js";
+import EventTicketNew from "./EventTicketNew.vue";
+
 
 const props = defineProps([
     "ticketId",
@@ -85,13 +87,14 @@ function downloadTicket() {
         pagebreak: {
             after: "#break",
         },
-        // image: {
-        //     type: "jpeg",
-        //     quality: 2.0,
-        // },
+        image: {
+            type: "jpeg",
+            quality: 1.0,
+        },
         html2canvas: {
-            scale: 1.0,
-            useCORS: true,
+              scale: 3.0,
+        useCORS: true,
+        logging: false,
         },
         jsPDF: {
             unit: "in",
@@ -212,14 +215,14 @@ function downloadTicket() {
                     <li>
                         <a class="dropdown-item" role="button"  @click="downloadTicket">Download Ticket</a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a
                             class="dropdown-item"
                         role="button"
                             @click="downloadInvoice"
                             >Download Invoice</a
                         >
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -231,7 +234,7 @@ function downloadTicket() {
             />
         </div>
         <div class="d-none">
-            <EventTicket
+            <EventTicketNew
             :ticketId="props.ticketId"
             :event="props.event"
             :userDetails="props.userDetails"

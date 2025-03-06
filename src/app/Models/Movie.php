@@ -33,6 +33,10 @@ class Movie extends Model implements HasMedia
         'movie_status',
         'currency',
         'maturity_rating',
+        'viewing_format',
+        'director',
+        'writer',
+        'producer'
 
     ];
 

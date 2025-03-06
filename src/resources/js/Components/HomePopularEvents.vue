@@ -49,6 +49,20 @@ const config = {
 function goToEventsPage() {
     router.visit("/events");
 }
+
+function slugify(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+}
+function viewEvent(title, id) {
+    router.visit(`/event/${slugify(title)}/${id}`);
+}
+
+function viewMovie(title, id) {
+    router.visit(`/home/movie/${slugify(title)}/${id}`);
+}
 </script>
 <template>
     <!-- Features start -->
@@ -107,6 +121,7 @@ function goToEventsPage() {
                             :eventLocation="item.location_name"
                             :eventId="item.id"
                             :eventTickets="item.event_tickets"
+                            @view="viewEvent"
                         />
                     </Slide>
                     <Slide
@@ -115,13 +130,14 @@ function goToEventsPage() {
                         calss=""
                     >
                         <MovieCard
-                        :movieName="item.title"
-                        :movieImageLink="item.thumbnail_url"
-                        :movieDate="item.release_date"
-                        :movieId="item.id"
-                        :showTimes="item.show_times"
-                        :overallRating="item.overallRating"
-                    />
+                            :movieName="item.title"
+                            :movieImageLink="item.thumbnail_url"
+                            :movieDate="item.release_date"
+                            :movieId="item.id"
+                            :showTimes="item.show_times"
+                            :overallRating="item.overallRating"
+                              @view="viewMovie"
+                        />
                     </Slide>
 
                     <template #addons>

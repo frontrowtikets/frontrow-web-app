@@ -10,11 +10,14 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\UserRegister;
 use App\Http\Controllers\ActivationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 Route::get('/events', [EventsController::class, 'homeEvents'])->name('events_home_page');
-Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('events_home_page');
+Route::get('/movies', [MoviesController::class, 'homeMovies'])->name('movies_home_page');
 
 Route::get('/verify/movie/ticket/{ticketId}/{transactionId}/{userDetailsId}', [MoviesController::class, 'verifyTicket'])->name('verifyTicket');
 Route::get('/verify/event/ticket/{ticketId}/{transactionId}/{userDetailsId}', [EventsController::class, 'verifyTicket'])->name('verifyTicket');
@@ -22,7 +25,28 @@ Route::get('/verify/event/ticket/{ticketId}/{transactionId}/{userDetailsId}', [E
 Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHome'])->name('movie_detail_home');
 Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
+Route::get("/search", [SearchController::class, 'search'])->name('search');
 
+
+
+
+
+//web payments callback
+Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');
+
+Route::get('/test-mail-dispatch', function () {
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+    $to = request()->query('to', 'godwintumuhimbise96@gmail.com');
+    $sent = Mail::to($to)->send(new \App\Mail\TestMail($details));
+    if($sent){
+        return "Email sent successfully";
+    }else{
+        return "Email not sent";
+    }
+});
 
 
 
@@ -66,6 +90,12 @@ Route::middleware([
     Route::post('/saveseatmap', [MoviesController::class, 'saveSeatMap'])->name('save_seat_map');
     Route::post('/deleteseatmap', [MoviesController::class, 'deleteSeatMap'])->name('delete_seat_map');
     Route::get('/activations', [ActivationController::class, 'activationPage'])->name('activations');
+    Route::get("/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicket'])->name('movie_buy_ticket');
+    Route::post('/payMovie/wallet', [MoviesController::class, 'walletPay']);
+    Route::post('/payEvent/wallet', [EventsController::class, 'walletPay']);
+
+
+
 
 
 
@@ -78,7 +108,5 @@ Route::middleware([
         Route::post('/deactivateEvent', [ActivationController::class, 'deactivateEvent'])->name('deactivate_Event');
         Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
         Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
-
     });
 });
-

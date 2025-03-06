@@ -1,6 +1,6 @@
 <script>
-import Layout from "../../../layouts/main.vue";
-import { SimpleBar } from "simplebar-vue3";
+import Layout from "../../../Layouts/main.vue";
+// import { SimpleBar } from "simplebar-vue3";
 import StatisticsApplicationsChart from "./statistics-applications-chart.vue";
 import ApplicationReceviedTime from "./application-recevied-time.vue";
 
@@ -29,7 +29,7 @@ export default {
   page: {
     title: "Job Dashboard",
   },
-  components: { Layout, StatisticsApplicationsChart, ApplicationReceviedTime, SimpleBar },
+  components: { Layout, StatisticsApplicationsChart, ApplicationReceviedTime },
   data() {
     return {
       title: "Job Dashboard",
@@ -240,17 +240,17 @@ export default {
 };
 </script>
 <template>
-  <Layout>
-    <div class="row mb-4">
+
+    <div class="mb-4 row">
       <div class="col-lg-12">
         <div class="d-flex align-items-center">
-          <img :src="avatar1" alt="" class="avatar-sm rounded">
+          <img :src="avatar1" alt="" class="rounded avatar-sm">
           <div class="ms-3 flex-grow-1">
             <h5 class="mb-2 card-title">Hello, Henry Franklin</h5>
-            <p class="text-muted mb-0">Ready to jump back in?</p>
+            <p class="mb-0 text-muted">Ready to jump back in?</p>
           </div>
           <div>
-            <a href="javascript:void(0);" class="btn btn-primary"><i class="bx bx-plus align-middle"></i> Add New
+            <a href="javascript:void(0);" class="btn btn-primary"><i class="align-middle bx bx-plus"></i> Add New
               Jobs</a>
           </div>
         </div>
@@ -273,7 +273,7 @@ export default {
               </div>
             </div>
           </div>
-          <div class="card-body border-top py-3">
+          <div class="py-3 card-body border-top">
             <p class="mb-0"> <span :class="`badge badge-soft-${item.badgeColor} me-1`">
                 <i :class="`${item.badge} align-bottom me-1`"></i> {{ item.percentage }}</span>
               {{ item.badgeColor == "success" ? 'Increase' : 'Decrease' }} last month
@@ -292,12 +292,12 @@ export default {
           <div class="card-body">
             <div class="d-flex">
               <div>
-                <h4 class="card-title mb-3">Invite your friends to Skote</h4>
+                <h4 class="mb-3 card-title">Invite your friends to Skote</h4>
                 <p class="text-muted">Nor again is there anyone who loves or pursues or desires to obtain pain of
                   itself, because it is pain, but because occasionally.</p>
                 <div>
                   <a href="javascript:void(0);" class="btn btn-primary btn-sm"><i
-                      class='bx bx-user-plus align-middle'></i> Invite Friends</a>
+                      class='align-middle bx bx-user-plus'></i> Invite Friends</a>
                 </div>
               </div>
               <div>
@@ -308,16 +308,16 @@ export default {
         </div>
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-3">Popular Candidate</h4>
+            <h4 class="mb-3 card-title">Popular Candidate</h4>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
               <div class="carousel-inner">
                 <div class="carousel-item active" data-bs-interval="3000">
-                  <div class="bg-light p-3 d-flex mb-3 rounded">
-                    <img :src="avatar4" alt="" class="avatar-sm rounded me-3">
+                  <div class="p-3 mb-3 rounded bg-light d-flex">
+                    <img :src="avatar4" alt="" class="rounded avatar-sm me-3">
                     <div class="flex-grow-1">
-                      <h5 class="font-size-15 mb-2"><router-link to="/jobs/candidate/overview" class="text-body">Stephen
+                      <h5 class="mb-2 font-size-15"><router-link to="/jobs/candidate/overview" class="text-body">Stephen
                           Hadley</router-link> <span class="badge badge-soft-info">Freelance</span></h5>
-                      <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> Germany</p>
+                      <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> Germany</p>
                     </div>
                     <div>
                       <div class="dropdown">
@@ -332,12 +332,12 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="bg-light p-3 d-flex">
-                    <img :src="avatar2" alt="" class="avatar-sm rounded me-3">
+                  <div class="p-3 bg-light d-flex">
+                    <img :src="avatar2" alt="" class="rounded avatar-sm me-3">
                     <div class="flex-grow-1">
-                      <h5 class="font-size-15 mb-2"><router-link to="/jobs/candidate/overview" class="text-body">Charles
+                      <h5 class="mb-2 font-size-15"><router-link to="/jobs/candidate/overview" class="text-body">Charles
                           Brown</router-link> <span class="badge badge-soft-success">Full Time</span></h5>
-                      <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> Cambodia</p>
+                      <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> Cambodia</p>
                     </div>
                     <div>
                       <div class="dropdown">
@@ -354,12 +354,12 @@ export default {
                   </div>
                 </div>
                 <div class="carousel-item" data-bs-interval="3000">
-                  <div class="bg-light p-3 d-flex mb-3 rounded">
-                    <img :src="avatar1" alt="" class="avatar-sm rounded me-3">
+                  <div class="p-3 mb-3 rounded bg-light d-flex">
+                    <img :src="avatar1" alt="" class="rounded avatar-sm me-3">
                     <div class="flex-grow-1">
-                      <h5 class="font-size-15 mb-2"><router-link to="/jobs/candidate/overview" class="text-body">Adam
+                      <h5 class="mb-2 font-size-15"><router-link to="/jobs/candidate/overview" class="text-body">Adam
                           Miller</router-link> <span class="badge badge-soft-warning">Internship</span></h5>
-                      <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> Australia</p>
+                      <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> Australia</p>
                     </div>
                     <div>
                       <div class="dropdown">
@@ -374,12 +374,12 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="bg-light p-3 d-flex">
-                    <img :src="avatar3" alt="" class="avatar-sm rounded me-3">
+                  <div class="p-3 bg-light d-flex">
+                    <img :src="avatar3" alt="" class="rounded avatar-sm me-3">
                     <div class="flex-grow-1">
-                      <h5 class="font-size-15 mb-2"><router-link to="/jobs/candidate/overview" class="text-body">Keith
+                      <h5 class="mb-2 font-size-15"><router-link to="/jobs/candidate/overview" class="text-body">Keith
                           Gonzales</router-link> <span class="badge badge-soft-info">Freelance</span></h5>
-                      <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> Belgium</p>
+                      <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> Belgium</p>
                     </div>
                     <div>
                       <div class="dropdown">
@@ -396,12 +396,12 @@ export default {
                   </div>
                 </div>
                 <div class="carousel-item" data-bs-interval="3000">
-                  <div class="bg-light p-3 d-flex mb-3 rounded">
-                    <img :src="avatar4" alt="" class="avatar-sm rounded me-3">
+                  <div class="p-3 mb-3 rounded bg-light d-flex">
+                    <img :src="avatar4" alt="" class="rounded avatar-sm me-3">
                     <div class="flex-grow-1">
-                      <h5 class="font-size-15 mb-2"><router-link to="/jobs/candidate/overview" class="text-body">Bonnie
+                      <h5 class="mb-2 font-size-15"><router-link to="/jobs/candidate/overview" class="text-body">Bonnie
                           Harney</router-link> <span class="badge badge-soft-success">Full Timer</span></h5>
-                      <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> Syria</p>
+                      <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> Syria</p>
                     </div>
                     <div>
                       <div class="dropdown">
@@ -416,12 +416,12 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="bg-light p-3 d-flex">
-                    <img :src="avatar2" alt="" class="avatar-sm rounded me-3">
+                  <div class="p-3 bg-light d-flex">
+                    <img :src="avatar2" alt="" class="rounded avatar-sm me-3">
                     <div class="flex-grow-1">
-                      <h5 class="font-size-15 mb-2"><router-link to="/jobs/candidate/overview" class="text-body">Dolores
+                      <h5 class="mb-2 font-size-15"><router-link to="/jobs/candidate/overview" class="text-body">Dolores
                           Minter</router-link> <span class="badge badge-soft-danger">Part Time</span></h5>
-                      <p class="mb-0 text-muted"><i class="bx bx-map text-body align-middle"></i> San Marino</p>
+                      <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> San Marino</p>
                     </div>
                     <div>
                       <div class="dropdown">
@@ -447,7 +447,7 @@ export default {
     <div class="row">
       <div class="col-lg-12">
         <div class="d-flex">
-          <h4 class="card-title mb-4 flex-grow-1">New Job Vacancy</h4>
+          <h4 class="mb-4 card-title flex-grow-1">New Job Vacancy</h4>
           <div>
             <router-link to="/jobs/job-list" class="btn btn-primary btn-sm">View All <i class="bx bx-right-arrow-alt"></i></router-link>
           </div>
@@ -455,8 +455,8 @@ export default {
       </div><!--end col-->
       <div class="col-xl-2 col-md-6">
         <div class="card">
-          <div class="card-body p-4">
-            <div class="text-center mb-3">
+          <div class="p-4 card-body">
+            <div class="mb-3 text-center">
               <img :src="airbnb" alt="" class="avatar-sm">
               <router-link to="/jobs/details" class="text-body">
                 <h5 class="mt-4 mb-2 font-size-15">Project Manager</h5>
@@ -473,8 +473,8 @@ export default {
       </div><!--end col-->
       <div class="col-xl-2 col-md-6">
         <div class="card">
-          <div class="card-body p-4">
-            <div class="text-center mb-3">
+          <div class="p-4 card-body">
+            <div class="mb-3 text-center">
               <img :src="mailchimp" alt="" class="avatar-sm">
               <router-link to="/jobs/details" class="text-body">
                 <h5 class="mt-4 mb-2 font-size-15">Marketing Director</h5>
@@ -490,8 +490,8 @@ export default {
       </div><!--end col-->
       <div class="col-xl-2 col-md-6">
         <div class="card">
-          <div class="card-body p-4">
-            <div class="text-center mb-3">
+          <div class="p-4 card-body">
+            <div class="mb-3 text-center">
               <img :src="reddit" alt="" class="avatar-sm">
               <router-link to="/jobs/details" class="text-body">
                 <h5 class="mt-4 mb-2 font-size-15">Product Designer</h5>
@@ -507,8 +507,8 @@ export default {
       </div><!--end col-->
       <div class="col-xl-2 col-md-6">
         <div class="card">
-          <div class="card-body p-4">
-            <div class="text-center mb-3">
+          <div class="p-4 card-body">
+            <div class="mb-3 text-center">
               <img :src="amazon" alt="" class="avatar-sm">
               <router-link to="/jobs/details" class="text-body">
                 <h5 class="mt-4 mb-2 font-size-15">Magento Developer</h5>
@@ -524,8 +524,8 @@ export default {
       </div><!--end col-->
       <div class="col-xl-2 col-md-6">
         <div class="card">
-          <div class="card-body p-4">
-            <div class="text-center mb-3">
+          <div class="p-4 card-body">
+            <div class="mb-3 text-center">
               <img :src="adobephoto" alt="" class="avatar-sm">
               <router-link to="/jobs/details" class="text-body">
                 <h5 class="mt-4 mb-2 font-size-15">Product Sales Specialist</h5>
@@ -541,8 +541,8 @@ export default {
       </div><!--end col-->
       <div class="col-xl-2 col-md-6">
         <div class="card">
-          <div class="card-body p-4">
-            <div class="text-center mb-3">
+          <div class="p-4 card-body">
+            <div class="mb-3 text-center">
               <img :src="line" alt="" class="avatar-sm">
               <router-link to="/jobs/details" class="text-body">
                 <h5 class="mt-4 mb-2 font-size-15">Business Associate</h5>
@@ -565,8 +565,8 @@ export default {
       <div class="col-xl-4">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-4">Activity Feed</h4>
-            <SimpleBar style="max-height: 376px;">
+            <h4 class="mb-4 card-title">Activity Feed</h4>
+            <!-- <SimpleBar style="max-height: 376px;"> -->
               <ul class="verti-timeline list-unstyled">
                 <li class="event-list">
                   <div class="event-timeline-dot">
@@ -599,7 +599,7 @@ export default {
                     <div class="flex-grow-1">
                       <div>
                         Your subscription expires today <a href="javascript: void(0);">Renew Now</a>
-                        <p class="text-muted mb-0">53 min ago</p>
+                        <p class="mb-0 text-muted">53 min ago</p>
                       </div>
                     </div>
                   </div>
@@ -619,7 +619,7 @@ export default {
                     <div class="flex-grow-1">
                       <div>
                         <b>Jennifer Alexandar</b> created a new account as a <b>Freelance</b>.
-                        <p class="text-muted mb-0">1 hrs ago</p>
+                        <p class="mb-0 text-muted">1 hrs ago</p>
                       </div>
                     </div>
                   </div>
@@ -655,31 +655,31 @@ export default {
                     <div class="flex-grow-1">
                       <div>
                         <b>Acolin Zelton</b> created a new account as a <b>Freelance</b>.
-                        <p class="text-muted mb-0">1 hrs ago</p>
+                        <p class="mb-0 text-muted">1 hrs ago</p>
                       </div>
                     </div>
                   </div>
                 </li>
               </ul>
-              <div class="text-center mt-4"><a href="javascript: void(0);"
+              <div class="mt-4 text-center"><a href="javascript: void(0);"
                   class="btn btn-primary waves-effect waves-light btn-sm">View More <i
                     class="mdi mdi-arrow-right ms-1"></i></a></div>
-            </SimpleBar>
+            <!-- </SimpleBar> -->
           </div>
         </div><!--end card-->
       </div><!--end col-->
       <div class="col-xl-4">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-4">Recent Added Jobs</h4>
-            <SimpleBar data-simplebar style="max-height: 376px;">
-              <div class="vstack gap-4">
+            <h4 class="mb-4 card-title">Recent Added Jobs</h4>
+            <!-- <SimpleBar data-simplebar style="max-height: 376px;"> -->
+              <div class="gap-4 vstack">
                 <div class="d-flex">
                   <img :src="wechat" alt="" height="40" class="rounded">
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">Marketing Director</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Themesbrand, USA - <b>53</b> sec ago</p>
+                    <p class="mb-0 text-muted">Themesbrand, USA - <b>53</b> sec ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -698,7 +698,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">Frontend Developer</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Themesbrand, Hong-Kong - <b>47</b> min ago</p>
+                    <p class="mb-0 text-muted">Themesbrand, Hong-Kong - <b>47</b> min ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown"
@@ -717,7 +717,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">React Developer</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Creative Agency, Danemark - <b>1</b> hrs ago</p>
+                    <p class="mb-0 text-muted">Creative Agency, Danemark - <b>1</b> hrs ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown"
@@ -735,7 +735,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">NodeJs Developer</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Skote Themes, Louisiana - <b>2</b> hrs ago</p>
+                    <p class="mb-0 text-muted">Skote Themes, Louisiana - <b>2</b> hrs ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown"
@@ -753,7 +753,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">Digital Marketing</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Web Technology pvt.Ltd, Danemark - <b>8</b> hrs ago</p>
+                    <p class="mb-0 text-muted">Web Technology pvt.Ltd, Danemark - <b>8</b> hrs ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown"
@@ -771,7 +771,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">Marketing Director</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Skote Technology, Dominica - <b>1</b> days ago</p>
+                    <p class="mb-0 text-muted">Skote Technology, Dominica - <b>1</b> days ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown"
@@ -789,7 +789,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">Business Associate</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Themesbrand, Russia - <b>2</b> days ago</p>
+                    <p class="mb-0 text-muted">Themesbrand, Russia - <b>2</b> days ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton7" data-bs-toggle="dropdown"
@@ -807,7 +807,7 @@ export default {
                   <div class="ms-2 flex-grow-1">
                     <h6 class="mb-1 font-size-15"><router-link to="/jobs/details" class="text-body">Backend Developer</router-link>
                     </h6>
-                    <p class="text-muted mb-0">Adobe Agency, Malaysia - <b>3</b> days ago</p>
+                    <p class="mb-0 text-muted">Adobe Agency, Malaysia - <b>3</b> days ago</p>
                   </div>
                   <div class="dropdown">
                     <button class="btn btn-light" type="button" id="dropdownMenuButton8" data-bs-toggle="dropdown"
@@ -821,10 +821,10 @@ export default {
                   </div>
                 </div>
               </div>
-            </SimpleBar>
+            <!-- </SimpleBar> -->
           </div>
         </div><!--end card-->
       </div><!--end col-->
     </div><!--end row-->
-  </Layout>
+
 </template>

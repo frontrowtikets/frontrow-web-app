@@ -12,12 +12,13 @@ import img4 from "../../images/movies/banner4.png";
 import img5 from "../../images/movies/banner5.png";
 import img6 from "../../images/movies/banner6.png";
 import { breakpointsTailwind, useBreakpoints, useWindowSize } from "@vueuse/core";
+import axios from "axios";
 
 // defineOptions({ layout: HorizontalHomeLayout });
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
-const props = defineProps(["last3Movies","last3Events","upcomingmovies","upcomingevents"]);
+const props = defineProps(["last3Movies", "last3Events", "upcomingmovies", "upcomingevents", "bannerImages"]);
 const state = reactive({});
 
 const greaterThanMd = breakpoints.greater("md");
@@ -28,20 +29,20 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-     document.getElementById('seenextBanner').click();
+    document.getElementById("seenextBanner").click();
 });
 
-const banners = computed(()=>{
+const banners = computed(() => {
     //this is based from the upcoming events and movies
     const banners = [
-    props.upcomingevents[0]?.banner_image_url,
-    props.upcomingevents[1]?.banner_image_url,
-    props.upcomingmovies[0]?.poster_url,
-    props.upcomingmovies[1]?.poster_url
-].filter(banner => banner && banner.trim() !== '');
+        props.upcomingevents[0]?.banner_image_url,
+        props.upcomingevents[1]?.banner_image_url,
+        props.upcomingmovies[0]?.poster_url,
+        props.upcomingmovies[1]?.poster_url,
+    ].filter((banner) => banner && banner.trim() !== "");
 
-return banners;
-})
+    return banners;
+});
 
 function windowScroll() {
     const navbar = document.getElementById("navbar");
@@ -54,6 +55,7 @@ function windowScroll() {
         }
     }
 }
+
 </script>
 
 <template>
@@ -63,32 +65,55 @@ function windowScroll() {
             <HomeHeader />
 
             <!-- hero section start -->
-            <section class=" section" id="home" style="margin-top: 15vh">
+            <section class="section" id="home" style="margin-top: 15vh">
                 <!-- <div class="bg-overlay"></div> -->
                 <b-container>
                     <div id="carouselExampleDark" class="carousel carousel-dark slide carousel-fade" data-bs-ride="carousel ">
                         <div class="carousel-indicators" v-if="greaterThanMd">
-                            <button v-if="banners[0]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                            <button v-if="banners[1]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button v-if="banners[2]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                            <button v-if="banners[3]" type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button>
-
+                            <button
+                                v-if="props.bannerImages[0]"
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="0"
+                                class="active"
+                                aria-current="true"
+                                aria-label="Slide 1"
+                            ></button>
+                            <button
+                                v-if="props.bannerImages[1]"
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="1"
+                                aria-label="Slide 2"
+                            ></button>
+                            <button
+                                v-if="props.bannerImages[2]"
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="2"
+                                aria-label="Slide 3"
+                            ></button>
+                            <button
+                                v-if="props.bannerImages[3]"
+                                type="button"
+                                data-bs-target="#carouselExampleDark"
+                                data-bs-slide-to="3"
+                                aria-label="Slide 4"
+                            ></button>
                         </div>
-                        <div class="rounded carousel-inner" style="max-height: 45vh">
-                            <div v-if="banners[0]" class="carousel-item active" data-bs-interval="10000">
-                                <img :src="banners[0]" class="d-block w-100" alt="First slide" />
-                                <div class="carousel-caption d-none d-md-block"></div>
-                            </div>
-                            <div v-if="banners[1]" class="carousel-item" data-bs-interval="2000">
-                                <img :src="banners[1]" class="d-block w-100" alt="Second slide" />
-                                <div class="carousel-caption d-none d-md-block"></div>
-                            </div>
-                            <div v-if="banners[2]" class="carousel-item">
-                                <img :src="banners[2]" class="d-block w-100" alt="Third slide" />
-                                <div class="carousel-caption d-none d-md-block"></div>
-                            </div>
-                            <div v-if="banners[3]" class="carousel-item">
-                                <img :src="banners[3]" class="d-block w-100" alt="fourth slide" />
+                        <div v-if="props.bannerImages" class="rounded carousel-inner" style="max-height: 45vh; overflow: hidden">
+                            <div
+                                v-for="(banner, index) in props.bannerImages"
+                                :key="`${banner.url}_${index}`"
+                                :class="['carousel-item', { active: index === 0 }]"
+                                data-bs-interval="10000"
+                            >
+                                <img
+                                    :src="banner.url"
+                                    class="d-block w-100"
+                                    style="object-fit: cover; height: 100%; max-height: 45vh"
+                                    :alt="`${index}`"
+                                />
                                 <div class="carousel-caption d-none d-md-block"></div>
                             </div>
                         </div>
@@ -96,7 +121,13 @@ function windowScroll() {
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next" id="seenextBanner">
+                        <button
+                            class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#carouselExampleDark"
+                            data-bs-slide="next"
+                            id="seenextBanner"
+                        >
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -111,14 +142,14 @@ function windowScroll() {
             <!-- curreny price section end -->
             <!-- about section start -->
 
-            <HomeEventOffers :last3Movies="props.last3Movies" :last3Events="props.last3Events"/>
+            <HomeEventOffers :last3Movies="props.last3Movies" :last3Events="props.last3Events" />
 
             <div id="sampleHomePopularEvents">
                 <HomePopularEvents :upcomingmovies="props.upcomingmovies" :upcomingevents="props.upcomingevents" />
             </div>
 
             <HomeAboutSection />
-            <FooterSection/>
+            <FooterSection />
         </div>
         <!-- <div v-if="!greaterThanMd" class="w-full pr-5 mb-5 d-flex justify-content-end" :style="{ position: 'fixed', bottom: '0px', marginLeft: width - 200 + 'px' }">
             <div role="button" class="" style="" @click="state.reportIncidentModal = true">

@@ -1,12 +1,13 @@
 import { createStore } from "vuex";
 
 import LoggedInUser from "./modules/LoggedInUser";
+import PaymentDetails from "./modules/PaymentDetails";
 
 
 const store = createStore({
     modules: {
         LoggedInUser,
- 
+        PaymentDetails,
     },
 
     // Enable strict mode in development to get a warning

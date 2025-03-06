@@ -58,7 +58,7 @@ function viewEvent(title, id) {
                                     :movieId="item.id"
                                     :showTimes="item.show_times"
                                     :overallRating = "item.overallRating"
-                                    @view="viewEvent"
+                                    @view="viewMovie(item.title,item.id)"
                                 />
                             </div>
                         </div>

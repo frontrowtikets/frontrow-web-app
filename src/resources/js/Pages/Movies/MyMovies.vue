@@ -1,5 +1,5 @@
 <script setup>
-import { Head, usePage,router } from "@inertiajs/vue3";
+import { Head, usePage, router } from "@inertiajs/vue3";
 import { reactive, computed, ref } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
@@ -46,8 +46,8 @@ const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
-function allMovies(){
-    router.visit('allmovies')
+function allMovies() {
+    router.visit("allmovies");
 }
 </script>
 
@@ -109,7 +109,7 @@ function allMovies(){
                                                             <li>
                                                                 <a href="#" class="d-flex align-items-center"><span class="me-auto">All</span></a>
                                                             </li>
-                                                            <li>
+                                                            <!-- <li>
                                                                 <a href="#" class="d-flex align-items-center"
                                                                     ><span class="me-auto">Coming Soon</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
@@ -123,28 +123,16 @@ function allMovies(){
                                                                 <a href="#" class="d-flex align-items-center"
                                                                     ><span class="me-auto">Out of Theaters</span> <i class="mdi mdi-pin ms-auto"></i
                                                                 ></a>
-                                                            </li>
+                                                            </li> -->
                                                         </ul>
                                                     </div>
                                                 </b-collapse>
                                             </div>
                                         </li>
 
-                                        <li>
-                                            <a href="javascript: void(0);" class="text-body d-flex align-items-center">
-                                                <i class="mdi mdi-share-variant font-size-16 me-2"></i>
-                                                <span class="me-auto">Reviews</span>
-                                                <i class="mdi mdi-circle-medium text-danger ms-2"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript: void(0);" class="text-body d-flex align-items-center">
-                                                <i class="mdi mdi-star-outline text-muted font-size-16 me-2"></i>
-                                                <span class="me-auto">Ratings</span>
-                                            </a>
-                                        </li>
+
                                         <li @click="allMovies" role="button">
-                                            <a  class="text-body d-flex align-items-center">
+                                            <a class="text-body d-flex align-items-center">
                                                 <i class="mdi mdi-play-circle-outline text-danger font-size-16 me-2"></i>
                                                 <span class="me-auto">Other Movies</span>
                                             </a>
@@ -201,13 +189,12 @@ function allMovies(){
                                     </div>
                                     <div v-else>
                                         <div class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
-                                            <div class="pt-5 mb-4"><img :src="icondata" :height="80" /></div>
+                                            <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                             <div>No Movies Yet.</div>
                                             <div ref="mymoviesBottom"></div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <!-- end card -->

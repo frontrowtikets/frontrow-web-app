@@ -4,10 +4,21 @@ const LoggedInUser = {
         userDetails: {},
         staffRegisterProfiles: [],
         iwillSign: 1,
-        currentUrl:""
+        currentUrl: "",
+        searchVal: "",
+        isSearching: false
     }),
 
     mutations: {
+        setSearchVal(state, data) {
+            state.searchVal = data;
+        },
+        setSearching(state, data){
+             state.isSearching = data;
+        },
+        resetSearchVal(state) {
+            state.searchVal = "";
+        },
         storeLoggedInUserDetails(state, data) {
             state.userDetails = data;
         },
@@ -32,6 +43,12 @@ const LoggedInUser = {
         getUserDetails(state) {
             return state.userDetails;
         },
+        getSearchVal(state) {
+            return state.searchVal;
+        },
+        getIsSearching(state){
+            return state.isSearching
+        }
     },
 };
 

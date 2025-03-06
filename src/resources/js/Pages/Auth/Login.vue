@@ -88,7 +88,7 @@ function backHome(){
                                 <Link :href="route('landing')">
                                     <div class="mb-4 avatar-md profile-user-wid">
                                         <span class="avatar-title rounded-circle bg-light">
-                                            <!-- <img src="@/images/FRONTROWLogo.svg" alt height="65" /> -->
+                                            <img src="@/images/logos/small2.png" class="avatar-title rounded-circle" style="background-color: #ffffff; " alt height="70" />
                                         </span>
                                     </div>
                                 </Link>

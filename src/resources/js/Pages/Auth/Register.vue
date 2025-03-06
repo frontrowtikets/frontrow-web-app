@@ -5,17 +5,15 @@ import { onMounted, reactive, ref, computed } from "vue";
 
 //data
 const isPhoneNumberValid = ref(false);
-const invalidPhoneNumberMsg = ref('');
-const userPhoneNumber = ref('')
-
-
+const invalidPhoneNumberMsg = ref("");
+const userPhoneNumber = ref("");
 
 const form = useForm({
     name: "",
     email: "",
     asEventsManager: false,
     password: "",
-    phone_number:'',
+    phone_number: "",
     password_confirmation: "",
     terms: true,
 });
@@ -41,16 +39,19 @@ function backHome() {
     router.visit("/");
 }
 
-function phoneNumber(val,phoneObj){
-    form.phone_number = phoneObj['number'];
-    isPhoneNumberValid.value = phoneObj.valid
+function phoneNumber(val, phoneObj) {
+    form.phone_number = phoneObj["number"];
+    isPhoneNumberValid.value = phoneObj.valid;
 }
-function checkValidity(){
-    if(isPhoneNumberValid.value === false || typeof isPhoneNumberValid.value == 'undefined'){
-        invalidPhoneNumberMsg.value = 'Phone Number is Invalid'
-    }else{
-        invalidPhoneNumberMsg.value = ''
+function checkValidity() {
+    if (isPhoneNumberValid.value === false || typeof isPhoneNumberValid.value == "undefined") {
+        invalidPhoneNumberMsg.value = "Phone Number is Invalid";
+    } else {
+        invalidPhoneNumberMsg.value = "";
     }
+}
+function registerAsEventsManager(val){
+form['asEventsManager'] = val
 }
 </script>
 
@@ -83,20 +84,49 @@ function checkValidity(){
                             </svg>
                             <span>Home</span>
                         </button> -->
-                        <div @click="backHome"  class="p-2" role="button">Home</div>
+                        <div @click="backHome" class="p-2" role="button">Home</div>
                     </div>
                     <div class="pt-0 card-body">
                         <div>
                             <Link :href="route('landing')">
                                 <div class="mb-4 avatar-md profile-user-wid">
                                     <span class="avatar-title rounded-circle bg-light">
-                                        <!-- <img src="@/images/FRONTROWLogo.svg" alt class="rounded-circle" height="65" /> -->
+                                        <img
+                                            src="@/images/logos/small2.png"
+                                            class="avatar-title rounded-circle"
+                                            style="background-color: #ffffff"
+                                            alt
+                                            height="70"
+                                        />
                                     </span>
                                 </div>
                             </Link>
                         </div>
 
                         <div class="mt-4">
+                            <div><label>Register As</label></div>
+                            <div>
+                                <b-tabs pills justified content-class="p-3 text-muted">
+                                    <b-tab active class="border-0" @click="registerAsEventsManager(false)">
+                                        <template v-slot:title>
+                                            <span class="d-inline-block d-sm-none">
+                                                <i class="fas fa-home"></i>
+                                            </span>
+                                            <span class="d-none d-sm-inline-block">Ticket Buyer</span>
+                                        </template>
+                                        {{ text }}
+                                    </b-tab>
+                                    <b-tab @click="registerAsEventsManager(true)">
+                                        <template v-slot:title>
+                                            <span class="d-inline-block d-sm-none">
+                                                <i class="far fa-user"></i>
+                                            </span>
+                                            <span class="d-none d-sm-inline-block">Events Manager</span>
+                                        </template>
+                                        {{ content }}
+                                    </b-tab>
+                                </b-tabs>
+                            </div>
                             <form>
                                 <div v-if="form.errors.email" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
                                     {{ form.errors.email }}
@@ -117,21 +147,47 @@ function checkValidity(){
 
                                 <div class="mb-3">
                                     <label for="name">Full Name</label>
-                                    <input style="font-size: 13px" type="text" class="form-control" id="name" placeholder="Name" required v-model="form.name" />
+                                    <input
+                                        style="font-size: 13px"
+                                        type="text"
+                                        class="form-control"
+                                        id="name"
+                                        placeholder="Name"
+                                        required
+                                        v-model="form.name"
+                                    />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.name" />
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="email"> Email Address</label>
-                                    <input style="font-size: 13px" type="email" class="form-control" id="email" required autocomplete="username" placeholder="Enter email" v-model="form.email" />
+                                    <input
+                                        style="font-size: 13px"
+                                        type="email"
+                                        class="form-control"
+                                        id="email"
+                                        required
+                                        autocomplete="username"
+                                        placeholder="Enter email"
+                                        v-model="form.email"
+                                    />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.email" />
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="phone_number"> Phone Number</label>
-                                    <VueTelInput class="form-control" :inputOptions.required="true" :inputOptions.showDialCode="true" :rules="[isValidPhone]" v-model="form.phone_number" @input="phoneNumber" @change="phoneNumber" @blur="checkValidity" />
+                                    <VueTelInput
+                                        class="form-control"
+                                        :inputOptions.required="true"
+                                        :inputOptions.showDialCode="true"
+                                        :rules="[isValidPhone]"
+                                        v-model="form.phone_number"
+                                        @input="phoneNumber"
+                                        @change="phoneNumber"
+                                        @blur="checkValidity"
+                                    />
                                     <!-- <input style="font-size: 13px" type="text" class="form-control" id="phone_number" required placeholder="Phone NO." v-model="form.phone_number" />-->
-                                    <small class="text-danger" v-if="invalidPhoneNumberMsg">{{invalidPhoneNumberMsg}}</small>
+                                    <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg }}</small>
                                 </div>
 
                                 <div class="mb-3">
@@ -162,12 +218,12 @@ function checkValidity(){
                                     />
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.password_confirmation" />
                                 </div>
-                                <div class="">
+                                <!-- <div class="">
                                     <div class="mb-3 form-check form-check-left">
                                         <input class="form-check-input" type="checkbox" id="formCheckRight1" v-model="form.asEventsManager" />
                                         <label class="form-check-label" for="formCheckRight1"> Register as Events Manager </label>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- <div>
                                     <b-form-checkbox id="customControlInline" name="remember" value="true" v-model="registerAsEventsManager" unchecked-value="false">
                                         Signup as Events Manager
@@ -175,8 +231,14 @@ function checkValidity(){
                                 </div> -->
 
                                 <div class="mt-5 d-grid">
-                                    <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" @click="submit" :disabled="form.processing">
-                                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i><span>Register</span>
+                                    <button
+                                        class="btn btn-primary btn-block waves-effect waves-light"
+                                        type="submit"
+                                        @click="submit"
+                                        :disabled="form.processing"
+                                    >
+                                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
+                                        ><span>Register</span>
                                     </button>
                                 </div>
 

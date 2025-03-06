@@ -4,7 +4,8 @@ use Illuminate\Http\Response as ResponseAlias;
 use App\Jobs\ProcessSendQueueEmail;
 use Illuminate\Support\Facades\Log;
 
-
+// constants 
+define('BEYONIC_CLIENT_VERSION', '0.0.16');
 
 
 function apiResponse($results, $status = ResponseAlias::HTTP_OK)

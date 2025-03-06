@@ -52,7 +52,6 @@ class PaymentService
      *
      * @param object $param collection request object
      * 
-     * @return bool
      */
     protected function logTransaction($param)
     {
@@ -68,13 +67,9 @@ class PaymentService
             'user_id' => $param->metadata->user_id,
             'txn_hash' => $param->metadata->txn_hash
         ];
-
-        if ($param->status !== 'pending') {
-            return false;
-        }
-
         $log = new PaymentTransaction($collection);
-        return $log->save();
+        $log->save();
+        return $log;
     }
 
 
@@ -98,11 +93,14 @@ class PaymentService
      *
      * @param integer $amount
      * @param string $phone
-     * @param User $user
+     * @param User|int $user
      * @param $meta default ['prefix' => '256', 'txn_channel' => 'web']
      */
-    public static function wallet(int $amount, string $phone, User $user, $meta = ['prefix' => '256', 'txn_channel' => 'web'])
+    public static function wallet(int $amount, string $phone, $user, $currency = "UGX", $meta = ['prefix' => '256', 'txn_channel' => 'web'])
     {
+        if (is_int($user)) {
+            $user = User::find($user);
+        }
         self::$is_wallet = true;
         $has_leading_zero = substr($phone, 0, 1) === '0' ? true : false;
         $phone_len =  strlen($phone);
@@ -125,6 +123,7 @@ class PaymentService
             'amount' => $amount,
             'user' => $user,
             'meta' => $meta,
+            'currency' => $currency
         ];
 
         self::setCollectionObject();
@@ -136,7 +135,7 @@ class PaymentService
     /**
      * Begin Transaction processing
      *
-     * @return bool|string
+     * 
      */
     public function pay()
     {
@@ -144,11 +143,11 @@ class PaymentService
             self::setCollectionObject();
 
             $this->setApiKey();
-            dd(self::$collection_intent);
             $payment = (object) Beyonic_Collection_Request::create(self::$collection_intent);
-            return self::logTransaction($payment);
+            return $payment;
+            //return self::logTransaction($payment);
         } catch (Beyonic_Exception $e) {
-            return $e->getMessage();
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -157,30 +156,33 @@ class PaymentService
      *
      * @param integer $amount
      * @param string $phone
-     * @param User $user
+     * @param User|int $user
+     * @param string $currency
      * @param $meta default ['prefix' => '256', 'txn_channel' => 'web']
      * 
-     * @return this
+     *
      */
-    public static function collect(int $amount, string $phone, User $user, array $meta = ['prefix' => '256', 'txn_channel' => 'web'])
+    public static function collect(int $amount, string $phone, $user, $currency = "UGX", array $meta = ['prefix' => '256', 'txn_channel' => 'web'])
     {
 
-        $has_leading_zero = substr($phone, 0, 1) === '0' ? true : false;
+        if (is_int($user)) {
+            $user = User::find($user);
+        }
+
+        $has_leading_zero = substr($phone, 0, 1) === '0';
 
         $phone_len =  strlen($phone);
 
         $prefix = $meta['prefix'];
 
         if ($phone_len === 10 && $has_leading_zero) {
-            $phone = substr($phone, 1);
+            $phone = ltrim($phone, '0');
             $phone = "+" . $prefix . $phone;
         } elseif ($phone_len < 10 && !$has_leading_zero) {
             $phone = "+" . $prefix . $phone;
         } // phone begins with a + sign
-        elseif ($phone_len === 13 && substr($phone, 0, 1) === '+') {
+        elseif ($phone_len > 10 && substr($phone, 0, 1) === '+') {
             $phone = $phone;
-        } else {
-            $phone = "+"  . $phone;
         }
 
         self::$collection_prams = [
@@ -188,6 +190,7 @@ class PaymentService
             'amount' => $amount,
             'user' => $user,
             'meta' => $meta,
+            'currency' => $currency
         ];
 
         return new self;
@@ -200,6 +203,7 @@ class PaymentService
         $amount = self::$collection_prams['amount'];
         $user = self::$collection_prams['user'];
         $name = explode(" ", $user->name);
+        $currency = self::$collection_prams['currency'];
 
         $metadata = [
             'txn_type' => self::$is_wallet ? 'wallet_topup' : 'ticket_purchase',
@@ -218,7 +222,7 @@ class PaymentService
             "amount" => $amount,
             "first_name" => isset($name[0]) ? $name[0] : $user->name,
             "last_name" => isset($name[1]) ? $name[1] : $user->name,
-            "currency" => "UGX",
+            "currency" => $currency,
             "reason" => self::$is_wallet ? "Wallet Topup" : "Ticket Purchase",
             "metadata" => $metadata,
             "send_instructions" => True,

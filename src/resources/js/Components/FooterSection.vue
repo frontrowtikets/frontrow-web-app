@@ -1,6 +1,6 @@
 <script setup>
-
-import { Head, Link, useForm,router } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
+import axios from "axios";
 
 function downloadApk() {
     const fileUrl = `/FRONTROW_V1.0.1.apk`;
@@ -14,97 +14,198 @@ function downloadApk() {
     document.body.removeChild(a);
 }
 
-function toLogin(){
-     router.visit("/login");
+function toLogin() {
+    router.visit("/login");
 }
-function toRegister(){
-     router.visit("/register");
+function toRegister() {
+    router.visit("/register");
+}
+function goEvents() {
+    router.visit("/myevents");
+}
+function createEvent() {
+    router.visit("/dashboard");
+}
+function createMovie() {
+    router.visit("/dashboard");
+}
+function goToEventsPage() {
+    router.visit("/events");
+}
+function goToMoviesPage() {
+    router.visit("/movies");
+}
+function goDashboard() {
+    router.visit("/dashboard");
+}
+function testMail1() {
+    axios
+        .post(
+            "/api/testthismail",
+            {},
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            console.log("ress", res);
+        })
+
+        .catch((err) => {});
+}
+function testMail2() {
+    axios
+        .post(
+            "/api/testthismail2",
+            {},
+            {
+                headers: {
+                    Accept: "application/json",
+                },
+            }
+        )
+        .then((res) => {
+            console.log("ress", res);
+        })
+
+        .catch((err) => {});
 }
 </script>
 
 <template>
     <!-- Footer start -->
-    <footer class="landing-footer bg-primary">
+    <footer class="pt-3 pb-2 landing-footer bg-primary">
         <b-container>
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
-                    <div class="mb-4 mb-lg-0">
+                    <div class="mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Platform</h5>
                         <ul class="list-unstyled footer-list-menu">
-                            <li>
-                                <a href="#">Buy Tickets</a>
+                            <li @click="goToMoviesPage" role="button">
+                                <a>Buy Tickets</a>
                             </li>
-                            <li>
-                                <a href="#">Create Event</a>
+                            <li @click="createEvent" role="button">
+                                <a>Sell Event Tickets</a>
                             </li>
-                            <li>
-                                <a href="#">Events</a>
+                            <li @click="createMovie" role="button">
+                                <a>Sell Movie Tickets</a>
                             </li>
-                            <li>
-                                <a href="#">Cinemas</a>
-                            </li>
+                            <!-- <li @click="goToMoviesPage" role="button">
+                                <a>Cinemas</a>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-sm-6">
-                    <div class="mb-4 mb-lg-0">
+                    <div class="mb-lg-0">
                         <h5 class="mb-3 footer-list-title">Links</h5>
                         <ul class="list-unstyled footer-list-menu">
                             <li @click="toRegister" role="button">
-                                <a >Create Account</a>
+                                <a>Create Account</a>
                             </li>
                             <li @click="toLogin" role="button">
-                                <a >Sign in </a>
+                                <a>Sign in </a>
                             </li>
-                            <li>
-                                <a href="#">Go to Dashboard</a>
+                            <li @click="goDashboard" role="button">
+                                <a>Go to Dashboard</a>
                             </li>
+                            <!-- <li @click="testMail1" >
+                                <a>TestMail1</a>
+                            </li>
+                            <li @click="testMail2">
+                                <a>Testmail2</a>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class=" mb-lg-0">
-                        <h5 class=" footer-list-title">
+                    <div class="mb-lg-0">
+                        <h5 class="footer-list-title">
                             Download Our Application
                         </h5>
                         <div class="blog-post">
-
                             <div class="flex-row gap-5 d-flex">
                                 <div @click="downloadApk" role="button">
                                     <img
                                         src="../../images/playstore.svg"
                                         alt
-                                        height="120"
+                                        height="100"
                                     />
                                 </div>
                                 <div @click="downloadApk" role="button">
                                     <img
                                         src="../../images/appstore.svg"
                                         alt
-                                        height="120"
+                                        height="100"
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-3 col-sm-6 text-end">
+                    <div class="mb-lg-0 ">
+                        <h5 class="footer-list-title">Follow Us</h5>
+                        <div class="gap-3 pt-2 d-flex flex-column align-items-end " >
+                            <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                               <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`" target="_blank"> <img
+                                    src="../../images/instagram.svg"
+                                    alt
+                                    height="19"
+                                /></a>
+                                <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`" target="_blank" class="text-light">Instagram</a>
+                            </div>
+                             <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                               <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`" target="_blank"> <img
+                                    src="../../images/tiktok.svg"
+                                    alt
+                                    height="20"
+                                /></a>
+                                <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`" target="_blank" class="text-light">TikTok</a>
+                            </div>
+                             <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                               <a :href="`https://x.com/frontrowtikets?s=21`" target="_blank"> <img
+                                    src="../../images/twitter.svg"
+                                    alt
+                                    height="15"
+                                /></a>
+                                <a  :href="`https://x.com/frontrowtikets?s=21`" target="_blank" class="text-light">X(Twitter)</a>
+                            </div>
+
+
+
+                            <!-- <div @click="" role="button" class="">
+                            <img
+                                src="../../images/youtube.svg"
+                                alt
+                                height="19"
+                            />
+                             Youtube
+                        </div> -->
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- end row -->
 
-            <hr class="my-5 footer-border" />
-
-            <div class="row">
+            <div class="mt-4 d-flex justify-content-between">
                 <div class="col-lg-6">
-                    <div class="mb-2">
-                        <div class="text-lg text-white fw-bold">FRONTROW</div>
-                    </div>
+                    <div>
+                        <!-- <div class="">
+                            <div class="text-lg text-white fw-bold">
+                                FRONTROW
+                            </div>
+                        </div> -->
 
-                    <p class="mb-2">
-                        {{ new Date().getFullYear() }} © FRONTROW. Design &
-                        Developed by the CinemaUg
-                    </p>
-                    <p>Movies & Beyound</p>
+                        <p class="">
+                            {{ new Date().getFullYear() }} © FRONTROW. Design &
+                            Developed by the CinemaUg
+                        </p>
+                    </div>
                 </div>
             </div>
         </b-container>

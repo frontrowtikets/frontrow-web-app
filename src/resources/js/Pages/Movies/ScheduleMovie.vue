@@ -62,13 +62,18 @@ const form = useForm({
     cardImage: null,
     tickets: [],
     casts:[],
-    id:''
+    id:'',
+    director:'',
+    writer:'',
+    producer:'',
+    viewingFormat: '3D'
+
 });
 
 const bannerImageData = ref(null);
 const cardImageData = ref(null);
 const movieTheatres = ref([{ currency: "UGX" }]);
-const movieCasts = ref([{ castName: '', role: '', image: null, imagePreview: null,imageUrl:''}]);
+const movieCasts = ref([{ castName: '', role: '',type:'cast', image: null, imagePreview: null,imageUrl:''}]);
 const scheduleForBeneficiary = ref(false);
 const selectedBeneficiary = ref(null);
 const movieRating = ref(3);
@@ -92,8 +97,10 @@ onMounted(() => {
         form["duration"] = editData.duration;
         form["rating"] = movieRating.value;
         form["id"] = editData.duration;
-
-
+        form["director"] = editData.director;
+        form["writer"] = editData.writer;
+        form["producer"] = editData.producer;
+        form["viewingFormat"] = editData.viewing_format;
 
         //genres
         editData.genres.forEach((genre)=>{
@@ -109,6 +116,7 @@ onMounted(() => {
             const cleaned = {
                 castName: cast.name,
                 role: cast.role,
+                type:cast.type,
                 imageUrl:cast.profile_image_url,
                 id:cast.id
             }
@@ -137,7 +145,7 @@ watch(movieRating,(newVal)=>{
 })
 watch(movieCasts,(newVal)=>{
     const cleaned  = newVal.map((cast)=>{
-        const castObj = {castName:cast.castName,role:cast.role,image:cast.image}
+        const castObj = {castName:cast.castName,role:cast.role,image:cast.image,type:cast.type}
 
         if(cast.hasOwnProperty("id")){
             castObj.id = cast.id
@@ -230,6 +238,7 @@ function addNewCast() {
       movieCasts.value.push({
         castName: '',
         role: '',
+        type:'cast',
         image: null,
         imagePreview: null,
         imageUrl:''
@@ -275,7 +284,7 @@ function handleImageUpload(event, index) {
                                     <div class="mb-4 col-12 col-md-9" v-if="scheduleForBeneficiary">
                                             <label for="title" class="mb-2">Select Beneficiary <span class="text-danger">*</span></label>
                                             <v-select  v-model="selectedBeneficiary" :options="props.beneficiaries" :label="'name'"></v-select>
-                                        </div>
+                                    </div>
                                     <div class="mt-4">
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="title" class="mb-2">Movie Title <span class="text-danger">*</span></label>
@@ -290,7 +299,46 @@ function handleImageUpload(event, index) {
                                             />
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.title" />
                                         </div>
-                                        <div class="mb-4 col-12 col-md-9" v-if="isAdmin">
+                                          <div class="mb-4 col-12 col-md-9">
+                                            <label for="title" class="mb-2">Director </label>
+                                            <input
+                                                style="font-size: 13px"
+                                                type="text"
+                                                class="form-control"
+                                                id="title"
+                                                placeholder="Director"
+                                                required
+                                                v-model="form.director"
+                                            />
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.director" />
+                                        </div>
+                                          <div class="mb-4 col-12 col-md-9">
+                                            <label for="title" class="mb-2">Writer </label>
+                                            <input
+                                                style="font-size: 13px"
+                                                type="text"
+                                                class="form-control"
+                                                id="writer"
+                                                placeholder="Writer"
+                                                required
+                                                v-model="form.writer"
+                                            />
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.writer" />
+                                        </div>
+                                          <div class="mb-4 col-12 col-md-9">
+                                            <label for="title" class="mb-2">Producer</label>
+                                            <input
+                                                style="font-size: 13px"
+                                                type="text"
+                                                class="form-control"
+                                                id="producer"
+                                                placeholder="Producer"
+                                                required
+                                                v-model="form.producer"
+                                            />
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.producer" />
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-9" >
                                             <label for="maturity_rating" class="mb-2">Maturity Rating<span class="text-danger">*</span></label>
                                             <select class="form-select form-control" id="maturity_rating" v-model="form.maturity_rating">
                                                 <option value="" disabled>Select</option>
@@ -310,8 +358,19 @@ function handleImageUpload(event, index) {
                                             </select>
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
                                         </div>
+                                         <div class="mb-4 col-12 col-md-9">
+                                            <label for="movie_status" class="mb-2">Viewing Format <span class="text-danger">*</span></label>
+                                            <select class="form-select form-control" id="movie_status" v-model="form.viewingFormat">
+                                                <option value="3D" selected>3D</option>
+                                                <option value="Normal (2D)">Normal (2D)</option>
+                                                <!-- <option value="4D">4D</option>
+                                                <option value="IMAX">IMAX</option>
+                                                <option value="5D & above ">5D & Above</option> -->
+                                            </select>
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.viewingFormat" />
+                                        </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="event_description" class="mb-2">Description</label>
+                                            <label for="event_description" class="mb-2">Synopsis</label>
                                             <VueEditor v-model="form.description" id="event_description"></VueEditor>
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.description" />
                                         </div>
@@ -545,16 +604,23 @@ function handleImageUpload(event, index) {
                                         <div class="col-12">
                                             <div v-for="(field, index) in movieCasts" :key="`${index}_${field.name}`" class="gap-4 mb-3 w-100 d-flex align-items-center ">
 
-                                                <div class="mb-3 col-4 ">
+                                                <div class="mb-3 col-3 ">
                                                     <label for="theatre">Name <span class="text-danger">*</span></label>
                                                     <input id="theatre" v-model="field.castName" type="text" class="form-control" />
 
                                                 </div>
-                                                <div class="mb-3 col-3">
+                                                <div class="mb-3 col-2">
                                                     <label for="theatre">Role <span class="text-danger">*</span></label>
                                                     <input id="theatre" v-model="field.role" type="text" class="form-control" />
 
                                                 </div>
+                                                 <div class="mb-4 col-2 ">
+                                            <label for="cast_type" class="mb-2">Type <span class="text-danger">*</span></label>
+                                            <select class="form-select form-control" id="cast_type" v-model="field.type">
+                                                <option value="cast" selected>Cast</option>
+                                                <option value="crew">Crew Member</option>
+                                            </select>
+                                        </div>
 
 
 

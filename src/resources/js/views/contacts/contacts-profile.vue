@@ -1,9 +1,9 @@
 <script>
-import Layout from "../../layouts/main.vue";
-import PageHeader from "../../components/page-header.vue";
+import Layout from "../../Layouts/main.vue";
+import PageHeader from "../../Components/page-header.vue";
 
 import { revenueChart } from "./data-profile";
-import Stat from "../../components/widgets/stat.vue";
+import Stat from "../../Components/widgets/stat.vue";
 
 import profile from '../../../images/profile-img.png';
 import avatar1 from '../../../images/users/avatar-1.jpg';
@@ -55,11 +55,11 @@ export default {
     <PageHeader :title="title" :items="items" />
     <div class="row">
       <div class="col-xl-4">
-        <div class="card overflow-hidden">
+        <div class="overflow-hidden card">
           <div class="bg-soft bg-primary">
             <div class="row">
               <div class="col-7">
-                <div class="text-primary p-3">
+                <div class="p-3 text-primary">
                   <h5 class="text-primary">Welcome Back !</h5>
                   <p>It will seem like simplified</p>
                 </div>
@@ -69,10 +69,10 @@ export default {
               </div>
             </div>
           </div>
-          <div class="card-body pt-0">
+          <div class="pt-0 card-body">
             <div class="row">
               <div class="col-sm-4">
-                <div class="avatar-md profile-user-wid mb-4">
+                <div class="mb-4 avatar-md profile-user-wid">
                   <img
                     :src="avatar1"
                     alt
@@ -80,7 +80,7 @@ export default {
                   />
                 </div>
                 <h5 class="font-size-15 text-truncate">Cynthia Price</h5>
-                <p class="text-muted mb-0 text-truncate">UI/UX Designer</p>
+                <p class="mb-0 text-muted text-truncate">UI/UX Designer</p>
               </div>
 
               <div class="col-sm-8">
@@ -88,11 +88,11 @@ export default {
                   <div class="row">
                     <div class="col-6">
                       <h5 class="font-size-15">125</h5>
-                      <p class="text-muted mb-0">Projects</p>
+                      <p class="mb-0 text-muted">Projects</p>
                     </div>
                     <div class="col-6">
                       <h5 class="font-size-15">$1245</h5>
-                      <p class="text-muted mb-0">Revenue</p>
+                      <p class="mb-0 text-muted">Revenue</p>
                     </div>
                   </div>
                   <div class="mt-4">
@@ -110,12 +110,12 @@ export default {
 
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-4">Personal Information</h4>
+            <h4 class="mb-4 card-title">Personal Information</h4>
 
             <p
-              class="text-muted mb-4"
+              class="mb-4 text-muted"
             >Hi I'm Cynthia Price,has been the industry's standard dummy text To an English person, it will seem like simplified English, as a skeptical Cambridge.</p>
-            <div class="table-responsive mb-0">
+            <div class="mb-0 table-responsive">
               <table class="table">
                 <tbody>
                   <tr>
@@ -143,7 +143,7 @@ export default {
 
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-5">Experience</h4>
+            <h4 class="mb-5 card-title">Experience</h4>
             <div class>
               <ul class="verti-timeline list-unstyled">
                 <li class="event-list active">
@@ -215,7 +215,7 @@ export default {
         </div>
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-4">Revenue</h4>
+            <h4 class="mb-4 card-title">Revenue</h4>
             <div id="revenue-chart" class="apex-charts"></div>
             <apexchart
               class="apex-charts"
@@ -229,9 +229,9 @@ export default {
 
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title mb-4">My Projects</h4>
-            <div class="table-responsive mb-0">
-              <table class="table table-nowrap table-hover mb-0 align-middle">
+            <h4 class="mb-4 card-title">My Projects</h4>
+            <div class="mb-0 table-responsive">
+              <table class="table mb-0 align-middle table-nowrap table-hover">
                 <thead>
                   <tr>
                     <th scope="col">#</th>

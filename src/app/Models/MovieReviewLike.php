@@ -13,6 +13,5 @@ class MovieReviewLike extends Model
     protected $fillable = [
         'movie_review_id',
         'user_id',
-        
     ];
 }

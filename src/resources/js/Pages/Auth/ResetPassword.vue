@@ -28,15 +28,15 @@ const submit = () => {
 </script>
 
 <template>
-    <div class="account-pages my-5 pt-5">
+    <div class="pt-5 my-5 account-pages">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6 col-xl-5">
-                    <div class="card overflow-hidden">
+                    <div class="overflow-hidden card">
                         <div class="bg-soft bg-success">
                             <div class="row">
                                 <div class="col-7">
-                                    <div class="text-primary p-4">
+                                    <div class="p-4 text-primary">
                                         <h5 class="text-primary">Reset Password</h5>
                                         <p>Re-Password with FRONTROW.</p>
                                     </div>
@@ -46,13 +46,19 @@ const submit = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body pt-0">
+                        <div class="pt-0 card-body">
                             <div>
                                 <Link :href="route('landing')">
-                                    <div class="avatar-md profile-user-wid mb-4">
-                                        <span class="avatar-title rounded-circle bg-light">
-                                            <img :src="logo" alt height="65" />
-                                        </span>
+                                    <div class="mb-4 avatar-md profile-user-wid">
+                                         <span class="avatar-title rounded-circle bg-light">
+                                        <img
+                                            src="@/images/logos/small2.png"
+                                            class="avatar-title rounded-circle"
+                                            style="background-color: #ffffff"
+                                            alt
+                                            height="70"
+                                        />
+                                    </span>
                                     </div>
                                 </Link>
                             </div>
@@ -113,7 +119,7 @@ const submit = () => {
                                                     </div>
                                                     <div class="col-12 text-end">
                                                         <button class="btn btn-primary w-md waves-effect waves-light" type="submit" :disabled="form.processing">
-                                                            <i class="bx bx-loader bx-spin font-size-16 align-middle me-2" v-if="form.processing"></i
+                                                            <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
                                                             >{{ form.processing ? "Please wait" : "Reset Password" }}
                                                         </button>
                                                     </div>
