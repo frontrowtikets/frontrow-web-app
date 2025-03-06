@@ -1,9 +1,9 @@
-name: FRONTROW TIKETS DEV CI
+name: FRONTROW TIKETS PR CI
 
 on:
   pull_request:
     branches:
-      - development
+      - main
 
 jobs:
   build:
@@ -34,4 +34,3 @@ jobs:
       - name: Build Vite Assets
         working-directory: src
         run: npm run build
-    # Add any additional steps or commands needed for your specific deployment setup
