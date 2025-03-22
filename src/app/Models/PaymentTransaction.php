@@ -24,7 +24,13 @@ class PaymentTransaction extends Model
         'txn_hash'
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
+    }
+
+    public function serviceFeeDeduction()
+    {
+        return $this->hasOne(ServiceFeeDeduction::class);
     }
 }
