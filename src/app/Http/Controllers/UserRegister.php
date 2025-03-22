@@ -9,8 +9,7 @@ use App\Mail\MakeUserBeneficiaryMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserBeneficiaryrRequestMail;
 use App\Mail\UserBeneficiaryRequestOriginatorMail;
-
-
+use App\Models\DataDeletionRequest;
 
 class UserRegister extends Controller
 {
@@ -100,5 +99,34 @@ class UserRegister extends Controller
         } catch (\Throwable $th) {
             //throw $th;
         }
+    }
+
+    public function deleteMyAccount(Request $request)
+    {
+        $email = $request->email;
+        $reason = $request->reason;
+        $details = $request->details;
+
+        $reason = $reason . ' - ' . $details;
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'No account was found with the associated email!'], 404);
+        }
+        $dataDeletionRequest = new DataDeletionRequest(
+            [
+                'user_id' => $user->id,
+                'reason' => $reason,
+                'status' => 'pending',
+                'data_to_delete' => 'all'
+            ]
+        );
+
+        $dataDeletionRequest->save();
+
+        $user->delete();
+
+        return response()->json(['message' => 'Request to delete your account has been successfully submitted.']);
     }
 }
