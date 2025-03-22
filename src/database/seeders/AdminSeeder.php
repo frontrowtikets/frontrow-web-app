@@ -31,7 +31,7 @@ class AdminSeeder extends Seeder
                 "name" => "Finance Admin",
                 "email" => "finance@frontrowtikets.com",
                 'email_verified_at' => date("Y-m-d H:i:s"),
-                "phone_number" => '07000000000',
+                "phone_number" => '07500000000',
                 "user_type" => 'admin',
                 "password" => bcrypt("frontRow@321"),
             ]

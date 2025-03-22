@@ -26,10 +26,23 @@ Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHom
 Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 Route::get("/search", [SearchController::class, 'search'])->name('search');
+// privacy policy
+Route::get("/privacy-policy", function () {
+    return inertia('PrivacyPolicy');
+})->name('privacy_policy');
 
+// terms and conditions
+Route::get("/terms-and-conditions", function () {
+    return inertia('TermsAndConditions');
+})->name('terms_and_conditions');
 
+// delete My Account
+Route::get("/delete-my-account", function () {
+    return inertia('DeleteMyAccount');
+})->name('delete_my_account');
 
-
+// post delete My Account
+Route::post("/delete-my-account", [UserRegister::class, 'deleteMyAccount'])->name('delete_my_account_request');
 
 //web payments callback
 Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');
@@ -41,9 +54,9 @@ Route::get('/test-mail-dispatch', function () {
     ];
     $to = request()->query('to', 'godwintumuhimbise96@gmail.com');
     $sent = Mail::to($to)->send(new \App\Mail\TestMail($details));
-    if($sent){
+    if ($sent) {
         return "Email sent successfully";
-    }else{
+    } else {
         return "Email not sent";
     }
 });

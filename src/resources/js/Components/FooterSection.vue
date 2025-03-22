@@ -38,6 +38,18 @@ function goToMoviesPage() {
 function goDashboard() {
     router.visit("/dashboard");
 }
+
+function toPrivacyPolicy() {
+    router.visit("/privacy-policy");
+}
+
+function toTermsAndConditions() {
+    router.visit("/terms-and-conditions");
+}
+
+function toDeleteAccount() {
+    router.visit("/delete-my-account");
+}
 function testMail1() {
     axios
         .post(
@@ -53,7 +65,7 @@ function testMail1() {
             console.log("ress", res);
         })
 
-        .catch((err) => {});
+        .catch((err) => { });
 }
 function testMail2() {
     axios
@@ -70,7 +82,7 @@ function testMail2() {
             console.log("ress", res);
         })
 
-        .catch((err) => {});
+        .catch((err) => { });
 }
 </script>
 
@@ -101,16 +113,16 @@ function testMail2() {
 
                 <div class="col-lg-3 col-sm-6">
                     <div class="mb-lg-0">
-                        <h5 class="mb-3 footer-list-title">Links</h5>
+                        <h5 class="mb-3 footer-list-title">Company</h5>
                         <ul class="list-unstyled footer-list-menu">
-                            <li @click="toRegister" role="button">
-                                <a>Create Account</a>
+                            <li @click="toDeleteAccount" role="button">
+                                <a>Delete My Account</a>
                             </li>
-                            <li @click="toLogin" role="button">
-                                <a>Sign in </a>
+                            <li @click="toPrivacyPolicy" role="button">
+                                <a>Privacy Policy</a>
                             </li>
-                            <li @click="goDashboard" role="button">
-                                <a>Go to Dashboard</a>
+                            <li @click="toTermsAndConditions" role="button">
+                                <a>Terms & Conditions</a>
                             </li>
                             <!-- <li @click="testMail1" >
                                 <a>TestMail1</a>
@@ -129,18 +141,10 @@ function testMail2() {
                         <div class="blog-post">
                             <div class="flex-row gap-5 d-flex">
                                 <div @click="downloadApk" role="button">
-                                    <img
-                                        src="../../images/playstore.svg"
-                                        alt
-                                        height="100"
-                                    />
+                                    <img src="../../images/playstore.svg" alt height="100" />
                                 </div>
                                 <div @click="downloadApk" role="button">
-                                    <img
-                                        src="../../images/appstore.svg"
-                                        alt
-                                        height="100"
-                                    />
+                                    <img src="../../images/appstore.svg" alt height="100" />
                                 </div>
                             </div>
                         </div>
@@ -150,30 +154,24 @@ function testMail2() {
                 <div class="col-lg-3 col-sm-6 text-end">
                     <div class="mb-lg-0 ">
                         <h5 class="footer-list-title">Follow Us</h5>
-                        <div class="gap-3 pt-2 d-flex flex-column align-items-end " >
-                            <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
-                               <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`" target="_blank"> <img
-                                    src="../../images/instagram.svg"
-                                    alt
-                                    height="19"
-                                /></a>
-                                <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`" target="_blank" class="text-light">Instagram</a>
+                        <div class="gap-3 pt-2 d-flex flex-column align-items-end ">
+                            <div role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                                <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`"
+                                    target="_blank"> <img src="../../images/instagram.svg" alt height="19" /></a>
+                                <a :href="`https://www.instagram.com/frontrowtikets?igsh=ZmVmajFlb3k1MzU4`"
+                                    target="_blank" class="text-light">Instagram</a>
                             </div>
-                             <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
-                               <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`" target="_blank"> <img
-                                    src="../../images/tiktok.svg"
-                                    alt
-                                    height="20"
-                                /></a>
-                                <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`" target="_blank" class="text-light">TikTok</a>
+                            <div role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                                <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`"
+                                    target="_blank"> <img src="../../images/tiktok.svg" alt height="20" /></a>
+                                <a :href="`https://www.tiktok.com/@frontrowtikets?_t=ZM-8u2RAENRACU&_r=1`"
+                                    target="_blank" class="text-light">TikTok</a>
                             </div>
-                             <div @click="" role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
-                               <a :href="`https://x.com/frontrowtikets?s=21`" target="_blank"> <img
-                                    src="../../images/twitter.svg"
-                                    alt
-                                    height="15"
-                                /></a>
-                                <a  :href="`https://x.com/frontrowtikets?s=21`" target="_blank" class="text-light">X(Twitter)</a>
+                            <div role="button" class="right-auto d-flex justify-content-between" style="width: 35%;">
+                                <a :href="`https://x.com/frontrowtikets?s=21`" target="_blank"> <img
+                                        src="../../images/twitter.svg" alt height="15" /></a>
+                                <a :href="`https://x.com/frontrowtikets?s=21`" target="_blank"
+                                    class="text-light">X(Twitter)</a>
                             </div>
 
 
