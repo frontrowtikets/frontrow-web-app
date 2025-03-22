@@ -94,6 +94,8 @@ function viewMovie(title, id) {
                                         :movieDate="item.release_date"
                                         :movieId="item.id"
                                         :showTimes="item.show_times"
+                        :viewing_format="item.viewing_format"
+
                                         :overallRating="item.overallRating"
                                         @view="viewMovie"
                                     />

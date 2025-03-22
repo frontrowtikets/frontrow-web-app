@@ -14,6 +14,7 @@ const props = defineProps([
     "movieId",
     "showTimes",
     "overallRating",
+    "viewing_format"
 ]);
 
 const movieRating = ref(3);
@@ -156,9 +157,9 @@ function buyTicket() {
                             ><span>{{ props.showTimes[0]?.theatre }} </span>
                         </div>
                         <span
-                            :class="{ invisible: props.showTimes.length < 1 }"
+                           
                             class="ms-3 badge badge-soft-secondary"
-                            >See More</span
+                            >{{ props.viewing_format }}</span
                         >
 
                         <h5 class="text-end">
