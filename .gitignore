@@ -2,3 +2,4 @@ budde-db
 .env
 .vscode
 .htaccess
+/public/qrCodes

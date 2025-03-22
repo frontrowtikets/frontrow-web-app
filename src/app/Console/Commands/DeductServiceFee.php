@@ -27,7 +27,7 @@ class DeductServiceFee extends Command
     {
 
         // fetch all successful transactions that have not been deducted service fee
-        $transactions = \App\Models\PaymentTransaction::where('status', 'successful')
+        $transactions = \App\Models\PaymentTransaction::where('txn_status', 'successful')
             ->whereDoesntHave('serviceFeeDeduction')
             ->get();
 
