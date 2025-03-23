@@ -57,6 +57,7 @@ class EventService
             $isEdit = $eventDetails['id'];
         }
 
+        $eventThumbnail = null;
         $createdEvent = Event::updateOrCreate([
             'id' => $isEdit
         ], [
@@ -71,13 +72,13 @@ class EventService
             'end_date' => $eventDetails['end_date'],
             'access_type' => $eventDetails['access_type'],
             'status' => $eventDetails['status'],
-            'is_active' => false
         ]);
 
         if (isset($eventDetails['cardImage']) && !is_null($eventDetails['cardImage'])) {
             $cardImage = $createdEvent->addMedia($eventDetails['cardImage'])->toMediaCollection('event_images');
             $cardImageUrl = $cardImage->getUrl();
             $createdEvent->thumbnail_url = $cardImageUrl;
+            $eventThumbnail = $cardImageUrl;
         }
 
 
@@ -106,6 +107,7 @@ class EventService
                     'price' => $ticket['price'],
                     'available_quantity' => $ticket['quantity'],
                     'currency' => $ticket['currency'],
+                    'ticket_thumbnail_url' => $eventThumbnail,
                 ]);
             }
         }
