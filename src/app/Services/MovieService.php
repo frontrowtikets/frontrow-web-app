@@ -74,7 +74,6 @@ class MovieService
             'writer' => $movieDetails['writer'],
             'producer' => $movieDetails['producer'],
             'viewingFormat' => $movieDetails['viewingFormat'],
-            'is_active' => false,
             'maturity_rating' => $movieDetails['maturity_rating'] ?? '13+',
         ]);
 
@@ -189,6 +188,12 @@ class MovieService
                 'movie_show_time_id' => $seatmapDetail['showTime']['id'],
                 'room_name' => $seatmapDetail['roomName'],
             ]);
+
+            // update MovieShowTime with show_room, used in the Mobile App 
+            MovieShowTime::where('id', $seatmapDetail['showTime']['id'])
+                ->update([
+                    'show_room' => $seatmapDetail['roomName']
+                ]);
 
             MovieShowTimeSeat::where('seat_map_id', $createdSeatMap->id)->forceDelete();
 
