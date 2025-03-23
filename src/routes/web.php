@@ -121,5 +121,10 @@ Route::middleware([
         Route::post('/deactivateEvent', [ActivationController::class, 'deactivateEvent'])->name('deactivate_Event');
         Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
         Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
+
+        // get business settings
+        Route::get('/get-business-config', [SettingsController::class, 'getBusinessSettings'])->name('get_business_settings');
+        // update business settings
+        Route::post('/update-business-config', [SettingsController::class, 'updateBusinessSettings'])->name('update_business_settings');
     });
 });

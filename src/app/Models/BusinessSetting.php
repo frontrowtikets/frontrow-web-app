@@ -25,7 +25,7 @@ class BusinessSetting extends Model
         'shareholder_wallet_id' => 'integer',
     ];
 
-    public function shareholderWallet()
+    public function wallet()
     {
         return $this->belongsTo(UserWallet::class, 'shareholder_wallet_id');
     }
