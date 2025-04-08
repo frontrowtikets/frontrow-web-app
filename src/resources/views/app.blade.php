@@ -10,12 +10,12 @@
         <meta name="keywords" content="FrontRow Tikets, movie tickets, event tickets, online booking, entertainment">
         <meta name="author" content="FrontRow Tikets">
         <meta name="robots" content="index, follow">
-        <meta property="og:title" content="FrontRow Tikets - Book Your Tickets Now">
+        <meta property="og:title" content="FrontRow Tikets - Your Front-Row Seat to Unforgettable Entertainment!">
         <meta property="og:description" content="Discover and book tickets for the latest movies and events with ease.">
         <meta property="og:image" content="/path-to-social-image.jpg">
         <meta property="og:url" content="https://frontrowtikets.com">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="FrontRow Tikets - Book Your Tickets Now">
+        <meta name="twitter:title" content="FrontRow Tikets - Your Front-Row Seat to Unforgettable Entertainment!">
         <meta name="twitter:description" content="Discover and book tickets for the latest movies and events with ease.">
         <meta name="twitter:image" content="/path-to-social-image.jpg">
 
