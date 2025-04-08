@@ -1,6 +1,6 @@
 <script setup>
 import { Head, usePage, router } from "@inertiajs/vue3";
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, onMounted } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
 import IsUserBeneficiary from "@/js/Composables/IsUserBeneficiary.js";
@@ -38,7 +38,12 @@ const state = reactive({
 const myEventsBottom = ref(null);
 
 const { paginatedItems, nextPageExists } = useInfiniteScroll("myEvents", myEventsBottom);
-
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 const showMyEventsDropdown = ref(true);
 const selectedMovie = ref(null);
 const viewMovies = ref(false);
@@ -157,14 +162,14 @@ function allEvents() {
                                         <div class="col-xl-9 col-sm-6">
                                             <form class="mt-4 mt-sm-0 float-sm-end d-flex align-items-center">
                                                 <div class="mb-2 search-box me-2">
-                                                    <div class="position-relative">
+                                                    <!-- <div class="position-relative">
                                                         <input
                                                             type="text"
                                                             class="rounded form-control bg-light border-light"
                                                             placeholder="Search..."
                                                         />
                                                         <i class="bx bx-search-alt search-icon"></i>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                             </form>
                                         </div>

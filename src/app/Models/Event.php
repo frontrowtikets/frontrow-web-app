@@ -31,7 +31,8 @@ class Event extends Model implements HasMedia
         'currency',
         'access_type',
         'status',
-        'is_active'
+        'is_active',
+        'trailer_url'
     ];
 
     protected $casts = [

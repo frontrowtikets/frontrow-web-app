@@ -72,6 +72,7 @@ class EventService
             'end_date' => $eventDetails['end_date'],
             'access_type' => $eventDetails['access_type'],
             'status' => $eventDetails['status'],
+            'trailer_url' => $eventDetails['trailer_url']
         ]);
 
         if (isset($eventDetails['cardImage']) && !is_null($eventDetails['cardImage'])) {

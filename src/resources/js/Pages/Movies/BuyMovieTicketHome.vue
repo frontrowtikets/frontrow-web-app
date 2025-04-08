@@ -26,7 +26,7 @@ const state = reactive({
         },
     ],
 });
-const { height } = useWindowSize();
+const { height,width } = useWindowSize();
 
 const rooms = ref(["Room 1", "Room 2", "Room 3", "Room 4"]);
 
@@ -60,6 +60,12 @@ const cleanedSelectedSeats = computed(() => {
 });
 
 onMounted(() => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
     if (props.buyMovieDetails.seatmap.length > 0) {
         setSavedSeatMap();
     }
@@ -259,7 +265,7 @@ function goToSelectSeats(theIndex) {
                                 </div>
 
                                 <div class="mb-4 text-center">
-                                    <div class="mb-2 fw-bold me-3">Total</div>
+                                    <div class="mb-2 fw-bold me-3">Sub Total</div>
                                     <div>
                                         <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(totalPrice) }}</h4>
                                     </div>
@@ -278,9 +284,9 @@ function goToSelectSeats(theIndex) {
                 <div class="pb-5 card w-100">
                     <div class="mb-5 card-body">
                         <div class="pb-4 w-100 d-flex justify-content-between align-items-center">
-                            <div class="card-title">Select Showtime to proceed</div>
+                            <div class="card-title"v-if="width > 424">Select Showtime to proceed</div>
                             <div class="" @click="movieDetails">
-                                <a class="btn btn-light"> <i class="mdi mdi-eye-outline"></i> View Movie Details </a>
+                                <a class="btn btn-light" > <i class="mdi mdi-eye-outline" v-if="width > 424"></i> View Details  </a>
                             </div>
                         </div>
                         <div>

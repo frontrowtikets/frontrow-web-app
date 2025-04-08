@@ -29,6 +29,12 @@ const state = reactive({
 const movieListBottom = ref(null);
 
 const { paginatedItems, nextPageExists } = useInfiniteScroll("movies", movieListBottom);
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 function slugify(title) {
     return title
         .toLowerCase()

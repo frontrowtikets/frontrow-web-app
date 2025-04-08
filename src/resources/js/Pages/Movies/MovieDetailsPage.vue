@@ -5,42 +5,43 @@ import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, computed, ref } from "vue";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import IsUserAdmin from "../../Composables/IsUserAdmin.js";
+import { useWindowSize } from "@vueuse/core";
 
 import moment from "moment";
 import YouTube from "vue3-youtube";
 import Swal from "sweetalert2";
 import "vue-select/dist/vue-select.css";
 
-const props = defineProps(["movieDetails","myWallet"]);
+const props = defineProps(["movieDetails", "myWallet"]);
 const state = reactive({});
+const { height, width } = useWindowSize();
 
 const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
 
-const movieCasts = computed(()=>{
+const movieCasts = computed(() => {
     const casts = props.movieDetails.moviecasts;
-    const theCasts = casts.filter((item)=>{
-        if(item.type !== 'crew'){
-            return item
+    const theCasts = casts.filter((item) => {
+        if (item.type !== "crew") {
+            return item;
         }
-    })
+    });
 
     return theCasts;
-})
+});
 
-const movieCrew = computed(()=>{
+const movieCrew = computed(() => {
     const casts = props.movieDetails.moviecasts;
-    const theCasts = casts.filter((item)=>{
-        if(item.type == 'crew'){
-            return item
+    const theCasts = casts.filter((item) => {
+        if (item.type == "crew") {
+            return item;
         }
-    })
+    });
 
     return theCasts;
-})
-
+});
 
 const { isAdmin } = IsUserAdmin();
 
@@ -111,7 +112,7 @@ function editMovie() {
         <PageHeader :title="props.movieDetails.title" :items="state.items" />
 
         <div class="row">
-            <div class="col-xl-3">
+            <div class="col-xl-3" v-if="width > 1024">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="fw-semibold">Overview</h5>
@@ -171,7 +172,13 @@ function editMovie() {
                         </div>
                         <div class="gap-2 hstack">
                             <button class="btn btn-soft-primary w-100" @click="buyTicket">Buy Ticket</button>
-                                <button class="btn btn-soft-danger w-100" @click="editMovie" v-if="props.movieDetails.beneficiary_id == currentUser.id || isAdmin">Edit</button>
+                            <button
+                                class="btn btn-soft-danger w-100"
+                                @click="editMovie"
+                                v-if="props.movieDetails.beneficiary_id == currentUser.id || isAdmin"
+                            >
+                                Edit
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -251,27 +258,26 @@ function editMovie() {
                                 </button>
                             </div>
                         </div>
+                        <div class="mb-4 d-flex " :class="[width < 768? 'flex-column':'']">
+                            <div class="d-flex me-5" v-if="props.movieDetails.director">
+                                <div class="me-2"><label>Director:</label></div>
+                                <div>{{ props.movieDetails.director }}</div>
+                            </div>
+                            <div class="d-flex me-5" v-if="props.movieDetails.writer">
+                                <div class="me-2"><label>Writer:</label></div>
+                                <div>{{ props.movieDetails.writer }}</div>
+                            </div>
+                            <div class="d-flex me-5" v-if="props.movieDetails.producer">
+                                <div class="me-2"><label>Producer:</label></div>
+                                <div>{{ props.movieDetails.producer }}</div>
+                            </div>
+                        </div>
 
                         <div class="mb-4">
                             <h5 class="mb-3 fw-semibold">Synopsis</h5>
                             <p class="text-muted" v-html="props.movieDetails.description"></p>
                         </div>
 
-                          <div class="mb-4 d-flex d-flex-wrap">
-                            <div class="d-flex me-5"  v-if="props.movieDetails.director">
-                                <div class="me-2"><label>Director:</label></div>
-                                <div>{{ props.movieDetails.director }}</div>
-                            </div>
-                             <div class="d-flex me-5" v-if="props.movieDetails.writer">
-                                <div class="me-2"><label>Writer:</label></div>
-                                <div>{{ props.movieDetails.writer }}</div>
-                            </div>
-                             <div class="d-flex me-5" v-if="props.movieDetails.producer">
-                                <div class="me-2"><label>Producer:</label></div>
-                                <div>{{ props.movieDetails.producer}}</div>
-                            </div>
-
-                        </div>
 
 
                         <div v-if="movieCasts.length > 0" class="mb-5">
@@ -324,12 +330,21 @@ function editMovie() {
                             </div>
                         </div>
 
-                        <div class="mb-5" v-if="props.movieDetails.trailer_url">
-                            <h5 class="mb-3 fw-semibold">Trailer:</h5>
-                            <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" />
+                        <div v-if="width > 768">
+                            <div class="mb-5" v-if="props.movieDetails.trailer_url">
+                                <h5 class="mb-3 fw-semibold">Trailer:</h5>
+                                <YouTube :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" />
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="mb-5" v-if="props.movieDetails.trailer_url">
+                                <h5 class="mb-3 fw-semibold">Trailer:</h5>
+                                <YouTube :width="300" :height="180" :src="`${props.movieDetails.trailer_url}`" @ready="onReady" ref="youtube" />
+                            </div>
                         </div>
 
-                        <h5 class="mb-3 fw-semibold">Show Times</h5>
+                        <div v-if="width > 1023">
+                            <h5 class="mb-3 fw-semibold">Show Times</h5>
                         <div class="col-12 d-flex">
                             <div class="mb-3 col-lg-4">
                                 <label for="theatre">Theatre</label>
@@ -368,6 +383,8 @@ function editMovie() {
                                 <div class="mb-3 col-lg-2">{{ field.currency }}: {{ useCurrencyFormat(field.ticket_price) }}</div>
                             </div>
                         </div>
+                        </div>
+
 
                         <b-button variant="primary" @click="buyTicket">Buy Ticket </b-button>
 

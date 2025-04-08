@@ -48,7 +48,7 @@ function viewEvent(title, id) {
                 <div
                     v-for="(item, index) in props.last3Movies"
                     :key="index"
-                    class="col-xl-3 col-md-4 col-sm-6"
+                    class="col-xl-3 col-md-4 "
                 >
                     <MovieCard
                         :movieName="item.title"
@@ -64,7 +64,7 @@ function viewEvent(title, id) {
                 <div
                     v-for="(item, index) in props.last3Events"
                     :key="index"
-                    class="col-xl-3 col-md-4 col-sm-6"
+                    class="col-xl-3 col-md-4 col-sm-6 "
                 >
                     <EventCard
                         :eventName="item.title"

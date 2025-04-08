@@ -5,7 +5,7 @@ import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 import MovieCard from "../../Components/MovieCard.vue";
 import { router } from "@inertiajs/vue3";
 
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 
 const props = defineProps({
     movies: {
@@ -19,6 +19,12 @@ const props = defineProps({
 const movieListBottom = ref(null);
 
 const { paginatedItems, nextPageExists } = useInfiniteScroll("movies", movieListBottom);
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 function slugify(title) {
     return title
         .toLowerCase()

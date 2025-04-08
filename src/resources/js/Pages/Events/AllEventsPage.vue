@@ -28,6 +28,13 @@ const state = reactive({
 
 const eventListBottom = ref(null);
 
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
+
 const { paginatedItems, nextPageExists } = useInfiniteScroll("events", eventListBottom);
 function slugify(title) {
     return title
