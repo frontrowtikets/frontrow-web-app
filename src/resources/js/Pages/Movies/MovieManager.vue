@@ -19,7 +19,12 @@ const props = defineProps({
 
 const movieTicketsBottom = ref(null);
 const { paginatedItems, nextPageExists } = useInfiniteScroll("movieTickets", movieTicketsBottom);
-
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 
 const state = reactive({
     items: [

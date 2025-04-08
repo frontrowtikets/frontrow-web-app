@@ -75,7 +75,7 @@ const paymentDetailsCleaned = computed(() => {
         expiryDate: expiryDate.value,
         cvv: cvv.value,
         currency: "UGX",
-        amount: props.total,
+        amount: props.total + 500,
         movieId: props.movieId,
         selectedSeatsDetails: selectedSeatsDetails,
         description: "Ticket Payment",
@@ -85,6 +85,13 @@ const paymentDetailsCleaned = computed(() => {
 });
 onMounted(() => {
     if (usePage().props.auth.user != null) {
+
+        const userName = usePage().props.auth.user?.name;
+        const [firstName, lastName] = userName.split(' ');
+        buyerLastName.value = lastName;
+        buyerName.value = firstName;
+        userPhoneNumber.value = usePage().props.auth.user?.phone_number
+
         buyerEmail.value = usePage().props.auth.user.email;
     }
 });
@@ -187,18 +194,20 @@ function payTicketWithWallet() {
                             <div class="mb-2"><span class="fw-bold me-3">Theatre:</span>{{ item?.theatre.theatre }}</div>
                             <div class="mb-2"><span class="fw-bold me-3">Room:</span>{{ item?.roomName }}</div>
                             <div class="mb-2"><span class="fw-bold me-3">Tickets:</span>{{ item?.selectedSeats.length }}</div>
-                            <div class="mb-4">
+                            <div class="mb-2">
                                 <span class="fw-bold me-3">Seats:</span
                                 ><span class="me-3 badge badge-soft-secondary" v-for="(seat, index) in item?.selectedSeats" :key="index">{{
                                     seat
                                 }}</span>
                             </div>
+                            <div class="mb-4"><span class="fw-bold me-3">Service Fee:</span>UGX 500</div>
+
                         </div>
 
                         <div class="mb-4 text-end">
                             <div class="mb-2 fw-bold me-3">Total</div>
                             <div>
-                                <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(props.total) }}</h4>
+                                <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(props.total + 500) }}</h4>
                             </div>
                         </div>
                     </div>

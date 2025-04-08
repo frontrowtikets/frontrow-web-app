@@ -31,6 +31,7 @@ function viewMoviesManager(){
     router.visit(`/moviemanager/${slugify(props.movieDetails.title)}/${props.movieDetails.id}`)
 }
 function activateMovie() {
+
     useInertiaFormSubmit(
         {
             movieId: props.movieDetails.id,
@@ -99,7 +100,7 @@ function deleteMovie() {
                                 @click="deactivateMovie"
                                 >Deactivate</b-dropdown-item
                             >
-                            <b-dropdown-item @click="editMovie">Edit</b-dropdown-item>
+                            <b-dropdown-item @click="editMovie">Update</b-dropdown-item>
                             <b-dropdown-item @click="viewMoviesManager"
                                 >Tickets Sold</b-dropdown-item
                             >

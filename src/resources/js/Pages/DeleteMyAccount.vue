@@ -4,7 +4,7 @@ import FooterSection from "@/js/Components/FooterSection.vue";
 import HomeHeader from "../Components/HomeHeader.vue";
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 
 defineProps({
     policy: String,
@@ -14,6 +14,13 @@ const email = ref('');
 const reason = ref('');
 const details = ref('');
 const isLoading = ref(false);
+
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 
 function toPrivacyPolicy() {
     router.visit("/privacy-policy");

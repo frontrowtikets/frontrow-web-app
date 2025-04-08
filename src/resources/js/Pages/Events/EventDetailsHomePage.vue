@@ -8,6 +8,7 @@ import HomeHeader from "../../Components/HomeHeader.vue";
 import FooterSection from "../../Components/FooterSection.vue";
 import EventCheckout from "../../Components/EventCheckout.vue";
 import { useWindowSize } from "@vueuse/core";
+import YouTube from "vue3-youtube";
 
 import moment from "moment";
 import Swal from "sweetalert2";
@@ -28,7 +29,7 @@ const state = reactive({
     ],
 });
 
-const { height } = useWindowSize();
+const { height, width } = useWindowSize();
 
 const registerForEventModal = ref(false);
 const buyTicketModal = ref(false);
@@ -50,10 +51,23 @@ const selectedTickets = ref();
 const ticketTotal = ref(0);
 
 onMounted(() => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
+
     selectedTickets.value = props.eventDetails.event_tickets.map((ticket) => {
         ticket.selectedQuantity = 0;
         return ticket;
     });
+});
+
+const cardSize = computed(() => {
+    if (width.value > 768) {
+        return 47;
+    } else {
+        return 100;
+    }
 });
 
 watch(ticketQuantity, (newVal) => {
@@ -163,7 +177,7 @@ function submitEventRegisterRequest() {
         eventRegisterForm["phone_number"] != "" &&
         eventRegisterForm["terms"] == true
     ) {
-        errorMessage.value = ""
+        errorMessage.value = "";
 
         eventRegisterForm.post(route("register_for_event"), {
             onFinish: () => {
@@ -188,8 +202,8 @@ function submitEventRegisterRequest() {
             },
             onError: (err) => console.log(err),
         });
-    }else{
-        errorMessage.value = "All fields are required"
+    } else {
+        errorMessage.value = "All fields are required";
     }
 }
 
@@ -395,6 +409,27 @@ function getEventTicket() {
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div v-if="width > 768">
+                                        <div class="mt-4 mb-3" v-if="props.eventDetails.trailer_url">
+                                            <h5 class="mb-3 fw-semibold">Trailer:</h5>
+                                            <YouTube :src="`${props.eventDetails.trailer_url}`" @ready="onReady" ref="youtube"
+                                            :width="390"
+                                                :height="300"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <div class="mt-4 mb-3" v-if="props.eventDetails.trailer_url">
+                                            <h5 class="mb-3 fw-semibold">Trailer:</h5>
+                                            <YouTube
+                                                :width="300"
+                                                :height="180"
+                                                :src="`${props.eventDetails.trailer_url}`"
+                                                @ready="onReady"
+                                                ref="youtube"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-12 col-md-5" id="eventsdetailsfrom">
                                     <div>
@@ -405,7 +440,7 @@ function getEventTicket() {
                                         <div v-if="props.eventDetails.access_type == 'paid'" class="mt-2 col-12">
                                             <h5>Available Tickets</h5>
                                             <div class="flex-wrap gap-3 mt-4 col-12 d-flex">
-                                                <div style="width: 47%" v-for="(field, index) in selectedTickets" :key="field.id">
+                                                <div :style="{ width: cardSize + '%' }" v-for="(field, index) in selectedTickets" :key="field.id">
                                                     <div class="text-center shadow-lg dotted-border card">
                                                         <div class="card-body">
                                                             <h5 class="font-size-15">
@@ -446,7 +481,7 @@ function getEventTicket() {
                                             <div
                                                 class="pt-2 pb-2 mt-4 rounded ps-1 pe-1 w-100 d-flex justify-content-between align-items-center bg-light"
                                             >
-                                                <div style="font-size: normal">Total Price({{ props.eventDetails.event_tickets[0].currency }}):</div>
+                                                <div style="font-size: normal">Sub Total({{ props.eventDetails.event_tickets[0].currency }}):</div>
                                                 <div style="font-size: medium" class="fw-bold">{{ useCurrencyFormat(ticketTotal) }}</div>
                                             </div>
                                             <div class="mt-4 col-12">
@@ -486,7 +521,7 @@ function getEventTicket() {
                                                         {{ eventRegisterForm.errors.email }}
                                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                                     </div>
-                                                       <div
+                                                    <div
                                                         v-if="errorMessage"
                                                         class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
                                                         role="alert"

@@ -57,7 +57,7 @@ function slugify(title) {
         .replace(/(^-|-$)/g, "");
 }
 function viewEvent(title, id) {
-    router.visit(`/event/${slugify(title)}/${id}`);
+    router.visit(`/home/event/${slugify(title)}/${id}`);
 }
 
 function viewMovie(title, id) {

@@ -8,6 +8,8 @@ import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import { Money3Component } from "v-money3";
 import axios from "axios";
 import moment from "moment";
+import { useWindowSize } from "@vueuse/core";
+
 
 const props = defineProps({
     transactions: {
@@ -22,6 +24,7 @@ const props = defineProps({
         default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
 });
+const { height, width } = useWindowSize();
 
 const walletModal = ref(false);
 const paymentRedirectURL = ref(null);
@@ -156,7 +159,7 @@ async function submitDeposit() {
         <div v-else>
             <div class="col-12">
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-4" :class="[width < 1440? 'col-12':'col-4']">
                         <div class="card">
                             <div class="card-body border-top">
                                 <div class="row">

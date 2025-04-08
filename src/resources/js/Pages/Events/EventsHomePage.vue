@@ -4,6 +4,7 @@ import FooterSection from "../../Components/FooterSection.vue";
 import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 import EventCard from "../../Components/EventCard.vue";
 import { router } from "@inertiajs/vue3";
+import { onMounted } from "vue";
 
 import { ref } from "vue";
 
@@ -18,6 +19,12 @@ const props = defineProps({
 });
 const eventListBottom = ref(null);
 
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 const { paginatedItems, nextPageExists } = useInfiniteScroll("events", eventListBottom);
 function slugify(title) {
     return title

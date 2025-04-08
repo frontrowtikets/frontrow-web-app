@@ -34,6 +34,12 @@ const isProcessingWallet = ref(false);
 
 onMounted(() => {
     if (usePage().props.auth.user != null) {
+        const userName = usePage().props.auth.user?.name;
+
+        const [firstName, lastName] = userName.split(' ');
+        buyerLastName.value = lastName;
+        buyerName.value = firstName;
+        userPhoneNumber.value = usePage().props.auth.user.phone_number
         buyerEmail.value = usePage().props.auth.user.email;
     }
 });
@@ -87,7 +93,7 @@ const paymentDetailsCleaned = computed(() => {
         expiryDate: expiryDate.value,
         cvv: cvv.value,
         selectedTicket: props.selectedTickets,
-        amount: totalAmount.value,
+        amount: totalAmount.value + 500,
         quantity: props.quantity,
         description: "Ticket Payment",
     };
@@ -209,17 +215,23 @@ function payTicketWithWallet() {
                                 >{{ item?.currency }} {{ item.price }} X
                                 {{ item.selectedQuantity }}
                             </div>
+
                         </div>
+                        <div class="">
+                                <span class="fw-bold me-3">Service Fee:</span
+                                >UGX 500
+                            </div>
 
                         <div class="mb-4 text-end">
                             <div class="mb-2 fw-bold me-3">Total</div>
+
                             <div>
                                 <h4>
                                     {{
                                         props.selectedTickets[0].currency ||
                                         "UGX"
                                     }}
-                                    {{ useCurrencyFormat(totalAmount) }}
+                                    {{ useCurrencyFormat(totalAmount + 500) }}
                                 </h4>
                             </div>
                         </div>

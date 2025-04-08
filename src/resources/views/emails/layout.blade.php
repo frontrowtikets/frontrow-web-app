@@ -51,6 +51,9 @@
             text-align: center;
             font-size: 0.6em;
         }
+        .supportLine{
+            margin-bottom:10px;
+        }
     </style>
 </head>
 
@@ -67,6 +70,8 @@
     </div>
 
     <div class="footer">
+    <div class="supportLine">Support: sales@frontrowtikets.com</div>
+
         @yield('footer', '© ' . date('Y') . ' FRONTROW. All rights reserved.')
     </div>
 </body>

@@ -93,7 +93,7 @@ function deleteEvent() {
                             <b-dropdown-item v-if="props.eventDetails?.is_active == true && isAdmin" @click="deactivateEvent"
                                 >Deactivate</b-dropdown-item
                             >
-                            <b-dropdown-item @click="editEvent">Edit</b-dropdown-item>
+                            <b-dropdown-item @click="editEvent">Update</b-dropdown-item>
                             <b-dropdown-item @click="viewEventsManager">Tickets Sold</b-dropdown-item>
                             <b-dropdown-item @click="viewEventsManager">Manage Event</b-dropdown-item>
                             <b-dropdown-divider></b-dropdown-divider>

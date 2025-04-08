@@ -11,6 +11,8 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -77,6 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
     public function getdirectPermissionsAttribute()
     {
         $directPermissions = $this->getDirectPermissions()->pluck('name')->all();
@@ -92,5 +95,5 @@ class User extends Authenticatable implements MustVerifyEmail
         $allPermissions = $this->getAllPermissions()->pluck('name')->all();
         return $allPermissions;
     }
-    
+
 }

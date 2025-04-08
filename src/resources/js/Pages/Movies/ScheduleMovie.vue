@@ -163,7 +163,29 @@ const isEdit = computed(()=>{
 function saveImage(event, cardType) {
 
     const file = event.target.files[0];
-    if (file) {
+    const maxSize = 1 * 1024 * 1024
+
+    if (file && file.size > maxSize) {
+        Swal.fire({
+                        title: "File too Large",
+                        icon: "warning",
+                        html: `<p style="font-size: 14px">The image file size should not exceed 1MB</p>`,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        focusConfirm: true,
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#43ad60",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        closeOnClickOutside: false,
+                    }).then((result) => {
+                        if (result.value) {
+                            // router.reload({
+                            //     preserveState: false,
+                            // });
+                        }
+                    });
+    }else{
         const reader = new FileReader();
         reader.onload = () => {
             if (cardType === "card") {

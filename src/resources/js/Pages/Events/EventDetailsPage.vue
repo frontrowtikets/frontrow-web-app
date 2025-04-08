@@ -8,6 +8,7 @@ import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import useInertiaFormSubmit from "../../Composables/useInertiaFormSubmit.js";
 import EventCheckout from "../../Components/EventCheckout.vue";
 import { useWindowSize } from "@vueuse/core";
+import YouTube from "vue3-youtube";
 
 import moment from "moment";
 import Swal from "sweetalert2";
@@ -17,7 +18,7 @@ import "vue-select/dist/vue-select.css";
 const props = defineProps(["eventDetails","myWallet"]);
 const state = reactive({});
 
-const { height } = useWindowSize();
+const { height,width } = useWindowSize();
 
 const registerForEventModal = ref(false);
 const buyTicketModal = ref(false);
@@ -57,6 +58,12 @@ const eventRegisterForm = useForm({
 });
 
 onMounted(() => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
     // eventdetailSection.value.scrollIntoView({ behavior: "smooth" });
     selectedTickets.value = props.eventDetails.event_tickets.map((ticket) => {
         ticket.selectedQuantity = 0;
@@ -92,6 +99,13 @@ watch(
         deep: true,
     }
 );
+const cardSize = computed(()=>{
+    if(width.value > 768){
+        return 47;
+    }else{
+        return 100
+    }
+})
 
 const theSetectedTickets = computed(() => {
     let filtered = [];
@@ -426,6 +440,27 @@ function getEventTicket(){
                                         </tbody>
                                     </table>
                                 </div>
+                                <div v-if="width > 768">
+                                        <div class="mt-4 mb-3" v-if="props.eventDetails.trailer_url">
+                                            <h5 class="mb-3 fw-semibold">Trailer:</h5>
+                                            <YouTube :src="`${props.eventDetails.trailer_url}`" @ready="onReady" ref="youtube"
+                                            :width="390"
+                                                :height="300"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <div class="mt-4 mb-3" v-if="props.eventDetails.trailer_url">
+                                            <h5 class="mb-3 fw-semibold">Trailer:</h5>
+                                            <YouTube
+                                                :width="300"
+                                                :height="180"
+                                                :src="`${props.eventDetails.trailer_url}`"
+                                                @ready="onReady"
+                                                ref="youtube"
+                                            />
+                                        </div>
+                                    </div>
                             </div>
                             <div class="col-12 col-md-6" id="eventsdetailsfrom">
                                 <div>
@@ -436,7 +471,7 @@ function getEventTicket(){
                                     <div v-if="props.eventDetails.access_type == 'paid'" class="mt-2 col-12">
                                         <h5>Available Tickets</h5>
                                         <div class="flex-wrap gap-3 mt-4 col-12 d-flex">
-                                            <div style="width: 47%" v-for="(field, index) in selectedTickets" :key="field.id">
+                                            <div :style="{width: cardSize+'%'}" v-for="(field, index) in selectedTickets" :key="field.id">
                                                 <div class="text-center shadow-lg dotted-border card">
                                                     <div class="card-body">
                                                         <h5 class="font-size-15">
@@ -477,7 +512,7 @@ function getEventTicket(){
                                         <div
                                             class="pt-2 pb-2 mt-4 rounded ps-1 pe-1 w-100 d-flex justify-content-between align-items-center bg-light"
                                         >
-                                            <div style="font-size: normal">Total Price({{ props.eventDetails.event_tickets[0].currency }}):</div>
+                                            <div style="font-size: normal">Sub Total({{ props.eventDetails.event_tickets[0].currency }}):</div>
                                             <div style="font-size: medium" class="fw-bold">{{ useCurrencyFormat(ticketTotal) }}</div>
                                         </div>
                                         <div class="mt-4 col-12">

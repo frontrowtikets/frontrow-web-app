@@ -114,6 +114,7 @@ const saveImages = async () => {
                 Authorization: `Bearer ${usePage().props.auth.user.api_token}`,
             },
         };
+        console.log("thiss",usePage().props.auth.user);
         const response = await axios.post("/api/images", formData, options);
 
         // Add newly saved images to savedImages
@@ -148,12 +149,26 @@ const deleteImage = async (imageId) => {
     }
 };
 
+// function saveEventSettings() {
+//     // split newTagsString into array and assign to newTags
+//     if (state.newTagsString) {
+//         state.newTags = state.newTagsString.split(",").map((tag) => tag.trim());
+//     }
+//     // merge eventCategories and newTags and remove duplicates
+//     const mergedArray = [...new Set([...state.eventCategories, ...state.newTags])];
+//     useInertiaFormSubmit(
+//         {
+//             eventCategories: mergedArray,
+//         },
+//         "admin/saveeventssettings",
+//         "/settings",
+//         "You are about to save changes",
+//         "Changes have been saved successfully"
+//     );
+//     state.newTags = [];
+// }
+
 function saveEventSettings() {
-    // split newTagsString into array and assign to newTags
-    if (state.newTagsString) {
-        state.newTags = state.newTagsString.split(",").map((tag) => tag.trim());
-    }
-    // merge eventCategories and newTags and remove duplicates
     const mergedArray = [...new Set([...state.eventCategories, ...state.newTags])];
     useInertiaFormSubmit(
         {
@@ -171,12 +186,27 @@ function revokeCategory(removecat) {
     state.eventCategories = state.eventCategories.filter((cat) => cat !== removecat);
 }
 
+// function saveMovieSettings() {
+//     // split newTagsString into array and assign to newTags
+//     if (state.newMovieTagsString) {
+//         state.newMovieTags = state.newMovieTagsString.split(",").map((tag) => tag.trim());
+//     }
+//     // merge movieCategories and newMovieTags and remove duplicates
+//     const mergedArray = [...new Set([...state.movieCategories, ...state.newMovieTags])];
+//     console.log("now thiss", mergedArray);
+//     useInertiaFormSubmit(
+//         {
+//             movieCategories: mergedArray,
+//         },
+//         "admin/savemoviessettings",
+//         "/settings",
+//         "You are about to save changes",
+//         "Changes have been saved successfully"
+//     );
+//     state.newMovieTags = [];
+// }
+
 function saveMovieSettings() {
-    // split newTagsString into array and assign to newTags
-    if (state.newMovieTagsString) {
-        state.newMovieTags = state.newMovieTagsString.split(",").map((tag) => tag.trim());
-    }
-    // merge movieCategories and newMovieTags and remove duplicates
     const mergedArray = [...new Set([...state.movieCategories, ...state.newMovieTags])];
     console.log("now thiss", mergedArray);
     useInertiaFormSubmit(
@@ -311,8 +341,7 @@ function saveBusinessConfiguration() {
                                                         role="button"></i></span>
                                             </span>
                                             <div>
-                                                <input v-model="state.newTagsString" class="form-control"
-                                                    placeholder="separate multiple categories with commas" />
+                                                <TagInput v-model="state.newTags" :tagBgColor="'rgb(0, 196, 206)'" />
                                             </div>
                                         </div>
                                         <div class="mt-5">
@@ -334,8 +363,7 @@ function saveBusinessConfiguration() {
                                                     role="button"></i></span>
                                         </span>
                                         <div>
-                                            <input v-model="state.newMovieTagsString" class="form-control"
-                                                placeholder="separate multiple categories with commas" />
+                                            <TagInput v-model="state.newMovieTags" :tagBgColor="'rgb(0, 196, 206)'" />
                                         </div>
                                     </div>
                                     <div class="mt-5">

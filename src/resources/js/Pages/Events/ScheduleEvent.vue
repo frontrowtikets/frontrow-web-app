@@ -64,7 +64,8 @@ const form = useForm({
     bannerImage: null,
     cardImage: null,
     tickets: [],
-    id:""
+    id:"",
+    trailer_url:""
 });
 
 const bannerImageData = ref(null);
@@ -79,6 +80,11 @@ const selectedTickets = ref([]);
  const {isAdmin} = IsUserAdmin();
 
 onMounted(() => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     form["beneficiary_id"] = usePage().props.auth.user.id;
     window.navigator.geolocation.getCurrentPosition(currentCoords, null, {
         enableHighAccuracy: true,
@@ -102,6 +108,7 @@ onMounted(() => {
     form['currency'] = editData.currency
     form['access_type'] = editData.access_type
     form["id"] =  editData.id
+    form["trailer_url"]= editData.trailer_url
 
 
 
@@ -150,7 +157,29 @@ const isEdit = computed(()=>{
 function saveImage(event, cardType) {
 
     const file = event.target.files[0];
-    if (file) {
+    const maxSize = 1 * 1024 * 1024
+
+if (file && file.size > maxSize) {
+    Swal.fire({
+                    title: "File too Large",
+                    icon: "warning",
+                    html: `<p style="font-size: 14px">The image file size should not exceed 1MB</p>`,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    focusConfirm: true,
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#43ad60",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    closeOnClickOutside: false,
+                }).then((result) => {
+                    if (result.value) {
+                        // router.reload({
+                        //     preserveState: false,
+                        // });
+                    }
+                });
+}else{
         const reader = new FileReader();
         reader.onload = () => {
             if (cardType === "card") {
@@ -279,6 +308,11 @@ const submit = () => {
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="title" class="mb-2">Event Catergory <span class="text-danger">*</span></label>
                                             <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'" ></v-select>
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-9">
+                                            <label for="trailer_url" class="mb-2">Trailer URL</label>
+                                            <input class="form-control" type="text" id="formFile" placeholder="Link" v-model="form.trailer_url" >
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.trailer_url" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="location" class="mb-2">Location<span class="text-danger">*</span></label>
