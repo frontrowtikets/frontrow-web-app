@@ -163,7 +163,7 @@ function buyTicket() {
                             ><span>{{ props.showTimes[0]?.theatre }} </span>
                         </div>
                         <span
-                           
+
                             class="ms-3 badge badge-soft-secondary"
                             >{{ props.viewing_format }}</span
                         >
