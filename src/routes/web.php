@@ -108,11 +108,6 @@ Route::middleware([
     Route::post('/payEvent/wallet', [EventsController::class, 'walletPay']);
 
 
-
-
-
-
-
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
     Route::prefix('admin')->group(function () {
         Route::post('/saveeventssettings', [EventsController::class, 'saveEventsSettings'])->name('eventsSettins');
@@ -127,4 +122,21 @@ Route::middleware([
         // update business settings
         Route::post('/update-business-config', [SettingsController::class, 'updateBusinessSettings'])->name('update_business_settings');
     });
+
+
+});
+
+ //preventing crawlers on dev
+ Route::get('/robots.txt', function () {
+    $host = request()->getHost();
+
+    // Block crawling on the dev server
+    if ($host === 'frontrowtikets.com') {
+        return response("User-agent: *\nDisallow:", 200)
+            ->header('Content-Type', 'text/plain');
+    }
+
+    // Allow everything on production
+    return response("User-agent: *\nDisallow: /", 200)
+        ->header('Content-Type', 'text/plain');
 });

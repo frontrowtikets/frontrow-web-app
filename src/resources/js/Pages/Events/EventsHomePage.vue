@@ -3,7 +3,7 @@ import HomeHeader from "../../Components/HomeHeader.vue";
 import FooterSection from "../../Components/FooterSection.vue";
 import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 import EventCard from "../../Components/EventCard.vue";
-import { router } from "@inertiajs/vue3";
+import { router,Head } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 
 import { ref } from "vue";
@@ -37,6 +37,8 @@ function viewEvent(title, id) {
 }
 </script>
 <template>
+    <Head title="Frontrow - Events" />
+
     <b-container class="mt-5">
         <HomeHeader />
 

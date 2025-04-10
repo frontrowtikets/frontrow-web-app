@@ -792,7 +792,7 @@ function handleImageUpload(event, index) {
                                                 :disabled="form.processing"
                                             >
                                                 <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
-                                                ><span>Schedule Movie</span>
+                                                ><span>{{isEdit?'Update Movie':'Schedule Movie'}}</span>
                                             </button>
                                         </div>
                                                         </div>
