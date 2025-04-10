@@ -13,6 +13,10 @@ const props = defineProps({
         type: Array,
         default: [],
     },
+    eventTicketCategories:{
+        type: Array,
+        default: [],
+    },
     movieCategories: {
         type: Array,
         default: [],
@@ -25,13 +29,17 @@ const state = reactive({
             text: "Dashboard",
             href: "javascript:void(0)",
         },
+
         {
             text: "Settings",
             active: true,
         },
     ],
     eventCategories: [],
+    eventTicketCategories: [],
+
     newTags: [],
+    newTicketTags:[],
     movieCategories: [],
     newMovieTags: [],
     newTagsString: "",
@@ -46,8 +54,10 @@ const state = reactive({
 
 onMounted(async () => {
     const savedProps = props.eventCategories;
+    const savedTicketProps = props.eventTicketCategories;
     const savedMovieProps = props.movieCategories;
     state.eventCategories = [...savedProps];
+    state.eventTicketCategories = [...savedTicketProps]
     state.movieCategories = [...savedMovieProps];
 
     //fetch banner images
@@ -149,30 +159,15 @@ const deleteImage = async (imageId) => {
     }
 };
 
-// function saveEventSettings() {
-//     // split newTagsString into array and assign to newTags
-//     if (state.newTagsString) {
-//         state.newTags = state.newTagsString.split(",").map((tag) => tag.trim());
-//     }
-//     // merge eventCategories and newTags and remove duplicates
-//     const mergedArray = [...new Set([...state.eventCategories, ...state.newTags])];
-//     useInertiaFormSubmit(
-//         {
-//             eventCategories: mergedArray,
-//         },
-//         "admin/saveeventssettings",
-//         "/settings",
-//         "You are about to save changes",
-//         "Changes have been saved successfully"
-//     );
-//     state.newTags = [];
-// }
+
 
 function saveEventSettings() {
     const mergedArray = [...new Set([...state.eventCategories, ...state.newTags])];
+    const mergedTicketsArray = [...new Set([...state.eventTicketCategories, ...state.newTicketTags])];
     useInertiaFormSubmit(
         {
             eventCategories: mergedArray,
+            ticketCategories: mergedTicketsArray
         },
         "admin/saveeventssettings",
         "/settings",
@@ -180,10 +175,16 @@ function saveEventSettings() {
         "Changes have been saved successfully"
     );
     state.newTags = [];
+    state.newTicketTags = [];
 }
 
 function revokeCategory(removecat) {
     state.eventCategories = state.eventCategories.filter((cat) => cat !== removecat);
+}
+
+function revokeTicketCategory(removecat){
+    state.eventTicketCategories = state.eventTicketCategories.filter((cat) => cat !== removecat);
+
 }
 
 // function saveMovieSettings() {
@@ -270,6 +271,7 @@ function saveBusinessConfiguration() {
                             <b-tab active title="System Configuration">
                                 <div class="mt-5">
                                     <div class="col-12">
+
                                         <div class="mt-5">
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -342,6 +344,25 @@ function saveBusinessConfiguration() {
                                             </span>
                                             <div>
                                                 <TagInput v-model="state.newTags" :tagBgColor="'rgb(0, 196, 206)'" />
+                                            </div>
+                                        </div>
+                                        <!-- <div class="mt-5">
+                                            <b-button variant="primary" @click="saveEventSettings"> Save Changes
+                                            </b-button>
+                                        </div> -->
+                                    </div>
+                                    <div class="col-12 col-md-6 mt-5">
+                                        <h6>Ticket Categories</h6>
+                                        <div class="mt-2 w-100">
+                                            <span role="button" v-for="(cat, index) in state.eventTicketCategories"
+                                                :key="`${index}_${cat}`">
+                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-4"
+                                                    @click="revokeTicketCategory(cat)">{{ cat }}<i
+                                                        class="bx bxs-x-circle text-danger ps-1 pe-1"
+                                                        role="button"></i></span>
+                                            </span>
+                                            <div>
+                                                <TagInput v-model="state.newTicketTags" :tagBgColor="'rgb(0, 196, 206)'" />
                                             </div>
                                         </div>
                                         <div class="mt-5">

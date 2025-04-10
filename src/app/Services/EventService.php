@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\UserEventTicket;
 use App\Mail\NewUserTempPasswordMail;
 use App\Models\UserPaymentDetail;
+use App\Models\EventTicketCategory;
 use App\Models\PaymentTransaction;
 use App\Models\UserWallet;
 use App\Mail\EventRegistrationOwnerMail;
@@ -42,8 +43,14 @@ class EventService
 
         //event categories
         EventCategory::truncate();
+        EventTicketCategory::truncate();
         foreach ($settingsDetails['eventCategories'] as $category) {
             EventCategory::create([
+                'name' => $category
+            ]);
+        }
+        foreach ($settingsDetails['ticketCategories'] as $category) {
+            EventTicketCategory::create([
                 'name' => $category
             ]);
         }

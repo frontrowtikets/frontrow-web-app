@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\EventCategory;
 use App\Models\MovieCategory;
 use \App\Models\BusinessSetting;
+use App\Models\EventTicketCategory;
 
 class SettingsController extends Controller
 {
     public function settings(Request $request)
     {
         $eventCategories = EventCategory::pluck("name")->toArray();
+        $eventTicketCategories = EventTicketCategory::pluck("name")->toArray();
         $movieCategories = MovieCategory::pluck("name")->toArray();
         return \Inertia\Inertia::render('SettingsPage', [
             'eventCategories' => $eventCategories,
+            'eventTicketCategories' => $eventTicketCategories,
             'movieCategories' => $movieCategories
         ]);
     }

@@ -3,7 +3,7 @@ import HomeHeader from "../../Components/HomeHeader.vue";
 import FooterSection from "../../Components/FooterSection.vue";
 import { useInfiniteScroll } from "../../Composables/useInfiniteScroll.js";
 import MovieCard from "../../Components/MovieCard.vue";
-import { router } from "@inertiajs/vue3";
+import { router, Head } from "@inertiajs/vue3";
 
 import { ref,onMounted } from "vue";
 
@@ -36,6 +36,7 @@ function viewEvent(title, id) {
 }
 </script>
 <template>
+    <Head title="Frontrow - Movies" />
     <b-container class="mt-5">
         <HomeHeader />
 

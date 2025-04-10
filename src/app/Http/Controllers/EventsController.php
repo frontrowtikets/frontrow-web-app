@@ -20,6 +20,7 @@ use App\Models\UserWallet;
 use App\Mail\EventCreationAdminMail;
 use App\Mail\EventCreationOriginatorMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\EventTicketCategory;
 
 
 
@@ -53,11 +54,13 @@ class EventsController extends Controller
     public function ScheduleEvent(Request $request)
     {
         $eventCategories = EventCategory::select('id', 'name')->get();
+        $eventTicketCategories = EventTicketCategory::select('name')->get()->toArray();
         $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
 
         return \Inertia\Inertia::render('Events/ScheduleEvent', [
             "eventCategories" => $eventCategories,
             "beneficiaries" => $beneficiaries,
+            "eventTicketCategories"=> $eventTicketCategories
         ]);
     }
     public function CreateEvent(CreateEvent $request)
