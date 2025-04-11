@@ -13,7 +13,7 @@ const props = defineProps({
         type: Array,
         default: [],
     },
-    eventTicketCategories:{
+    eventTicketCategories: {
         type: Array,
         default: [],
     },
@@ -39,7 +39,7 @@ const state = reactive({
     eventTicketCategories: [],
 
     newTags: [],
-    newTicketTags:[],
+    newTicketTags: [],
     movieCategories: [],
     newMovieTags: [],
     newTagsString: "",
@@ -52,12 +52,29 @@ const state = reactive({
     },
 });
 
+
+const seatMapFields = ref([
+    {
+        theatreName: null,
+        room: null,
+        seats: [
+            {
+                row: "A",
+                seatCount: 10,
+            },
+        ],
+        reserved: [],
+    },
+]);
+
+const hasChanges = ref(true);
+
 onMounted(async () => {
     const savedProps = props.eventCategories;
     const savedTicketProps = props.eventTicketCategories;
     const savedMovieProps = props.movieCategories;
     state.eventCategories = [...savedProps];
-    state.eventTicketCategories = [...savedTicketProps]
+    state.eventTicketCategories = [...savedTicketProps];
     state.movieCategories = [...savedMovieProps];
 
     //fetch banner images
@@ -124,7 +141,7 @@ const saveImages = async () => {
                 Authorization: `Bearer ${usePage().props.auth.user.api_token}`,
             },
         };
-        console.log("thiss",usePage().props.auth.user);
+        console.log("thiss", usePage().props.auth.user);
         const response = await axios.post("/api/images", formData, options);
 
         // Add newly saved images to savedImages
@@ -159,15 +176,13 @@ const deleteImage = async (imageId) => {
     }
 };
 
-
-
 function saveEventSettings() {
     const mergedArray = [...new Set([...state.eventCategories, ...state.newTags])];
     const mergedTicketsArray = [...new Set([...state.eventTicketCategories, ...state.newTicketTags])];
     useInertiaFormSubmit(
         {
             eventCategories: mergedArray,
-            ticketCategories: mergedTicketsArray
+            ticketCategories: mergedTicketsArray,
         },
         "admin/saveeventssettings",
         "/settings",
@@ -182,9 +197,8 @@ function revokeCategory(removecat) {
     state.eventCategories = state.eventCategories.filter((cat) => cat !== removecat);
 }
 
-function revokeTicketCategory(removecat){
+function revokeTicketCategory(removecat) {
     state.eventTicketCategories = state.eventTicketCategories.filter((cat) => cat !== removecat);
-
 }
 
 // function saveMovieSettings() {
@@ -255,11 +269,29 @@ function saveBusinessConfiguration() {
         "Changes have been saved successfully"
     );
 }
+
+function addRow(index, seatmapIndex) {
+    const lastItem = seatMapFields.value[seatmapIndex].seats[index];
+    if (lastItem.row != "") {
+        seatMapFields.value[seatmapIndex].seats.push({
+            row: "",
+            seatCount: 10,
+        });
+    }
+    hasChanges.value = true;
+}
+
+function removeRow(index, seatmapIndex) {
+    console.log("I am now working");
+    if (seatMapFields.value[seatmapIndex].seats.length !== 1) {
+        seatMapFields.value[seatmapIndex].seats.splice(index, 1);
+    }
+    hasChanges.value = true;
+}
 </script>
 
 <template>
     <section>
-
         <Head title="Settings" />
 
         <DashboardLayout>
@@ -271,22 +303,28 @@ function saveBusinessConfiguration() {
                             <b-tab active title="System Configuration">
                                 <div class="mt-5">
                                     <div class="col-12">
-
                                         <div class="mt-5">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="mb-5 d-flex justify-content-between align-items-center">
                                                         <h6>Home Banner Images</h6>
                                                         <div>
-                                                            <input type="file" ref="fileInput" @change="onFileChange"
-                                                                multiple accept="image/*" class="d-none" />
-                                                            <button class="btn btn-primary me-2"
-                                                                @click="triggerFileInput">Add Images</button>
-                                                            <button v-if="selectedImages.length > 0"
-                                                                class="btn btn-success" @click="saveImages"
-                                                                :disabled="saving">
-                                                                <i class="align-middle bx bx-loader bx-spin font-size-16 me-2"
-                                                                    v-if="saving"></i>
+                                                            <input
+                                                                type="file"
+                                                                ref="fileInput"
+                                                                @change="onFileChange"
+                                                                multiple
+                                                                accept="image/*"
+                                                                class="d-none"
+                                                            />
+                                                            <button class="btn btn-primary me-2" @click="triggerFileInput">Add Images</button>
+                                                            <button
+                                                                v-if="selectedImages.length > 0"
+                                                                class="btn btn-success"
+                                                                @click="saveImages"
+                                                                :disabled="saving"
+                                                            >
+                                                                <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="saving"></i>
                                                                 {{ saving ? "Saving..." : "Save Changes" }}
                                                             </button>
                                                         </div>
@@ -295,29 +333,30 @@ function saveBusinessConfiguration() {
                                                     <div class="mb-5">
                                                         <div class="row g-3">
                                                             <!-- Unsaved Selected Images -->
-                                                            <div v-for="(image, index) in selectedImages"
+                                                            <div
+                                                                v-for="(image, index) in selectedImages"
                                                                 :key="`unsaved-${index}`"
-                                                                class="col-md-3 position-relative">
+                                                                class="col-md-3 position-relative"
+                                                            >
                                                                 <div class="image-wrapper">
-                                                                    <img :src="image.preview" class="img-fluid rounded"
-                                                                        alt="Selected Image" />
+                                                                    <img :src="image.preview" class="img-fluid rounded" alt="Selected Image" />
                                                                     <button
                                                                         class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
-                                                                        @click="removeUnsavedImage(index)">
+                                                                        @click="removeUnsavedImage(index)"
+                                                                    >
                                                                         <i class="bx bx-trash"></i>
                                                                     </button>
                                                                 </div>
                                                             </div>
 
                                                             <!-- Saved Images from Database -->
-                                                            <div v-for="image in savedImages" :key="image.id"
-                                                                class="col-md-3 position-relative">
+                                                            <div v-for="image in savedImages" :key="image.id" class="col-md-3 position-relative">
                                                                 <div class="image-wrapper">
-                                                                    <img :src="image.url" class="img-fluid rounded"
-                                                                        alt="Saved Image" />
+                                                                    <img :src="image.url" class="img-fluid rounded" alt="Saved Image" />
                                                                     <button
                                                                         class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
-                                                                        @click="deleteImage(image.id)">
+                                                                        @click="deleteImage(image.id)"
+                                                                    >
                                                                         <i class="bx bx-trash"></i>
                                                                     </button>
                                                                 </div>
@@ -335,12 +374,10 @@ function saveBusinessConfiguration() {
                                     <div class="col-12 col-md-6">
                                         <h6>Categories</h6>
                                         <div class="mt-2 w-100">
-                                            <span role="button" v-for="(cat, index) in state.eventCategories"
-                                                :key="`${index}_${cat}`">
-                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-4"
-                                                    @click="revokeCategory(cat)">{{ cat }}<i
-                                                        class="bx bxs-x-circle text-danger ps-1 pe-1"
-                                                        role="button"></i></span>
+                                            <span role="button" v-for="(cat, index) in state.eventCategories" :key="`${index}_${cat}`">
+                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-4" @click="revokeCategory(cat)"
+                                                    >{{ cat }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
+                                                ></span>
                                             </span>
                                             <div>
                                                 <TagInput v-model="state.newTags" :tagBgColor="'rgb(0, 196, 206)'" />
@@ -354,20 +391,17 @@ function saveBusinessConfiguration() {
                                     <div class="col-12 col-md-6 mt-5">
                                         <h6>Ticket Categories</h6>
                                         <div class="mt-2 w-100">
-                                            <span role="button" v-for="(cat, index) in state.eventTicketCategories"
-                                                :key="`${index}_${cat}`">
-                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-4"
-                                                    @click="revokeTicketCategory(cat)">{{ cat }}<i
-                                                        class="bx bxs-x-circle text-danger ps-1 pe-1"
-                                                        role="button"></i></span>
+                                            <span role="button" v-for="(cat, index) in state.eventTicketCategories" :key="`${index}_${cat}`">
+                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-4" @click="revokeTicketCategory(cat)"
+                                                    >{{ cat }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
+                                                ></span>
                                             </span>
                                             <div>
                                                 <TagInput v-model="state.newTicketTags" :tagBgColor="'rgb(0, 196, 206)'" />
                                             </div>
                                         </div>
                                         <div class="mt-5">
-                                            <b-button variant="primary" @click="saveEventSettings"> Save Changes
-                                            </b-button>
+                                            <b-button variant="primary" @click="saveEventSettings"> Save Changes </b-button>
                                         </div>
                                     </div>
                                 </div>
@@ -376,12 +410,10 @@ function saveBusinessConfiguration() {
                                 <div class="mt-5">
                                     <h6>Categories(Genres)</h6>
                                     <div class="mt-2 w-100">
-                                        <span role="button" v-for="(cat, index) in state.movieCategories"
-                                            :key="`${index}_${cat}`">
-                                            <span class="mb-3 badge badge-soft-primary font-size-11 me-4"
-                                                @click="revokeMovieCategory(cat)">{{ cat }}<i
-                                                    class="bx bxs-x-circle text-danger ps-1 pe-1"
-                                                    role="button"></i></span>
+                                        <span role="button" v-for="(cat, index) in state.movieCategories" :key="`${index}_${cat}`">
+                                            <span class="mb-3 badge badge-soft-primary font-size-11 me-4" @click="revokeMovieCategory(cat)"
+                                                >{{ cat }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
+                                            ></span>
                                         </span>
                                         <div>
                                             <TagInput v-model="state.newMovieTags" :tagBgColor="'rgb(0, 196, 206)'" />
@@ -400,36 +432,150 @@ function saveBusinessConfiguration() {
                                             <!-- 4 columns  -->
                                             <div class="col-md-3">
                                                 <label for="service_fee">Service Fee (UGX)</label>
-                                                <input type="number" class="form-control" id="service_fee"
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="service_fee"
                                                     placeholder="Service Fee"
-                                                    v-model="state.businessConfig.service_fee" />
+                                                    v-model="state.businessConfig.service_fee"
+                                                />
                                             </div>
                                             <div class="col-md-3">
                                                 <label for="share_percentage">Share Percentage (%)</label>
-                                                <input type="number" class="form-control" id="share_percentage"
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="share_percentage"
                                                     placeholder="Share Percentage"
-                                                    v-model="state.businessConfig.share_percentage" />
+                                                    v-model="state.businessConfig.share_percentage"
+                                                />
                                             </div>
 
                                             <div class="col-md-3">
                                                 <label for="wallet_credit">Wallet Credit</label>
-                                                <input type="number" class="form-control" id="wallet_credit"
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="wallet_credit"
                                                     placeholder="Wallet Credit"
-                                                    v-model="state.businessConfig.wallet_credit" />
+                                                    v-model="state.businessConfig.wallet_credit"
+                                                />
                                             </div>
 
                                             <div class="col-md-3">
                                                 <label for="shareholder_wallet_id">Shareholder Wallet ID</label>
-                                                <input type="number" class="form-control" id="shareholder_wallet_id"
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    id="shareholder_wallet_id"
                                                     placeholder="Shareholder Wallet ID"
-                                                    v-model="state.businessConfig.shareholder_wallet_id" />
+                                                    v-model="state.businessConfig.shareholder_wallet_id"
+                                                />
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="mt-5">
-                                        <b-button variant="primary" @click="saveBusinessConfiguration"> Save Changes
-                                        </b-button>
+                                        <b-button variant="primary" @click="saveBusinessConfiguration"> Save Changes </b-button>
+                                    </div>
+                                </div>
+                            </b-tab>
+                            <b-tab title="SeatMap Configuration">
+                                <div>
+                                    <div class="mt-4 me-4">
+                                        <div
+                                            v-for="(seatmap, seatmapIndex) in seatMapFields"
+                                            :key="`${seatmapIndex}_${seatmap.theatre}_${seatmapIndex}`"
+                                        >
+                                            <div
+                                                role="button"
+                                                v-if="seatMapFields.length > 1"
+                                                @click="removeTheatre(seatmapIndex)"
+                                                class="mt-5 text-end text-danger"
+                                            >
+                                                <i class="bx bx-trash-alt"></i>
+                                            </div>
+                                            <div class="gap-4 mb-4 justify-content-between d-flex">
+                                                <!-- <div class="col-6">
+                                                    <label>Theatre <span class="text-danger">*</span></label>
+                                                    <v-select
+                                                        :options="props.movieDetails.show_times"
+                                                        v-model="seatmap.theatre"
+                                                        :label="'theatre'"
+                                                    ></v-select>
+                                                </div> -->
+                                                <div class="col-6">
+                                                    <label>Theatre <span class="text-danger">*</span></label>
+                                                    <input class="form-control" type="text" id="theaterName" v-model="seatmap.theatreName" />
+                                                </div>
+                                                <div class="col-6">
+                                                    <label>Room Name <span class="text-danger">*</span></label>
+                                                    <input class="form-control" type="text" id="roomname" v-model="seatmap.room" />
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="invisible"><i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i></div>
+
+                                                    <div class="col-5">
+                                                        <label>Row Label </label>
+                                                    </div>
+                                                    <div class="text-start col-5">
+                                                        <label>Number of Seats </label>
+                                                    </div>
+                                                    <div class="invisible">
+                                                        <b-button variant="primary"><i class="bx bxs-plus-circle"></i> Add</b-button>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    v-for="(field, index) in seatmap.seats"
+                                                    :key="`${index}_${field.row}`"
+                                                    class="flex-row mb-2 d-flex justify-content-between align-items-center"
+                                                >
+                                                    <div @click="removeRow(index, seatmapIndex)">
+                                                        <i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <select class="form-select form-control" id="movie_status" v-model="field.row">
+                                                            <option value="" disabled default>Select</option>
+                                                            <option value="A">A</option>
+                                                            <option value="B">B</option>
+                                                            <option value="C">C</option>
+                                                            <option value="D">D</option>
+                                                            <option value="E">E</option>
+                                                            <option value="F">F</option>
+                                                            <option value="G">G</option>
+                                                            <option value="H">H</option>
+                                                            <option value="I">I</option>
+                                                            <option value="J">J</option>
+                                                            <option value="K">K</option>
+                                                            <option value="L">L</option>
+                                                            <option value="M">M</option>
+                                                            <option value="N">N</option>
+                                                            <option value="O">O</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <input class="form-control" type="number" id="roomname" v-model="field.seatCount" />
+                                                    </div>
+                                                    <div>
+                                                        <b-button
+                                                            v-if="index === seatMapFields[seatmapIndex].seats.length - 1"
+                                                            variant="primary"
+                                                            @click="addRow(index, seatmapIndex)"
+                                                            ><i class="bx bxs-plus-circle"></i> Add</b-button
+                                                        >
+                                                        <b-button v-else variant="primary" class="invisible" @click="addRow(index, seatmapIndex)"
+                                                            ><i class="bx bxs-plus-circle"></i> Add</b-button
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="mt-5 mb-5">
+                                            <b-button variant="primary" @click="saveSeatMap" :disabled="!hasChanges">Save Changes</b-button>
+                                        </div>
                                     </div>
                                 </div>
                             </b-tab>
