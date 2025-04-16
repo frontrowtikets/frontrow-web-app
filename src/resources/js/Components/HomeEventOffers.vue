@@ -32,7 +32,7 @@ function viewEvent(title, id) {
                 <div class="col-lg-12">
                     <div class="mb-5 text-center">
                         <div class="small-title">
-                            The Art of Making Memories
+                            Your Frontrow Seat to Unforgettable Entertainment!
                         </div>
                         <h4>Featured</h4>
                     </div>

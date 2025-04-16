@@ -61,7 +61,7 @@
     <div class="header">
         <img src="{{ url('/large.png') }}" alt="frontrow" height="45px" width="auto">
 
-        <div>The Art of Making Memories</div>
+        <div>Your Frontrow Seat to Unforgettable Entertainment!</div>
 
     </div>
 
