@@ -122,12 +122,10 @@ Route::middleware([
         // update business settings
         Route::post('/update-business-config', [SettingsController::class, 'updateBusinessSettings'])->name('update_business_settings');
     });
-
-
 });
 
- //preventing crawlers on dev
- Route::get('/robots.txt', function () {
+//preventing crawlers on dev
+Route::get('/robots.txt', function () {
     $host = request()->getHost();
 
     // Block crawling on the dev server
@@ -140,3 +138,6 @@ Route::middleware([
     return response("User-agent: *\nDisallow: /", 200)
         ->header('Content-Type', 'text/plain');
 });
+
+// send email verification otp upon request
+Route::get('/send-email-login-otp', [UserRegister::class, 'sendEmailLoginOtp'])->name('send_email_verification_otp');
