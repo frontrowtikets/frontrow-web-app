@@ -140,4 +140,4 @@ Route::get('/robots.txt', function () {
 });
 
 // send email verification otp upon request
-Route::get('/send-email-login-otp', [UserRegister::class, 'sendEmailLoginOtp'])->name('send_email_verification_otp');
+Route::post('/send-email-login-otp', [UserRegister::class, 'sendEmailLoginOtp'])->name('send_email_verification_otp');

@@ -147,7 +147,7 @@ class UserRegister extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             Log::error('Error sending email: ' . $th->getMessage());
-            return response()->json(['message' => 'Error sending Login Verification OTP' . $th->getMessage()], 500);
+            return response()->json(['message' => 'Error sending Login Verification OTP'], 500);
         }
     }
 }
