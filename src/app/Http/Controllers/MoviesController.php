@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MovieCreationAdminMail;
 use App\Mail\MovieCreationOriginatorMail;
+use App\Models\SeatMapConfigTable;
 
 
 class MoviesController extends Controller
@@ -49,13 +50,15 @@ class MoviesController extends Controller
         ]);
     }
 
-    public function schedueMovie(Request $request)
+        public function schedueMovie(Request $request)
     {
         $movieCategories = MovieCategory::select('id', 'name')->get();
         $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
+        $SeatMapConfig = SeatMapConfigTable::select('id','theatre','room')->with(['seatMap'])->get();
         return \Inertia\Inertia::render('Movies/ScheduleMovie', [
             'movieCategories' => $movieCategories,
-            'beneficiaries' => $beneficiaries
+            'beneficiaries' => $beneficiaries,
+            'seatMapConfig' => $SeatMapConfig
         ]);
     }
 
@@ -66,7 +69,7 @@ class MoviesController extends Controller
 
         $admins = User::permission('admin')->get();
         $currentUser =  User::where('id', Auth::user()->id)->first();
-        
+
         foreach ($admins as $admin) {
             try {
                 $message = (new MovieCreationAdminMail($admin->name))

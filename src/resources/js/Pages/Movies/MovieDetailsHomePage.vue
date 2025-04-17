@@ -229,7 +229,7 @@ function capitalizeFirstCharacter(str) {
                                     <i class="bx bx-globe text-primary fs-4"></i>
                                     <div class="ms-3">
                                         <h6 class="mb-2 fs-14">Website</h6>
-                                        <p class="mb-0 text-muted fs-14 text-break">www.frontrow.com</p>
+                                        <p class="mb-0 text-muted fs-14 text-break">www.frontrowtikets.com</p>
                                     </div>
                                 </div>
                             </li>
@@ -238,7 +238,7 @@ function capitalizeFirstCharacter(str) {
                                     <i class="bx bx-support text-primary fs-4"></i>
                                     <div class="ms-3">
                                         <h6 class="mb-2 fs-14">Support</h6>
-                                        <p class="mb-0 text-muted fs-14">support@frontrow.com</p>
+                                        <p class="mb-0 text-muted fs-14">sales@frontrowtikets.com</p>
                                     </div>
                                 </div>
                             </li>

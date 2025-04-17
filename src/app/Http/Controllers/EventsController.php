@@ -21,6 +21,8 @@ use App\Mail\EventCreationAdminMail;
 use App\Mail\EventCreationOriginatorMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\EventTicketCategory;
+use App\Models\SeatsConfig;
+use App\Models\SeatMapConfigTable;
 
 
 
@@ -233,5 +235,27 @@ class EventsController extends Controller
 
     public function walletPay(Request $details){
         EventService::payWithWallet($details);
+    }
+
+    public function saveSeatsConfig(Request $request){
+
+        $seatMap = SeatMapConfigTable::create([
+            'theatre' => $request->theatreName,
+            'room' => $request->room,
+        ]);
+
+        foreach ($request->seats as $seat) {
+            SeatsConfig::create([
+                'seat_map_config_tables_id' => $seatMap->id,
+                'row' => $seat['row'],
+                'seat_count' => $seat['seatCount'],
+            ]);
+        }
+    }
+
+    public function deleteSeatsConfig(Request $request){
+        $seatMap = SeatMapConfigTable::where('id',$request->seatIndex)->first();
+        $seatMap->delete();
+
     }
 }

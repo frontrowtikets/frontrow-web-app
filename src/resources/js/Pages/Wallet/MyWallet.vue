@@ -10,7 +10,6 @@ import axios from "axios";
 import moment from "moment";
 import { useWindowSize } from "@vueuse/core";
 
-
 const props = defineProps({
     transactions: {
         type: Array,
@@ -159,7 +158,7 @@ async function submitDeposit() {
         <div v-else>
             <div class="col-12">
                 <div class="row">
-                    <div class="col-4" :class="[width < 1440? 'col-12':'col-4']">
+                    <div class="col-4" :class="[width < 1440 ? 'col-12' : 'col-4']">
                         <div class="card">
                             <div class="card-body border-top">
                                 <div class="row">
@@ -262,7 +261,14 @@ async function submitDeposit() {
                                                             <span class="badge text-bg-success">Ticket Purchase</span>
                                                         </div>
 
-                                                        <div v-else><span class="badge text-bg-indigo">Other</span></div>
+                                                        <div v-else-if="item.txn_type == 'movie_ticket'">
+                                                            <span class="badge text-bg-success">Movie Ticket</span>
+                                                        </div>
+                                                        <div v-else-if="item.txn_type == 'event_ticket'">
+                                                            <span class="badge text-bg-success">Event Ticket</span>
+                                                        </div>
+
+                                                        <div v-else><span class="badge text-bg-primary">Other</span></div>
                                                     </td>
                                                     <td :style="{ backgroundColor: '#fff' }" class="text-center">
                                                         <div v-if="item.txn_status == 'pending'">

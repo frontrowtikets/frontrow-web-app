@@ -7,6 +7,7 @@ use App\Models\EventCategory;
 use App\Models\MovieCategory;
 use \App\Models\BusinessSetting;
 use App\Models\EventTicketCategory;
+use App\Models\SeatMapConfigTable;
 
 class SettingsController extends Controller
 {
@@ -15,10 +16,12 @@ class SettingsController extends Controller
         $eventCategories = EventCategory::pluck("name")->toArray();
         $eventTicketCategories = EventTicketCategory::pluck("name")->toArray();
         $movieCategories = MovieCategory::pluck("name")->toArray();
+        $seatMapConfigs = SeatMapConfigTable::select('id','theatre')->get()->toArray();
         return \Inertia\Inertia::render('SettingsPage', [
             'eventCategories' => $eventCategories,
             'eventTicketCategories' => $eventTicketCategories,
-            'movieCategories' => $movieCategories
+            'movieCategories' => $movieCategories,
+            'configSeatMaps' =>  $seatMapConfigs
         ]);
     }
 
