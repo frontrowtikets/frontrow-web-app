@@ -103,15 +103,37 @@ class MovieService
 
         if (count($movieDetails['tickets']) > 0) {
             foreach ($movieDetails['tickets'] as $ticket) {
-                MovieShowTime::updateOrCreate(['id' => isset($ticket['id']) ? $ticket['id'] : null], [
+               $movieShowtime =  MovieShowTime::updateOrCreate(['id' => isset($ticket['id']) ? $ticket['id'] : null], [
                     'movie_id' => $createdMovie->id,
-                    'theatre' => $ticket['theatre'],
+                    'theatre' => $ticket['theatre']['theatre'],
                     'screening_date' => $ticket['screening_date'],
                     'start_time' => $ticket['start_time'],
                     'end_time' => $ticket['end_time'],
                     'currency' => $ticket['currency'],
                     'ticket_price' => $ticket['ticket_price'],
                 ]);
+                //saving seatmaps
+                if(isset($ticket['addedSeatMaps'] )){
+
+                    Log::alert("works");
+
+                    $createdSeatMap = SeatMap::create([
+                        'movie_id' => $createdMovie->id,
+                        'movie_show_time_id' => $movieShowtime->id,
+                        'room_name' => $ticket['theatre']['room'],
+                    ]);
+
+                    foreach ($ticket['addedSeatMaps'] as $seatLabel) {
+                        MovieShowTimeSeat::create([
+                            'movie_show_time_id' => $movieShowtime->id,
+                            'seat_map_id' => $createdSeatMap->id,
+                            'seat_number' => $seatLabel['label'],
+                            'seat_status' =>  'available',
+                            'row_name' => $seatLabel['label'][0]
+                        ]);
+                    }
+
+                }
             }
         }
 
@@ -189,7 +211,7 @@ class MovieService
                 'room_name' => $seatmapDetail['roomName'],
             ]);
 
-            // update MovieShowTime with show_room, used in the Mobile App 
+            // update MovieShowTime with show_room, used in the Mobile App
             MovieShowTime::where('id', $seatmapDetail['showTime']['id'])
                 ->update([
                     'show_room' => $seatmapDetail['roomName']
@@ -402,4 +424,6 @@ class MovieService
         $uniqueId = str_replace('.', '', $uniqueId);
         return substr($uniqueId, 0, 18);
     }
+ 
+
 }

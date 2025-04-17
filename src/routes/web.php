@@ -110,6 +110,9 @@ Route::middleware([
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
     Route::prefix('admin')->group(function () {
+
+        Route::post('/deleteSeatsConfig', [EventsController::class, 'deleteSeatsConfig'])->name('deleteseatConfigs');
+        Route::post('/saveSeatsConfig', [EventsController::class, 'saveSeatsConfig'])->name('seatConfigs');
         Route::post('/saveeventssettings', [EventsController::class, 'saveEventsSettings'])->name('eventsSettins');
         Route::post('/savemoviessettings', [MoviesController::class, 'savemoviesSettings'])->name('moviesSettins');
         Route::post('/activateEvent', [ActivationController::class, 'activateEvent'])->name('activate_Event');

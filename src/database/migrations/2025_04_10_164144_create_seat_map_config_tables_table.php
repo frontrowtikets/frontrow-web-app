@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('seat_map_config_tables', function (Blueprint $table) {
             $table->id();
+            $table->string('theatre')->unique();
+            $table->string('room');
             $table->timestamps();
             $table->softDeletes();
         });

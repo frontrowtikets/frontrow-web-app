@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('seats_configs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('seat_map_config_tables_id')->constrained()->cascadeOnDelete();
+            $table->string('row');
+            $table->string('seat_count');
             $table->timestamps();
             $table->softDeletes();
         });

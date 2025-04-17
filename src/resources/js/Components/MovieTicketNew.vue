@@ -65,20 +65,20 @@ const purchaseDate = computed(() => {
                 class="p-4 mb-5 d-flex"
                 style="background-color: #79bbe8; border-radius: 15px"
             >
-                <div class="me-4">
+                <!-- <div class="me-4">
                     <div
                         class=""
                         style="
                             background-color: gray;
-                            width: 200px;
-                            height: 250px;
+                            width: 100px;
+                            height: 150px;
                             border-radius: 15px;
                         "
                     >
                         <img :src="props.movie?.thumbnail_url" style="object-fit: cover;"/>
 
                     </div>
-                </div>
+                </div> -->
                 <div class="flex-grow-1">
                     <div class="" style="font-size: medium">
                         <h3 class="mb-4 fw-bold text-dark">

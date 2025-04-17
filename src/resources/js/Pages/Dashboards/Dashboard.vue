@@ -24,6 +24,11 @@ const props = defineProps([
     "failedTransactions",
     "myWallet"
 ]);
+// onMounted(()=>{
+//     if(usePage().props.auth.user.user_type === 'ticket_buyer'){
+//     router.visit("/mytickets");
+//     }
+// })
 const { height, width } = useWindowSize();
 
 const state = reactive({});

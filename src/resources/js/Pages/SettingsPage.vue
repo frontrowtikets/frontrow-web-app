@@ -21,6 +21,10 @@ const props = defineProps({
         type: Array,
         default: [],
     },
+    configSeatMaps: {
+        type: Array,
+        default: [],
+    },
 });
 
 const state = reactive({
@@ -51,7 +55,6 @@ const state = reactive({
         shareholder_wallet_id: "",
     },
 });
-
 
 const seatMapFields = ref([
     {
@@ -201,6 +204,31 @@ function revokeTicketCategory(removecat) {
     state.eventTicketCategories = state.eventTicketCategories.filter((cat) => cat !== removecat);
 }
 
+function saveSeatMapConfig() {
+    useInertiaFormSubmit(
+        {
+            theatreName: seatMapFields.value[0].theatreName,
+            room: seatMapFields.value[0].room,
+            seats: seatMapFields.value[0].seats,
+        },
+        "admin/saveSeatsConfig",
+        "/settings",
+        "You are about to save changes",
+        "Changes have been saved successfully"
+    );
+}
+
+function deleteSeatMap(seatIndex){
+    useInertiaFormSubmit(
+        {
+            seatIndex
+        },
+        "admin/deleteSeatsConfig",
+        "/settings",
+        "You are about to delete the saved seatmap",
+        "Seatmap deleted successfully"
+    );
+}
 // function saveMovieSettings() {
 //     // split newTagsString into array and assign to newTags
 //     if (state.newMovieTagsString) {
@@ -480,8 +508,22 @@ function removeRow(index, seatmapIndex) {
                                 </div>
                             </b-tab>
                             <b-tab title="SeatMap Configuration">
-                                <div>
-                                    <div class="mt-4 me-4">
+                                <div class="d-flex mt-4 ">
+                                    <div class="col-4 mt-4">
+                                        <div>
+                                            <label>Saved SeatMaps</label>
+                                        </div>
+                                        <div v-if="configSeatMaps.length > 0" v-for="seat in configSeatMaps" :key="seat.id" class="">
+                                            <div class="d-flex justify-content-between mt-2 col-10">
+                                                <div>{{ seat.theatre }}</div>
+                                                <div role="button" @click="deleteSeatMap(seat.id)"><i class="bx bx-trash text-danger " style="font-size: medium;"></i></div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="text-center col-10 mt-5">
+                                            No saved seatmaps
+                                        </div>
+                                    </div>
+                                    <div class="mt-4  col-7">
                                         <div
                                             v-for="(seatmap, seatmapIndex) in seatMapFields"
                                             :key="`${seatmapIndex}_${seatmap.theatre}_${seatmapIndex}`"
@@ -495,14 +537,7 @@ function removeRow(index, seatmapIndex) {
                                                 <i class="bx bx-trash-alt"></i>
                                             </div>
                                             <div class="gap-4 mb-4 justify-content-between d-flex">
-                                                <!-- <div class="col-6">
-                                                    <label>Theatre <span class="text-danger">*</span></label>
-                                                    <v-select
-                                                        :options="props.movieDetails.show_times"
-                                                        v-model="seatmap.theatre"
-                                                        :label="'theatre'"
-                                                    ></v-select>
-                                                </div> -->
+
                                                 <div class="col-6">
                                                     <label>Theatre <span class="text-danger">*</span></label>
                                                     <input class="form-control" type="text" id="theaterName" v-model="seatmap.theatreName" />
@@ -571,10 +606,9 @@ function removeRow(index, seatmapIndex) {
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="mt-5 mb-5">
-                                            <b-button variant="primary" @click="saveSeatMap" :disabled="!hasChanges">Save Changes</b-button>
+                                            <b-button variant="primary" @click="saveSeatMapConfig" :disabled="!hasChanges">Save Changes</b-button>
                                         </div>
                                     </div>
                                 </div>

@@ -54,11 +54,18 @@ const { paginatedItems, nextPageExists } = useInfiniteScroll("transationDetails"
                                 <tr v-for="(item, index) in paginatedItems" :key="`${index}_${item.id}`">
                                     <td :style="{ backgroundColor: '#fff' }">{{ item.txn_ref }}</td>
                                     <td :style="{ backgroundColor: '#fff' }" class="text-center">
+
                                         <div v-if="item.txn_type == 'ticket_purchase'">
                                             <span class="badge text-bg-success">Ticket Purchase</span>
                                         </div>
+                                        <div v-else-if="item.txn_type == 'movie_ticket'">
+                                            <span class="badge text-bg-success">Movie Ticket</span>
+                                        </div>
+                                        <div v-else-if="item.txn_type == 'event_ticket'">
+                                            <span class="badge text-bg-success">Event Ticket</span>
+                                        </div>
 
-                                        <div v-else><span class="badge text-bg-indigo">Other</span></div>
+                                        <div v-else><span class="badge text-bg-primary">Other</span></div>
                                     </td>
                                     <td :style="{ backgroundColor: '#fff' }" class="text-center">
                                         <div v-if="item.txn_status == 'pending'">
