@@ -13,7 +13,7 @@ import IsUserAdmin from "@/js/Composables/IsUserAdmin.js"
 import Swal from "sweetalert2";
 
 
-const props = defineProps(["movieCategories","beneficiaries", "editDetails"]);
+const props = defineProps(["movieCategories","beneficiaries", "editDetails","seatMapConfig"]);
 
 const state = reactive({
     items: [
@@ -133,9 +133,39 @@ onMounted(() => {
 watch(
     movieTheatres,
     (newVal) => {
-        form["tickets"] = [...newVal];
+
+        const cleanedSeatMaps = newVal.map((item)=>{
+             if(item?.theatre?.hasOwnProperty('seat_map')){
+            let addedSeatMaps = [];
+
+            item.theatre.seat_map.forEach((seatMap)=>{
+                const combinations = generateCombinations({row:seatMap.row,seatCount:seatMap.seat_count})
+
+                addedSeatMaps = [...addedSeatMaps,...combinations]
+            })
+
+            return {...item,addedSeatMaps}
+
+        }
+        else{
+            return item;
+        }
+        })
+
+        // const cleanedSeatMaps = newVal.map((item)=>{
+        //      if(item?.theatre?.hasOwnProperty('seat_map')){
+        //     item.theatre.savedSeatMap = true
+        //      }
+        //     return item;
+        // })
+
+      console.log("please",[...cleanedSeatMaps])
+
+        form["tickets"] = [...cleanedSeatMaps];
     },
-    { deep: true }
+    { deep: true,
+        immediate:true
+     }
 );
 watch(selectedBeneficiary,(newVal)=>{
     form["beneficiary_id"] = newVal.id
@@ -143,6 +173,7 @@ watch(selectedBeneficiary,(newVal)=>{
 watch(movieRating,(newVal)=>{
     form["rating"] = newVal
 })
+
 watch(movieCasts,(newVal)=>{
     const cleaned  = newVal.map((cast)=>{
         const castObj = {castName:cast.castName,role:cast.role,image:cast.image,type:cast.type}
@@ -163,7 +194,29 @@ const isEdit = computed(()=>{
 function saveImage(event, cardType) {
 
     const file = event.target.files[0];
-    if (file) {
+    const maxSize = 1 * 1024 * 1024
+
+    if (file && file.size > maxSize) {
+        Swal.fire({
+                        title: "File too Large",
+                        icon: "warning",
+                        html: `<p style="font-size: 14px">The image file size should not exceed 1MB</p>`,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        focusConfirm: true,
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#43ad60",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        closeOnClickOutside: false,
+                    }).then((result) => {
+                        if (result.value) {
+                            // router.reload({
+                            //     preserveState: false,
+                            // });
+                        }
+                    });
+    }else{
         const reader = new FileReader();
         reader.onload = () => {
             if (cardType === "card") {
@@ -205,6 +258,7 @@ const submit = () => {
     onSuccess:()=>{
         router.visit("/mymovies")
     },
+    forceFormData: true,
         onError: (err) => {
             const keysArray = Object.keys(err);
                  Swal.fire({
@@ -259,6 +313,20 @@ function handleImageUpload(event, index) {
       }
       reader.readAsDataURL(file)
     }
+
+function generateCombinations({ row, seatCount }) {
+    if (!row || seatCount <= 0) {
+        return [];
+    }
+
+    const combinations = [];
+    for (let i = 1; i <= seatCount; i++) {
+        combinations.push({ label: `${row}${i}` });
+    }
+
+    return combinations;
+}
+
 </script>
 
 <template>
@@ -552,7 +620,9 @@ function handleImageUpload(event, index) {
                                             <div v-for="(field, index) in movieTheatres" :key="field.id" class="mb-3 w-100 row">
                                                 <div class="mb-3 col-lg-2">
                                                     <label for="theatre">Theatre</label>
-                                                    <input id="theatre" v-model="field.theatre" type="text" class="form-control" />
+                                                    <!-- <input id="theatre" v-model="field.theatre" type="text" class="form-control" /> -->
+                                            <v-select id="theatre"  v-model="field.theatre" :options="props.seatMapConfig" :label="'theatre'" taggable  ></v-select>
+
 
                                                 </div>
 
@@ -718,7 +788,7 @@ function handleImageUpload(event, index) {
                                                             <h6 class="text-success">Theatre</h6>
                                                             <div class="mb-4">
                                                                 <h5 class="mb-2" v-for="(details,index) in form.tickets" :key="`${index}`" >
-                                                                {{ details.theatre }} :
+                                                                {{ details.theatre.theatre }} :
                                                                 <span class="text-muted me-2">
                                                                     <span> {{ details.currency  }}</span>
                                                                 </span>
@@ -770,7 +840,7 @@ function handleImageUpload(event, index) {
                                                 :disabled="form.processing"
                                             >
                                                 <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
-                                                ><span>Schedule Movie</span>
+                                                ><span>{{isEdit?'Update Movie':'Schedule Movie'}}</span>
                                             </button>
                                         </div>
                                                         </div>

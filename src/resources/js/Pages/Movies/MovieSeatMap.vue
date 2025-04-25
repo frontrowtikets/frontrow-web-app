@@ -19,7 +19,7 @@ const state = reactive({
             // href: "javascript:void(0)"
         },
         {
-            text: "Manager Movie",
+            text: "Manage Movie",
             active: true,
         },
     ],
@@ -150,11 +150,9 @@ function removeTheatre(index) {
             "You are to delete the seat map",
             "Deleted successfully"
         );
-    }else{
-         seatMapFields.value.splice(index, 1);
+    } else {
+        seatMapFields.value.splice(index, 1);
     }
-
-    
 }
 
 function addRow(index, seatmapIndex) {
@@ -169,7 +167,6 @@ function addRow(index, seatmapIndex) {
 }
 
 function removeRow(index, seatmapIndex) {
-    console.log("I am now working");
     if (seatMapFields.value[seatmapIndex].seats.length !== 1) {
         seatMapFields.value[seatmapIndex].seats.splice(index, 1);
     }

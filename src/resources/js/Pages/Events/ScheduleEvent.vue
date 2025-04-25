@@ -13,9 +13,10 @@ import { Money3Component } from "v-money3";
 import IsUserAdmin from "@/js/Composables/IsUserAdmin.js"
 import useInertiaFormSubmit from "@/js/Composables//useInertiaFormSubmit.js";
 import Swal from "sweetalert2";
+import { Loader } from "@googlemaps/js-api-loader";
 
 
-const props = defineProps(["eventCategories","beneficiaries", "editDetails"]);
+const props = defineProps(["eventCategories","beneficiaries", "editDetails","eventTicketCategories"]);
 
 const state = reactive({
     items: [
@@ -64,7 +65,8 @@ const form = useForm({
     bannerImage: null,
     cardImage: null,
     tickets: [],
-    id:""
+    id:"",
+    trailer_url:""
 });
 
 const bannerImageData = ref(null);
@@ -79,6 +81,11 @@ const selectedTickets = ref([]);
  const {isAdmin} = IsUserAdmin();
 
 onMounted(() => {
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     form["beneficiary_id"] = usePage().props.auth.user.id;
     window.navigator.geolocation.getCurrentPosition(currentCoords, null, {
         enableHighAccuracy: true,
@@ -102,6 +109,7 @@ onMounted(() => {
     form['currency'] = editData.currency
     form['access_type'] = editData.access_type
     form["id"] =  editData.id
+    form["trailer_url"]= editData.trailer_url
 
 
 
@@ -125,6 +133,7 @@ onMounted(() => {
          })
 
     }
+    loadSearchMap()
 });
 
 watch(
@@ -150,7 +159,29 @@ const isEdit = computed(()=>{
 function saveImage(event, cardType) {
 
     const file = event.target.files[0];
-    if (file) {
+    const maxSize = 1 * 1024 * 1024
+
+if (file && file.size > maxSize) {
+    Swal.fire({
+                    title: "File too Large",
+                    icon: "warning",
+                    html: `<p style="font-size: 14px">The image file size should not exceed 1MB</p>`,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    focusConfirm: true,
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#43ad60",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    closeOnClickOutside: false,
+                }).then((result) => {
+                    if (result.value) {
+                        // router.reload({
+                        //     preserveState: false,
+                        // });
+                    }
+                });
+}else{
         const reader = new FileReader();
         reader.onload = () => {
             if (cardType === "card") {
@@ -212,6 +243,34 @@ const submit = () => {
     });
 
 };
+
+async function loadSearchMap() {
+            const loader = new Loader({
+                apiKey: "AIzaSyCBE7aRb0VJdRBlUnvjcQ_lnKWoAWuXUx8",
+                version: "weekly",
+            });
+            const Places = await loader.importLibrary("places");
+
+            const input = document.getElementById("searched_place_location");
+
+            const options = {
+                types: ["establishment"],
+                fields: ["address_components", "geometry", "icon", "name"],
+                strictBounds: false,
+            };
+
+            const autocomplete = new Places.Autocomplete(input, options);
+
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                if (place.geometry && place.geometry.location) {
+                    form['location_name'] = place.name
+                    form['gps_location'] = `${place.geometry.location.lng()},${place.geometry.location.lat()}`
+                } else {
+                    console.log("No coordinates available for this place.");
+                }
+            });
+        }
 </script>
 
 <template>
@@ -281,19 +340,24 @@ const submit = () => {
                                             <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'" ></v-select>
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
+                                            <label for="trailer_url" class="mb-2">Trailer URL</label>
+                                            <input class="form-control" type="text" id="formFile" placeholder="Link" v-model="form.trailer_url" >
+                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.trailer_url" />
+                                        </div>
+                                        <div class="mb-4 col-12 col-md-9">
                                             <label for="location" class="mb-2">Location<span class="text-danger">*</span></label>
                                             <input
                                                 style="font-size: 13px"
                                                 type="text"
                                                 class="form-control"
-                                                id="title"
+                                                id="searched_place_location"
                                                 placeholder="Location"
                                                 required
                                                 v-model="form.location_name"
                                             />
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.location_name" />
                                         </div>
-                                        <div class="mb-4 col-12 col-md-9">
+                                        <div class="mb-4 col-12 col-md-9 invisible">
                                             <label for="gps_location" class="mb-2">GPRS Coordinates <span class="text-danger">*</span></label>
                                             <input
                                                 style="font-size: 13px"
@@ -477,16 +541,7 @@ const submit = () => {
                                                     <label for="category">Category</label>
                                                     <select class="form-select form-control" id="category" v-model="field.category">
                                                         <option value="" disabled>Select</option>
-                                                        <option value="VIP">VIP</option>
-                                                        <option value="VVIP">VVIP</option>
-                                                        <option value="Ordinary">Ordinary</option>
-                                                        <option value="Standard">Standard</option>
-                                                        <option value="Standard">Early Bird</option>
-                                                        <option value="Standard">Corporate</option>
-                                                        <option value="Standard">First Class</option>
-                                                        <option value="Charity Supporter">Charity Supporter</option>
-                                                        <option value="Regular">Regular</option>
-                                                        <option value="Workshop Pass">Workshop Pass</option>
+                                                        <option :value="cat.name" v-for="(cat,index) in props.eventTicketCategories" :key="index">{{ cat.name }}</option>
                                                     </select>
                                                 </div>
 
@@ -632,7 +687,7 @@ const submit = () => {
                                                 :disabled="form.processing"
                                             >
                                                 <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
-                                                ><span>Schedule Event</span>
+                                                ><span>{{isEdit?'Update Event':'Schedule Event'}}</span>
                                             </button>
                                         </div>
                                                         </div>

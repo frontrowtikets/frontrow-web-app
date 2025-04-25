@@ -10,6 +10,8 @@ import useRequestBeneficiaryStatus from "../../Composables/useRequestBeneficiary
 import useScheduleMoviesPage from "../../Composables/useScheduleMoviesPage.js";
 import useScheduleEventsPage from "../../Composables/useScheduleEventsPage";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
+import { useWindowSize } from "@vueuse/core";
+
 
 const props = defineProps([
     "eventsChart",
@@ -22,6 +24,13 @@ const props = defineProps([
     "failedTransactions",
     "myWallet"
 ]);
+// onMounted(()=>{
+//     if(usePage().props.auth.user.user_type === 'ticket_buyer'){
+//     router.visit("/mytickets");
+//     }
+// })
+const { height, width } = useWindowSize();
+
 const state = reactive({});
 const { isBeneficiary } = IsUserBeneficiary();
 const { isAdmin } = IsUserAdmin();
@@ -29,7 +38,7 @@ const currentUser = computed(() => {
     const theUser = usePage().props.auth.user;
     return theUser;
 });
- 
+
 const eventsChartOptions = ref({
     chart: {
         id: "eventsChat",
@@ -402,8 +411,8 @@ function viewEvent(event) {
             </div>
         </div> -->
 
-        <div class="row">
-            <div class="col-4 d-flex align-items-stretch">
+        <div class="" :class="[width < 1440?'col':'row']">
+            <div class=" d-flex align-items-stretch" :class="[width < 1440?'col-12':'col-4']">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <h4 class="mb-4 card-title">{{ isAdmin ? "Transactions" : "My Transactions" }}</h4>
@@ -518,7 +527,7 @@ function viewEvent(event) {
                     </div>
                 </div>
             </div>
-            <div class="col-4 d-flex align-items-stretch">
+            <div class=" d-flex align-items-stretch" :class="[width < 1440?'col-12':'col-4']">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <h4 class="mb-4 card-title">{{ isAdmin ? "Movies" : "My Movies" }}</h4>
@@ -590,7 +599,7 @@ function viewEvent(event) {
                     </div>
                 </div>
             </div>
-            <div class="col-4 d-flex align-items-stretch">
+            <div class=" d-flex align-items-stretch" :class="[width < 1440?'col-12':'col-4']">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <h4 class="mb-4 card-title">{{ isAdmin ? "Events" : "My Events" }}</h4>

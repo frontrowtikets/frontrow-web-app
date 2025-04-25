@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\UserEventTicket;
 use App\Mail\NewUserTempPasswordMail;
 use App\Models\UserPaymentDetail;
+use App\Models\EventTicketCategory;
 use App\Models\PaymentTransaction;
 use App\Models\UserWallet;
 use App\Mail\EventRegistrationOwnerMail;
@@ -42,8 +43,14 @@ class EventService
 
         //event categories
         EventCategory::truncate();
+        EventTicketCategory::truncate();
         foreach ($settingsDetails['eventCategories'] as $category) {
             EventCategory::create([
+                'name' => $category
+            ]);
+        }
+        foreach ($settingsDetails['ticketCategories'] as $category) {
+            EventTicketCategory::create([
                 'name' => $category
             ]);
         }
@@ -57,6 +64,7 @@ class EventService
             $isEdit = $eventDetails['id'];
         }
 
+        $eventThumbnail = null;
         $createdEvent = Event::updateOrCreate([
             'id' => $isEdit
         ], [
@@ -71,13 +79,14 @@ class EventService
             'end_date' => $eventDetails['end_date'],
             'access_type' => $eventDetails['access_type'],
             'status' => $eventDetails['status'],
-            'is_active' => false
+            'trailer_url' => $eventDetails['trailer_url']
         ]);
 
         if (isset($eventDetails['cardImage']) && !is_null($eventDetails['cardImage'])) {
             $cardImage = $createdEvent->addMedia($eventDetails['cardImage'])->toMediaCollection('event_images');
             $cardImageUrl = $cardImage->getUrl();
             $createdEvent->thumbnail_url = $cardImageUrl;
+            $eventThumbnail = $cardImageUrl;
         }
 
 
@@ -106,6 +115,7 @@ class EventService
                     'price' => $ticket['price'],
                     'available_quantity' => $ticket['quantity'],
                     'currency' => $ticket['currency'],
+                    'ticket_thumbnail_url' => $eventThumbnail,
                 ]);
             }
         }

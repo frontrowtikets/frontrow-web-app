@@ -77,6 +77,7 @@ const { paginatedItems: declinedpaginatedItems, nextPageExists: declinedPageExis
     attendenceDeclinedListBottom
 );
 
+
 function submitEventRegisterRequest() {
     if (
         eventRegisterForm["name"] != "" &&

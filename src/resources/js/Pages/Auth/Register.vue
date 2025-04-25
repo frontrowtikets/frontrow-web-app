@@ -11,7 +11,7 @@ const userPhoneNumber = ref("");
 const form = useForm({
     name: "",
     email: "",
-    asEventsManager: false,
+    asEventsManager: true,
     password: "",
     phone_number: "",
     password_confirmation: "",
@@ -107,16 +107,7 @@ form['asEventsManager'] = val
                             <div><label>Register As</label></div>
                             <div>
                                 <b-tabs pills justified content-class="p-3 text-muted">
-                                    <b-tab active class="border-0" @click="registerAsEventsManager(false)">
-                                        <template v-slot:title>
-                                            <span class="d-inline-block d-sm-none">
-                                                <i class="fas fa-home"></i>
-                                            </span>
-                                            <span class="d-none d-sm-inline-block">Ticket Buyer</span>
-                                        </template>
-                                        {{ text }}
-                                    </b-tab>
-                                    <b-tab @click="registerAsEventsManager(true)">
+                                    <b-tab active @click="registerAsEventsManager(true)">
                                         <template v-slot:title>
                                             <span class="d-inline-block d-sm-none">
                                                 <i class="far fa-user"></i>
@@ -125,6 +116,16 @@ form['asEventsManager'] = val
                                         </template>
                                         {{ content }}
                                     </b-tab>
+                                    <b-tab  class="border-0" @click="registerAsEventsManager(false)">
+                                        <template v-slot:title>
+                                            <span class="d-inline-block d-sm-none">
+                                                <i class="fas fa-home"></i>
+                                            </span>
+                                            <span class="d-none d-sm-inline-block">Ticket Buyer</span>
+                                        </template>
+                                        {{ text }}
+                                    </b-tab>
+
                                 </b-tabs>
                             </div>
                             <form>

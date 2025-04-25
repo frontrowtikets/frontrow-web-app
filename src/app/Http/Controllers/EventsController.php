@@ -20,6 +20,9 @@ use App\Models\UserWallet;
 use App\Mail\EventCreationAdminMail;
 use App\Mail\EventCreationOriginatorMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\EventTicketCategory;
+use App\Models\SeatsConfig;
+use App\Models\SeatMapConfigTable;
 
 
 
@@ -53,11 +56,13 @@ class EventsController extends Controller
     public function ScheduleEvent(Request $request)
     {
         $eventCategories = EventCategory::select('id', 'name')->get();
+        $eventTicketCategories = EventTicketCategory::select('name')->get()->toArray();
         $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
 
         return \Inertia\Inertia::render('Events/ScheduleEvent', [
             "eventCategories" => $eventCategories,
             "beneficiaries" => $beneficiaries,
+            "eventTicketCategories"=> $eventTicketCategories
         ]);
     }
     public function CreateEvent(CreateEvent $request)
@@ -230,5 +235,27 @@ class EventsController extends Controller
 
     public function walletPay(Request $details){
         EventService::payWithWallet($details);
+    }
+
+    public function saveSeatsConfig(Request $request){
+
+        $seatMap = SeatMapConfigTable::create([
+            'theatre' => $request->theatreName,
+            'room' => $request->room,
+        ]);
+
+        foreach ($request->seats as $seat) {
+            SeatsConfig::create([
+                'seat_map_config_tables_id' => $seatMap->id,
+                'row' => $seat['row'],
+                'seat_count' => $seat['seatCount'],
+            ]);
+        }
+    }
+
+    public function deleteSeatsConfig(Request $request){
+        $seatMap = SeatMapConfigTable::where('id',$request->seatIndex)->first();
+        $seatMap->delete();
+
     }
 }

@@ -1,6 +1,8 @@
 <script setup>
 import moment from "moment";
+import { computed } from "vue";
 import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
+import useGetLowestEventTicket from "../Composables/useGetLowestEventTicket.js";
 const props = defineProps({
      discount:{
 
@@ -19,6 +21,10 @@ const props = defineProps({
     },
 });
 const emit = defineEmits(["view"]);
+const lowestPrice = computed(()=>{
+     const lowestPx = useGetLowestEventTicket(props.eventTickets)
+     return lowestPx.price
+})
 const viewDetails = () => {
     emit("view", props.eventName);
 };
@@ -91,7 +97,7 @@ const viewDetails = () => {
                         <b
                             >{{ props.eventTickets[0]?.currency }}
                             {{
-                                useCurrencyFormat(props.eventTickets[0]?.price)
+                                useCurrencyFormat(lowestPrice)
                             }}</b
                         >
                     </h5>

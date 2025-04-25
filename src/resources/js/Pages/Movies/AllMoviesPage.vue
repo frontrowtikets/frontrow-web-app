@@ -29,6 +29,12 @@ const state = reactive({
 const movieListBottom = ref(null);
 
 const { paginatedItems, nextPageExists } = useInfiniteScroll("movies", movieListBottom);
+onMounted(()=>{
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+})
 function slugify(title) {
     return title
         .toLowerCase()
@@ -58,6 +64,8 @@ function viewEvent(title, id) {
                                     :movieId="item.id"
                                     :showTimes="item.show_times"
                                     :overallRating = "item.overallRating"
+                        :viewing_format="item.viewing_format"
+
                                     @view="viewMovie(item.title,item.id)"
                                 />
                             </div>

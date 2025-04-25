@@ -34,12 +34,12 @@ const isSearching = computed(() => {
 });
 
 const vFocus = {
-  mounted: (el) => {
-    if(searchValue.value.length > 3){
-        el.focus()
-    }
-  }
-}
+    mounted: (el) => {
+        if (searchValue.value.length > 3) {
+            el.focus();
+        }
+    },
+};
 
 const userDetails = computed(() => {
     const store = useStore();
@@ -85,6 +85,7 @@ function logout() {
 
 function toggleMenu() {
     this.$parent.toggleMenu();
+
 }
 function toggleRightSidebar() {
     this.$parent.toggleRightSidebar();

@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import moment from "moment";
 import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
+import useGetLowestPrice from "../Composables/useGetLowestPrice.js";
 import { debounce } from "lodash";
 import { router, usePage } from "@inertiajs/vue3";
 
@@ -14,6 +15,7 @@ const props = defineProps([
     "movieId",
     "showTimes",
     "overallRating",
+    "viewing_format"
 ]);
 
 const movieRating = ref(3);
@@ -26,6 +28,11 @@ const emit = defineEmits(["view"]);
 const viewDetails = () => {
     emit("view", props.movieName);
 };
+
+const lowestTicketPrice = computed(()=>{
+    const lowestTicket = useGetLowestPrice(props?.showTimes);
+    return lowestTicket.ticket_price;
+})
 
 const updateRating = debounce(async (rating) => {
     try {
@@ -156,9 +163,9 @@ function buyTicket() {
                             ><span>{{ props.showTimes[0]?.theatre }} </span>
                         </div>
                         <span
-                            :class="{ invisible: props.showTimes.length < 1 }"
+
                             class="ms-3 badge badge-soft-secondary"
-                            >See More</span
+                            >{{ props.viewing_format }}</span
                         >
 
                         <h5 class="text-end">
@@ -166,7 +173,7 @@ function buyTicket() {
                                 >{{ props.showTimes[0]?.currency }}
                                 {{
                                     useCurrencyFormat(
-                                        props.showTimes[0]?.ticket_price
+                                        lowestTicketPrice
                                     )
                                 }}</b
                             >

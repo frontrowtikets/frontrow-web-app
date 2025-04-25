@@ -64,9 +64,9 @@
         <div class="header">
             <img src="{{ asset('/large.png') }}" alt="Frontrow Logo">
             <p style="float: right; font-size: 12px; text-align: right;">
-                <a href="https://www.frontrow.com">www.frontrow.com</a> <br>
-                info@frontrow.com <br>
-                support@frontrow.com
+                <a href="https://www.frontrow.com">www.frontrowtikets.com</a> <br>
+                info@frontrowtikets.com <br>
+                sales@frontrowtikets.com
             </p>
         </div>
 

@@ -32,7 +32,7 @@ function viewEvent(title, id) {
                 <div class="col-lg-12">
                     <div class="mb-5 text-center">
                         <div class="small-title">
-                            The Art of Making Memories
+                            Your Frontrow Seat to Unforgettable Entertainment!
                         </div>
                         <h4>Featured</h4>
                     </div>
@@ -48,7 +48,7 @@ function viewEvent(title, id) {
                 <div
                     v-for="(item, index) in props.last3Movies"
                     :key="index"
-                    class="col-xl-3 col-md-4 col-sm-6"
+                    class="col-xl-3 col-md-4 "
                 >
                     <MovieCard
                         :movieName="item.title"
@@ -57,13 +57,14 @@ function viewEvent(title, id) {
                         :movieId="item.id"
                         :showTimes="item.show_times"
                         :overallRating="item.overallRating"
+                        :viewing_format="item.viewing_format"
                         @view="viewMovie"
                     />
                 </div>
                 <div
                     v-for="(item, index) in props.last3Events"
                     :key="index"
-                    class="col-xl-3 col-md-4 col-sm-6"
+                    class="col-xl-3 col-md-4 col-sm-6 "
                 >
                     <EventCard
                         :eventName="item.title"

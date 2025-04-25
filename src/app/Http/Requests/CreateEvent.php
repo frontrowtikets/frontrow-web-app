@@ -47,6 +47,7 @@ class CreateEvent extends FormRequest
             'categories' => 'array',
             'beneficiary_id' => 'numeric',
             'tickets'=> 'array',
+            'trailer_url'=> '',
             'id' =>''
                ];
     }

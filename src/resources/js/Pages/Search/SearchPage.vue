@@ -100,6 +100,8 @@ function viewEvent(title, id) {
                                         :movieName="item.title"
                                         :movieImageLink="item.thumbnail_url"
                                         :movieDate="item.release_date"
+                        :viewing_format="item.viewing_format"
+
                                         :movieId="item.id"
                                         :showTimes="item.show_times"
                                         :overallRating="item.overallRating"

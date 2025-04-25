@@ -49,7 +49,8 @@ const showEndDateTime = computed(() => {
 
 const hasShowEnded = computed(() => {
     const currentTime = moment();
-    return currentTime.isAfter(showEndDateTime.value);
+    const extendedEndTime = moment(showEndDateTime.value).add(1, 'day');
+    return currentTime.isAfter(extendedEndTime );
 });
 
 const toggleSeat = (seatId) => {

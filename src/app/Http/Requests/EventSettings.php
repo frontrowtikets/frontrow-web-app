@@ -30,7 +30,9 @@ class EventSettings extends FormRequest
     public function rules(): array
     {
         return [
-            'eventCategories' => 'required'
+            'eventCategories' => 'required',
+            'ticketCategories' => 'required',
+
         ];
     }
 }

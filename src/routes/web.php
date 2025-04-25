@@ -26,10 +26,23 @@ Route::get("/home/movie/{title}/{id}", [MoviesController::class, 'movieDetailHom
 Route::get("/home/event/{title}/{id}", [EventsController::class, 'eventDetailHome'])->name('event_detail_home');
 Route::get("/home/movie/buy-ticket/{title}/{id}", [MoviesController::class, 'buyMovieTicketHome'])->name('movie_buy_ticket_home');
 Route::get("/search", [SearchController::class, 'search'])->name('search');
+// privacy policy
+Route::get("/privacy-policy", function () {
+    return inertia('PrivacyPolicy');
+})->name('privacy_policy');
 
+// terms and conditions
+Route::get("/terms-and-conditions", function () {
+    return inertia('TermsAndConditions');
+})->name('terms_and_conditions');
 
+// delete My Account
+Route::get("/delete-my-account", function () {
+    return inertia('DeleteMyAccount');
+})->name('delete_my_account');
 
-
+// post delete My Account
+Route::post("/delete-my-account", [UserRegister::class, 'deleteMyAccount'])->name('delete_my_account_request');
 
 //web payments callback
 Route::get("/verify/payment", [PaymentController::class, 'verifyPayment'])->name('verify_payment');
@@ -41,9 +54,9 @@ Route::get('/test-mail-dispatch', function () {
     ];
     $to = request()->query('to', 'godwintumuhimbise96@gmail.com');
     $sent = Mail::to($to)->send(new \App\Mail\TestMail($details));
-    if($sent){
+    if ($sent) {
         return "Email sent successfully";
-    }else{
+    } else {
         return "Email not sent";
     }
 });
@@ -95,18 +108,39 @@ Route::middleware([
     Route::post('/payEvent/wallet', [EventsController::class, 'walletPay']);
 
 
-
-
-
-
-
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
     Route::prefix('admin')->group(function () {
+
+        Route::post('/deleteSeatsConfig', [EventsController::class, 'deleteSeatsConfig'])->name('deleteseatConfigs');
+        Route::post('/saveSeatsConfig', [EventsController::class, 'saveSeatsConfig'])->name('seatConfigs');
         Route::post('/saveeventssettings', [EventsController::class, 'saveEventsSettings'])->name('eventsSettins');
         Route::post('/savemoviessettings', [MoviesController::class, 'savemoviesSettings'])->name('moviesSettins');
         Route::post('/activateEvent', [ActivationController::class, 'activateEvent'])->name('activate_Event');
         Route::post('/deactivateEvent', [ActivationController::class, 'deactivateEvent'])->name('deactivate_Event');
         Route::post('/activateMovie', [ActivationController::class, 'activateMovie'])->name('activate_Movie');
         Route::post('/deactivateMovie', [ActivationController::class, 'deactivateMovie'])->name('deactivate_Movie');
+
+        // get business settings
+        Route::get('/get-business-config', [SettingsController::class, 'getBusinessSettings'])->name('get_business_settings');
+        // update business settings
+        Route::post('/update-business-config', [SettingsController::class, 'updateBusinessSettings'])->name('update_business_settings');
     });
 });
+
+//preventing crawlers on dev
+Route::get('/robots.txt', function () {
+    $host = request()->getHost();
+
+    // Block crawling on the dev server
+    if ($host === 'frontrowtikets.com') {
+        return response("User-agent: *\nDisallow:", 200)
+            ->header('Content-Type', 'text/plain');
+    }
+
+    // Allow everything on production
+    return response("User-agent: *\nDisallow: /", 200)
+        ->header('Content-Type', 'text/plain');
+});
+
+// send email verification otp upon request
+Route::get('/send-email-login-otp', [UserRegister::class, 'sendEmailLoginOtp'])->name('send_email_verification_otp');

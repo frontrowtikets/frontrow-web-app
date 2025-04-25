@@ -17,4 +17,9 @@ class UserWallet extends Model
         'balance',
         'wallet_pin'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
