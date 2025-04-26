@@ -424,6 +424,6 @@ class MovieService
         $uniqueId = str_replace('.', '', $uniqueId);
         return substr($uniqueId, 0, 18);
     }
- 
+
 
 }
