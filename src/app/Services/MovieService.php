@@ -101,7 +101,7 @@ class MovieService
             }
         }
 
-        if (count($movieDetails['tickets']) > 0) {
+        if (count($movieDetails['tickets']) > 0 && is_null($isEdit)) {
             foreach ($movieDetails['tickets'] as $ticket) {
                $movieShowtime =  MovieShowTime::updateOrCreate(['id' => isset($ticket['id']) ? $ticket['id'] : null], [
                     'movie_id' => $createdMovie->id,
@@ -115,7 +115,6 @@ class MovieService
                 //saving seatmaps
                 if(isset($ticket['addedSeatMaps'] )){
 
-                    Log::alert("works");
 
                     $createdSeatMap = SeatMap::create([
                         'movie_id' => $createdMovie->id,
@@ -136,31 +135,65 @@ class MovieService
                 }
             }
         }
+        if (count($movieDetails['tickets']) > 0 && !is_null($isEdit)){
+            foreach ($movieDetails['tickets'] as $ticket) {
+                $movieShowtime =  MovieShowTime::updateOrCreate(['id' => isset($ticket['id']) ? $ticket['id'] : null], [
+                     'movie_id' => $createdMovie->id,
+                     'theatre' => $ticket['theatre'],
+                     'screening_date' => $ticket['screening_date'],
+                     'start_time' => $ticket['start_time'],
+                     'end_time' => $ticket['end_time'],
+                     'currency' => $ticket['currency'],
+                     'ticket_price' => $ticket['ticket_price'],
+                 ]);
+                 //saving seatmaps
+                 if(isset($ticket['addedSeatMaps'] )){
 
-        if (count($movieDetails['casts']) > 0) {
-            foreach ($movieDetails['casts'] as $cast) {
 
-                $isCastEdit = null;
-                if (isset($cast['id']) && $cast['id'] != '') {
-                    $isCastEdit = $cast['id'];
-                }
+                     $createdSeatMap = SeatMap::create([
+                         'movie_id' => $createdMovie->id,
+                         'movie_show_time_id' => $movieShowtime->id,
+                         'room_name' => $ticket['theatre']['room'],
+                     ]);
 
+                     foreach ($ticket['addedSeatMaps'] as $seatLabel) {
+                         MovieShowTimeSeat::create([
+                             'movie_show_time_id' => $movieShowtime->id,
+                             'seat_map_id' => $createdSeatMap->id,
+                             'seat_number' => $seatLabel['label'],
+                             'seat_status' =>  'available',
+                             'row_name' => $seatLabel['label'][0]
+                         ]);
+                     }
 
-                $moviecast = MovieCast::updateOrCreate(['id' => $isCastEdit], [
-                    'movie_id' => $createdMovie->id,
-                    'name' => $cast['castName'],
-                    'role' => $cast['role'],
-                    'type' => $cast['type']
-                ]);
-
-                if (isset($cast['image']) && !is_null($cast['image']) && $cast['image'] != 'null') {
-                    $castImage = $createdMovie->addMedia($cast['image'])->toMediaCollection('casts_profile_images');
-                    $castImageUrl = $castImage->getUrl();
-                    $moviecast->profile_image_url = $castImageUrl;
-                }
-                $moviecast->save();
-            }
+                 }
+             }
         }
+
+        // if (count($movieDetails['casts']) > 0) {
+        //     foreach ($movieDetails['casts'] as $cast) {
+
+        //         $isCastEdit = null;
+        //         if (isset($cast['id']) && $cast['id'] != '') {
+        //             $isCastEdit = $cast['id'];
+        //         }
+
+
+        //         $moviecast = MovieCast::updateOrCreate(['id' => $isCastEdit], [
+        //             'movie_id' => $createdMovie->id,
+        //             'name' => $cast['castName'],
+        //             'role' => $cast['role'],
+        //             'type' => $cast['type']
+        //         ]);
+
+        //         if (isset($cast['image']) && !is_null($cast['image']) && $cast['image'] != 'null') {
+        //             $castImage = $createdMovie->addMedia($cast['image'])->toMediaCollection('casts_profile_images');
+        //             $castImageUrl = $castImage->getUrl();
+        //             $moviecast->profile_image_url = $castImageUrl;
+        //         }
+        //         $moviecast->save();
+        //     }
+        // }
 
         MovieRating::create([
             'movie_id' => $createdMovie->id,

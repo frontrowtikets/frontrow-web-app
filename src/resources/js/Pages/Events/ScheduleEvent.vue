@@ -246,7 +246,7 @@ const submit = () => {
 
 async function loadSearchMap() {
             const loader = new Loader({
-                apiKey: "AIzaSyCBE7aRb0VJdRBlUnvjcQ_lnKWoAWuXUx8",
+                apiKey: "AIzaSyBQKw2vj3Wjow-0p69Wz8okjJ470gVOhNo",
                 version: "weekly",
             });
             const Places = await loader.importLibrary("places");

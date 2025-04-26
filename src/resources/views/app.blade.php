@@ -33,7 +33,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBE7aRb0VJdRBlUnvjcQ_lnKWoAWuXUx8&libraries=places,visualization"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQKw2vj3Wjow-0p69Wz8okjJ470gVOhNo&libraries=places,visualization"></script>
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
