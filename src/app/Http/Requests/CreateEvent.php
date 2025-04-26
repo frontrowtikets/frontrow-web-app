@@ -43,7 +43,7 @@ class CreateEvent extends FormRequest
             'bannerImage' => '',
             'tickets' => 'required',
             'description' =>'string',
-            'gps_location' => 'string',
+            'gps_location' => '',
             'categories' => 'array',
             'beneficiary_id' => 'numeric',
             'tickets'=> 'array',
