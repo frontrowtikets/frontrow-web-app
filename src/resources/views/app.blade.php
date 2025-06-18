@@ -11,22 +11,28 @@
         @endphp
         
         @if ($event)
-        @dd($event)
+        @php
+            $start_date_and_time = $event['start_date'] . ' ' . $event['time'];
+            $start_date = \Carbon\Carbon::parse($start_date_and_time)->format('jS M Y');
+            $start_time = \Carbon\Carbon::parse($start_date_and_time)->format('H:i');
+            $event_description = $event['title'] . ' | ' . $event['location_name'] . ' | ' . $start_date . ', ' . $start_time;
+            $event_url = url('/home/event/' . \Illuminate\Support\Str::slug($event['title']) . '/' . $event['id']);
+        @endphp
         {{-- Dynamic meta for event --}}
         <title inertia>{{ $event['title'] }}</title>
-        <meta name="description" content="{{ $event['description'] ?? 'Join us for an amazing event!' }}">
+        <meta name="description" content="{{ $event_description }}">
         <meta name="keywords" content="{{ $event['title'] }}, event tickets, FrontRow Tikets">
 
         <meta property="og:title" content="{{ $event['title'] }}" />
-        <meta property="og:description" content="{{ $event['description'] ?? 'Join us for an amazing event!' }}" />
-        <meta property="og:image" content="{{ $event['thumbnail_url'] ?? asset('large.png') }}" />
-        <meta property="og:url" content="{{ url('/home/event/' . \Illuminate\Support\Str::slug($event['title']) . '/' . $event['id']) }}" />
-        <meta property="og:type" content="website" />
+        <meta property="og:description" content="{{ $event_description }}" />
+        <meta property="og:image" content="{{ $event['thumbnail_url']}}" />
+        <meta property="og:url" content="{{ $event_url }}" />
+        <meta property="og:type" content="website"/>
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="{{ $event['title'] }}" />
-        <meta name="twitter:description" content="{{ $event['description'] ?? 'Join us for an amazing event!' }}" />
-        <meta name="twitter:image" content="{{ $event['thumbnail_url'] ?? asset('large.png') }}" />
+        <meta name="twitter:description" content="{{ $event_description }}" />
+        <meta name="twitter:image" content="{{ $event['thumbnail_url'] }}" />
     @else
         {{-- Default meta tags --}}
         <title inertia>{{ config('app.name', 'FrontRow Tikets') }}</title>
