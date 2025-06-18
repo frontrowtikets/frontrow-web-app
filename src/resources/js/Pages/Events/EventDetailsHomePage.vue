@@ -255,7 +255,7 @@ function getEventTicket() {
 <template>
     <section>
 
-        <Head :title="`${props.eventDetails.title} - Event Details`" />
+        <Head :title="`${props.eventDetails.title} - FrontRow Tickets`" />
         <div v-scroll-spy>
             <b-container class="" style="margin-top: 16em">
                 <HomeHeader />
