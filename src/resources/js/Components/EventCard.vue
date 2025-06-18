@@ -4,26 +4,26 @@ import { computed } from "vue";
 import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
 import useGetLowestEventTicket from "../Composables/useGetLowestEventTicket.js";
 const props = defineProps({
-     discount:{
-
-     },
-    eventName:{
+    discount: {
 
     },
-    eventImageLink:{},
-    eventDate:{},
-    eventLocation:{},
-    eventTickets:{
-        default:[]
+    eventName: {
+
     },
-    eventId:{
+    eventImageLink: {},
+    eventDate: {},
+    eventLocation: {},
+    eventTickets: {
+        default: []
+    },
+    eventId: {
 
     },
 });
 const emit = defineEmits(["view"]);
-const lowestPrice = computed(()=>{
-     const lowestPx = useGetLowestEventTicket(props.eventTickets)
-     return lowestPx.price
+const lowestPrice = computed(() => {
+    const lowestPx = useGetLowestEventTicket(props.eventTickets)
+    return lowestPx.price
 })
 const viewDetails = () => {
     emit("view", props.eventName);
@@ -32,45 +32,22 @@ const viewDetails = () => {
 
 <template>
     <b-container>
-        <div
-        style="background-color: #a8ffff;"
-            class="rounded shadow card w-100"
-            @click="() => $emit('view', eventName, eventId)"
-        >
+        <div style="background-color: #a8ffff;" class="rounded shadow card w-100"
+            @click="() => $emit('view', eventName, eventId)">
             <div class="p-2">
-                <div
-                    class="overflow-hidden rounded position-relative"
-                    style="height: 320px"
-                    role="button"
-                >
-                    <div
-                        v-if="discount"
-                        class="avatar-sm product-ribbon"
-                        style="z-index: 1"
-                    >
-                        <span class="avatar-title rounded-circle bg-primary"
-                            >-{{ discount }}%</span
-                        >
+                <div class="overflow-hidden rounded position-relative" style="height: 320px" role="button">
+                    <div v-if="discount" class="avatar-sm product-ribbon" style="z-index: 1">
+                        <span class="avatar-title rounded-circle bg-primary">-{{ discount }}%</span>
                     </div>
                     <div>
-                        <img
-                            :src="`${eventImageLink}`"
-                            alt
-                            class=""
-                            style="
+                        <img :src="`${eventImageLink}`" alt class="" style="
                                 object-fit: cover;
                                 object-position: center;
                                 height: 320px;
                                 background-color: lightgray;
                                 width: 100%;
-                            "
-                            v-motion
-                            :initial="{ opacity: 0 }"
-                            :enter="{ opacity: 1, scale: 1 }"
-                            :hovered="{ scale: 1.1 }"
-                            :delay="20"
-                            :duration="400"
-                        />
+                            " v-motion :initial="{ opacity: 0 }" :enter="{ opacity: 1, scale: 1 }"
+                            :hovered="{ scale: 1.1 }" :delay="20" :duration="400" />
                     </div>
                 </div>
                 <div class="pb-2 mt-4 ps-2 pe-2" role="button">
@@ -80,26 +57,20 @@ const viewDetails = () => {
                         </div>
                     </h5>
                     <div class="mb-1 text-primary text-start">
-                        <i class="bx bx-calendar-event me-1"></i
-                        ><span>{{
+                        <i class="bx bx-calendar-event me-1"></i><span>{{
                             moment(eventDate).format("ddd, DD MMM YYYY")
-                        }}</span>
+                            }}</span>
                     </div>
                     <div class="text-truncate text-start">
-                        <i class="bx bx-map me-1"></i
-                        ><span>{{ eventLocation }} </span>
+                        <i class="bx bx-map me-1"></i><span>{{ eventLocation }} </span>
                     </div>
-                    <span class="invisible ms-3 badge badge-soft-secondary"
-                        >See More</span
-                    >
+                    <span class="invisible ms-3 badge badge-soft-secondary">See More</span>
 
                     <h5 class="mt-3 text-end">
-                        <b
-                            >{{ props.eventTickets[0]?.currency }}
+                        <b>{{ props.eventTickets[0]?.currency }}
                             {{
                                 useCurrencyFormat(lowestPrice)
-                            }}</b
-                        >
+                            }}</b>
                     </h5>
                 </div>
             </div>
@@ -109,10 +80,12 @@ const viewDetails = () => {
 <style scoped>
 .text-hover-warning {
     color: black;
-    transition: color 0.3s ease-in-out; /* Animate color changes over 0.3s */
+    transition: color 0.3s ease-in-out;
+    /* Animate color changes over 0.3s */
 }
 
 .text-hover-warning:hover {
-    color: #fed444; /* Bootstrap's primary color variable */
+    color: #fed444;
+    /* Bootstrap's primary color variable */
 }
 </style>
