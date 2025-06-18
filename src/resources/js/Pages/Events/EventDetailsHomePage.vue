@@ -253,8 +253,25 @@ function getEventTicket() {
 }
 </script>
 <template>
-    <Head :title="props.eventDetails.title" />
     <div v-scroll-spy>
+
+        <Head>
+            <title>{{ eventDetails.title }}</title>
+            <meta name="description" :content="eventDetails.description || 'Join us for an amazing event!'" />
+
+            <!-- Open Graph Meta Tags -->
+            <meta property="og:title" :content="eventDetails.title" />
+            <meta property="og:description" :content="eventDetails.description || 'Join us for an amazing event!'" />
+            <meta property="og:image" :content="eventDetails.thumbnail_url" />
+            <meta property="og:url" :content="`/home/event/${slugify(title)}/${id}`" />
+            <meta property="og:type" content="website" />
+
+            <!-- Twitter Card Meta Tags -->
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" :content="eventDetails.title" />
+            <meta name="twitter:description" :content="eventDetails.description || 'Join us for an amazing event!'" />
+            <meta name="twitter:image" :content="eventDetails.thumbnail_url" />
+        </Head>
         <b-container class="" style="margin-top: 16em">
             <HomeHeader />
             <PageHeader :title="props.eventDetails.title" :items="state.items" role="button" @click="goback" />
@@ -338,27 +355,25 @@ function getEventTicket() {
                 <!--end col-->
                 <div class="col-12">
                     <div class="card">
-                        <div
-                            class="card-body border-bottom background-container"
-                            :style="{ backgroundImage: `url(${props.eventDetails.banner_image_url})` }"
-                        ></div>
+                        <div class="card-body border-bottom background-container"
+                            :style="{ backgroundImage: `url(${props.eventDetails.banner_image_url})` }"></div>
                         <div class="card-body">
                             <div class="pt-4 flex-column justify-content-between d-flex flex-md-row col-12">
                                 <div class="mb-4 col-12 col-md-7 flex-column pe-md-5">
                                     <div class="d-flex justify-content-between">
-                                        <div><h5 class="fw-semibold">Description</h5></div>
+                                        <div>
+                                            <h5 class="fw-semibold">Description</h5>
+                                        </div>
                                         <div class="d-block d-md-none">
-                                            <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText }}</b-button>
+                                            <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText
+                                            }}</b-button>
                                         </div>
                                     </div>
                                     <div class="flex-row mb-3 d-flex col-12 justify-content-between">
                                         <div class="col-5">
-                                            <span
-                                                class="badge badge-soft-primary me-3"
+                                            <span class="badge badge-soft-primary me-3"
                                                 v-for="(category, index) in props.eventDetails.categories"
-                                                :key="index"
-                                                >{{ category.name }}</span
-                                            >
+                                                :key="index">{{ category.name }}</span>
                                         </div>
                                     </div>
                                     <p class="text-muted" v-html="props.eventDetails.description"></p>
@@ -368,7 +383,8 @@ function getEventTicket() {
                                                 <tr>
                                                     <th scope="col">Start Date</th>
                                                     <td scope="col">
-                                                        {{ moment(props.eventDetails.start_date).format("MMM Do YY") }} at
+                                                        {{ moment(props.eventDetails.start_date).format("MMM Do YY") }}
+                                                        at
                                                         {{ props.eventDetails.start_time }}
                                                     </td>
                                                 </tr>
@@ -382,15 +398,15 @@ function getEventTicket() {
                                                 <tr>
                                                     <th scope="row">Type</th>
                                                     <td>
-                                                        <span class="badge badge-soft-success" v-if="props.eventDetails.access_type == 'paid'"
-                                                            >Paid Event</span
-                                                        >
-                                                        <span class="badge badge-soft-secondary" v-if="props.eventDetails.access_type == 'free'"
-                                                            >Free Event</span
-                                                        >
-                                                        <span class="badge badge-soft-warning" v-if="props.eventDetails.access_type == 'invite-only'"
-                                                            >Invite Only</span
-                                                        >
+                                                        <span class="badge badge-soft-success"
+                                                            v-if="props.eventDetails.access_type == 'paid'">Paid
+                                                            Event</span>
+                                                        <span class="badge badge-soft-secondary"
+                                                            v-if="props.eventDetails.access_type == 'free'">Free
+                                                            Event</span>
+                                                        <span class="badge badge-soft-warning"
+                                                            v-if="props.eventDetails.access_type == 'invite-only'">Invite
+                                                            Only</span>
                                                     </td>
                                                 </tr>
 
@@ -403,7 +419,8 @@ function getEventTicket() {
                                                 <tr>
                                                     <th scope="row">Organized By</th>
                                                     <td>
-                                                        {{ props.eventDetails.beneficiary.name }} ({{ props.eventDetails.beneficiary.phone_number }})
+                                                        {{ props.eventDetails.beneficiary.name }} ({{
+                                                            props.eventDetails.beneficiary.phone_number }})
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -412,22 +429,16 @@ function getEventTicket() {
                                     <div v-if="width > 768">
                                         <div class="mt-4 mb-3" v-if="props.eventDetails.trailer_url">
                                             <h5 class="mb-3 fw-semibold">Trailer:</h5>
-                                            <YouTube :src="`${props.eventDetails.trailer_url}`" @ready="onReady" ref="youtube"
-                                            :width="390"
-                                                :height="300"
-                                            />
+                                            <YouTube :src="`${props.eventDetails.trailer_url}`" @ready="onReady"
+                                                ref="youtube" :width="390" :height="300" />
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div class="mt-4 mb-3" v-if="props.eventDetails.trailer_url">
                                             <h5 class="mb-3 fw-semibold">Trailer:</h5>
-                                            <YouTube
-                                                :width="300"
-                                                :height="180"
-                                                :src="`${props.eventDetails.trailer_url}`"
-                                                @ready="onReady"
-                                                ref="youtube"
-                                            />
+                                            <YouTube :width="300" :height="180"
+                                                :src="`${props.eventDetails.trailer_url}`" @ready="onReady"
+                                                ref="youtube" />
                                         </div>
                                     </div>
                                 </div>
@@ -440,35 +451,37 @@ function getEventTicket() {
                                         <div v-if="props.eventDetails.access_type == 'paid'" class="mt-2 col-12">
                                             <h5>Available Tickets</h5>
                                             <div class="flex-wrap gap-3 mt-4 col-12 d-flex">
-                                                <div :style="{ width: cardSize + '%' }" v-for="(field, index) in selectedTickets" :key="field.id">
+                                                <div :style="{ width: cardSize + '%' }"
+                                                    v-for="(field, index) in selectedTickets" :key="field.id">
                                                     <div class="text-center shadow-lg dotted-border card">
                                                         <div class="card-body">
                                                             <h5 class="font-size-15">
-                                                                <a href="javascript: void(0);" class="text-dark"
-                                                                    >{{ field.category }} ({{ field.available_quantity }})</a
-                                                                >
+                                                                <a href="javascript: void(0);" class="text-dark">
+                                                                    <!-- ({{ field.available_quantity }}) -->
+                                                                    {{ field.category }}
+                                                                </a>
                                                             </h5>
-                                                            <p class="text-muted">{{ field.currency }}: {{ useCurrencyFormat(field.price) }}</p>
+                                                            <p class="text-muted">{{ field.currency }}: {{
+                                                                useCurrencyFormat(field.price) }}</p>
                                                         </div>
                                                         <div class="bg-transparent card-footer border-top">
                                                             <div class="contact-links d-flex font-size-20">
-                                                                <div class="flex-fill pe-3" @click="decreaseTicket(index)">
-                                                                    <a v-b-tooltip.hover.top title="Reduce Tickets" href="javascript: void(0);">
+                                                                <div class="flex-fill pe-3"
+                                                                    @click="decreaseTicket(index)">
+                                                                    <a v-b-tooltip.hover.top title="Reduce Tickets"
+                                                                        href="javascript: void(0);">
                                                                         <i class="bx bx-minus"></i>
                                                                     </a>
                                                                 </div>
                                                                 <div class="flex-fill">
-                                                                    <input
-                                                                        style="font-size: 13px"
-                                                                        type="number"
-                                                                        class="form-control"
-                                                                        :min="0"
-                                                                        required
-                                                                        v-model="field.selectedQuantity"
-                                                                    />
+                                                                    <input style="font-size: 13px" type="number"
+                                                                        class="form-control" :min="0" required
+                                                                        v-model="field.selectedQuantity" />
                                                                 </div>
-                                                                <div class="flex-fill ps-3" @click="increaseTicket(index)">
-                                                                    <a v-b-tooltip.hover.top title="Add Tickets" href="javascript: void(0);">
+                                                                <div class="flex-fill ps-3"
+                                                                    @click="increaseTicket(index)">
+                                                                    <a v-b-tooltip.hover.top title="Add Tickets"
+                                                                        href="javascript: void(0);">
                                                                         <i class="bx bx-plus"></i>
                                                                     </a>
                                                                 </div>
@@ -479,151 +492,116 @@ function getEventTicket() {
                                             </div>
 
                                             <div
-                                                class="pt-2 pb-2 mt-4 rounded ps-1 pe-1 w-100 d-flex justify-content-between align-items-center bg-light"
-                                            >
-                                                <div style="font-size: normal">Sub Total({{ props.eventDetails.event_tickets[0].currency }}):</div>
-                                                <div style="font-size: medium" class="fw-bold">{{ useCurrencyFormat(ticketTotal) }}</div>
+                                                class="pt-2 pb-2 mt-4 rounded ps-1 pe-1 w-100 d-flex justify-content-between align-items-center bg-light">
+                                                <div style="font-size: normal">Sub Total({{
+                                                    props.eventDetails.event_tickets[0].currency }}):</div>
+                                                <div style="font-size: medium" class="fw-bold">{{
+                                                    useCurrencyFormat(ticketTotal) }}</div>
                                             </div>
                                             <div class="mt-4 col-12">
-                                                <b-button
-                                                    variant="primary"
-                                                    class="col-12"
+                                                <b-button variant="primary" class="col-12"
                                                     @click.prevent="checkoutMovie"
-                                                    :disabled="theSetectedTickets.length === 0"
-                                                    >Book Now</b-button
-                                                >
+                                                    :disabled="theSetectedTickets.length === 0">Book Now</b-button>
                                             </div>
                                         </div>
                                         <div v-else>
-                                            <div
-                                                v-if="props.eventDetails.reg_status == 'pending'"
-                                                class="mt-4 mb-4 alert alert-danger fade show"
-                                                role="alert"
-                                            >
+                                            <div v-if="props.eventDetails.reg_status == 'pending'"
+                                                class="mt-4 mb-4 alert alert-danger fade show" role="alert">
                                                 Request Pending Approval
                                             </div>
-                                            <b-button
-                                                variant="primary"
-                                                class="mt-4"
+                                            <b-button variant="primary" class="mt-4"
                                                 v-else-if="props.eventDetails.reg_status == 'approved'"
-                                                @click="getEventTicket"
-                                                >Get Ticket</b-button
-                                            >
+                                                @click="getEventTicket">Get Ticket</b-button>
                                             <div v-else>
                                                 <h5 class="mb-3 fw-semibold">Register For Event</h5>
 
                                                 <form>
-                                                    <div
-                                                        v-if="eventRegisterForm.errors.email"
+                                                    <div v-if="eventRegisterForm.errors.email"
                                                         class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
-                                                        role="alert"
-                                                    >
+                                                        role="alert">
                                                         {{ eventRegisterForm.errors.email }}
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
-                                                    <div
-                                                        v-if="errorMessage"
+                                                    <div v-if="errorMessage"
                                                         class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
-                                                        role="alert"
-                                                    >
+                                                        role="alert">
                                                         {{ errorMessage }}
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
 
-                                                    <div
-                                                        v-if="eventRegisterForm.errors.phone_number"
+                                                    <div v-if="eventRegisterForm.errors.phone_number"
                                                         class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
-                                                        role="alert"
-                                                    >
+                                                        role="alert">
                                                         {{ eventRegisterForm.errors.phone_number }}
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
-                                                    <div
-                                                        v-if="eventRegisterForm.errors.terms"
+                                                    <div v-if="eventRegisterForm.errors.terms"
                                                         class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
-                                                        role="alert"
-                                                    >
+                                                        role="alert">
                                                         {{ eventRegisterForm.errors.terms }}
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
-                                                    <div
-                                                        v-if="invalidPhoneNumberMsg"
+                                                    <div v-if="invalidPhoneNumberMsg"
                                                         class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
-                                                        role="alert"
-                                                    >
+                                                        role="alert">
                                                         {{ invalidPhoneNumberMsg }}
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                            aria-label="Close"></button>
                                                     </div>
 
                                                     <div class="mb-3">
                                                         <label for="name">Name</label>
-                                                        <input
-                                                            style="font-size: 13px"
-                                                            type="text"
-                                                            class="form-control"
-                                                            id="name"
-                                                            placeholder="Name"
-                                                            required
-                                                            v-model="eventRegisterForm.name"
-                                                        />
-                                                        <InputError class="mt-2 mb-4 text-danger" :message="eventRegisterForm.errors.name" />
+                                                        <input style="font-size: 13px" type="text" class="form-control"
+                                                            id="name" placeholder="Name" required
+                                                            v-model="eventRegisterForm.name" />
+                                                        <InputError class="mt-2 mb-4 text-danger"
+                                                            :message="eventRegisterForm.errors.name" />
                                                     </div>
 
                                                     <div class="mb-3">
                                                         <label for="email"> Email Address</label>
-                                                        <input
-                                                            style="font-size: 13px"
-                                                            type="email"
-                                                            class="form-control"
-                                                            id="email"
-                                                            required
-                                                            autocomplete="username"
+                                                        <input style="font-size: 13px" type="email" class="form-control"
+                                                            id="email" required autocomplete="username"
                                                             placeholder="Enter email"
-                                                            v-model="eventRegisterForm.email"
-                                                        />
-                                                        <InputError class="mt-2 mb-4 text-danger" :message="eventRegisterForm.errors.email" />
+                                                            v-model="eventRegisterForm.email" />
+                                                        <InputError class="mt-2 mb-4 text-danger"
+                                                            :message="eventRegisterForm.errors.email" />
                                                     </div>
 
                                                     <div class="mb-4">
                                                         <label for="phone_number"> Phone Number</label>
-                                                        <VueTelInput
-                                                            class="form-control"
-                                                            :inputOptions.required="true"
-                                                            :inputOptions.showDialCode="true"
-                                                            :rules="[isValidPhone]"
+                                                        <VueTelInput class="form-control" inputOptions.required="true"
+                                                            inputOptions.showDialCode="true" :rules="[isValidPhone]"
                                                             v-model="eventRegisterForm.phone_number"
-                                                            @input="phoneNumber"
-                                                            @change="phoneNumber"
-                                                            @blur="checkValidity"
-                                                        />
-                                                        <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg }}</small>
+                                                            @input="phoneNumber" @change="phoneNumber"
+                                                            @blur="checkValidity" />
+                                                        <small class="text-danger" v-if="invalidPhoneNumberMsg">{{
+                                                            invalidPhoneNumberMsg }}</small>
                                                     </div>
 
                                                     <div class="">
                                                         <div class="mb-3 form-check form-check-left">
-                                                            <input
-                                                                class="form-check-input"
-                                                                type="checkbox"
+                                                            <input class="form-check-input" type="checkbox"
                                                                 id="formCheckRight1"
-                                                                v-model="eventRegisterForm.terms"
-                                                            />
-                                                            <label class="form-check-label" for="formCheckRight1"> Allow Terms & Conditions </label>
-                                                            <InputError class="mt-2 mb-4 text-danger" :message="eventRegisterForm.errors.terms" />
+                                                                v-model="eventRegisterForm.terms" />
+                                                            <label class="form-check-label" for="formCheckRight1"> Allow
+                                                                Terms & Conditions </label>
+                                                            <InputError class="mt-2 mb-4 text-danger"
+                                                                :message="eventRegisterForm.errors.terms" />
                                                         </div>
                                                     </div>
 
                                                     <div class="mt-5 d-grid">
                                                         <button
                                                             class="btn btn-primary btn-block waves-effect waves-light"
-                                                            type="submit"
-                                                            @click.prevent="submitEventRegisterRequest"
-                                                            :disabled="eventRegisterForm.processing"
-                                                        >
-                                                            <i
-                                                                class="align-middle bx bx-loader bx-spin font-size-16 me-2"
-                                                                v-if="eventRegisterForm.processing"
-                                                            ></i
-                                                            ><span>Register</span>
+                                                            type="submit" @click.prevent="submitEventRegisterRequest"
+                                                            :disabled="eventRegisterForm.processing">
+                                                            <i class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                                                                v-if="eventRegisterForm.processing"></i><span>Register</span>
                                                         </button>
                                                     </div>
                                                 </form>
@@ -664,54 +642,42 @@ function getEventTicket() {
                             <div class="mt-5">
                                 <h5 class="pt-4">Reviews :</h5>
 
-                                <div
-                                    class="mt-3 d-flex border-bottom"
+                                <div class="mt-3 d-flex border-bottom"
                                     v-for="(review, index) in props.eventDetails.reviews"
-                                    :key="`${index}_${review.submitted_by}`"
-                                >
-                                    <img
-                                        :src="review.user.profile_photo_url"
-                                        class="me-3 rounded-circle header-profile-user object-fit-cover"
-                                        alt="img"
-                                    />
+                                    :key="`${index}_${review.submitted_by}`">
+                                    <img :src="review.user.profile_photo_url"
+                                        class="me-3 rounded-circle header-profile-user object-fit-cover" alt="img" />
                                     <div class="flex-grow-1">
                                         <h5 class="mt-0 font-size-15">{{ review.submitted_by }}</h5>
                                         <p class="text-muted">{{ review.review }}</p>
                                         <ul class="invisible list-inline float-sm-end">
                                             <li class="list-inline-item">
-                                                <a href="javascript: void(0);"> <i class="far fa-thumbs-up me-1"></i> Like </a>
+                                                <a href="javascript: void(0);"> <i class="far fa-thumbs-up me-1"></i>
+                                                    Like </a>
                                             </li>
                                             <li class="list-inline-item">
-                                                <a href="javascript: void(0);"> <i class="far fa-comment-dots me-1"></i> Comment </a>
+                                                <a href="javascript: void(0);"> <i class="far fa-comment-dots me-1"></i>
+                                                    Comment </a>
                                             </li>
                                         </ul>
                                         <div class="text-muted">
-                                            <i class="far fa-calendar-alt text-primary me-1"></i> {{ moment(review.created_at).fromNow() }}
+                                            <i class="far fa-calendar-alt text-primary me-1"></i> {{
+                                                moment(review.created_at).fromNow() }}
                                         </div>
                                     </div>
                                 </div>
                                 <form v-if="usePage().props.auth.user">
                                     <div class="gap-4 mt-5 mb-5 col-12 c d-flex align-items-end">
                                         <div class="col-10 col-md-8">
-                                            <textarea
-                                                class="form-control"
-                                                id="commentmessage-input"
-                                                placeholder="Your message..."
-                                                rows="3"
-                                                v-model="form.review"
-                                            ></textarea>
+                                            <textarea class="form-control" id="commentmessage-input"
+                                                placeholder="Your message..." rows="3" v-model="form.review"></textarea>
                                         </div>
                                         <div>
-                                            <button
-                                                type="submit"
-                                                class="btn btn-primary chat-send w-md"
-                                                @click.prevent="submit"
-                                                :disabled="form.processing"
-                                            >
-                                                <span class="d-none d-sm-inline-block me-2"
-                                                    ><i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
-                                                    ><span>Submit</span></span
-                                                >
+                                            <button type="submit" class="btn btn-primary chat-send w-md"
+                                                @click.prevent="submit" :disabled="form.processing">
+                                                <span class="d-none d-sm-inline-block me-2"><i
+                                                        class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                                                        v-if="form.processing"></i><span>Submit</span></span>
                                                 <i class="mdi mdi-send"></i>
                                             </button>
                                         </div>
@@ -720,7 +686,8 @@ function getEventTicket() {
                                     </div>
                                 </form>
                                 <div v-else class="mt-3 mb-3 text-center text-muted">
-                                    <div><span class="text-primary" role="button" @click="goLogin">Sign in</span> to sumbmit a review</div>
+                                    <div><span class="text-primary" role="button" @click="goLogin">Sign in</span> to
+                                        sumbmit a review</div>
                                 </div>
                             </div>
                         </div>
@@ -765,10 +732,9 @@ function getEventTicket() {
                 </div>
             </div>
         </b-container>
-    </div>
-
-    <div class="mt-5">
-        <FooterSection />
+        <div class="mt-5">
+            <FooterSection />
+        </div>
     </div>
 </template>
 <style scoped>
@@ -782,6 +748,7 @@ function getEventTicket() {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
 .dotted-border {
     border: 1px dotted #d3d3d3;
     padding: 10px;
