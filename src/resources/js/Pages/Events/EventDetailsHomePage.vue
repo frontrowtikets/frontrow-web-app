@@ -1,5 +1,5 @@
 <script setup>
-import { usePage, useForm, router } from "@inertiajs/vue3";
+import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, onMounted, computed, ref, watch } from "vue";
 import IsUserAdmin from "../../Composables/IsUserAdmin.js";
@@ -254,6 +254,8 @@ function getEventTicket() {
 </script>
 <template>
     <section>
+
+        <Head :title="`${props.eventDetails.title} - Event Details`" />
         <div v-scroll-spy>
             <b-container class="" style="margin-top: 16em">
                 <HomeHeader />

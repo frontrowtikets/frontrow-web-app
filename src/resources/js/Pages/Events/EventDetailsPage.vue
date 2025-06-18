@@ -1,5 +1,5 @@
 <script setup>
-import { usePage, useForm, router } from "@inertiajs/vue3";
+import { Head, usePage, useForm, router } from "@inertiajs/vue3";
 import DashboardLayout from "../../Layouts/main.vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, onMounted, computed, ref, watch } from "vue";
@@ -249,6 +249,8 @@ function getEventTicket() {
 </script>
 <template>
     <DashboardLayout>
+
+        <Head :title="`${props.eventDetails.title} - Event Details`" />
         <PageHeader :title="props.eventDetails.title" :items="state.items" role="button"
             @click="showCheckout = false" />
 
