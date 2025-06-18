@@ -8,11 +8,12 @@
         @endif
         @php
             $event = $page['props']['eventDetails'] ?? null;
+            $movie = $page['props']['movieDetails'] ?? null;
         @endphp
         
         @if ($event)
         @php
-            $start_date_and_time = $event['start_date'] . ' ' . $event['time'];
+            $start_date_and_time = $event['start_date'] . ' ' . $event['start_time'];
             $start_date = \Carbon\Carbon::parse($start_date_and_time)->format('jS M Y');
             $start_time = \Carbon\Carbon::parse($start_date_and_time)->format('H:i');
             $event_description = $event['title'] . ' | ' . $event['location_name'] . ' | ' . $start_date . ', ' . $start_time;
@@ -33,6 +34,28 @@
         <meta name="twitter:title" content="{{ $event['title'] }}" />
         <meta name="twitter:description" content="{{ $event_description }}" />
         <meta name="twitter:image" content="{{ $event['thumbnail_url'] }}" />
+
+    @elseif($movie)
+        @php
+            $release_date = \Carbon\Carbon::parse($movie['release_date'])->format('jS M Y');
+            $movie_description = $movie['title'] . ' | ' . $movie['viewing_format'] . ' | ' . $release_date;
+            $movie_url = url('/home/movie/' . \Illuminate\Support\Str::slug($movie['title']) . '/' . $movie['id']);
+        @endphp
+        {{-- Dynamic meta for event --}}
+        <title inertia>{{ $movie['title'] }}</title>
+        <meta name="description" content="{{ $movie_description }}">
+        <meta name="keywords" content="{{ $movie['title'] }}, movie tickets, FrontRow Tikets">
+
+        <meta property="og:title" content="{{ $movie['title'] }}" />
+        <meta property="og:description" content="{{ $movie_description }}" />
+        <meta property="og:image" content="{{ $movie['thumbnail_url']}}" />
+        <meta property="og:url" content="{{ $movie_url }}" />
+        <meta property="og:type" content="website"/>
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ $movie['title'] }}" />
+        <meta name="twitter:description" content="{{ $movie_description }}" />
+        <meta name="twitter:image" content="{{ $movie['thumbnail_url'] }}" />
     @else
         {{-- Default meta tags --}}
         <title inertia>{{ config('app.name', 'FrontRow Tikets') }}</title>
