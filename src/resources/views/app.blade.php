@@ -6,21 +6,46 @@
                 @if (request()->getHost() === 'frontrow.cinemaug.com')
             <meta name="robots" content="noindex, nofollow">
         @endif
+        @php
+            $event = $page['props']['eventDetails'] ?? null;
+        @endphp
+        
+        @if ($event)
+        @dd($event)
+        {{-- Dynamic meta for event --}}
+        <title inertia>{{ $event['title'] }}</title>
+        <meta name="description" content="{{ $event['description'] ?? 'Join us for an amazing event!' }}">
+        <meta name="keywords" content="{{ $event['title'] }}, event tickets, FrontRow Tikets">
+
+        <meta property="og:title" content="{{ $event['title'] }}" />
+        <meta property="og:description" content="{{ $event['description'] ?? 'Join us for an amazing event!' }}" />
+        <meta property="og:image" content="{{ $event['thumbnail_url'] ?? asset('large.png') }}" />
+        <meta property="og:url" content="{{ url('/home/event/' . \Illuminate\Support\Str::slug($event['title']) . '/' . $event['id']) }}" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ $event['title'] }}" />
+        <meta name="twitter:description" content="{{ $event['description'] ?? 'Join us for an amazing event!' }}" />
+        <meta name="twitter:image" content="{{ $event['thumbnail_url'] ?? asset('large.png') }}" />
+    @else
+        {{-- Default meta tags --}}
+        <title inertia>{{ config('app.name', 'FrontRow Tikets') }}</title>
         <meta name="description" content="FrontRow Tikets - Your gateway to the best movies and events. Book tickets seamlessly and enjoy premium entertainment.">
         <meta name="keywords" content="FrontRow Tikets, movie tickets, event tickets, online booking, entertainment">
         <meta name="author" content="FrontRow Tikets">
         <meta name="robots" content="index, follow">
+
         <meta property="og:title" content="FrontRow Tikets - Your Front-Row Seat to Unforgettable Entertainment!">
         <meta property="og:description" content="Discover and book tickets for the latest movies and events with ease.">
-        <meta property="og:image" content="/large.png">
-        <meta property="og:url" content="https://frontrowtikets.com">
-        <meta name="twitter:card" content="/large.png">
+        <meta property="og:image" content="{{ asset('large.png') }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:type" content="website">
+
+        <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="FrontRow Tikets - Book Your Tickets Now">
         <meta name="twitter:description" content="Discover and book tickets for the latest movies and events with ease.">
-        <meta name="twitter:image" content="/large.png">
-
-        <title inertia>{{ config('app.name', 'FrontRow Tikets') }}</title>
-
+        <meta name="twitter:image" content="{{ asset('large.png') }}">
+    @endif
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="/small.png">
         <link rel="apple-touch-icon" href="/small.png">

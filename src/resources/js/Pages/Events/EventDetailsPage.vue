@@ -249,24 +249,6 @@ function getEventTicket() {
 </script>
 <template>
     <DashboardLayout>
-
-        <Head>
-            <title>{{ eventDetails.title }}</title>
-            <meta name="description" :content="eventDetails.description || 'Join us for an amazing event!'" />
-
-            <!-- Open Graph Meta Tags -->
-            <meta property="og:title" :content="eventDetails.title" />
-            <meta property="og:description" :content="eventDetails.description || 'Join us for an amazing event!'" />
-            <meta property="og:image" :content="eventDetails.thumbnail_url" />
-            <meta property="og:url" :content="`/home/event/${slugify(title)}/${id}`" />
-            <meta property="og:type" content="website" />
-
-            <!-- Twitter Card Meta Tags -->
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" :content="eventDetails.title" />
-            <meta name="twitter:description" :content="eventDetails.description || 'Join us for an amazing event!'" />
-            <meta name="twitter:image" :content="eventDetails.thumbnail_url" />
-        </Head>
         <PageHeader :title="props.eventDetails.title" :items="state.items" role="button"
             @click="showCheckout = false" />
 
@@ -402,7 +384,7 @@ function getEventTicket() {
                                     </div>
                                     <div class="d-block d-md-none">
                                         <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText
-                                        }}</b-button>
+                                            }}</b-button>
                                     </div>
                                 </div>
                                 <div class="flex-row mb-3 d-flex col-12 justify-content-between">
