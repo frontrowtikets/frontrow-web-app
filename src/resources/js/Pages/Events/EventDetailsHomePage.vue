@@ -1,5 +1,5 @@
 <script setup>
-import { Head, usePage, useForm, router } from "@inertiajs/vue3";
+import { usePage, useForm, router } from "@inertiajs/vue3";
 import PageHeader from "@/js/Components/page-header.vue";
 import { reactive, onMounted, computed, ref, watch } from "vue";
 import IsUserAdmin from "../../Composables/IsUserAdmin.js";
@@ -349,7 +349,7 @@ function getEventTicket() {
                                             </div>
                                             <div class="d-block d-md-none">
                                                 <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText
-                                                }}</b-button>
+                                                    }}</b-button>
                                             </div>
                                         </div>
                                         <div class="flex-row mb-3 d-flex col-12 justify-content-between">
