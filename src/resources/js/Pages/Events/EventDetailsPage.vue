@@ -250,7 +250,7 @@ function getEventTicket() {
 <template>
     <DashboardLayout>
 
-        <Head :title="`${props.eventDetails.title} - Event Details`" />
+        <Head :title="`${props.eventDetails.title} - FrontRow Tickets`" />
         <PageHeader :title="props.eventDetails.title" :items="state.items" role="button"
             @click="showCheckout = false" />
 
@@ -386,7 +386,7 @@ function getEventTicket() {
                                     </div>
                                     <div class="d-block d-md-none">
                                         <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText
-                                        }}</b-button>
+                                            }}</b-button>
                                     </div>
                                 </div>
                                 <div class="flex-row mb-3 d-flex col-12 justify-content-between">
