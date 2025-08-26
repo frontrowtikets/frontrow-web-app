@@ -69,10 +69,10 @@ class CreditBeneficiaryWallet extends Command
 
     private function processMovieTickets()
     {
-        $tickets = MovieTicket::where('beneficiary_credited', false)
-            ->whereIn('ticket_status', ['booked', 'confirmed'])
+        $tickets = MovieTicket::whereRaw('beneficiary_credited = ?', [false])
             ->with(['movie', 'theatre', 'movie.beneficiary', 'movie.beneficiary.wallet'])
             ->get();
+
         if ($tickets->isEmpty()) {
             $this->info("No movie tickets found for beneficiary crediting.");
             Log::info("No movie tickets found for beneficiary crediting.");
@@ -127,7 +127,7 @@ class CreditBeneficiaryWallet extends Command
 
     private function processEventTickets()
     {
-        $tickets = UserEventTicket::where('beneficiary_credited', false)
+        $tickets = UserEventTicket::whereRaw('beneficiary_credited = ?', [false])
             ->with(['event', 'event.beneficiary', 'event.beneficiary.wallet'])
             ->get();
         if ($tickets->isEmpty()) {
