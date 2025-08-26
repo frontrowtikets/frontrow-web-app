@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Support\Str;
 
 
 
@@ -32,7 +33,8 @@ class Event extends Model implements HasMedia
         'access_type',
         'status',
         'is_active',
-        'trailer_url'
+        'trailer_url',
+        'slug'
     ];
 
     protected $casts = [
@@ -73,5 +75,11 @@ class Event extends Model implements HasMedia
                 return 'declined';
             }
         }
+    }
+    protected static function booted()
+    {
+        static::creating(function ($movie) {
+            $movie->slug = Str::slug($movie->title) . '-' . uniqid();
+        });
     }
 }

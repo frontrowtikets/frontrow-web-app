@@ -180,7 +180,16 @@ function payTicketWithWallet() {
 <template>
     <div v-if="showPaymentPage" class="card-body">
         <div class="payment-container">
-            <iframe id="payment_page" ref="paymentPageIframe" :src="paymentRedirectURL" style="width: 100%; height: 100%"></iframe>
+            <!-- Add a notice banner -->
+            <div class="alert alert-info payment-notice" style="margin: 0; border-radius: 0;">
+                <div class="d-flex align-items-center">
+                    <i class="bx bx-info-circle me-2"></i>
+                    <strong>Important:</strong> After completing payment, please wait for your tickets to be generated.
+                    Do not close this window.
+                </div>
+            </div>
+            <iframe id="payment_page" ref="paymentPageIframe" :src="paymentRedirectURL"
+                style="width: 100%; height: 100%"></iframe>
         </div>
     </div>
     <div v-else class="pt-4 flex-column justify-content-center d-flex flex-md-row col-12">
@@ -191,14 +200,16 @@ function payTicketWithWallet() {
 
                     <div class="mt-4 text-start">
                         <div v-for="(item, index) in props.paymentDetails" :key="`${item.roomId}_${index}`">
-                            <div class="mb-2"><span class="fw-bold me-3">Theatre:</span>{{ item?.theatre.theatre }}</div>
+                            <div class="mb-2"><span class="fw-bold me-3">Theatre:</span>{{ item?.theatre.theatre }}
+                            </div>
                             <div class="mb-2"><span class="fw-bold me-3">Room:</span>{{ item?.roomName }}</div>
-                            <div class="mb-2"><span class="fw-bold me-3">Tickets:</span>{{ item?.selectedSeats.length }}</div>
+                            <div class="mb-2"><span class="fw-bold me-3">Tickets:</span>{{ item?.selectedSeats.length }}
+                            </div>
                             <div class="mb-2">
-                                <span class="fw-bold me-3">Seats:</span
-                                ><span class="me-3 badge badge-soft-secondary" v-for="(seat, index) in item?.selectedSeats" :key="index">{{
-                                    seat
-                                }}</span>
+                                <span class="fw-bold me-3">Seats:</span><span class="me-3 badge badge-soft-secondary"
+                                    v-for="(seat, index) in item?.selectedSeats" :key="index">{{
+                                        seat
+                                    }}</span>
                             </div>
                             <div class="mb-4"><span class="fw-bold me-3">Service Fee:</span>UGX 500</div>
 
@@ -207,7 +218,8 @@ function payTicketWithWallet() {
                         <div class="mb-4 text-end">
                             <div class="mb-2 fw-bold me-3">Total</div>
                             <div>
-                                <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(props.total + 500) }}</h4>
+                                <h4>{{ selectedTheatre?.currency || "UGX" }} {{ useCurrencyFormat(props.total + 500) }}
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -238,7 +250,8 @@ function payTicketWithWallet() {
                             <img :src="airtelMoney" height="50" width="50" />
                         </button>
                     </div> -->
-                    <div v-if="responseError" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                    <div v-if="responseError" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
+                        role="alert">
                         {{ responseError }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -251,77 +264,38 @@ function payTicketWithWallet() {
                         <div class="mb-4 credit-card-info--form">
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Card holder full name</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="text"
-                                    name="input-name"
-                                    title="Enter Card Holder Name"
-                                    placeholder="Enter your full name"
-                                    v-model="buyerName"
-                                />
+                                <input id="password_field" class="input_field" type="text" name="input-name"
+                                    title="Enter Card Holder Name" placeholder="Enter your full name"
+                                    v-model="buyerName" />
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Email Address</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="email"
-                                    name="input-name"
-                                    title="Enter Email Address"
-                                    placeholder="Enter Email Address"
-                                    v-model="buyerEmail"
-                                />
+                                <input id="password_field" class="input_field" type="email" name="input-name"
+                                    title="Enter Email Address" placeholder="Enter Email Address"
+                                    v-model="buyerEmail" />
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Phone Number</label>
-                                <VueTelInput
-                                    class="input_field"
-                                    :inputOptions.required="true"
-                                    :inputOptions.showDialCode="true"
-                                    :rules="[isValidPhone]"
-                                    v-model="userPhoneNumber"
-                                    @input="phoneNumber"
-                                    @change="phoneNumber"
-                                    @blur="checkValidity"
-                                />
-                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg }}</small>
+                                <VueTelInput class="input_field" :inputOptions.required="true"
+                                    :inputOptions.showDialCode="true" :rules="[isValidPhone]" v-model="userPhoneNumber"
+                                    @input="phoneNumber" @change="phoneNumber" @blur="checkValidity" />
+                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg
+                                }}</small>
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Card Number</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="number"
-                                    name="input-name"
-                                    title="Enter Card Number"
-                                    v-maska="'#### #### #### ####'"
-                                    placeholder="0000 0000 0000 0000"
-                                    v-model="cardNumber"
-                                />
+                                <input id="password_field" class="input_field" type="number" name="input-name"
+                                    title="Enter Card Number" v-maska="'#### #### #### ####'"
+                                    placeholder="0000 0000 0000 0000" v-model="cardNumber" />
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Expiry Date / CVV</label>
                                 <div class="split">
-                                    <input
-                                        id="password_field"
-                                        class="input_field"
-                                        type="text"
-                                        name="input-name"
-                                        title="Expiry Date"
-                                        v-maska="'##/##'"
-                                        placeholder="01/25"
-                                        v-model="expiryDate"
-                                    />
-                                    <input
-                                        id="password_field"
-                                        class="input_field"
-                                        type="number"
-                                        name="cvv"
-                                        title="CVV"
-                                        placeholder="CVV"
-                                        v-model="cvv"
-                                    />
+                                    <input id="password_field" class="input_field" type="text" name="input-name"
+                                        title="Expiry Date" v-maska="'##/##'" placeholder="01/25"
+                                        v-model="expiryDate" />
+                                    <input id="password_field" class="input_field" type="number" name="cvv" title="CVV"
+                                        placeholder="CVV" v-model="cvv" />
                                 </div>
                             </div>
                         </div>
@@ -330,55 +304,30 @@ function payTicketWithWallet() {
                         <div class="mb-4 credit-card-info--form">
                             <div class="input_container">
                                 <label for="password_field" class="input_label">First name</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="text"
-                                    name="input-name"
-                                    title="Enter Card Holder Name"
-                                    placeholder="Enter your full name"
-                                    v-model="buyerName"
-                                />
+                                <input id="password_field" class="input_field" type="text" name="input-name"
+                                    title="Enter Card Holder Name" placeholder="Enter your full name"
+                                    v-model="buyerName" />
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Last name</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="text"
-                                    name="input-name"
-                                    title="Enter Card Holder Name"
-                                    placeholder="Enter your full name"
-                                    v-model="buyerLastName"
-                                />
+                                <input id="password_field" class="input_field" type="text" name="input-name"
+                                    title="Enter Card Holder Name" placeholder="Enter your full name"
+                                    v-model="buyerLastName" />
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Email</label>
                                 <div class="split">
-                                    <input
-                                        id="password_field"
-                                        class="input_field"
-                                        type="email"
-                                        name="input-name"
-                                        title="Email"
-                                        placeholder="Email"
-                                        v-model="buyerEmail"
-                                    />
+                                    <input id="password_field" class="input_field" type="email" name="input-name"
+                                        title="Email" placeholder="Email" v-model="buyerEmail" />
                                 </div>
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Phone Number</label>
-                                <VueTelInput
-                                    class="input_field"
-                                    :inputOptions.required="true"
-                                    :inputOptions.showDialCode="true"
-                                    :rules="[isValidPhone]"
-                                    v-model="userPhoneNumber"
-                                    @input="phoneNumber"
-                                    @change="phoneNumber"
-                                    @blur="checkValidity"
-                                />
-                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg }}</small>
+                                <VueTelInput class="input_field" :inputOptions.required="true"
+                                    :inputOptions.showDialCode="true" :rules="[isValidPhone]" v-model="userPhoneNumber"
+                                    @input="phoneNumber" @change="phoneNumber" @blur="checkValidity" />
+                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg
+                                }}</small>
                             </div>
                         </div>
                     </div>
@@ -386,58 +335,36 @@ function payTicketWithWallet() {
                         <div class="mb-4 credit-card-info--form">
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Full name</label>
-                                <input
-                                    id="password_field"
-                                    class="input_field"
-                                    type="text"
-                                    name="input-name"
-                                    title="Enter Card Holder Name"
-                                    placeholder="Enter your full name"
-                                    v-model="buyerName"
-                                />
+                                <input id="password_field" class="input_field" type="text" name="input-name"
+                                    title="Enter Card Holder Name" placeholder="Enter your full name"
+                                    v-model="buyerName" />
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Email</label>
                                 <div class="split">
-                                    <input
-                                        id="password_field"
-                                        class="input_field"
-                                        type="email"
-                                        name="input-name"
-                                        title="Email"
-                                        placeholder="Email"
-                                        v-model="buyerEmail"
-                                    />
+                                    <input id="password_field" class="input_field" type="email" name="input-name"
+                                        title="Email" placeholder="Email" v-model="buyerEmail" />
                                 </div>
                             </div>
                             <div class="input_container">
                                 <label for="password_field" class="input_label">Airtel Phone Number</label>
-                                <VueTelInput
-                                    class="input_field"
-                                    :inputOptions.required="true"
-                                    :inputOptions.showDialCode="true"
-                                    :rules="[isValidPhone]"
-                                    v-model="userPhoneNumber"
-                                    @input="phoneNumber"
-                                    @change="phoneNumber"
-                                    @blur="checkValidity"
-                                />
-                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg }}</small>
+                                <VueTelInput class="input_field" :inputOptions.required="true"
+                                    :inputOptions.showDialCode="true" :rules="[isValidPhone]" v-model="userPhoneNumber"
+                                    @input="phoneNumber" @change="phoneNumber" @blur="checkValidity" />
+                                <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg
+                                }}</small>
                             </div>
                         </div>
                     </div>
 
                     <button class="purchase--btn" @click.prevent="payTicket" :disabled="checkoutDisabled">
-                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Make Payment</span>
+                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                            v-if="isProcessing"></i><span>Make Payment</span>
                     </button>
-                    <button
-                        v-if="props.myWallet "
-                        class="mt-4 btn btn-primary"
-                        style="padding: 13px"
-                        @click.prevent="payTicketWithWallet"
-                        :disabled="checkoutDisabled"
-                    >
-                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessingWallet"></i><span>Pay with Wallet</span>
+                    <button v-if="props.myWallet" class="mt-4 btn btn-primary" style="padding: 13px"
+                        @click.prevent="payTicketWithWallet" :disabled="checkoutDisabled">
+                        <i class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                            v-if="isProcessingWallet"></i><span>Pay with Wallet</span>
                     </button>
                 </form>
             </div>
@@ -488,7 +415,7 @@ function payTicketWithWallet() {
     margin: 0 10px;
 }
 
-.separator > p {
+.separator>p {
     word-break: keep-all;
     display: block;
     text-align: center;
@@ -596,5 +523,16 @@ function payTicketWithWallet() {
     height: 100%;
     border: none;
     overflow: hidden;
+}
+
+.payment-notice {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #d1ecf1 !important;
+    border-color: #bee5eb !important;
+    color: #0c5460 !important;
+    font-size: 14px;
+    padding: 15px;
 }
 </style>

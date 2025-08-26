@@ -420,7 +420,7 @@ class EventService
     {
         $prefix = "FRE";
         $uniqueId = uniqid($prefix, true);
-        $uniqueId = str_replace('.', '', $uniqueId);
+        $uniqueId = str_replace('.', '', strtoupper($uniqueId));
         return substr($uniqueId, 0, 18);
     }
 }

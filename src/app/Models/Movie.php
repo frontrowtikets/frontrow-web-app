@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
+use Illuminate\Support\Str;
 
 class Movie extends Model implements HasMedia
 {
@@ -36,7 +36,8 @@ class Movie extends Model implements HasMedia
         'viewing_format',
         'director',
         'writer',
-        'producer'
+        'producer',
+        'slug'
 
     ];
 
@@ -80,11 +81,13 @@ class Movie extends Model implements HasMedia
         return $this->hasMany(MovieReview::class);
     }
 
-    public function tickets(){
+    public function tickets()
+    {
         return $this->hasMany(MovieTicket::class);
     }
 
-    public function seatmap() {
+    public function seatmap()
+    {
         return $this->hasMany(SeatMap::class);
     }
 
@@ -93,5 +96,10 @@ class Movie extends Model implements HasMedia
         return $this->belongsToMany(MovieCategory::class, 'movie_category_links', 'movie_id', 'category_id');
     }
 
-
+    protected static function booted()
+    {
+        static::creating(function ($movie) {
+            $movie->slug = Str::slug($movie->title) . '-' . uniqid();
+        });
+    }
 }

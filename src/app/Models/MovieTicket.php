@@ -26,7 +26,8 @@ class MovieTicket extends Model
         'ticket_id',
         'booking_id',
         'user_payment_detail_id',
-        'payment_transaction_id'
+        'payment_transaction_id',
+        'beneficiary_credited'
     ];
 
 
@@ -42,12 +43,12 @@ class MovieTicket extends Model
     {
         return $this->belongsTo(PaymentTransaction::class);
     }
-    public function theatre(){
+    public function theatre()
+    {
         return $this->belongsTo(MovieShowTime::class, 'movie_show_time_id');
     }
-    public function showTimeSeats(){
+    public function showTimeSeats()
+    {
         return $this->belongsTo(MovieShowTimeSeat::class, 'movie_show_time_seat_id');
     }
-
-
 }

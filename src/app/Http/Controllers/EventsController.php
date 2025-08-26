@@ -62,7 +62,7 @@ class EventsController extends Controller
         return \Inertia\Inertia::render('Events/ScheduleEvent', [
             "eventCategories" => $eventCategories,
             "beneficiaries" => $beneficiaries,
-            "eventTicketCategories"=> $eventTicketCategories
+            "eventTicketCategories" => $eventTicketCategories
         ]);
     }
     public function CreateEvent(CreateEvent $request)
@@ -117,7 +117,7 @@ class EventsController extends Controller
     }
     public function eventDetailHome(Request $request)
     {
-        $eventDetail = Event::where('id', $request->id)->with([
+        $eventDetail = Event::where('slug', $request->slug)->with([
             'beneficiary',
             'categories',
             'reviews.user',
@@ -142,8 +142,6 @@ class EventsController extends Controller
 
         $requestDetails = $request->validated();
         EventService::registerForEvent($requestDetails);
-
-
     }
 
     public function eventManager(Request $request)
@@ -233,11 +231,13 @@ class EventsController extends Controller
         $event->delete();
     }
 
-    public function walletPay(Request $details){
+    public function walletPay(Request $details)
+    {
         EventService::payWithWallet($details);
     }
 
-    public function saveSeatsConfig(Request $request){
+    public function saveSeatsConfig(Request $request)
+    {
 
         $seatMap = SeatMapConfigTable::create([
             'theatre' => $request->theatreName,
@@ -253,9 +253,9 @@ class EventsController extends Controller
         }
     }
 
-    public function deleteSeatsConfig(Request $request){
-        $seatMap = SeatMapConfigTable::where('id',$request->seatIndex)->first();
+    public function deleteSeatsConfig(Request $request)
+    {
+        $seatMap = SeatMapConfigTable::where('id', $request->seatIndex)->first();
         $seatMap->delete();
-
     }
 }

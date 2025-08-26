@@ -17,12 +17,13 @@ class UserEventTicket extends Model
         'total_amount',
         'ticket_status',
         'booking_date',
-         'user_email',
+        'user_email',
         'ticket_id',
         'booking_id',
         'event_ticket_id',
         'user_payment_detail_id',
         'payment_transaction_id',
+        'beneficiary_credited'
     ];
 
     public function event()
