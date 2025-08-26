@@ -5,7 +5,7 @@ import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import HomeHeader from "@/js/Components/HomeHeader.vue";
 import FooterSection from "@/js/Components/FooterSection.vue";
 import { useStore } from "vuex";
-import { showLoader, swalNotification } from "@/mixins/helpers.js";
+import { showLoader, swalNotification } from "@/js/mixins/helpers.js";
 
 const props = defineProps(["OrderTrackingId", "OrderNotificationType", "OrderMerchantReference"]);
 
