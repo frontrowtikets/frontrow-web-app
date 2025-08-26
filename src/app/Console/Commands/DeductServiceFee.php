@@ -33,10 +33,11 @@ class DeductServiceFee extends Command
             ->get();
 
         // set service fee 
-        $serviceFee = \App\Models\BusinessSetting::first()->service_fee;
+        $businessSettings = \App\Models\BusinessSetting::first();
 
         // get shareholder_wallet_id from business settings
-        $shareholderWalletId = \App\Models\BusinessSetting::first()->shareholder_wallet_id;
+        $shareholderWalletId = $businessSettings->shareholder_wallet_id;
+        $serviceFee = $businessSettings->service_fee;
 
         // deduct service fee from each transaction and save the deduction
         foreach ($transactions as $transaction) {

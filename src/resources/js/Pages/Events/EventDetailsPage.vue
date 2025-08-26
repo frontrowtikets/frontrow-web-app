@@ -353,7 +353,7 @@ function getEventTicket() {
                             </li>
                         </ul>
                         <div class="mt-4" v-if="props.eventDetails.beneficiary_id == currentUser.id" @click="goToEventManager">
-                            <a class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Tickets Sold</a>
+                            <a class="rounded btn btn-soft-primary btn-hover w-100"><i class="mdi mdi-eye"></i> Ticket Sales</a>
                         </div>
                     </div>
                 </div>
@@ -386,7 +386,7 @@ function getEventTicket() {
                                     </div>
                                     <div class="d-block d-md-none">
                                         <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText
-                                            }}</b-button>
+                                        }}</b-button>
                                     </div>
                                 </div>
                                 <div class="flex-row mb-3 d-flex col-12 justify-content-between">
