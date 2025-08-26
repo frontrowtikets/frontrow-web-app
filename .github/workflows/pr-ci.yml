@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -23,13 +23,21 @@ jobs:
         run: composer install --no-interaction --prefer-dist
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "18"
+          # cache is skipped if no lock file
 
       - name: Install Node.js Dependencies
         working-directory: src
-        run: npm install
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
+            echo "Lock file found, using npm ci"
+            npm ci --fetch-retries=5 --fetch-retry-maxtimeout=120000
+          else
+            echo "No lock file found, falling back to npm install"
+            npm install --fetch-retries=5 --fetch-retry-maxtimeout=120000
+          fi
 
       - name: Build Vite Assets
         working-directory: src

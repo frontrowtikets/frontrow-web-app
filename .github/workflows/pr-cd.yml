@@ -11,12 +11,13 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "18" # Nuxt 3.0.0 safe LTS
+          cache: "npm" # enables npm caching for dependencies
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -29,19 +30,26 @@ jobs:
 
       - name: Install Node.js Dependencies
         working-directory: src
-        run: npm install
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
+            echo "Lock file found, using npm ci"
+            npm ci --fetch-retries=5 --fetch-retry-maxtimeout=120000
+          else
+            echo "No lock file found, falling back to npm install"
+            npm install --fetch-retries=5 --fetch-retry-maxtimeout=120000
+          fi
 
       - name: Build Vite Assets
         working-directory: src
         run: npm run build
 
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+        uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
       - name: Sync to Production Server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.REMOTE_DEV_HOST }}
           username: ${{ secrets.REMOTE_DEV_USER }}
@@ -56,15 +64,15 @@ jobs:
             if [ -f artisan ]; then
               ~/bin/composer install --no-interaction --prefer-dist
               chmod -R 755 vendor
-              ~/bin/composer -o dump-autoload
-              chmod -R 777 storage
-              chmod -R 777 bootstrap
-              php artisan storage:link
+              ~/bin/composer dump-autoload -o
+              chmod -R 777 storage bootstrap
+              php artisan storage:link || true
               php artisan optimize:clear
               php artisan migrate --force
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
             fi
+
       - name: Transfer Built Assets
         env:
           REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
@@ -76,10 +84,10 @@ jobs:
 
           echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 65002..."
 
-          # Add the server to known hosts
+          # Add server to known hosts
           ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
 
-          # Create the necessary directory structure on the remote server
+          # Ensure remote build directory exists
           ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH $REMOTE_BUILD_PATH"
 
           echo "Transferring built assets..."
