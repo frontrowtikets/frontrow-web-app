@@ -26,6 +26,10 @@ class UserEventTicket extends Model
         'beneficiary_credited'
     ];
 
+    protected $casts = [
+        'beneficiary_credited' => 'boolean',
+    ];
+
     public function event()
     {
         return $this->belongsTo(Event::class);

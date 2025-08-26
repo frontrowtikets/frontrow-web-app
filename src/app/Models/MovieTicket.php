@@ -31,6 +31,10 @@ class MovieTicket extends Model
     ];
 
 
+    protected $casts = [
+        'beneficiary_credited' => 'boolean',
+    ];
+
     public function movie()
     {
         return $this->belongsTo(Movie::class);
