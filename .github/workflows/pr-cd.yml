@@ -17,7 +17,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18" # Nuxt 3.0.0 safe LTS
-          cache: "npm" # enables npm caching for dependencies
+          cache: "npm"
+          cache-dependency-path: src/package-lock.json # 👈 points to your lock file
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -31,7 +32,7 @@ jobs:
       - name: Install Node.js Dependencies
         working-directory: src
         run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
+          if [ -f package-lock.json ]; then
             echo "Lock file found, using npm ci"
             npm ci --fetch-retries=5 --fetch-retry-maxtimeout=120000
           else
