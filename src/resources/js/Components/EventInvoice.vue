@@ -11,47 +11,36 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
 <template>
     <div class="row" id="eventInvoicepdf">
         <div class="col-12">
-            <table
-                class="body-wrap"
-                style="
+            <table class="body-wrap" style="
                     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                     box-sizing: border-box;
                     font-size: 14px;
                     width: 100%;
                     background-color: transparent;
                     margin: 0;
-                "
-            >
+                ">
                 <!-- <div class="col-12 d-flex justify-content-center">
                 <img
                     :src="logo"
 
                 />
             </div> -->
-                <tr
-                    style="
+                <tr style="
                         font-family: 'Helvetica Neue', Helvetica, Arial,
                             sans-serif;
                         box-sizing: border-box;
                         font-size: 14px;
                         margin: 0;
-                    "
-                >
-                    <td
-                        style="
+                    ">
+                    <td style="
                             font-family: 'Helvetica Neue', Helvetica, Arial,
                                 sans-serif;
                             box-sizing: border-box;
                             font-size: 14px;
                             vertical-align: top;
                             margin: 0;
-                        "
-                        valign="top"
-                    ></td>
-                    <td
-                        class="container"
-                        width="600"
-                        style="
+                        " valign="top"></td>
+                    <td class="container" width="600" style="
                             font-family: 'Helvetica Neue', Helvetica, Arial,
                                 sans-serif;
                             box-sizing: border-box;
@@ -61,12 +50,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                             max-width: 600px !important;
                             clear: both !important;
                             margin: 0 auto;
-                        "
-                        valign="top"
-                    >
-                        <div
-                            class="content"
-                            style="
+                        " valign="top">
+                        <div class="content" style="
                                 font-family: 'Helvetica Neue', Helvetica, Arial,
                                     sans-serif;
                                 box-sizing: border-box;
@@ -75,14 +60,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                 display: block;
                                 margin: 0 auto;
                                 padding: 20px;
-                            "
-                        >
-                            <table
-                                class="main"
-                                width="100%"
-                                cellpadding="0"
-                                cellspacing="0"
-                                style="
+                            ">
+                            <table class="main" width="100%" cellpadding="0" cellspacing="0" style="
                                     font-family: 'Helvetica Neue', Helvetica,
                                         Arial, sans-serif;
                                     box-sizing: border-box;
@@ -90,20 +69,15 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                     border-radius: 3px;
                                     margin: 0;
                                     border: none;
-                                "
-                            >
-                                <tr
-                                    style="
+                                ">
+                                <tr style="
                                         font-family: 'Helvetica Neue', Helvetica,
                                             Arial, sans-serif;
                                         box-sizing: border-box;
                                         font-size: 14px;
                                         margin: 0;
-                                    "
-                                >
-                                    <td
-                                        class="content-wrap aligncenter"
-                                        style="
+                                    ">
+                                    <td class="content-wrap aligncenter" style="
                                             font-family: 'Helvetica Neue',
                                                 Helvetica, Arial, sans-serif;
                                             box-sizing: border-box;
@@ -115,35 +89,23 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                             border: 2px solid #1d1e3a;
                                             border-radius: 7px;
                                             background-color: #fff;
-                                        "
-                                        align="center"
-                                        valign="top"
-                                    >
-                                        <table
-                                            width="100%"
-                                            cellpadding="0"
-                                            cellspacing="0"
-                                            style="
+                                        " align="center" valign="top">
+                                        <table width="100%" cellpadding="0" cellspacing="0" style="
                                                 font-family: 'Helvetica Neue',
                                                     Helvetica, Arial, sans-serif;
                                                 box-sizing: border-box;
                                                 font-size: 14px;
                                                 margin: 0;
-                                            "
-                                        >
-                                            <tr
-                                                style="
+                                            ">
+                                            <tr style="
                                                     font-family: 'Helvetica Neue',
                                                         Helvetica, Arial,
                                                         sans-serif;
                                                     box-sizing: border-box;
                                                     font-size: 14px;
                                                     margin: 0;
-                                                "
-                                            >
-                                                <td
-                                                    class="content-block"
-                                                    style="
+                                                ">
+                                                <td class="content-block" style="
                                                         font-family: 'Helvetica Neue',
                                                             Helvetica, Arial,
                                                             sans-serif;
@@ -152,12 +114,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                         vertical-align: top;
                                                         margin: 0;
                                                         padding: 0 0 20px;
-                                                    "
-                                                    valign="top"
-                                                >
-                                                    <h2
-                                                        class="aligncenter"
-                                                        style="
+                                                    " valign="top">
+                                                    <h2 class="aligncenter" style="
                                                             font-family: 'Helvetica Neue',
                                                                 Helvetica, Arial,
                                                                 'Lucida Grande',
@@ -169,33 +127,24 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                             font-weight: 400;
                                                             text-align: center;
                                                             margin: 40px 0 0;
-                                                        "
-                                                        align="center"
-                                                    >
+                                                        " align="center">
                                                         Thanks for using
-                                                        <b
-                                                            style="
+                                                        <b style="
                                                                 font-weight: 600;
                                                                 text-transform: uppercase;
-                                                            "
-                                                            >FrontRow</b
-                                                        >.
+                                                            ">FrontRow</b>.
                                                     </h2>
                                                 </td>
                                             </tr>
-                                            <tr
-                                                style="
+                                            <tr style="
                                                     font-family: 'Helvetica Neue',
                                                         Helvetica, Arial,
                                                         sans-serif;
                                                     box-sizing: border-box;
                                                     font-size: 14px;
                                                     margin: 0;
-                                                "
-                                            >
-                                                <td
-                                                    class="content-block aligncenter"
-                                                    style="
+                                                ">
+                                                <td class="content-block aligncenter" style="
                                                         font-family: 'Helvetica Neue',
                                                             Helvetica, Arial,
                                                             sans-serif;
@@ -205,13 +154,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                         text-align: center;
                                                         margin: 0;
                                                         padding: 0 0 20px;
-                                                    "
-                                                    align="center"
-                                                    valign="top"
-                                                >
-                                                    <table
-                                                        class="invoice"
-                                                        style="
+                                                    " align="center" valign="top">
+                                                    <table class="invoice" style="
                                                             font-family: 'Helvetica Neue',
                                                                 Helvetica, Arial,
                                                                 sans-serif;
@@ -220,10 +164,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                             text-align: left;
                                                             width: 80%;
                                                             margin: 40px auto;
-                                                        "
-                                                    >
-                                                        <tr
-                                                            style="
+                                                        ">
+                                                        <tr style="
                                                                 font-family: 'Helvetica Neue',
                                                                     Helvetica,
                                                                     Arial,
@@ -231,10 +173,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                 box-sizing: border-box;
                                                                 font-size: 14px;
                                                                 margin: 0;
-                                                            "
-                                                        >
-                                                            <td
-                                                                style="
+                                                            ">
+                                                            <td style="
                                                                     font-family: 'Helvetica Neue',
                                                                         Helvetica,
                                                                         Arial,
@@ -245,14 +185,11 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                     margin: 0;
                                                                     padding: 5px
                                                                         0;
-                                                                "
-                                                                valign="top"
-                                                            >
+                                                                " valign="top">
                                                                 <b>{{
                                                                     props.userDetails.full_name
-                                                                }}</b>
-                                                                <br
-                                                                    style="
+                                                                    }}</b>
+                                                                <br style="
                                                                         font-family: 'Helvetica Neue',
                                                                             Helvetica,
                                                                             Arial,
@@ -260,12 +197,11 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                         box-sizing: border-box;
                                                                         font-size: 14px;
                                                                         margin: 0;
-                                                                    "
-                                                                />Invoice #{{
-                                                                    moment().format(
-                                                                        "YY"
-                                                                    )
-                                                                }}{{
+                                                                    " />Invoice #{{
+                                                                        moment().format(
+                                                                            "YY"
+                                                                        )
+                                                                    }}{{
                                                                     moment().format(
                                                                         "MM"
                                                                     )
@@ -276,8 +212,7 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                 }}{{
                                                                     props.transactionDetails.id
                                                                 }}
-                                                                <br
-                                                                    style="
+                                                                <br style="
                                                                         font-family: 'Helvetica Neue',
                                                                             Helvetica,
                                                                             Arial,
@@ -285,18 +220,16 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                         box-sizing: border-box;
                                                                         font-size: 14px;
                                                                         margin: 0;
-                                                                    "
-                                                                />{{
-                                                                    moment(
-                                                                        date
-                                                                    ).format(
-                                                                        "ddd, DD MMM YYYY hh:mm:ss A"
-                                                                    )
-                                                                }}
+                                                                    " />{{
+                                                                        moment(
+                                                                            date
+                                                                        ).format(
+                                                                            "ddd, DD MMM YYYY hh:mm:ss A"
+                                                                        )
+                                                                    }}
                                                             </td>
                                                         </tr>
-                                                        <tr
-                                                            style="
+                                                        <tr style="
                                                                 font-family: 'Helvetica Neue',
                                                                     Helvetica,
                                                                     Arial,
@@ -304,10 +237,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                 box-sizing: border-box;
                                                                 font-size: 14px;
                                                                 margin: 0;
-                                                            "
-                                                        >
-                                                            <td
-                                                                style="
+                                                            ">
+                                                            <td style="
                                                                     font-family: 'Helvetica Neue',
                                                                         Helvetica,
                                                                         Arial,
@@ -318,14 +249,9 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                     margin: 0;
                                                                     padding: 5px
                                                                         0;
-                                                                "
-                                                                valign="top"
-                                                            >
-                                                                <table
-                                                                    class="invoice-items"
-                                                                    cellpadding="0"
-                                                                    cellspacing="0"
-                                                                    style="
+                                                                " valign="top">
+                                                                <table class="invoice-items" cellpadding="0"
+                                                                    cellspacing="0" style="
                                                                         font-family: 'Helvetica Neue',
                                                                             Helvetica,
                                                                             Arial,
@@ -334,10 +260,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                         font-size: 14px;
                                                                         width: 100%;
                                                                         margin: 0;
-                                                                    "
-                                                                >
-                                                                    <tr
-                                                                        style="
+                                                                    ">
+                                                                    <tr style="
                                                                             font-family: 'Helvetica Neue',
                                                                                 Helvetica,
                                                                                 Arial,
@@ -345,11 +269,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                             box-sizing: border-box;
                                                                             font-size: 14px;
                                                                             margin: 0;
-                                                                        "
-                                                                    >
-                                                                        <td
-                                                                            class="alignright"
-                                                                            style="
+                                                                        ">
+                                                                        <td class="alignright" style="
                                                                                 font-family: 'Helvetica Neue',
                                                                                     Helvetica,
                                                                                     Arial,
@@ -364,10 +285,7 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                                 margin: 0;
                                                                                 padding: 5px
                                                                                     0;
-                                                                            "
-                                                                            align="right"
-                                                                            valign="top"
-                                                                        >
+                                                                            " align="right" valign="top">
                                                                             {{
                                                                                 props
                                                                                     .transactionDetails
@@ -383,9 +301,7 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                         </td>
                                                                     </tr>
 
-                                                                    <tr
-                                                                        class="total"
-                                                                        style="
+                                                                    <tr class="total" style="
                                                                             font-family: 'Helvetica Neue',
                                                                                 Helvetica,
                                                                                 Arial,
@@ -393,12 +309,8 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                             box-sizing: border-box;
                                                                             font-size: 14px;
                                                                             margin: 0;
-                                                                        "
-                                                                    >
-                                                                        <td
-                                                                            class="alignright"
-                                                                            width="80%"
-                                                                            style="
+                                                                        ">
+                                                                        <td class="alignright" width="80%" style="
                                                                                 font-family: 'Helvetica Neue',
                                                                                     Helvetica,
                                                                                     Arial,
@@ -417,15 +329,10 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                                 margin: 0;
                                                                                 padding: 5px
                                                                                     0;
-                                                                            "
-                                                                            align="right"
-                                                                            valign="top"
-                                                                        >
+                                                                            " align="right" valign="top">
                                                                             Total
                                                                         </td>
-                                                                        <td
-                                                                            class="alignright"
-                                                                            style="
+                                                                        <td class="alignright" style="
                                                                                 font-family: 'Helvetica Neue',
                                                                                     Helvetica,
                                                                                     Arial,
@@ -444,10 +351,7 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                                                 margin: 0;
                                                                                 padding: 5px
                                                                                     0;
-                                                                            "
-                                                                            align="right"
-                                                                            valign="top"
-                                                                        >
+                                                                            " align="right" valign="top">
                                                                             {{
                                                                                 props
                                                                                     .transactionDetails
@@ -468,19 +372,15 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                     </table>
                                                 </td>
                                             </tr>
-                                            <tr
-                                                style="
+                                            <tr style="
                                                     font-family: 'Helvetica Neue',
                                                         Helvetica, Arial,
                                                         sans-serif;
                                                     box-sizing: border-box;
                                                     font-size: 14px;
                                                     margin: 0;
-                                                "
-                                            >
-                                                <td
-                                                    class="content-block aligncenter"
-                                                    style="
+                                                ">
+                                                <td class="content-block aligncenter" style="
                                                         font-family: 'Helvetica Neue',
                                                             Helvetica, Arial,
                                                             sans-serif;
@@ -490,28 +390,21 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                         text-align: center;
                                                         margin: 0;
                                                         padding: 0 0 20px;
-                                                    "
-                                                    align="center"
-                                                    valign="top"
-                                                >
-                                                    Cinema UG. 2896 Street Rd,
-                                                    Kampala, ST, 72823
+                                                    " align="center" valign="top">
+                                                    FrontRow Tickets, Makerere Kavule, Arrival Building Rn 38, Kampala -
+                                                    Uganda.
                                                 </td>
                                             </tr>
 
-                                            <tr
-                                                style="
+                                            <tr style="
                                                     font-family: 'Helvetica Neue',
                                                         Helvetica, Arial,
                                                         sans-serif;
                                                     box-sizing: border-box;
                                                     font-size: 14px;
                                                     margin: 0;
-                                                "
-                                            >
-                                                <td
-                                                    class="content-block"
-                                                    style="
+                                                ">
+                                                <td class="content-block" style="
                                                         text-align: center;
                                                         font-family: 'Helvetica Neue',
                                                             Helvetica, Arial,
@@ -521,14 +414,12 @@ const props = defineProps(["event", "userDetails", "transactionDetails"]);
                                                         vertical-align: top;
                                                         margin: 0;
                                                         padding: 0;
-                                                    "
-                                                    valign="top"
-                                                >
+                                                    " valign="top">
                                                     ©
                                                     {{
                                                         new Date().getFullYear()
                                                     }}
-                                                    FrontRow
+                                                    FrontRow Tickets. All rights reserved.
                                                 </td>
                                             </tr>
                                         </table>
