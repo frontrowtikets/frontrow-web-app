@@ -30,7 +30,14 @@ jobs:
 
       - name: Install Node.js Dependencies
         working-directory: src
-        run: npm ci --fetch-retries=5 --fetch-retry-maxtimeout=120000
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ] || [ -f yarn.lock ]; then
+            echo "Lock file found, using npm ci"
+            npm ci --fetch-retries=5 --fetch-retry-maxtimeout=120000
+          else
+            echo "No lock file found, falling back to npm install"
+            npm install --fetch-retries=5 --fetch-retry-maxtimeout=120000
+          fi
 
       - name: Build Vite Assets
         working-directory: src
