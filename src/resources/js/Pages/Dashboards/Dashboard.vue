@@ -260,7 +260,7 @@ function allEvents() {
 function allMovies() {
     router.visit("/allmovies");
 }
-function myTransaction(){
+function myTransaction() {
     router.visit("/mytransactions")
 }
 function slugify(title) {
@@ -278,9 +278,11 @@ function viewEvent(event) {
 }
 </script>
 <template>
-    <Head title="Dashboard" />
 
     <DashboardLayout>
+
+        <Head title="Dashboard" />
+
         <PageHeader title="Dashboard" :items="state.items" />
         <div class="row">
             <div class="col-xl-4 d-flex align-items-stretch" Style="">
@@ -289,11 +291,8 @@ function viewEvent(event) {
                         <div>
                             <div>
                                 <!-- <img class="rounded-circle header-profile-user" :src="avatar1" alt="Header Avatar" /> -->
-                                <img
-                                    :src="usePage().props.auth.user.profile_photo_url"
-                                    :alt="'p'"
-                                    class="rounded-circle header-profile-user object-fit-cover"
-                                />
+                                <img :src="usePage().props.auth.user.profile_photo_url" :alt="'p'"
+                                    class="rounded-circle header-profile-user object-fit-cover" />
                             </div>
 
                             <div class="mt-2">
@@ -310,7 +309,8 @@ function viewEvent(event) {
                             <div class="col-12 text-end">
                                 <div>
                                     <p class="mb-2 fw-medium">Wallet Balance :</p>
-                                    <h4>UGX {{ props.myWallet ? useCurrencyFormat(props.myWallet.balance) : "0.00" }}</h4>
+                                    <h4>UGX {{ props.myWallet ? useCurrencyFormat(props.myWallet.balance) : "0.00" }}
+                                    </h4>
                                 </div>
                             </div>
                         </div>
@@ -365,7 +365,8 @@ function viewEvent(event) {
                                 <div class="text-muted">{{ isAdmin ? "Events" : "My Events" }}</div>
 
                                 <div class="">
-                                    <apexchart height="90%" width="100%" type="area" :options="eventsChartOptions" :series="eventSeries"></apexchart>
+                                    <apexchart height="90%" width="100%" type="area" :options="eventsChartOptions"
+                                        :series="eventSeries"></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -376,7 +377,8 @@ function viewEvent(event) {
                                 <div class="text-muted">{{ isAdmin ? "Movies" : "My Movies" }}</div>
 
                                 <div class="">
-                                    <apexchart height="90%" width="100%" type="area" :options="moviesChartOptions" :series="movieseries"></apexchart>
+                                    <apexchart height="90%" width="100%" type="area" :options="moviesChartOptions"
+                                        :series="movieseries"></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -387,13 +389,8 @@ function viewEvent(event) {
                                 <div class="text-muted">{{ isAdmin ? "Transactions" : "My Transactions" }}</div>
 
                                 <div class="">
-                                    <apexchart
-                                        height="90%"
-                                        width="100%"
-                                        type="area"
-                                        :options="transactionsChartOptions"
-                                        :series="transactionsSeries"
-                                    ></apexchart>
+                                    <apexchart height="90%" width="100%" type="area" :options="transactionsChartOptions"
+                                        :series="transactionsSeries"></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -411,41 +408,43 @@ function viewEvent(event) {
             </div>
         </div> -->
 
-        <div class="" :class="[width < 1440?'col':'row']">
-            <div class=" d-flex align-items-stretch" :class="[width < 1440?'col-12':'col-4']">
+        <div class="" :class="[width < 1440 ? 'col' : 'row']">
+            <div class=" d-flex align-items-stretch" :class="[width < 1440 ? 'col-12' : 'col-4']">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <h4 class="mb-4 card-title">{{ isAdmin ? "Transactions" : "My Transactions" }}</h4>
                         <b-tabs pills nav-class="rounded bg-light" content-class="mt-4">
                             <b-tab title="All" active>
                                 <b-card-text class="mt-5">
-                                    <table v-if="props.allTransactions.length > 0" class="table align-middle table-centered table-nowrap">
+                                    <table v-if="props.allTransactions.length > 0"
+                                        class="table align-middle table-centered table-nowrap">
                                         <tbody>
                                             <tr v-for="data of props.allTransactions" :key="data.id">
                                                 <td>
                                                     <div>
                                                         <h5 class="mb-1 font-size-14">{{ data.user.name }}</h5>
-                                                        <p class="mb-0 text-muted">{{ data.currency }} {{ useCurrencyFormat(data.amount) }}</p>
+                                                        <p class="mb-0 text-muted">{{ data.currency }} {{
+                                                            useCurrencyFormat(data.amount) }}</p>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="text-end">
-                                                        <span v-if="(data.txn_status = 'pending')" class="badge badge-soft-warning font-size-11"
-                                                            >Pending</span
-                                                        >
-                                                        <span v-else-if="(data.txn_status = 'paid')" class="badge badge-soft-success font-size-11"
-                                                            >Paid</span
-                                                        >
-                                                        <span v-else-if="(data.txn_status = 'failed')" class="badge badge-soft-danger font-size-11"
-                                                            >Failed</span
-                                                        >
+                                                        <span v-if="(data.txn_status = 'pending')"
+                                                            class="badge badge-soft-warning font-size-11">Pending</span>
+                                                        <span v-else-if="(data.txn_status = 'paid')"
+                                                            class="badge badge-soft-success font-size-11">Successful</span>
+                                                        <span v-else-if="(data.txn_status = 'successful')"
+                                                            class="badge badge-soft-success font-size-11">Successful</span>
+                                                        <span v-else-if="(data.txn_status = 'failed')"
+                                                            class="badge badge-soft-danger font-size-11">Failed</span>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
 
-                                    <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                    <div v-else class="d-flex flex-column align-items-center"
+                                        style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
@@ -454,32 +453,32 @@ function viewEvent(event) {
 
                             <b-tab title="Successful">
                                 <b-card-text class="mt-5">
-                                    <table v-if="props.successTransactions.length > 0" class="table align-middle table-centered table-nowrap">
+                                    <table v-if="props.successTransactions.length > 0"
+                                        class="table align-middle table-centered table-nowrap">
                                         <tbody>
                                             <tr v-for="data of props.successTransactions" :key="data.id">
                                                 <td>
                                                     <div>
                                                         <h5 class="mb-1 font-size-14">{{ data.user.name }}</h5>
-                                                        <p class="mb-0 text-muted">{{ data.currency }} {{ useCurrencyFormat(data.amount) }}</p>
+                                                        <p class="mb-0 text-muted">{{ data.currency }} {{
+                                                            useCurrencyFormat(data.amount) }}</p>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="text-end">
-                                                        <span v-if="(data.txn_status = 'pending')" class="badge badge-soft-warning font-size-11"
-                                                            >Pending</span
-                                                        >
-                                                        <span v-else-if="(data.txn_status = 'paid')" class="badge badge-soft-success font-size-11"
-                                                            >Paid</span
-                                                        >
-                                                        <span v-else-if="(data.txn_status = 'failed')" class="badge badge-soft-danger font-size-11"
-                                                            >Failed</span
-                                                        >
+                                                        <span v-if="(data.txn_status = 'pending')"
+                                                            class="badge badge-soft-warning font-size-11">Pending</span>
+                                                        <span v-else-if="(data.txn_status = 'paid')"
+                                                            class="badge badge-soft-success font-size-11">Paid</span>
+                                                        <span v-else-if="(data.txn_status = 'failed')"
+                                                            class="badge badge-soft-danger font-size-11">Failed</span>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                    <div v-else class="d-flex flex-column align-items-center"
+                                        style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
@@ -487,32 +486,32 @@ function viewEvent(event) {
                             </b-tab>
                             <b-tab title="Failed">
                                 <b-card-text class="mt-5">
-                                    <table v-if="props.failedTransactions.length > 0" class="table align-middle table-centered table-nowrap">
+                                    <table v-if="props.failedTransactions.length > 0"
+                                        class="table align-middle table-centered table-nowrap">
                                         <tbody>
                                             <tr v-for="data of props.failedTransactions" :key="data.id">
                                                 <td>
                                                     <div>
                                                         <h5 class="mb-1 font-size-14">{{ data.user.name }}</h5>
-                                                        <p class="mb-0 text-muted">{{ data.currency }} {{ useCurrencyFormat(data.amount) }}</p>
+                                                        <p class="mb-0 text-muted">{{ data.currency }} {{
+                                                            useCurrencyFormat(data.amount) }}</p>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="text-end">
-                                                        <span v-if="(data.txn_status = 'pending')" class="badge badge-soft-warning font-size-11"
-                                                            >Pending</span
-                                                        >
-                                                        <span v-else-if="(data.txn_status = 'paid')" class="badge badge-soft-success font-size-11"
-                                                            >Paid</span
-                                                        >
-                                                        <span v-else-if="(data.txn_status = 'failed')" class="badge badge-soft-danger font-size-11"
-                                                            >Failed</span
-                                                        >
+                                                        <span v-if="(data.txn_status = 'pending')"
+                                                            class="badge badge-soft-warning font-size-11">Pending</span>
+                                                        <span v-else-if="(data.txn_status = 'paid')"
+                                                            class="badge badge-soft-success font-size-11">Paid</span>
+                                                        <span v-else-if="(data.txn_status = 'failed')"
+                                                            class="badge badge-soft-danger font-size-11">Failed</span>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div v class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                    <div v class="d-flex flex-column align-items-center"
+                                        style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
@@ -522,52 +521,45 @@ function viewEvent(event) {
                         </b-tabs>
 
                         <div class="mt-4">
-                                    <a @click="myTransaction" class="btn btn-light me-2 w-md">See More</a>
-                                </div>
+                            <a @click="myTransaction" class="btn btn-light me-2 w-md">See More</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class=" d-flex align-items-stretch" :class="[width < 1440?'col-12':'col-4']">
+            <div class=" d-flex align-items-stretch" :class="[width < 1440 ? 'col-12' : 'col-4']">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <h4 class="mb-4 card-title">{{ isAdmin ? "Movies" : "My Movies" }}</h4>
                         <div v-if="isBeneficiary">
-                            <div class="text-end"><b-button variant="primary" @click="useScheduleMoviesPage">Schedule Movie</b-button></div>
+                            <div class="text-end"><b-button variant="primary" @click="useScheduleMoviesPage">Schedule
+                                    Movie</b-button></div>
 
                             <div v-if="props.movies.length > 0" class="mt-5">
-                                <div v-for="(movie, index) in props.movies" :key="movie.id" class="p-3 mb-3 rounded bg-light d-flex">
+                                <div v-for="(movie, index) in props.movies" :key="`${movie.id}-${index}`"
+                                    class="p-3 mb-3 rounded bg-light d-flex">
                                     <img :src="movie.thumbnail_url" alt="" class="rounded avatar-sm me-3" />
                                     <div class="flex-grow-1">
                                         <h5 class="mb-2 font-size-15" role="button" @click="viewMovie(movie)">
                                             {{ movie.title }}
                                         </h5>
                                         <div class="flex-row gap-2 mb-1 d-flex" role="button">
-                                            <div
-                                                v-for="star in 5"
-                                                :key="star"
-                                                class="movie-item-star-icon-button"
+                                            <div v-for="star in 5" :key="star" class="movie-item-star-icon-button"
                                                 :class="star <= movie.overallRating ? 'text-warning' : 'text-grey'"
-                                                :disabled="star === movie.overallRating"
-                                                @click="updateRating(star)"
-                                                @mouseover="() => (movie.overallRating = star)"
-                                            >
+                                                :disabled="star === movie.overallRating" @click="updateRating(star)"
+                                                @mouseover="() => (movie.overallRating = star)">
                                                 <i class="bx bxs-star"></i>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="dropdown">
-                                            <button
-                                                class="btn btn-soft-primary"
-                                                type="button"
-                                                id="dropdownMenuButton11"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
+                                            <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton11"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton11">
-                                                <li class="p-1 ps-3" role="button" @click="viewMovie(movie)">View Details</li>
+                                                <li class="p-1 ps-3" role="button" @click="viewMovie(movie)">View
+                                                    Details</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -576,21 +568,27 @@ function viewEvent(event) {
                                     <a @click="allMovies" class="btn btn-light me-2 w-md">See More</a>
                                 </div>
                             </div>
-                            <div v-else class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                            <div v-else class="d-flex flex-column align-items-center"
+                                style="padding-top: 15vh; padding-bottom: 30vh">
                                 <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Movies Yet.</div>
                             </div>
                         </div>
-                        <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
-                            <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
-                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                        <div
+                            v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
+                            <div class="d-flex flex-column align-items-center"
+                                style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center"
+                                    @click="useRequestBeneficiaryStatus(currentUser.id)">
                                     Beneficiary Status <span class="text-primary">Pending Approval</span>
                                 </div>
                             </div>
                         </div>
                         <div v-else>
-                            <div v class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
-                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                            <div v class="d-flex flex-column align-items-center"
+                                style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center"
+                                    @click="useRequestBeneficiaryStatus(currentUser.id)">
                                     You need to become a beneficiary to schedule Movies.<br />
                                     <span class="text-primary">Click Here</span> to submit your request.
                                 </div>
@@ -599,34 +597,33 @@ function viewEvent(event) {
                     </div>
                 </div>
             </div>
-            <div class=" d-flex align-items-stretch" :class="[width < 1440?'col-12':'col-4']">
+            <div class=" d-flex align-items-stretch" :class="[width < 1440 ? 'col-12' : 'col-4']">
                 <div class="card w-100">
                     <div class="card-body w-100">
                         <h4 class="mb-4 card-title">{{ isAdmin ? "Events" : "My Events" }}</h4>
                         <div v-if="isBeneficiary">
-                            <div class="text-end"><b-button variant="primary" @click="useScheduleEventsPage">Schedule Event</b-button></div>
+                            <div class="text-end"><b-button variant="primary" @click="useScheduleEventsPage">Schedule
+                                    Event</b-button></div>
                             <div v-if="props.events.length > 0" class="mt-5">
-                                <div v-for="(event, index) in props.events" :key="event.id" class="p-3 mb-3 rounded bg-light d-flex">
+                                <div v-for="(event, index) in props.events" :key="`${event.id}-${index}`"
+                                    class="p-3 mb-3 rounded bg-light d-flex">
                                     <img :src="event.thumbnail_url" alt="" class="rounded avatar-sm me-3" />
                                     <div class="flex-grow-1">
                                         <h5 class="mb-2 font-size-15" role="button" @click="viewEvent(event)">
                                             {{ event.title }}
                                         </h5>
-                                        <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> {{ event.location_name }}</p>
+                                        <p class="mb-0 text-muted"><i class="align-middle bx bx-map text-body"></i> {{
+                                            event.location_name }}</p>
                                     </div>
                                     <div>
                                         <div class="dropdown">
-                                            <button
-                                                class="btn btn-soft-primary"
-                                                type="button"
-                                                id="dropdownMenuButton11"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
+                                            <button class="btn btn-soft-primary" type="button" id="dropdownMenuButton11"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton11">
-                                                <li class="p-1 ps-3" role="button" @click="viewEvent(event)">View Details</li>
+                                                <li class="p-1 ps-3" role="button" @click="viewEvent(event)">View
+                                                    Details</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -635,21 +632,27 @@ function viewEvent(event) {
                                     <a class="btn btn-light me-2 w-md" @click="allEvents">See More</a>
                                 </div>
                             </div>
-                            <div v-else class="d-flex flex-column align-items-center" style="padding-top: 15vh; padding-bottom: 30vh">
+                            <div v-else class="d-flex flex-column align-items-center"
+                                style="padding-top: 15vh; padding-bottom: 30vh">
                                 <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                 <div>No Events Yet.</div>
                             </div>
                         </div>
-                        <div v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
-                            <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
-                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                        <div
+                            v-else-if="currentUser.user_type === 'beneficiary' && currentUser.beneficiary_status === 'inactive'">
+                            <div class="d-flex flex-column align-items-center"
+                                style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center"
+                                    @click="useRequestBeneficiaryStatus(currentUser.id)">
                                     Beneficiary Status <span class="text-primary">Pending Approval</span>
                                 </div>
                             </div>
                         </div>
                         <div v-else>
-                            <div class="d-flex flex-column align-items-center" style="padding-top: 20vh; padding-bottom: 30vh">
-                                <div role="button" class="text-center" @click="useRequestBeneficiaryStatus(currentUser.id)">
+                            <div class="d-flex flex-column align-items-center"
+                                style="padding-top: 20vh; padding-bottom: 30vh">
+                                <div role="button" class="text-center"
+                                    @click="useRequestBeneficiaryStatus(currentUser.id)">
                                     You need to become a beneficiary to schedule Events.<br />
                                     <span class="text-primary">Click Here</span> to submit your request.
                                 </div>

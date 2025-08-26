@@ -50,11 +50,11 @@ class MoviesController extends Controller
         ]);
     }
 
-        public function schedueMovie(Request $request)
+    public function schedueMovie(Request $request)
     {
         $movieCategories = MovieCategory::select('id', 'name')->get();
         $beneficiaries = User::select('id', 'name')->where('user_type', 'beneficiary')->where('beneficiary_status', 'active')->get();
-        $SeatMapConfig = SeatMapConfigTable::select('id','theatre','room')->with(['seatMap'])->get();
+        $SeatMapConfig = SeatMapConfigTable::select('id', 'theatre', 'room')->with(['seatMap'])->get();
         return \Inertia\Inertia::render('Movies/ScheduleMovie', [
             'movieCategories' => $movieCategories,
             'beneficiaries' => $beneficiaries,
@@ -121,7 +121,7 @@ class MoviesController extends Controller
 
     public function movieDetailHome(Request $request)
     {
-        $movieDetail = Movie::where('id', $request->id)->with([
+        $movieDetail = Movie::where('slug', $request->slug)->with([
             'beneficiary',
             'showTimes',
             'genres',

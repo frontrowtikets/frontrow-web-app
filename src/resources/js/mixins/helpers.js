@@ -6,7 +6,7 @@ axios.defaults.withCredentials = false;
 
 // axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
-export function getDownloadedFile(blob,filename) {
+export function getDownloadedFile(blob, filename) {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

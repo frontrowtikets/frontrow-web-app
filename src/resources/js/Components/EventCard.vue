@@ -5,20 +5,31 @@ import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
 import useGetLowestEventTicket from "../Composables/useGetLowestEventTicket.js";
 const props = defineProps({
     discount: {
-
+        default: null
     },
     eventName: {
-
+        required: true
     },
-    eventImageLink: {},
-    eventDate: {},
-    eventLocation: {},
+    eventImageLink: {
+        required: true
+    },
+    eventDate: {
+        required: true
+    },
+    eventLocation: {
+        required: true
+    },
     eventTickets: {
         default: []
     },
     eventId: {
-
+        type: Number,
+        required: true
     },
+    slug: {
+        type: String,
+        required: true
+    }
 });
 const emit = defineEmits(["view"]);
 const lowestPrice = computed(() => {
@@ -33,7 +44,7 @@ const viewDetails = () => {
 <template>
     <b-container>
         <div style="background-color: #a8ffff;" class="rounded shadow card w-100"
-            @click="() => $emit('view', eventName, eventId)">
+            @click="() => $emit('view', props.slug)">
             <div class="p-2">
                 <div class="overflow-hidden rounded position-relative" style="height: 320px" role="button">
                     <div v-if="discount" class="avatar-sm product-ribbon" style="z-index: 1">
@@ -59,7 +70,7 @@ const viewDetails = () => {
                     <div class="mb-1 text-primary text-start">
                         <i class="bx bx-calendar-event me-1"></i><span>{{
                             moment(eventDate).format("ddd, DD MMM YYYY")
-                            }}</span>
+                        }}</span>
                     </div>
                     <div class="text-truncate text-start">
                         <i class="bx bx-map me-1"></i><span>{{ eventLocation }} </span>

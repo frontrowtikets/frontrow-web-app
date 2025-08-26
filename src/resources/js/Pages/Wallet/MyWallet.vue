@@ -96,7 +96,7 @@ const chartOptions = ref({
     colors: ["#f1b44c", "#3452e1", "#50a5f1"],
 });
 
-onMounted(() => {});
+onMounted(() => { });
 
 function myTransaction() {
     router.visit("/mytransactions");
@@ -143,14 +143,17 @@ async function submitDeposit() {
 </script>
 
 <template>
-    <Head title="My Wallet" />
+
 
     <DashboardLayout>
+
+        <Head title="My Wallet" />
         <PageHeader title="My Wallet" :items="state.items" />
         <div v-if="showPaymentPage" class="card">
             <div class="card-body border-top">
                 <div class="payment-container">
-                    <iframe id="payment_page" ref="paymentPageIframe" :src="paymentRedirectURL" style="width: 100%; height: 100%"></iframe>
+                    <iframe id="payment_page" ref="paymentPageIframe" :src="paymentRedirectURL"
+                        style="width: 100%; height: 100%"></iframe>
                 </div>
             </div>
         </div>
@@ -165,7 +168,8 @@ async function submitDeposit() {
                                     <div class="col-sm-6">
                                         <div>
                                             <p class="mb-2 text-muted">Available Balance</p>
-                                            <h5>UGX {{ props.myWallet ? useCurrencyFormat(props.myWallet.balance) : "0.00" }}</h5>
+                                            <h5>UGX {{ props.myWallet ? useCurrencyFormat(props.myWallet.balance) :
+                                                "0.00" }}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -196,10 +200,12 @@ async function submitDeposit() {
                                                 </div>
 
                                                 <p class="mb-2 text-muted">Last Deposit</p>
-                                                <p>{{ props.myWallet ? moment(props.myWallet.updated_at).format("ddd, DD MMM YYYY") : "Never" }}</p>
+                                                <p>{{ props.myWallet ? moment(props.myWallet.updated_at).format(`ddd, DD
+                                                    MMM YYYY`) : `Never` }}</p>
 
                                                 <div class="mt-3">
-                                                    <a @click="walletModal = true" class="btn btn-primary btn-sm w-md">Deposit</a>
+                                                    <a @click="walletModal = true"
+                                                        class="btn btn-primary btn-sm w-md">Deposit</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -215,14 +221,8 @@ async function submitDeposit() {
                                 <h4 class="mb-3 card-title">Overview</h4>
 
                                 <div>
-                                    <apexchart
-                                        class="apex-charts"
-                                        type="line"
-                                        :height="240"
-                                        dir="ltr"
-                                        :series="series"
-                                        :options="chartOptions"
-                                    ></apexchart>
+                                    <apexchart class="apex-charts" type="line" :height="240" dir="ltr" :series="series"
+                                        :options="chartOptions"></apexchart>
                                 </div>
                             </div>
                         </div>
@@ -244,7 +244,8 @@ async function submitDeposit() {
                             <div class="mt-4">
                                 <div class="table-responsive">
                                     <div v-if="props.transactions.length > 0">
-                                        <table class="table align-middle table-nowrap table-striped dt-responsive nowrap w-100 table-container">
+                                        <table
+                                            class="table align-middle table-nowrap table-striped dt-responsive nowrap w-100 table-container">
                                             <thead>
                                                 <tr>
                                                     <th>Reference</th>
@@ -254,7 +255,8 @@ async function submitDeposit() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="(item, index) in props.transactions" :key="`${index}_${item.id}`">
+                                                <tr v-for="(item, index) in props.transactions"
+                                                    :key="`${index}_${item.id}`">
                                                     <td :style="{ backgroundColor: '#fff' }">{{ item.txn_ref }}</td>
                                                     <td :style="{ backgroundColor: '#fff' }" class="text-center">
                                                         <div v-if="item.txn_type == 'ticket_purchase'">
@@ -268,7 +270,8 @@ async function submitDeposit() {
                                                             <span class="badge text-bg-success">Event Ticket</span>
                                                         </div>
 
-                                                        <div v-else><span class="badge text-bg-primary">Other</span></div>
+                                                        <div v-else><span class="badge text-bg-primary">Other</span>
+                                                        </div>
                                                     </td>
                                                     <td :style="{ backgroundColor: '#fff' }" class="text-center">
                                                         <div v-if="item.txn_status == 'pending'">
@@ -295,7 +298,8 @@ async function submitDeposit() {
                                             <a @click="myTransaction" class="btn btn-light me-2 w-md">See More</a>
                                         </div>
                                     </div>
-                                    <div v-else class="d-flex flex-column align-items-center" style="padding-top: 9vh; padding-bottom: 30vh">
+                                    <div v-else class="d-flex flex-column align-items-center"
+                                        style="padding-top: 9vh; padding-bottom: 30vh">
                                         <div class="pt-5 mb-4"><img :src="icondata" :height="50" /></div>
                                         <div>No Transactions Yet.</div>
                                     </div>
@@ -304,17 +308,22 @@ async function submitDeposit() {
                         </div>
                     </div>
                 </div>
-                <b-modal v-model="walletModal" id="EventRegister" centered title="Deposit to Wallet" title-class="font-18" hide-footer>
+                <b-modal v-model="walletModal" id="EventRegister" centered title="Deposit to Wallet"
+                    title-class="font-18" hide-footer>
                     <div>
                         <form>
-                            <div v-if="form.errors.amount" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                            <div v-if="form.errors.amount"
+                                class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ form.errors.amount }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
 
-                            <div v-if="responseError" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show" role="alert">
+                            <div v-if="responseError" class="mt-4 mb-4 alert alert-danger alert-dismissible fade show"
+                                role="alert">
                                 {{ responseError }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
 
                             <div class="mt-4 mb-3 col-12 row">
@@ -327,19 +336,17 @@ async function submitDeposit() {
 
                                 <div class="mb-4 col-8">
                                     <label for="">Amount</label>
-                                    <Money3Component class="form-control" v-model="form.amount" v-bind="state.config"></Money3Component>
+                                    <Money3Component class="form-control" v-model="form.amount" v-bind="state.config">
+                                    </Money3Component>
                                     <InputError class="mt-2 mb-4 text-danger" :message="form.errors.name" />
                                 </div>
                             </div>
 
                             <div class="mt-4 d-grid">
-                                <button
-                                    class="btn btn-primary btn-block waves-effect waves-light"
-                                    type="submit"
-                                    @click.prevent="submitDeposit"
-                                    :disabled="isProcessing"
-                                >
-                                    <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="isProcessing"></i><span>Make Deposit</span>
+                                <button class="btn btn-primary btn-block waves-effect waves-light" type="submit"
+                                    @click.prevent="submitDeposit" :disabled="isProcessing">
+                                    <i class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                                        v-if="isProcessing"></i><span>Make Deposit</span>
                                 </button>
                             </div>
                         </form>
@@ -364,5 +371,16 @@ async function submitDeposit() {
     height: 100%;
     border: none;
     overflow: hidden;
+}
+
+.payment-notice {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #d1ecf1 !important;
+    border-color: #bee5eb !important;
+    color: #0c5460 !important;
+    font-size: 14px;
+    padding: 15px;
 }
 </style>

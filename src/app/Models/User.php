@@ -95,5 +95,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $allPermissions = $this->getAllPermissions()->pluck('name')->all();
         return $allPermissions;
     }
-
+    public function wallet()
+    {
+        return $this->hasOne(UserWallet::class, 'user_id', 'id');
+    }
 }
