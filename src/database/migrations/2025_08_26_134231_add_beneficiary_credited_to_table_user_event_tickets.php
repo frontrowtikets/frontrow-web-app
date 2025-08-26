@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_event_tickets', function (Blueprint $table) {
-            $table->boolean('beneficiary_credited')->default(false)->after('ticket_status');
+            $table->tinyInteger('beneficiary_credited')->default(0)->after('ticket_status');
         });
     }
 

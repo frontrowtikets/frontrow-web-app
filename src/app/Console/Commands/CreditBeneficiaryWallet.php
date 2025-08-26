@@ -69,7 +69,7 @@ class CreditBeneficiaryWallet extends Command
 
     private function processMovieTickets()
     {
-        $tickets = MovieTicket::whereRaw('beneficiary_credited = ?', [false])
+        $tickets = MovieTicket::where('beneficiary_credited', 0)
             ->with(['movie', 'theatre', 'movie.beneficiary', 'movie.beneficiary.wallet'])
             ->get();
 
@@ -117,7 +117,7 @@ class CreditBeneficiaryWallet extends Command
             Log::info("Crediting beneficiary wallet ID: $walletId with amount: $amount for ticket ID: {$ticket->id}");
 
             if ($this->creditBeneficiaryWallet($walletId, $amount)) {
-                $ticket->beneficiary_credited = true;
+                $ticket->beneficiary_credited = 1;
                 $ticket->save();
                 $this->info("Successfully credited beneficiary wallet for: {$beneficiary->name} for ticket ID: {$ticket->id}");
                 Log::info("Successfully credited beneficiary wallet for: {$beneficiary->name} for ticket ID: {$ticket->id}");
@@ -127,7 +127,7 @@ class CreditBeneficiaryWallet extends Command
 
     private function processEventTickets()
     {
-        $tickets = UserEventTicket::whereRaw('beneficiary_credited = ?', [false])
+        $tickets = UserEventTicket::where('beneficiary_credited', 0)
             ->with(['event', 'event.beneficiary', 'event.beneficiary.wallet'])
             ->get();
         if ($tickets->isEmpty()) {
@@ -174,7 +174,7 @@ class CreditBeneficiaryWallet extends Command
             Log::info("Crediting beneficiary wallet ID: $walletId with amount: $amount for ticket ID: {$ticket->id}");
 
             if ($this->creditBeneficiaryWallet($walletId, $amount)) {
-                $ticket->beneficiary_credited = true;
+                $ticket->beneficiary_credited = 1;
                 $ticket->save();
                 $this->info("Successfully credited beneficiary wallet for: {$beneficiary->name} for ticket ID: {$ticket->id}");
                 Log::info("Successfully credited beneficiary wallet for: {$beneficiary->name} for ticket ID: {$ticket->id}");
