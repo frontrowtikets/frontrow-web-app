@@ -60,6 +60,8 @@ jobs:
             cd /home/u964704866/domains/frontrowtikets.com/public_html/src
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/id_rsa_git
+            git stash save --include-untracked
+            git stash drop
             git pull origin main
 
             if [ -f artisan ]; then

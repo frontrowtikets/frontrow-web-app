@@ -51,6 +51,8 @@ jobs:
             cd /home/u964704866/public_html/frontrow/src
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/id_rsa_git
+            git stash save --include-untracked
+            git stash drop
             git pull origin development
 
             if [ -f artisan ]; then
