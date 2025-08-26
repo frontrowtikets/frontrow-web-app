@@ -15,11 +15,11 @@ class SlugSeeder extends Seeder
      */
     public function run(): void
     {
-        Movie::whereIsNull('slug')->get()->each(function ($movie) {
+        Movie::whereNull('slug')->get()->each(function ($movie) {
             $movie->slug = Str::slug($movie->title) . '-' . uniqid();
             $movie->save();
         });
-        Event::whereIsNull('slug')->get()->each(function ($event) {
+        Event::whereNull('slug')->get()->each(function ($event) {
             $event->slug = Str::slug($event->title) . '-' . uniqid();
             $event->save();
         });
