@@ -144,9 +144,10 @@ async function submitDeposit() {
 
 <template>
 
-    <Head title="My Wallet" />
 
     <DashboardLayout>
+
+        <Head title="My Wallet" />
         <PageHeader title="My Wallet" :items="state.items" />
         <div v-if="showPaymentPage" class="card">
             <div class="card-body border-top">
@@ -199,8 +200,8 @@ async function submitDeposit() {
                                                 </div>
 
                                                 <p class="mb-2 text-muted">Last Deposit</p>
-                                                <p>{{ props.myWallet ? moment(props.myWallet.updated_at).format("ddd, DD
-                                                    MMM YYYY") : "Never" }}</p>
+                                                <p>{{ props.myWallet ? moment(props.myWallet.updated_at).format(`ddd, DD
+                                                    MMM YYYY`) : `Never` }}</p>
 
                                                 <div class="mt-3">
                                                     <a @click="walletModal = true"
