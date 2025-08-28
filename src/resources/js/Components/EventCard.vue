@@ -37,7 +37,7 @@ const lowestPrice = computed(() => {
     return lowestPx.price
 })
 const viewDetails = () => {
-    emit("view", props.eventName);
+    emit("view", props.eventName, props.eventId);
 };
 </script>
 
@@ -70,7 +70,7 @@ const viewDetails = () => {
                     <div class="mb-1 text-primary text-start">
                         <i class="bx bx-calendar-event me-1"></i><span>{{
                             moment(eventDate).format("ddd, DD MMM YYYY")
-                        }}</span>
+                            }}</span>
                     </div>
                     <div class="text-truncate text-start">
                         <i class="bx bx-map me-1"></i><span>{{ eventLocation }} </span>
