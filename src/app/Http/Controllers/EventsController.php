@@ -117,7 +117,7 @@ class EventsController extends Controller
     }
     public function eventDetailHome(Request $request)
     {
-        $eventDetail = Event::where('slug', $request->slug)->with([
+        $eventDetail = Event::where('id', $request->id)->with([
             'beneficiary',
             'categories',
             'reviews.user',

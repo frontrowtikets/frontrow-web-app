@@ -121,7 +121,7 @@ class MoviesController extends Controller
 
     public function movieDetailHome(Request $request)
     {
-        $movieDetail = Movie::where('slug', $request->slug)->with([
+        $movieDetail = Movie::where('id', $request->id)->with([
             'beneficiary',
             'showTimes',
             'genres',
