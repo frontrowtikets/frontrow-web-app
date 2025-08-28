@@ -5,31 +5,20 @@ import useCurrencyFormat from "../Composables/useCurrencyFormat.js";
 import useGetLowestEventTicket from "../Composables/useGetLowestEventTicket.js";
 const props = defineProps({
     discount: {
-        default: null
+
     },
     eventName: {
-        required: true
+
     },
-    eventImageLink: {
-        required: true
-    },
-    eventDate: {
-        required: true
-    },
-    eventLocation: {
-        required: true
-    },
+    eventImageLink: {},
+    eventDate: {},
+    eventLocation: {},
     eventTickets: {
         default: []
     },
     eventId: {
-        type: Number,
-        required: true
+
     },
-    slug: {
-        type: String,
-        required: true
-    }
 });
 const emit = defineEmits(["view"]);
 const lowestPrice = computed(() => {
@@ -37,14 +26,14 @@ const lowestPrice = computed(() => {
     return lowestPx.price
 })
 const viewDetails = () => {
-    emit("view", props.eventName, props.eventId);
+    emit("view", props.eventName);
 };
 </script>
 
 <template>
     <b-container>
         <div style="background-color: #a8ffff;" class="rounded shadow card w-100"
-            @click="() => $emit('view', props.slug)">
+            @click="() => $emit('view', eventName, eventId)">
             <div class="p-2">
                 <div class="overflow-hidden rounded position-relative" style="height: 320px" role="button">
                     <div v-if="discount" class="avatar-sm product-ribbon" style="z-index: 1">
