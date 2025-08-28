@@ -681,7 +681,7 @@ function getEventTicket() {
                                     </form>
                                     <div v-else class="mt-3 mb-3 text-center text-muted">
                                         <div><span class="text-primary" role="button" @click="goLogin">Sign in</span> to
-                                            sumbmit a review</div>
+                                            submit a review</div>
                                     </div>
                                 </div>
                             </div>
