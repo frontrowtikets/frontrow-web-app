@@ -138,13 +138,17 @@ class MoviesController extends Controller
     public function buyMovieTicket(Request $request)
     {
         $movieDetail = Movie::where('id', $request->id)->with([
+            'beneficiary',
+            'genres',
+            'reviews.user',
+            'moviecasts',
             'showTimes',
             'seatmap',
         ])->first();
         $myWallet = UserWallet::where('user_id', Auth::user()->id)->first();
         return \Inertia\Inertia::render('Movies/BuyMovieTicket', [
             'buyMovieDetails' => $movieDetail,
-            'myWallet' => $myWallet
+            'myWallet' => $myWallet,
         ]);
     }
 
