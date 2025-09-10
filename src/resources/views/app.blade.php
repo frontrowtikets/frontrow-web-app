@@ -10,7 +10,10 @@
         @endif
         @php
             $event = $page['props']['eventDetails'] ?? null;
-            $movie = ($page['props']['movieDetails'] || $page['props']['buyMovieDetails']) ?? null;
+            $movie = $page['props']['movieDetails'] ?? null;
+            if(!$movie) {
+                $movie = $page['props']['buyMovieDetails'] ?? null;
+            }
         @endphp
         
         @if ($event)
