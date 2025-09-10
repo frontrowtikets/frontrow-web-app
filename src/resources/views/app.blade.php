@@ -3,12 +3,14 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-                @if (request()->getHost() === 'frontrow.cinemaug.com')
+        @if (request()->getHost() === 'frontrow.cinemaug.com')
             <meta name="robots" content="noindex, nofollow">
+        @else
+            <meta name="robots" content="index, follow">
         @endif
         @php
             $event = $page['props']['eventDetails'] ?? null;
-            $movie = $page['props']['movieDetails'] ?? null;
+            $movie = ($page['props']['movieDetails'] || $page['props']['buyMovieDetails']) ?? null;
         @endphp
         
         @if ($event)
@@ -62,7 +64,6 @@
         <meta name="description" content="FrontRow Tikets - Your gateway to the best movies and events. Book tickets seamlessly and enjoy premium entertainment.">
         <meta name="keywords" content="FrontRow Tikets, movie tickets, event tickets, online booking, entertainment">
         <meta name="author" content="FrontRow Tikets">
-        <meta name="robots" content="index, follow">
 
         <meta property="og:title" content="FrontRow Tikets - Your Front-Row Seat to Unforgettable Entertainment!">
         <meta property="og:description" content="Discover and book tickets for the latest movies and events with ease.">
