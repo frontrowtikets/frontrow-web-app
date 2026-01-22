@@ -153,7 +153,7 @@ function declineRequest(userID) {
 <template>
     <DashboardLayout>
 
-        <Head :title="`Manage Event - ${props.event?.title}`" />
+        <Head :title="`Manage Event - ${props.event_title}`" />
         <PageHeader title="Manage Event" :items="state.items" />
         <div class="row">
             <div class="card">
@@ -251,7 +251,7 @@ function declineRequest(userID) {
                                             </th>
                                             <td :style="{ backgroundColor: '#fff' }">{{ user.user.name }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.email
-                                            }}</td>
+                                                }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">{{
                                                 user.user.phone_number }}</td>
 
@@ -319,7 +319,7 @@ function declineRequest(userID) {
                                             </th>
                                             <td :style="{ backgroundColor: '#fff' }">{{ user.user.name }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.email
-                                            }}</td>
+                                                }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">{{
                                                 user.user.phone_number }}</td>
 
@@ -392,7 +392,7 @@ function declineRequest(userID) {
                                             </th>
                                             <td :style="{ backgroundColor: '#fff' }">{{ user.user.name }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">{{ user.email
-                                            }}</td>
+                                                }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">{{
                                                 user.user.phone_number }}</td>
                                             <td :style="{ backgroundColor: '#fff' }" class="text-center">
@@ -496,7 +496,7 @@ function declineRequest(userID) {
                                         v-model="eventRegisterForm.phone_number" @input="phoneNumber"
                                         @change="phoneNumber" @blur="checkValidity" />
                                     <small class="text-danger" v-if="invalidPhoneNumberMsg">{{ invalidPhoneNumberMsg
-                                    }}</small>
+                                        }}</small>
                                 </div>
 
                                 <div class="">
