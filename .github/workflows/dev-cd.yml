@@ -56,16 +56,19 @@ jobs:
             git pull origin development
 
             if [ -f artisan ]; then
-              ~/bin/composer install --no-interaction --prefer-dist
+              ~/bin/composer install --no-interaction --prefer-dist --no-scripts   # avoid artisan boot
               chmod -R 755 vendor
-              ~/bin/composer -o dump-autoload
+              ~/bin/composer dump-autoload -o --no-scripts                         # avoid artisan boot
               chmod -R 777 storage
               chmod -R 777 bootstrap
-              php artisan storage:link
-              php artisan migrate --force
+              # Storage link should be created once manually, do NOT run artisan here
+              # php artisan storage:link   # ❌ remove
+              # Migrations should be run manually once, do NOT run artisan here
+              # php artisan migrate --force  # ❌ remove
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
             fi
+
       - name: Transfer Built Assets
         env:
           REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
