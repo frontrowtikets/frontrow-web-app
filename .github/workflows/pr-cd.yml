@@ -63,7 +63,7 @@ jobs:
           host: ${{ secrets.REMOTE_DEV_HOST }}
           username: ${{ secrets.REMOTE_DEV_USER }}
           key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
-          port: 22
+          port: 65002
           script: |
             cd /home/u964704866/domains/frontrowtikets.com/public_html/src
             git stash save --include-untracked
@@ -90,9 +90,9 @@ jobs:
         run: |
           REMOTE_BUILD_PATH=$REMOTE_PATH/public/build
 
-          echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 22..."
-          ssh-keyscan -p 22 -H $REMOTE_HOST >> ~/.ssh/known_hosts
-          ssh -p 22 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_BUILD_PATH"
+          echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 65002..."
+          ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
+          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_BUILD_PATH"
 
           echo "Transferring built assets..."
-          rsync -avz -e "ssh -p 22" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
+          rsync -avz -e "ssh -p 65002" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
