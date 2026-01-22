@@ -66,8 +66,7 @@ jobs:
           port: 65002
           script: |
             cd /home/u964704866/domains/frontrowtikets.com/public_html/src
-            git stash save --include-untracked
-            git stash drop
+            git reset --hard
             git pull origin main
 
             if [ -f artisan ]; then
@@ -80,6 +79,7 @@ jobs:
               # php artisan migrate --force # run manually
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
+            fi
 
       # 9️⃣ Transfer built assets via rsync
       - name: Transfer Built Assets
