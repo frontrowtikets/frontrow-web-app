@@ -153,7 +153,7 @@ function declineRequest(userID) {
 <template>
     <DashboardLayout>
 
-        <Head title="Manage Event" />
+        <Head :title="`Manage Event - ${props.event?.title}`" />
         <PageHeader title="Manage Event" :items="state.items" />
         <div class="row">
             <div class="card">
@@ -170,7 +170,8 @@ function declineRequest(userID) {
                                         :key="`${index}_${ticket.id}`" :ticketId="ticket.ticket_id"
                                         :status="ticket.ticket_status" :event="ticket?.event"
                                         :userDetails="ticket?.user_payment_detail"
-                                        :transactionDetails="ticket?.payment_transaction" />
+                                        :transactionDetails="ticket?.payment_transaction"
+                                        :ticketAmount="ticket?.amount" />
                                 </div>
                                 <div>
                                     <div ref="movieEventsBottom"></div>
@@ -188,7 +189,7 @@ function declineRequest(userID) {
                             </div>
                         </b-tab>
                         <b-tab title="Ticket Sales - List">
-                            <div v-if="eventpaginatedItems.length > 0">
+                            <div v-if="eventpaginatedItems.length > 0" class="table-responsive">
                                 <table class="table table-striped mt-4">
                                     <thead>
                                         <tr>
