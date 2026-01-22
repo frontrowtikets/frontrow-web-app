@@ -1,7 +1,7 @@
 <script setup>
 import { useQRCode } from "@vueuse/integrations/useQRCode";
 import smallImageUrl from "../../images/logos/small.png";
-import {computed} from 'vue'
+import { computed } from 'vue'
 import moment from 'moment'
 
 
@@ -10,6 +10,7 @@ const props = defineProps([
     "userDetails",
     "transactionDetails",
     "ticketId",
+    "ticketAmount"
 ]);
 
 
@@ -33,13 +34,13 @@ const screeningDate2 = computed(() => {
     );
     return thedate;
 });
-const startTime = computed(() =>{
+const startTime = computed(() => {
     const starts = moment(props.event?.start_time, "HH:mm:ss").format("h:mm A")
     return starts
 }
 
 );
-const endTime = computed(() =>{
+const endTime = computed(() => {
     const ends = moment(props.event?.end_time, "HH:mm:ss").format("h:mm A");
     return ends
 }
@@ -49,10 +50,7 @@ const endTime = computed(() =>{
 
 <template>
     <div class="p-5 d-flex align-items-center justify-content-center" id="eventticket">
-        <div
-            class="p-4"
-            style="width: 95%; border: 3px solid #3498db; border-radius: 10px"
-        >
+        <div class="p-4" style="width: 95%; border: 3px solid #3498db; border-radius: 10px">
             <div class="mb-5 d-flex justify-content-between">
                 <div class="d-flex align-items-center">
                     <div><img :src="smallImageUrl" height="90" /></div>
@@ -61,17 +59,11 @@ const endTime = computed(() =>{
                         <h5 style="color: #70aad1">EVENT TICKET</h5>
                     </div>
                 </div>
-                <div
-                    class=""
-                    style="border: 1.5px solid #3498db; border-radius: 4px"
-                >
+                <div class="" style="border: 1.5px solid #3498db; border-radius: 4px">
                     <img :src="qrcode" alt="QR Code" />
                 </div>
             </div>
-            <div
-                class="p-4 mb-5 d-flex"
-                style="background-color: #79bbe8; border-radius: 15px"
-            >
+            <div class="p-4 mb-5 d-flex" style="background-color: #79bbe8; border-radius: 15px">
                 <!-- <div class="me-4">
                     <div
                         class=""
@@ -93,7 +85,7 @@ const endTime = computed(() =>{
                         <p class="d-flex justify-content-between">
                             <strong>Date:</strong>
                             <span style="color: black">{{
-                                 screeningDate
+                                screeningDate
                             }}</span>
                         </p>
                         <p class="d-flex justify-content-between">
@@ -111,27 +103,30 @@ const endTime = computed(() =>{
                 </div>
             </div>
 
-            <div class="mb-5"   style="border-top: 2px dashed #3498db;">
+            <div class="mb-5" style="border-top: 2px dashed #3498db;">
                 <div class="p-4" style="font-size: medium;border: 1px solid #3498db; border-radius: 10px">
                     <div class="" style="width: 70%;">
                         <p class="d-flex justify-content-between">
-                        <strong>Ticket ID:</strong>
-                        <span style="color: black">{{ props.ticketId }}</span>
-                    </p>
-                    <p class="d-flex justify-content-between">
-                        <strong>Price:</strong>
-                        <span style="color: black">{{ props.transactionDetails?.currency }} {{ props.transactionDetails.amount }}</span>
-                    </p>
-                    <p class="d-flex justify-content-between">
-                        <strong>Purchase Date:</strong>
-                        <span style="color: black">{{ purchaseDate }}</span>
-                    </p>
+                            <strong>Ticket ID:</strong>
+                            <span style="color: black">{{ props.ticketId }}</span>
+                        </p>
+                        <p class="d-flex justify-content-between">
+                            <strong>Price:</strong>
+                            <span style="color: black">
+                                {{ props.transactionDetails?.currency }}
+                                {{ props.ticketAmount }}
+                            </span>
+                        </p>
+                        <p class="d-flex justify-content-between">
+                            <strong>Purchase Date:</strong>
+                            <span style="color: black">{{ purchaseDate }}</span>
+                        </p>
                     </div>
 
                 </div>
             </div>
-              <div class="mb-5">
-                <p class="fw-bold " style="font-size: medium; color: #47a2de" >Terms & Conditions:</p>
+            <div class="mb-5">
+                <p class="fw-bold " style="font-size: medium; color: #47a2de">Terms & Conditions:</p>
                 <ul class="text-muted small ps-3">
                     <li>
                         This ticket is valid only for the specified show time

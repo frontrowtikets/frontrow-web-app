@@ -320,20 +320,24 @@ class EventService
 
         if ($paymentDetails['status'] == 1 || $paymentDetails['status'] == '1') {
             foreach ($paymentDetails['selectedTicket'] as $seat) {
-                $eventTicket = UserEventTicket::create([
-                    'user_id' => $currentUser->id,
-                    'event_id' => $seat['event_id'],
-                    'quantity' => $seat['selectedQuantity'],
-                    'total_amount' => $paymentDetails['total'],
-                    'ticket_status' => 'paid',
-                    'booking_date' => now(),
-                    'user_email' => $paymentDetails['email'],
-                    'ticket_id' => self::generateRandomEventTicketId(),
-                    'event_ticket_id' => $seat['id'],
-                    'user_payment_detail_id' => $userPaymentDetails->id,
-                    'payment_transaction_id' => $paymentTransactions->id,
-                ]);
-                array_push($eventTickets, $eventTicket);
+                $ticketQuantity = $seat['selectedQuantity'];
+                // Create multiple tickets for the same seat depending on the quantity
+                for ($i = 0; $i < $ticketQuantity; $i++) {
+                    $eventTicket = UserEventTicket::create([
+                        'user_id' => $currentUser->id,
+                        'event_id' => $seat['event_id'],
+                        'quantity' => 1,
+                        'total_amount' => $paymentDetails['total'] / $ticketQuantity,
+                        'ticket_status' => 'paid',
+                        'booking_date' => now(),
+                        'user_email' => $paymentDetails['email'],
+                        'ticket_id' => self::generateRandomEventTicketId(),
+                        'event_ticket_id' => $seat['id'],
+                        'user_payment_detail_id' => $userPaymentDetails->id,
+                        'payment_transaction_id' => $paymentTransactions->id,
+                    ]);
+                    array_push($eventTickets, $eventTicket);
+                }
             }
         }
 
@@ -370,20 +374,24 @@ class EventService
 
 
             foreach ($paymentDetails['selectedTicket'] as $seat) {
-                $eventTicket = UserEventTicket::create([
-                    'user_id' => $currentUser->id,
-                    'event_id' => $seat['event_id'],
-                    'quantity' => $seat['selectedQuantity'],
-                    'total_amount' => $paymentDetails['amount'],
-                    'ticket_status' => 'paid',
-                    'booking_date' => now(),
-                    'user_email' => $paymentDetails['email'],
-                    'ticket_id' => self::generateRandomEventTicketId(),
-                    'event_ticket_id' => $seat['id'],
-                    'user_payment_detail_id' => $userPaymentDetails->id,
-                    'payment_transaction_id' => $paymentTransactions->id,
-                ]);
-                array_push($eventTickets, $eventTicket);
+                $ticketQuantity = $seat['selectedQuantity'];
+                // Create multiple tickets for the same seat depending on the quantity
+                for ($i = 0; $i < $ticketQuantity; $i++) {
+                    $eventTicket = UserEventTicket::create([
+                        'user_id' => $currentUser->id,
+                        'event_id' => $seat['event_id'],
+                        'quantity' => 1,
+                        'total_amount' => $paymentDetails['total'] / $ticketQuantity,
+                        'ticket_status' => 'paid',
+                        'booking_date' => now(),
+                        'user_email' => $paymentDetails['email'],
+                        'ticket_id' => self::generateRandomEventTicketId(),
+                        'event_ticket_id' => $seat['id'],
+                        'user_payment_detail_id' => $userPaymentDetails->id,
+                        'payment_transaction_id' => $paymentTransactions->id,
+                    ]);
+                    array_push($eventTickets, $eventTicket);
+                }
             }
 
             $userWallet->balance = $userWallet->balance - $paymentDetails['amount'];
