@@ -70,7 +70,6 @@ jobs:
               ~/bin/composer dump-autoload -o
               chmod -R 777 storage bootstrap
               php artisan storage:link || true
-              php artisan optimize:clear
               php artisan migrate --force
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
