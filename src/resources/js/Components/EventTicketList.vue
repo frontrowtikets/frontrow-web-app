@@ -13,6 +13,7 @@ const props = defineProps([
     "event",
     "userDetails",
     "transactionDetails",
+    "ticketAmount"
 ]);
 
 const showEndDateTime = computed(() => {
@@ -154,7 +155,7 @@ onMounted(() => {
         <!-- Amount -->
         <td class="amount-cell">
             <span class="amount">
-                {{ props?.transactionDetails?.currency }} {{ props.transactionDetails?.amount || '0.00' }}
+                {{ props?.transactionDetails?.currency }} {{ props.ticketAmount || '0.00' }}
             </span>
         </td>
 
@@ -220,7 +221,7 @@ onMounted(() => {
         </td>
         <td class="d-none">
             <EventTicketNew :ticketId="props.ticketId" :event="props.event" :userDetails="props.userDetails"
-                :transactionDetails="props.transactionDetails" />
+                :transactionDetails="props.transactionDetails" :ticketAmount="props.ticketAmount" />
         </td>
     </tr>
 </template>
