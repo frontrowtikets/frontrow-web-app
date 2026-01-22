@@ -79,7 +79,7 @@ function downloadTicket() {
         },
     });
     var element = document.getElementById("eventticket");
-    const filename = `Event_Ticket_${props.ticketId}.pdf`;
+    const filename = `Event-Ticket-${props.ticketId}.pdf`;
     var options = {
         margin: 0.5,
         filename: filename,

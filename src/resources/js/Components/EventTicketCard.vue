@@ -84,7 +84,7 @@ function downloadTicket(ticketId = null) {
 
     var options = {
         margin: 0.5,
-        filename: `Ticket_${ticketId}.pdf`,
+        filename: `Event-Ticket-${ticketId}.pdf`,
         pagebreak: {
             after: "#break",
         },

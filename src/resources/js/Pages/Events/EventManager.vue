@@ -189,7 +189,7 @@ function declineRequest(userID) {
                             </div>
                         </b-tab>
                         <b-tab title="Ticket Sales - List">
-                            <div v-if="eventpaginatedItems.length > 0">
+                            <div v-if="eventpaginatedItems.length > 0" class="table-responsive">
                                 <table class="table table-striped mt-4">
                                     <thead>
                                         <tr>
