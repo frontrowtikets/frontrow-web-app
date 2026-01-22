@@ -153,7 +153,7 @@ function declineRequest(userID) {
 <template>
     <DashboardLayout>
 
-        <Head :title="`Manage Event - ${props.event?.title}`" />
+        <Head :title="`Manage Event - ${props.event_title}`" />
         <PageHeader title="Manage Event" :items="state.items" />
         <div class="row">
             <div class="card">
@@ -171,7 +171,7 @@ function declineRequest(userID) {
                                         :status="ticket.ticket_status" :event="ticket?.event"
                                         :userDetails="ticket?.user_payment_detail"
                                         :transactionDetails="ticket?.payment_transaction"
-                                        :ticketAmount="ticket?.amount" />
+                                        :ticketAmount="ticket?.total_amount" />
                                 </div>
                                 <div>
                                     <div ref="movieEventsBottom"></div>
