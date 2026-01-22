@@ -10,25 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18" # Nuxt 3.0.0 safe LTS
+          node-version: "18"
           cache: "npm"
-          cache-dependency-path: src/package-lock.json # 👈 points to your lock file
+          cache-dependency-path: src/package-lock.json
 
+      # 3️⃣ Set up PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
 
+      # 4️⃣ Install Composer Dependencies (no scripts!)
       - name: Install Composer Dependencies
         working-directory: src
-        run: composer install --no-interaction --prefer-dist
+        run: composer install --no-interaction --prefer-dist --no-scripts
 
+      # 5️⃣ Install Node.js Dependencies
       - name: Install Node.js Dependencies
         working-directory: src
         run: |
@@ -40,60 +45,54 @@ jobs:
             npm install --fetch-retries=5 --fetch-retry-maxtimeout=120000
           fi
 
+      # 6️⃣ Build Vite Assets
       - name: Build Vite Assets
         working-directory: src
         run: npm run build
 
+      # 7️⃣ Set up SSH (for git pull & rsync)
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
 
-      - name: Sync to Production Server
+      # 8️⃣ Deploy code to server
+      - name: Sync to Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.REMOTE_DEV_HOST }}
           username: ${{ secrets.REMOTE_DEV_USER }}
           key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
-          port: 65002
+          port: 22
           script: |
             cd /home/u964704866/domains/frontrowtikets.com/public_html/src
-            eval "$(ssh-agent -s)"
-            ssh-add ~/.ssh/id_rsa_git
             git stash save --include-untracked
             git stash drop
             git pull origin main
 
             if [ -f artisan ]; then
-              ~/bin/composer install --no-interaction --prefer-dist --no-scripts   # avoid artisan boot
+              ~/bin/composer install --no-interaction --prefer-dist --no-scripts
               chmod -R 755 vendor
-              ~/bin/composer dump-autoload -o --no-scripts                         # avoid artisan boot
+              ~/bin/composer dump-autoload -o --no-scripts
               chmod -R 777 storage
               chmod -R 777 bootstrap
-              # Storage link should be created once manually, do NOT run artisan here
-              # php artisan storage:link   # ❌ remove
-              # Migrations should be run manually once, do NOT run artisan here
-              # php artisan migrate --force  # ❌ remove
+              # php artisan storage:link  # run manually once
+              # php artisan migrate --force # run manually
             else
               echo "artisan file not found! Ensure the project was correctly deployed."
-            fi
 
+      # 9️⃣ Transfer built assets via rsync
       - name: Transfer Built Assets
         env:
           REMOTE_USER: ${{ secrets.REMOTE_DEV_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_DEV_HOST }}
           REMOTE_PATH: /home/u964704866/domains/frontrowtikets.com/public_html/src
         run: |
-          REMOTE_SRC_PATH=$REMOTE_PATH
           REMOTE_BUILD_PATH=$REMOTE_PATH/public/build
 
-          echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 65002..."
-
-          # Add server to known hosts
-          ssh-keyscan -p 65002 -H $REMOTE_HOST >> ~/.ssh/known_hosts
-
-          # Ensure remote build directory exists
-          ssh -p 65002 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_SRC_PATH $REMOTE_BUILD_PATH"
+          echo "Connecting to $REMOTE_USER@$REMOTE_HOST on port 22..."
+          ssh-keyscan -p 22 -H $REMOTE_HOST >> ~/.ssh/known_hosts
+          ssh -p 22 $REMOTE_USER@$REMOTE_HOST "mkdir -p $REMOTE_BUILD_PATH"
 
           echo "Transferring built assets..."
-          rsync -avz -e "ssh -p 65002" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
+          rsync -avz -e "ssh -p 22" src/public/build/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_BUILD_PATH
