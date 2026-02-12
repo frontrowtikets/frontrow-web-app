@@ -24,7 +24,8 @@ class TicketController extends Controller
         $eventTickets = UserEventTicket::where('user_email', Auth::user()->email)->with([
             "event",
             "userPaymentDetail",
-            "paymentTransaction"
+            "paymentTransaction",
+            "eventTicket"
         ])->orderBy('created_at', 'desc')->paginate(6);
 
         return \Inertia\Inertia::render('Tickets/MyTickets', [

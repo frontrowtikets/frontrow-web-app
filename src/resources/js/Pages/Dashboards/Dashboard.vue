@@ -11,6 +11,7 @@ import useScheduleMoviesPage from "../../Composables/useScheduleMoviesPage.js";
 import useScheduleEventsPage from "../../Composables/useScheduleEventsPage";
 import useCurrencyFormat from "../../Composables/useCurrencyFormat.js";
 import { useWindowSize } from "@vueuse/core";
+import apexchart from "vue3-apexcharts";
 
 
 const props = defineProps([

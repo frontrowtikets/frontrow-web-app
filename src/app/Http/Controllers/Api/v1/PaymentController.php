@@ -22,6 +22,7 @@ use App\Models\MovieShowTimeSeat;
 use App\Models\PaymentTransaction;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EventTicketPurchaseMail;
+use App\Models\PendingOrder;
 use Carbon\Carbon;
 
 
@@ -153,6 +154,20 @@ class PaymentController extends Controller
         $response = $this->pesapal->submitOrder($orderDetails);
         Log::alert($response);
 
+        // Save pending order so IPN can create tickets if user closes browser
+        if (isset($response['order_tracking_id'])) {
+            PendingOrder::create([
+                'order_tracking_id' => $response['order_tracking_id'],
+                'order_type' => $request->input('description') === 'Ticket Payment' ? 'event' : ($request->input('movieId') ? 'movie' : 'wallet'),
+                'customer_name' => ($request->input('first_name') ?? '') . ' ' . ($request->input('last_name') ?? ''),
+                'customer_email' => $request->input('email'),
+                'customer_phone' => $request->input('phone'),
+                'order_payload' => $request->all(),
+                'amount' => $request->input('amount'),
+                'status' => 'pending',
+            ]);
+        }
+
         return response($response['redirect_url']);
     }
 
@@ -160,6 +175,33 @@ class PaymentController extends Controller
     {
         try {
             $orderTrackingId = $request->orderTrackingId;
+
+            // Idempotency: check if this order was already processed or is being processed
+            $pendingOrder = PendingOrder::where('order_tracking_id', $orderTrackingId)->first();
+            if ($pendingOrder && in_array($pendingOrder->status, ['completed', 'processing'])) {
+                $status = $this->pesapal->getPaymentStatus($orderTrackingId);
+                return response()->json([
+                    'success' => true,
+                    'data' => $status
+                ]);
+            }
+
+            // Atomically claim this order for processing (prevents race condition with IPN)
+            if ($pendingOrder) {
+                $claimed = PendingOrder::where('order_tracking_id', $orderTrackingId)
+                    ->where('status', 'pending')
+                    ->update(['status' => 'processing']);
+
+                if (!$claimed) {
+                    // Another process (IPN) already claimed it
+                    $status = $this->pesapal->getPaymentStatus($orderTrackingId);
+                    return response()->json([
+                        'success' => true,
+                        'data' => $status
+                    ]);
+                }
+            }
+
             $status = $this->pesapal->getPaymentStatus($orderTrackingId);
             if ($request->purpose == 'event') {
                 $paymentDetails = [
@@ -258,6 +300,11 @@ class PaymentController extends Controller
                 $wallet->topUp($paymentDetails);
             }
 
+            // Mark pending order as completed
+            if ($pendingOrder) {
+                PendingOrder::where('order_tracking_id', $orderTrackingId)
+                    ->update(['status' => $status['status_code'] == 1 ? 'completed' : 'pending']);
+            }
 
             return response()->json([
                 'success' => true,
@@ -268,6 +315,161 @@ class PaymentController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Pesapal IPN callback - called server-to-server when payment status changes.
+     * This ensures tickets are created even if the user closes their browser.
+     */
+    public function handleIPN(Request $request)
+    {
+        try {
+            $orderTrackingId = $request->OrderTrackingId;
+            Log::info('Pesapal IPN received', ['OrderTrackingId' => $orderTrackingId]);
+
+            if (!$orderTrackingId) {
+                return response()->json(['status' => 'error', 'message' => 'Missing OrderTrackingId'], 400);
+            }
+
+            // Find the pending order
+            $pendingOrder = PendingOrder::where('order_tracking_id', $orderTrackingId)->first();
+            if (!$pendingOrder) {
+                Log::warning('IPN: Pending order not found', ['OrderTrackingId' => $orderTrackingId]);
+                return response()->json(['orderNotificationType' => 'IPNCHANGE', 'orderTrackingId' => $orderTrackingId, 'status' => 200]);
+            }
+
+            // Already processed or being processed - skip
+            if (in_array($pendingOrder->status, ['completed', 'processing'])) {
+                Log::info('IPN: Order already completed/processing', ['OrderTrackingId' => $orderTrackingId]);
+                return response()->json(['orderNotificationType' => 'IPNCHANGE', 'orderTrackingId' => $orderTrackingId, 'status' => 200]);
+            }
+
+            // Atomically claim this order for processing (prevents race condition with redirect)
+            $claimed = PendingOrder::where('order_tracking_id', $orderTrackingId)
+                ->where('status', 'pending')
+                ->update(['status' => 'processing']);
+
+            if (!$claimed) {
+                Log::info('IPN: Order already claimed by another process', ['OrderTrackingId' => $orderTrackingId]);
+                return response()->json(['orderNotificationType' => 'IPNCHANGE', 'orderTrackingId' => $orderTrackingId, 'status' => 200]);
+            }
+
+            // Check payment status with Pesapal
+            $status = $this->pesapal->getPaymentStatus($orderTrackingId);
+
+            // Only process successful payments (status_code 1 = completed)
+            if ($status['status_code'] != 1) {
+                Log::info('IPN: Payment not yet completed', ['status_code' => $status['status_code'], 'OrderTrackingId' => $orderTrackingId]);
+                // Revert to pending so it can be retried on next IPN
+                PendingOrder::where('order_tracking_id', $orderTrackingId)->update(['status' => 'pending']);
+                return response()->json(['orderNotificationType' => 'IPNCHANGE', 'orderTrackingId' => $orderTrackingId, 'status' => 200]);
+            }
+
+            $payload = $pendingOrder->order_payload;
+
+            if ($pendingOrder->order_type === 'event') {
+                $paymentDetails = [
+                    'name' => $pendingOrder->customer_name,
+                    'email' => $pendingOrder->customer_email,
+                    'phoneNumber' => $pendingOrder->customer_phone,
+                    'purpose' => 'event_ticket',
+                    'selectedTicket' => $payload['selectedTicket'] ?? [],
+                    'status' => $status['status_code'],
+                    'payment_account' => $status['payment_account'],
+                    'payment_method' => $status['payment_method'],
+                    'currency' => $status['currency'],
+                    'total' => $status['amount'],
+                    'merchant_reference' => $status['merchant_reference'],
+                    'confirmation_code' => $status['confirmation_code'],
+                    'call_back_url' => $status['call_back_url'] ?? ''
+                ];
+
+                $createdTickets = EventService::buyTicket($paymentDetails);
+
+                // Send confirmation email
+                $cleanedTicketData = [];
+                foreach ($createdTickets as $createdTicket) {
+                    $event = Event::where('id', $createdTicket->event_id)->first();
+                    $transactionDetails = PaymentTransaction::where('id', $createdTicket->payment_transaction_id)->first();
+                    $cleanedTicketData[] = [
+                        'event' => $event,
+                        'transactionDetails' => $transactionDetails,
+                        'ticketId' => $createdTicket->ticket_id
+                    ];
+                }
+
+                $timestamp = strtotime(now());
+                $formattedDate = date('D, M d Y H:i:s', $timestamp);
+                $message = (new EventTicketPurchaseMail(
+                    $paymentDetails['name'],
+                    $paymentDetails['total'],
+                    $paymentDetails['merchant_reference'],
+                    $paymentDetails['confirmation_code'],
+                    $paymentDetails['payment_method'],
+                    $formattedDate,
+                    $cleanedTicketData
+                ))->onQueue('emails');
+
+                Mail::to($paymentDetails['email'])->queue($message);
+
+            } elseif ($pendingOrder->order_type === 'movie') {
+                $paymentDetails = [
+                    'name' => $pendingOrder->customer_name,
+                    'email' => $pendingOrder->customer_email,
+                    'phoneNumber' => $pendingOrder->customer_phone,
+                    'movieId' => $payload['movieId'] ?? null,
+                    'purpose' => 'movie_ticket',
+                    'selectedSeatsDetails' => $payload['selectedSeatsDetails'] ?? [],
+                    'status' => $status['status_code'],
+                    'payment_account' => $status['payment_account'],
+                    'payment_method' => $status['payment_method'],
+                    'currency' => $status['currency'],
+                    'total' => $status['amount'],
+                    'merchant_reference' => $status['merchant_reference'],
+                    'confirmation_code' => $status['confirmation_code'],
+                    'call_back_url' => $status['call_back_url'] ?? ''
+                ];
+
+                $createdTickets = MovieService::buyTicket($paymentDetails);
+
+                $cleanedTicketData = [];
+                foreach ($createdTickets as $createdTicket) {
+                    $movie = Movie::where('id', $createdTicket->movie_id)->first();
+                    $theatre = MovieShowTime::where('id', $createdTicket->movie_show_time_id)->first();
+                    $transactionDetails = PaymentTransaction::where('id', $createdTicket->payment_transaction_id)->first();
+                    $seatDetails = MovieShowTimeSeat::where('id', $createdTicket->movie_show_time_seat_id)->first();
+                    $cleanedTicketData[] = [
+                        'theatre' => $theatre,
+                        'transactionDetails' => $transactionDetails,
+                        'movie' => $movie,
+                        'seatDetails' => $seatDetails,
+                        'ticketId' => $createdTicket->ticket_id
+                    ];
+                }
+
+                $timestamp = strtotime(now());
+                $formattedDate = date('D, M d Y H:i:s', $timestamp);
+                $message = (new TicketPurchaseMail(
+                    $paymentDetails['name'],
+                    $paymentDetails['total'],
+                    $paymentDetails['merchant_reference'],
+                    $paymentDetails['confirmation_code'],
+                    $paymentDetails['payment_method'],
+                    $formattedDate,
+                    $cleanedTicketData
+                ))->onQueue('emails');
+
+                Mail::to($paymentDetails['email'])->queue($message);
+            }
+
+            $pendingOrder->update(['status' => 'completed']);
+            Log::info('IPN: Order processed successfully', ['OrderTrackingId' => $orderTrackingId]);
+
+            return response()->json(['orderNotificationType' => 'IPNCHANGE', 'orderTrackingId' => $orderTrackingId, 'status' => 200]);
+        } catch (\Exception $e) {
+            Log::error('IPN Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json(['status' => 'error'], 500);
         }
     }
 

@@ -27,6 +27,12 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 assetFileNames: "assets/[name]-[hash][extname]",
+                manualChunks: {
+                    vendor: ["vue", "@inertiajs/vue3"],
+                    charts: ["apexcharts", "vue3-apexcharts"],
+                    maps: ["@googlemaps/js-api-loader"],
+                    editors: ["vue3-editor"],
+                },
             },
         },
     },

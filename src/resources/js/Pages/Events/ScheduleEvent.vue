@@ -1,6 +1,6 @@
 <script setup>
-import { Head, useForm, router,usePage } from "@inertiajs/vue3";
-import { reactive, onMounted, ref, watch,computed } from "vue";
+import { Head, useForm, router, usePage } from "@inertiajs/vue3";
+import { reactive, onMounted, ref, watch, computed } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import InputError from "@/js/Components/InputError.vue";
 import Stepper from "@/js/Components/Stepper.vue";
@@ -11,12 +11,12 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import { Money3Component } from "v-money3";
 import IsUserAdmin from "@/js/Composables/IsUserAdmin.js"
-import useInertiaFormSubmit from "@/js/Composables//useInertiaFormSubmit.js";
+import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
 import Swal from "sweetalert2";
 import { Loader } from "@googlemaps/js-api-loader";
 
 
-const props = defineProps(["eventCategories","beneficiaries", "editDetails","eventTicketCategories"]);
+const props = defineProps(["eventCategories", "beneficiaries", "editDetails", "eventTicketCategories"]);
 
 const state = reactive({
     items: [
@@ -55,9 +55,9 @@ const form = useForm({
     gps_location: "",
     start_date: "",
     end_date: "",
-    start_time:"",
-    end_time:"",
-    status:"",
+    start_time: "",
+    end_time: "",
+    status: "",
     thumbnail_url: "",
     currency: "",
     access_type: "",
@@ -65,8 +65,8 @@ const form = useForm({
     bannerImage: null,
     cardImage: null,
     tickets: [],
-    id:"",
-    trailer_url:""
+    id: "",
+    trailer_url: ""
 });
 
 const bannerImageData = ref(null);
@@ -78,13 +78,13 @@ const selectedBeneficiary = ref(null)
 const selectedTickets = ref([]);
 
 
- const {isAdmin} = IsUserAdmin();
+const { isAdmin } = IsUserAdmin();
 
 onMounted(() => {
 
     window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+        top: 0,
+        behavior: 'smooth'
     });
     form["beneficiary_id"] = usePage().props.auth.user.id;
     window.navigator.geolocation.getCurrentPosition(currentCoords, null, {
@@ -93,35 +93,35 @@ onMounted(() => {
         maximumAge: 0,
     });
 
-    if(props.editDetails){
+    if (props.editDetails) {
         const editData = props.editDetails;
-          form['beneficiary_id'] = editData.beneficiary_id
-    form['title'] = editData.title
-    form['description'] = editData.description
-    form['location_name'] = editData.location_name
-    form['gps_location'] = editData.gps_location
-    form['start_date'] = editData.start_date
-    form['end_date'] = editData.end_date
-    form['start_time'] = editData.start_time
-    form['end_time'] =editData.end_time
-    form['status'] =editData.status
-    form['thumbnail_url'] = editData.thumbnail_url
-    form['currency'] = editData.currency
-    form['access_type'] = editData.access_type
-    form["id"] =  editData.id
-    form["trailer_url"]= editData.trailer_url
+        form['beneficiary_id'] = editData.beneficiary_id
+        form['title'] = editData.title
+        form['description'] = editData.description
+        form['location_name'] = editData.location_name
+        form['gps_location'] = editData.gps_location
+        form['start_date'] = editData.start_date
+        form['end_date'] = editData.end_date
+        form['start_time'] = editData.start_time
+        form['end_time'] = editData.end_time
+        form['status'] = editData.status
+        form['thumbnail_url'] = editData.thumbnail_url
+        form['currency'] = editData.currency
+        form['access_type'] = editData.access_type
+        form["id"] = editData.id
+        form["trailer_url"] = editData.trailer_url
 
 
 
-    //categories
-        editData.categories.forEach((category)=>{
-            const eventCats= [];
-            eventCats.push({id:category.id,name:category.name})
+        //categories
+        editData.categories.forEach((category) => {
+            const eventCats = [];
+            eventCats.push({ id: category.id, name: category.name })
             form["categories"] = eventCats;
         })
 
         // tickets
-         eventTickets.value = editData.event_tickets.map((ticket)=>{
+        eventTickets.value = editData.event_tickets.map((ticket) => {
             const cleaned = {
                 id: ticket.id,
                 category: ticket.category,
@@ -130,7 +130,7 @@ onMounted(() => {
                 quantity: ticket.available_quantity
             }
             return cleaned;
-         })
+        })
 
     }
     loadSearchMap()
@@ -143,7 +143,7 @@ watch(
     },
     { deep: true }
 );
-watch(selectedBeneficiary,(newVal)=>{
+watch(selectedBeneficiary, (newVal) => {
     form["beneficiary_id"] = newVal.id
 })
 function currentCoords(pos) {
@@ -151,8 +151,8 @@ function currentCoords(pos) {
     form["gps_location"] = `${crd.longitude},${crd.latitude}`;
 }
 
-const isEdit = computed(()=>{
-    return props.editDetails?true:false;
+const isEdit = computed(() => {
+    return props.editDetails ? true : false;
 })
 
 
@@ -161,27 +161,27 @@ function saveImage(event, cardType) {
     const file = event.target.files[0];
     const maxSize = 1 * 1024 * 1024
 
-if (file && file.size > maxSize) {
-    Swal.fire({
-                    title: "File too Large",
-                    icon: "warning",
-                    html: `<p style="font-size: 14px">The image file size should not exceed 1MB</p>`,
-                    showCloseButton: false,
-                    showCancelButton: false,
-                    focusConfirm: true,
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "#43ad60",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    closeOnClickOutside: false,
-                }).then((result) => {
-                    if (result.value) {
-                        // router.reload({
-                        //     preserveState: false,
-                        // });
-                    }
-                });
-}else{
+    if (file && file.size > maxSize) {
+        Swal.fire({
+            title: "File too Large",
+            icon: "warning",
+            html: `<p style="font-size: 14px">The image file size should not exceed 1MB</p>`,
+            showCloseButton: false,
+            showCancelButton: false,
+            focusConfirm: true,
+            confirmButtonText: "OK",
+            confirmButtonColor: "#43ad60",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            closeOnClickOutside: false,
+        }).then((result) => {
+            if (result.value) {
+                // router.reload({
+                //     preserveState: false,
+                // });
+            }
+        });
+    } else {
         const reader = new FileReader();
         reader.onload = () => {
             if (cardType === "card") {
@@ -215,68 +215,68 @@ function deleteTicket(index) {
 
 const submit = () => {
     form.post("/createevent", {
-    onSuccess:()=>{
-        router.visit("/myevents")
-    },
+        onSuccess: () => {
+            router.visit("/myevents")
+        },
         onError: (err) => {
             const keysArray = Object.keys(err);
-                 Swal.fire({
-                        title: "Something Went Wrong",
-                        icon: "error",
-                        html: `<p style="font-size: 14px">${err[`${keysArray[0]}`]}</p>`,
-                        showCloseButton: false,
-                        showCancelButton: false,
-                        focusConfirm: true,
-                        confirmButtonText: "OK",
-                        confirmButtonColor: "#43ad60",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        closeOnClickOutside: false,
-                    }).then((result) => {
-                        if (result.value) {
-                            // router.reload({
-                            //     preserveState: false,
-                            // });
-                        }
-                    });
+            Swal.fire({
+                title: "Something Went Wrong",
+                icon: "error",
+                html: `<p style="font-size: 14px">${err[`${keysArray[0]}`]}</p>`,
+                showCloseButton: false,
+                showCancelButton: false,
+                focusConfirm: true,
+                confirmButtonText: "OK",
+                confirmButtonColor: "#43ad60",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                closeOnClickOutside: false,
+            }).then((result) => {
+                if (result.value) {
+                    // router.reload({
+                    //     preserveState: false,
+                    // });
+                }
+            });
         },
     });
 
 };
 
 async function loadSearchMap() {
-            const loader = new Loader({
-                apiKey: "AIzaSyBQKw2vj3Wjow-0p69Wz8okjJ470gVOhNo",
-                version: "weekly",
-            });
-            const Places = await loader.importLibrary("places");
+    const loader = new Loader({
+        apiKey: "AIzaSyBQKw2vj3Wjow-0p69Wz8okjJ470gVOhNo",
+        version: "weekly",
+    });
+    const Places = await loader.importLibrary("places");
 
-            const input = document.getElementById("searched_place_location");
+    const input = document.getElementById("searched_place_location");
 
-            const options = {
-                types: ["establishment"],
-                fields: ["address_components", "geometry", "icon", "name"],
-                strictBounds: false,
-            };
+    const options = {
+        types: ["establishment"],
+        fields: ["address_components", "geometry", "icon", "name"],
+        strictBounds: false,
+    };
 
-            const autocomplete = new Places.Autocomplete(input, options);
+    const autocomplete = new Places.Autocomplete(input, options);
 
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-                if (place.geometry && place.geometry.location) {
-                    form['location_name'] = place.name
-                    form['gps_location'] = `${place.geometry.location.lng()},${place.geometry.location.lat()}`
-                } else {
-                    console.log("No coordinates available for this place.");
-                }
-            });
+    autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (place.geometry && place.geometry.location) {
+            form['location_name'] = place.name
+            form['gps_location'] = `${place.geometry.location.lng()},${place.geometry.location.lat()}`
+        } else {
+            console.log("No coordinates available for this place.");
         }
+    });
+}
 </script>
 
 <template>
-    <Head title="Schedule Events" />
-
     <DashboardLayout>
+
+        <Head title="Schedule Events" />
         <PageHeader title="Schedule Event" :items="state.items" />
         <div class="col-12">
             <div class="card">
@@ -288,189 +288,170 @@ async function loadSearchMap() {
 
                                     <div class="mb-4" v-if="isAdmin">
 
-                                <div class="mb-2 align-middle form-check font-size-16" v-if="!isEdit">
-                                    <input class="form-check-input" type="checkbox" id="transactionCheck01"  v-model="scheduleForBeneficiary"/>
-                                    <small class="form-check-label" for="transactionCheck01"> Schedule for another beneficiary </small>
-                                </div>
+                                        <div class="mb-2 align-middle form-check font-size-16" v-if="!isEdit">
+                                            <input class="form-check-input" type="checkbox" id="transactionCheck01"
+                                                v-model="scheduleForBeneficiary" />
+                                            <small class="form-check-label" for="transactionCheck01"> Schedule for
+                                                another beneficiary </small>
+                                        </div>
                                     </div>
                                     <div class="mb-4 col-12 col-md-9" v-if="scheduleForBeneficiary">
-                                            <label for="title" class="mb-2">Select Beneficiary <span class="text-danger">*</span></label>
-                                            <v-select  v-model="selectedBeneficiary" :options="props.beneficiaries" :label="'name'"></v-select>
-                                        </div>
+                                        <label for="title" class="mb-2">Select Beneficiary <span
+                                                class="text-danger">*</span></label>
+                                        <v-select v-model="selectedBeneficiary" :options="props.beneficiaries"
+                                            :label="'name'"></v-select>
+                                    </div>
                                     <div class="mt-4">
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="title" class="mb-2">Event Title <span class="text-danger">*</span></label>
-                                            <input
-                                                style="font-size: 13px"
-                                                type="text"
-                                                class="form-control"
-                                                id="title"
-                                                placeholder="Title"
-                                                required
-                                                v-model="form.title"
-                                            />
+                                            <label for="title" class="mb-2">Event Title <span
+                                                    class="text-danger">*</span></label>
+                                            <input style="font-size: 13px" type="text" class="form-control" id="title"
+                                                placeholder="Title" required v-model="form.title" />
                                             <InputError class="mt-2 mb-4 text-danger" :message="form.errors.title" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="access_type" class="mb-2">Access Type <span class="text-danger">*</span></label>
-                                            <select class="form-select form-control" id="access_type" v-model="form.access_type">
+                                            <label for="access_type" class="mb-2">Access Type <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select form-control" id="access_type"
+                                                v-model="form.access_type">
                                                 <option value="" disabled>Select</option>
                                                 <option value="paid">Paid Event</option>
                                                 <option value="free">Free Event</option>
                                                 <option value="invite-only">Invite Only Event</option>
                                             </select>
-                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
+                                            <InputError class="mt-2 mb-4 text-danger"
+                                                :message="form.errors.access_type" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="event_status" class="mb-2">Event Status <span class="text-danger">*</span></label>
-                                            <select class="form-select form-control" id="event_status" v-model="form.status">
+                                            <label for="event_status" class="mb-2">Event Status <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select form-control" id="event_status"
+                                                v-model="form.status">
                                                 <option value="" disabled>Select</option>
                                                 <option value="coming_soon">Coming Soon</option>
                                                 <option value="ongoing">Ongoing</option>
                                             </select>
-                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.access_type" />
+                                            <InputError class="mt-2 mb-4 text-danger"
+                                                :message="form.errors.access_type" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="event_description" class="mb-2">Description</label>
                                             <VueEditor v-model="form.description" id="event_description"></VueEditor>
-                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.description" />
+                                            <InputError class="mt-2 mb-4 text-danger"
+                                                :message="form.errors.description" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="title" class="mb-2">Event Catergory <span class="text-danger">*</span></label>
-                                            <v-select multiple v-model="form.categories" :options="props.eventCategories" :label="'name'" ></v-select>
+                                            <label for="title" class="mb-2">Event Catergory <span
+                                                    class="text-danger">*</span></label>
+                                            <v-select multiple v-model="form.categories"
+                                                :options="props.eventCategories" :label="'name'"></v-select>
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
                                             <label for="trailer_url" class="mb-2">Trailer URL</label>
-                                            <input class="form-control" type="text" id="formFile" placeholder="Link" v-model="form.trailer_url" >
-                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.trailer_url" />
+                                            <input class="form-control" type="text" id="formFile" placeholder="Link"
+                                                v-model="form.trailer_url">
+                                            <InputError class="mt-2 mb-4 text-danger"
+                                                :message="form.errors.trailer_url" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9">
-                                            <label for="location" class="mb-2">Location<span class="text-danger">*</span></label>
-                                            <input
-                                                style="font-size: 13px"
-                                                type="text"
-                                                class="form-control"
-                                                id="searched_place_location"
-                                                placeholder="Location"
-                                                required
-                                                v-model="form.location_name"
-                                            />
-                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.location_name" />
+                                            <label for="location" class="mb-2">Location<span
+                                                    class="text-danger">*</span></label>
+                                            <input style="font-size: 13px" type="text" class="form-control"
+                                                id="searched_place_location" placeholder="Location" required
+                                                v-model="form.location_name" />
+                                            <InputError class="mt-2 mb-4 text-danger"
+                                                :message="form.errors.location_name" />
                                         </div>
                                         <div class="mb-4 col-12 col-md-9 invisible">
-                                            <label for="gps_location" class="mb-2">GPRS Coordinates <span class="text-danger">*</span></label>
-                                            <input
-                                                style="font-size: 13px"
-                                                type="text"
-                                                class="form-control"
-                                                id="title"
-                                                placeholder="Coordinates"
-                                                required
-                                                v-model="form.gps_location"
-                                            />
-                                            <InputError class="mt-2 mb-4 text-danger" :message="form.errors.gps_location" />
+                                            <label for="gps_location" class="mb-2">GPRS Coordinates <span
+                                                    class="text-danger">*</span></label>
+                                            <input style="font-size: 13px" type="text" class="form-control" id="title"
+                                                placeholder="Coordinates" required v-model="form.gps_location" />
+                                            <InputError class="mt-2 mb-4 text-danger"
+                                                :message="form.errors.gps_location" />
                                         </div>
-                                        <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
+                                        <div
+                                            class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                             <div class="w-100">
-                                                <label for="start_date" class="mb-2">Start Date<span class="text-danger">*</span></label>
-                                                <input
-                                                    style="font-size: 13px"
-                                                    type="date"
-                                                    class="form-control"
-                                                    id="title"
-                                                    required
-                                                    v-model="form.start_date"
-                                                />
-                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.start_date" />
+                                                <label for="start_date" class="mb-2">Start Date<span
+                                                        class="text-danger">*</span></label>
+                                                <input style="font-size: 13px" type="date" class="form-control"
+                                                    id="title" required v-model="form.start_date" />
+                                                <InputError class="mt-2 mb-4 text-danger"
+                                                    :message="form.errors.start_date" />
                                             </div>
                                             <div class="w-100">
-                                                <label for="end_date" class="mb-2">End Date<span class="text-danger">*</span></label>
-                                                <input
-                                                    style="font-size: 13px"
-                                                    type="date"
-                                                    class="form-control"
-                                                    id="title"
-                                                    required
-                                                    v-model="form.end_date"
-                                                />
-                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.end_date" />
+                                                <label for="end_date" class="mb-2">End Date<span
+                                                        class="text-danger">*</span></label>
+                                                <input style="font-size: 13px" type="date" class="form-control"
+                                                    id="title" required v-model="form.end_date" />
+                                                <InputError class="mt-2 mb-4 text-danger"
+                                                    :message="form.errors.end_date" />
                                             </div>
                                         </div>
-                                         <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
+                                        <div
+                                            class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                             <div class="w-100">
-                                                <label for="start_time" class="mb-2">Start Time<span class="text-danger">*</span></label>
-                                                <input
-                                                    style="font-size: 13px"
-                                                    type="time"
-                                                    class="form-control"
-                                                    id="title"
-                                                    required
-                                                    v-model="form.start_time"
-                                                />
-                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.start_time" />
+                                                <label for="start_time" class="mb-2">Start Time<span
+                                                        class="text-danger">*</span></label>
+                                                <input style="font-size: 13px" type="time" class="form-control"
+                                                    id="title" required v-model="form.start_time" />
+                                                <InputError class="mt-2 mb-4 text-danger"
+                                                    :message="form.errors.start_time" />
                                             </div>
                                             <div class="w-100">
-                                                <label for="end_time" class="mb-2">End Time<span class="text-danger">*</span></label>
-                                                <input
-                                                    style="font-size: 13px"
-                                                    type="time"
-                                                    class="form-control"
-                                                    id="title"
-                                                    required
-                                                    v-model="form.end_time"
-                                                />
-                                                <InputError class="mt-2 mb-4 text-danger" :message="form.errors.end_time" />
+                                                <label for="end_time" class="mb-2">End Time<span
+                                                        class="text-danger">*</span></label>
+                                                <input style="font-size: 13px" type="time" class="form-control"
+                                                    id="title" required v-model="form.end_time" />
+                                                <InputError class="mt-2 mb-4 text-danger"
+                                                    :message="form.errors.end_time" />
                                             </div>
                                         </div>
                                         <div>
-                                            <label for="event_banner" class="mb-2">Event Card Image <span class="text-danger">*</span></label>
-                                            <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
+                                            <label for="event_banner" class="mb-2">Event Card Image <span
+                                                    class="text-danger">*</span></label>
+                                            <div
+                                                class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                                 <div class="dropzone w-100">
                                                     <div class="mx-auto">
-                                                        <i class="bx bxs-cloud-upload" style="font-size: 4em; color: #b5b5b5"></i>
+                                                        <i class="bx bxs-cloud-upload"
+                                                            style="font-size: 4em; color: #b5b5b5"></i>
                                                     </div>
-                                                    <div class="text-center text-muted">Appears on the card of your event Page.</div>
-                                                    <div class="text-center text-muted">Please note your image should not be below 200x320 (<20MB).</div>
+                                                    <div class="text-center text-muted">Appears on the card of your
+                                                        event Page.</div>
+                                                    <div class="text-center text-muted">Please note your image should
+                                                        not be below 200x320 (20MB).</div>
 
                                                     <label for="dropzoneFile">Select Files</label>
-                                                    <input
-                                                        type="file"
-                                                        id="dropzoneFile"
+                                                    <input type="file" id="dropzoneFile"
                                                         class="dropzoneFile btn btn-primary"
-                                                        @change="saveImage($event, 'card')"
-                                                        :accept="'image/*'"
-                                                    />
+                                                        @change="saveImage($event, 'card')" :accept="'image/*'" />
                                                 </div>
                                                 <div v-if="cardImageData">
-                                                    <img
-                                                        id="cardImage"
-                                                        :src="cardImageData"
-                                                        style="
+                                                    <img id="cardImage" :src="cardImageData" style="
                                                             object-fit: cover;
                                                             object-position: center;
                                                             height: 180px;
                                                             width: 150px;
                                                             border-radius: 5px;
                                                             background-color: lightgray;
-                                                        "
-                                                    />
-                                                    <div class="mt-4 text-danger" role="button" @click="deleteCardImage">
-                                                        <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete image
+                                                        " />
+                                                    <div class="mt-4 text-danger" role="button"
+                                                        @click="deleteCardImage">
+                                                        <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete
+                                                        image
                                                     </div>
                                                 </div>
                                                 <div v-else-if="!cardImageData && isEdit">
-                                                    <img
-                                                        id="cardImage"
-                                                        :src="props.editDetails.thumbnail_url"
-                                                        style="
+                                                    <img id="cardImage" :src="props.editDetails.thumbnail_url" style="
                                                             object-fit: cover;
                                                             object-position: center;
                                                             height: 180px;
                                                             width: 150px;
                                                             border-radius: 5px;
                                                             background-color: lightgray;
-                                                        "
-                                                    />
+                                                        " />
 
                                                 </div>
                                             </div>
@@ -478,44 +459,40 @@ async function loadSearchMap() {
 
                                         <div>
                                             <label for="event_banner" class="mb-2">Event Banner Image</label>
-                                            <div class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
+                                            <div
+                                                class="flex flex-row gap-4 mb-4 col-12 col-md-9 d-flex justify-content-between">
                                                 <div class="dropzone w-100">
                                                     <div class="mx-auto">
-                                                        <i class="bx bxs-cloud-upload" style="font-size: 4em; color: #b5b5b5"></i>
+                                                        <i class="bx bxs-cloud-upload"
+                                                            style="font-size: 4em; color: #b5b5b5"></i>
                                                     </div>
-                                                    <div class="text-center text-muted">Appears across the top of your event Page.</div>
-                                                    <div class="text-center text-muted">Please note your image should not be below 1500x500 (<20MB) .</div>
+                                                    <div class="text-center text-muted">Appears across the top of your
+                                                        event Page.</div>
+                                                    <div class="text-center text-muted">Please note your image should
+                                                        not be below 1500x500 (20MB) </div>
 
                                                     <label for="dropzoneFile2">Select Files</label>
-                                                    <input
-                                                        type="file"
-                                                        id="dropzoneFile2"
+                                                    <input type="file" id="dropzoneFile2"
                                                         class="dropzoneFile2 btn-primary"
-                                                        @change="saveImage($event, 'banner')"
-                                                        :accept="'image/*'"
-                                                    />
+                                                        @change="saveImage($event, 'banner')" :accept="'image/*'" />
                                                 </div>
                                                 <div v-if="bannerImageData">
-                                                    <img
-                                                        id="bannerImage"
-                                                        :src="bannerImageData"
-                                                        style="
+                                                    <img id="bannerImage" :src="bannerImageData" style="
                                                             object-fit: cover;
                                                             object-position: center;
                                                             height: 150px;
                                                             width: 300px;
                                                             border-radius: 5px;
                                                             background-color: lightgray;
-                                                        "
-                                                    />
-                                                    <div class="mt-4 text-danger" role="button" @click="deleteBannerImage">
-                                                        <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete image
+                                                        " />
+                                                    <div class="mt-4 text-danger" role="button"
+                                                        @click="deleteBannerImage">
+                                                        <span class="me-2"><i class="bx bx-trash-alt"></i></span>Delete
+                                                        image
                                                     </div>
                                                 </div>
-                                                 <div v-else-if="!bannerImageData && isEdit">
-                                                    <img
-                                                        id="bannerImage"
-                                                        :src="props.editDetails.banner_image_url"
+                                                <div v-else-if="!bannerImageData && isEdit">
+                                                    <img id="bannerImage" :src="props.editDetails.banner_image_url"
                                                         style="
                                                             object-fit: cover;
                                                             object-position: center;
@@ -523,8 +500,7 @@ async function loadSearchMap() {
                                                             width: 300px;
                                                             border-radius: 5px;
                                                             background-color: lightgray;
-                                                        "
-                                                    />
+                                                        " />
 
                                                 </div>
                                             </div>
@@ -536,23 +512,29 @@ async function loadSearchMap() {
                                 <div v-if="currentStep === 2">
                                     <div class="mt-4 mb-5 repeater">
                                         <div class="col-12">
-                                            <div v-for="(field, index) in eventTickets" :key="field.id" class="mb-3 w-100 row">
+                                            <div v-for="(field, index) in eventTickets" :key="field.id"
+                                                class="mb-3 w-100 row">
                                                 <div class="mb-3 col-lg-3">
                                                     <label for="category">Category</label>
-                                                    <select class="form-select form-control" id="category" v-model="field.category">
+                                                    <select class="form-select form-control" id="category"
+                                                        v-model="field.category">
                                                         <option value="" disabled>Select</option>
-                                                        <option :value="cat.name" v-for="(cat,index) in props.eventTicketCategories" :key="index">{{ cat.name }}</option>
+                                                        <option :value="cat.name"
+                                                            v-for="(cat, index) in props.eventTicketCategories"
+                                                            :key="index">{{ cat.name }}</option>
                                                     </select>
                                                 </div>
 
-                                              <div class="mb-3 col-lg-2">
+                                                <div class="mb-3 col-lg-2">
                                                     <label for="quantity">Available Qty</label>
-                                                    <input id="quantity " v-model="field.quantity" type="number" class="form-control" />
+                                                    <input id="quantity " v-model="field.quantity" type="number"
+                                                        class="form-control" />
                                                 </div>
 
                                                 <div class="mb-3 col-lg-2">
                                                     <label for="currency">Currency</label>
-                                                    <select class="form-select form-control" id="currency" v-model="field.currency">
+                                                    <select class="form-select form-control" id="currency"
+                                                        v-model="field.currency">
                                                         <option value="UGX" :selected="true">UGX</option>
                                                         <option value="KSH">KSH</option>
                                                         <option value="USD">USD</option>
@@ -562,23 +544,22 @@ async function loadSearchMap() {
 
                                                 <div class="mb-3 col-lg-3">
                                                     <label for="resume">Price</label>
-                                                    <Money3Component
-                                                        class="form-control"
-                                                        v-model="field.price"
-                                                        v-bind="state.config"
-                                                    ></Money3Component>
+                                                    <Money3Component class="form-control" v-model="field.price"
+                                                        v-bind="state.config"></Money3Component>
                                                 </div>
 
                                                 <div class="col-lg-2 align-self-center">
                                                     <div class="pt-3">
-                                                        <span class="mb-3 badge font-size-11 me-4" @click="deleteTicket(index)"
-                                                            >{{ permission }}<i class="bx bxs-x-circle text-danger ps-1 pe-1" role="button"></i
-                                                        ></span>
+                                                        <span class="mb-3 badge font-size-11 me-4"
+                                                            @click="deleteTicket(index)"><i
+                                                                class="bx bxs-x-circle text-danger ps-1 pe-1"
+                                                                role="button"></i></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="button" class="mt-3 btn btn-success mt-lg-0" value="Add" @click="addTicket" />
+                                        <input type="button" class="mt-3 btn btn-success mt-lg-0" value="Add"
+                                            @click="addTicket" />
                                     </div>
                                 </div>
                                 <div v-if="currentStep === 3">
@@ -589,33 +570,25 @@ async function loadSearchMap() {
                                                     <div class="col-xl-6">
                                                         <div class="product-detai-imgs">
                                                             <div v-if="cardImageData" class="product-img">
-                                                                <img
-                                                                    :src="cardImageData"
-                                                                    alt
-                                                                    class="mx-auto img-fluid d-block"
-                                                                    style="
+                                                                <img :src="cardImageData" alt
+                                                                    class="mx-auto img-fluid d-block" style="
                                                                         object-fit: cover;
                                                                         object-position: center;
                                                                         height: 320px;
                                                                         background-color: lightgray;
-                                                                    "
-                                                                />
+                                                                    " />
                                                             </div>
-                                                                                  <div v-else-if="!cardImageData && isEdit">
-                                                    <img
-                                                        id="cardImage"
-                                                        :src="props.editDetails.thumbnail_url"
-                                                        alt
-                                                                    class="mx-auto img-fluid d-block"
-                                                                    style="
+                                                            <div v-else-if="!cardImageData && isEdit">
+                                                                <img id="cardImage"
+                                                                    :src="props.editDetails.thumbnail_url" alt
+                                                                    class="mx-auto img-fluid d-block" style="
                                                                         object-fit: cover;
                                                                         object-position: center;
                                                                         height: 320px;
                                                                         background-color: lightgray;
-                                                                    "
-                                                    />
+                                                                    " />
 
-                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -624,72 +597,83 @@ async function loadSearchMap() {
                                                             <h4 class="mt-1 mb-3">{{ form.title }}</h4>
 
                                                             <div v-if="form.categories">
-                                            <span
-                                                role="button"
-                                                v-for="(category, index) in form.categories"
-                                                :key="`${index}_${category.name}`"
-                                            >
-                                                <span class="mb-3 badge badge-soft-primary font-size-11 me-2"
-                                                    >{{ category.name }}</span>
-                                            </span>
-                                        </div>
+                                                                <span role="button"
+                                                                    v-for="(category, index) in form.categories"
+                                                                    :key="`${index}_${category.name}`">
+                                                                    <span
+                                                                        class="mb-3 badge badge-soft-primary font-size-11 me-2">{{
+                                                                            category.name }}</span>
+                                                                </span>
+                                                            </div>
 
                                                             <h6 class="text-success">Tickets</h6>
                                                             <div class="mb-4">
-                                                                <h5 class="mb-2" v-for="(details,index) in form.tickets" :key="`${index}`" >
-                                                                {{ details.category }} :
-                                                                <span class="text-muted me-2">
-                                                                    <span> {{ details.currency  }}</span>
-                                                                </span>
-                                                               <span>{{ details.price }}</span>
-                                                            </h5>
+                                                                <h5 class="mb-2"
+                                                                    v-for="(details, index) in form.tickets"
+                                                                    :key="`${index}`">
+                                                                    {{ details.category }} :
+                                                                    <span class="text-muted me-2">
+                                                                        <span> {{ details.currency }}</span>
+                                                                    </span>
+                                                                    <span>{{ details.price }}</span>
+                                                                </h5>
                                                             </div>
-                                                            <p class="mb-4 text-muted" v-html="form.description"
-
+                                                            <p class="mb-4 text-muted" v-html="form.description">
                                                             </p>
                                                             <div class="mb-3 row">
                                                                 <div class="">
                                                                     <div>
-                                                                        <div class="mb-2 text-mute" v-if="form.location_name">
+                                                                        <div class="mb-2 text-mute"
+                                                                            v-if="form.location_name">
                                                                             <i
-                                                                                class="align-middle bx bx-map-pin font-size-16 text-primary me-1"
-                                                                            ></i>
-                                                                            <span><span class="fw-bold me-3">Location:</span><span>{{ form.location_name }}</span></span>
+                                                                                class="align-middle bx bx-map-pin font-size-16 text-primary me-1"></i>
+                                                                            <span><span
+                                                                                    class="fw-bold me-3">Location:</span><span>{{
+                                                                                        form.location_name }}</span></span>
                                                                         </div>
-                                                                        <div class="mb-2 text-mute" v-if="form.gps_location">
+                                                                        <div class="mb-2 text-mute"
+                                                                            v-if="form.gps_location">
                                                                             <i
-                                                                                class="align-middle bx bx-map font-size-16 text-primary me-1"
-                                                                            ></i>
-                                                                            <span><span class="fw-bold me-3">Map Coordinates:</span><span>{{ form.gps_location }}</span></span>
+                                                                                class="align-middle bx bx-map font-size-16 text-primary me-1"></i>
+                                                                            <span><span class="fw-bold me-3">Map
+                                                                                    Coordinates:</span><span>{{
+                                                                                        form.gps_location }}</span></span>
                                                                         </div>
-                                                                        <div class="mb-2 text-mute" v-if="form.start_date">
+                                                                        <div class="mb-2 text-mute"
+                                                                            v-if="form.start_date">
                                                                             <i
-                                                                                class="align-middle bx bx-calendar font-size-16 text-primary me-1"
-                                                                            ></i>
-                                                                            <span><span class="fw-bold me-3">Date:</span><span v-if="form.start_date">{{ form.start_date }}</span><span v-if="form.end_date"> to {{ form.end_date }}</span></span>
+                                                                                class="align-middle bx bx-calendar font-size-16 text-primary me-1"></i>
+                                                                            <span><span
+                                                                                    class="fw-bold me-3">Date:</span><span
+                                                                                    v-if="form.start_date">{{
+                                                                                        form.start_date }}</span><span
+                                                                                    v-if="form.end_date"> to {{
+                                                                                        form.end_date }}</span></span>
                                                                         </div>
 
-                                                                        <div class="mb-2 text-mute" v-if="form.access_type">
+                                                                        <div class="mb-2 text-mute"
+                                                                            v-if="form.access_type">
                                                                             <i
-                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"
-                                                                            ></i>
-                                                                            <span><span class="fw-bold me-3">Access Type:</span><span>{{ form.access_type }}</span></span>
+                                                                                class="align-middle bx bx-user-voice font-size-16 text-primary me-1"></i>
+                                                                            <span><span class="fw-bold me-3">Access
+                                                                                    Type:</span><span>{{
+                                                                                        form.access_type }}</span></span>
                                                                         </div>
 
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="mt-5">
-                                            <button
-                                                class="btn btn-primary btn-block waves-effect waves-light"
-                                                type="submit"
-                                                @click.prevent="submit"
-                                                :disabled="form.processing"
-                                            >
-                                                <i class="align-middle bx bx-loader bx-spin font-size-16 me-2" v-if="form.processing"></i
-                                                ><span>{{isEdit?'Update Event':'Schedule Event'}}</span>
-                                            </button>
-                                        </div>
+                                                                <button
+                                                                    class="btn btn-primary btn-block waves-effect waves-light"
+                                                                    type="submit" @click.prevent="submit"
+                                                                    :disabled="form.processing">
+                                                                    <i class="align-middle bx bx-loader bx-spin font-size-16 me-2"
+                                                                        v-if="form.processing"></i><span>
+                                                                        {{ isEdit ? 'Update Event' : 'Schedule Event' }}
+                                                                    </span>
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -735,6 +719,7 @@ async function loadSearchMap() {
     border: 2px dashed #01b4bd45;
     background-color: #fff;
     transition: 0.3s ease all;
+
     label {
         padding: 8px 12px;
         border-radius: 4px;
@@ -742,10 +727,12 @@ async function loadSearchMap() {
         background-color: #01b3bd;
         transition: 0.3s ease all;
     }
+
     input {
         display: none;
     }
 }
+
 .dropzone2 {
     // width: 400px;
     height: 100%;
@@ -757,6 +744,7 @@ async function loadSearchMap() {
     border: 2px dashed #01b4bd45;
     background-color: #fff;
     transition: 0.3s ease all;
+
     label {
         padding: 8px 12px;
         border-radius: 4px;
@@ -764,14 +752,17 @@ async function loadSearchMap() {
         background-color: #01b3bd;
         transition: 0.3s ease all;
     }
+
     input {
         display: none;
     }
 }
+
 .active-dropzone {
     color: #fff;
     border-color: #fff;
     background-color: #01b3bd;
+
     label {
         background-color: #fff;
         border-radius: 4px;

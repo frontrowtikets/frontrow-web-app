@@ -109,8 +109,11 @@ Route::middleware([
 
 
     Route::get('/settings', [SettingsController::class, 'settings'])->name('settings');
+    Route::get('/ticket-scanner/{id?}', [EventsController::class, 'ticketScannerPage'])->name('ticket_scanner');
     Route::prefix('admin')->group(function () {
 
+        Route::post('/scan-ticket/lookup', [EventsController::class, 'scanTicketLookup'])->name('scan_ticket_lookup');
+        Route::post('/scan-ticket/mark-scanned', [EventsController::class, 'markTicketScanned'])->name('mark_ticket_scanned');
         Route::post('/deleteSeatsConfig', [EventsController::class, 'deleteSeatsConfig'])->name('deleteseatConfigs');
         Route::post('/saveSeatsConfig', [EventsController::class, 'saveSeatsConfig'])->name('seatConfigs');
         Route::post('/saveeventssettings', [EventsController::class, 'saveEventsSettings'])->name('eventsSettins');
@@ -124,6 +127,12 @@ Route::middleware([
         Route::get('/get-business-config', [SettingsController::class, 'getBusinessSettings'])->name('get_business_settings');
         // update business settings
         Route::post('/update-business-config', [SettingsController::class, 'updateBusinessSettings'])->name('update_business_settings');
+
+        // Admin create ticket wizard
+        Route::get('/create-ticket', [EventsController::class, 'adminCreateTicketPage'])->name('admin_create_ticket_page');
+        Route::post('/create-ticket', [EventsController::class, 'adminCreateTicket'])->name('admin_create_ticket');
+        Route::get('/search-user', [EventsController::class, 'adminSearchUser'])->name('admin_search_user');
+        Route::get('/event-ticket-types/{id}', [EventsController::class, 'adminEventTicketTypes'])->name('admin_event_ticket_types');
     });
 });
 

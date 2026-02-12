@@ -1,8 +1,11 @@
 <script>
+import VueApexCharts from "vue3-apexcharts";
+
 /**
  * Email-sent component
  */
 export default {
+  components: { apexchart: VueApexCharts },
   data() {
     return {
       isActive: "year",

@@ -1,9 +1,11 @@
 <script>
+import VueApexCharts from "vue3-apexcharts";
 
 /**
  * Monthly-Earning component
  */
 export default {
+  components: { apexchart: VueApexCharts },
   data() {
     return {
       chartOptions: {

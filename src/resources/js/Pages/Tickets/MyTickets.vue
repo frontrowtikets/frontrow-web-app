@@ -112,6 +112,8 @@ function allMovies() {
                                             :event="ticket?.event"
                                             :userDetails="ticket?.user_payment_detail"
                                             :transactionDetails="ticket?.payment_transaction"
+                                            :ticketAmount="ticket?.total_amount"
+                                            :ticketCategory="ticket?.event_ticket?.category"
                                         />
                                     </div>
                                     <div>
