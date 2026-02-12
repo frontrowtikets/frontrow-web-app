@@ -55,7 +55,15 @@ class EventsController extends Controller
 
     public function myEvents(Request $request)
     {
-        $myEvents = Event::where('beneficiary_id', Auth::id())->latest()->paginate(6);
+        $user = Auth::user();
+        $isAdmin = $user->getAllPermissions()->pluck('name')->intersect(['admin', 's_admin'])->isNotEmpty();
+
+        $query = Event::query()->latest();
+        if (!$isAdmin) {
+            $query->where('beneficiary_id', $user->id);
+        }
+
+        $myEvents = $query->paginate(6);
         return \Inertia\Inertia::render('Events/MyEvents', [
             'myEvents' => $myEvents
         ]);
@@ -169,7 +177,7 @@ class EventsController extends Controller
         $eventDetails = Event::select('id', 'access_type', 'title')->where('id', $eventId)->first();
         $eventTickets = UserEventTicket::where('event_id', $eventId)->with([
             "event:id,title",
-            "userPaymentDetail:id,payment_type,payment_name,payment_email,payment_phone",
+            "userPaymentDetail:id,payment_type,full_name,user_email,user_phone_number",
             "paymentTransaction:id,txn_ref,txn_status,txn_amount,currency,created_at",
             "eventTicket:id,event_id,category,price,currency"
         ])->orderBy('created_at', 'desc')->paginate(6);
@@ -407,10 +415,13 @@ class EventsController extends Controller
             ->orderBy('start_date', 'desc')
             ->get();
 
+        $event = Event::select('id', 'title')->find($request->event_id);
+
         return \Inertia\Inertia::render('Events/AdminCreateTicket', [
             'events' => $events,
             'createdTickets' => $ticketData,
             'createdEventId' => $request->event_id,
+            'createdEventTitle' => $event ? $event->title : '',
             'isNewUser' => $result['is_new_user'],
             'userName' => $result['user']->name,
         ]);

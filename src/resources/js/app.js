@@ -8,6 +8,7 @@ import helper from "./mixins/layouts.mixin";
 import vSelect from "vue-select";
 import { MotionPlugin } from "@vueuse/motion";
 
+import { BootstrapVueNext } from "bootstrap-vue-next";
 import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
 //importing the vuex store
@@ -32,6 +33,7 @@ createInertiaApp({
         return app
             .use(Toast, {})
             .use(MotionPlugin)
+            .use(BootstrapVueNext)
             .use(plugin)
             .use(store)
             .use(ZiggyVue)

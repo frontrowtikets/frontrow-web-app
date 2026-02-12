@@ -1,6 +1,6 @@
 <script setup>
 import { Head, useForm, router } from "@inertiajs/vue3";
-import { reactive, ref, watch, computed, onMounted } from "vue";
+import { reactive, ref, watch, computed } from "vue";
 import PageHeader from "@/js/Components/page-header.vue";
 import Stepper from "@/js/Components/Stepper.vue";
 import DashboardLayout from "@/js/Layouts/DashboardLayout.vue";
@@ -14,6 +14,7 @@ const props = defineProps({
     events: { type: Array, default: () => [] },
     createdTickets: { type: Array, default: null },
     createdEventId: { default: null },
+    createdEventTitle: { type: String, default: "" },
     isNewUser: { type: Boolean, default: false },
     userName: { type: String, default: "" },
 });
@@ -162,6 +163,10 @@ function formatCurrency(val) {
     return Number(val).toLocaleString();
 }
 
+function slugify(title) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
 // Submit form
 function submitForm() {
     Swal.fire({
@@ -201,14 +206,15 @@ function resetWizard() {
     generatePaymentReference();
 }
 
-onMounted(() => {
-    generatePaymentReference();
-    // Check if we received created tickets from server (post-submission)
-    if (props.createdTickets && props.createdTickets.length > 0) {
-        createdTicketsLocal.value = props.createdTickets;
+// React to props.createdTickets (set after form POST via Inertia)
+watch(() => props.createdTickets, (tickets) => {
+    if (tickets && tickets.length > 0) {
+        createdTicketsLocal.value = tickets;
         submissionSuccess.value = true;
     }
-});
+}, { immediate: true });
+
+generatePaymentReference();
 </script>
 
 <template>
@@ -253,7 +259,7 @@ onMounted(() => {
                             <button class="btn btn-primary" @click="resetWizard">
                                 <i class="bx bx-plus me-1"></i> Create More Tickets
                             </button>
-                            <a v-if="props.createdEventId" :href="`/eventmanager/${props.createdEventId}`"
+                            <a v-if="props.createdEventId" :href="`/eventmanager/${slugify(props.createdEventTitle)}/${props.createdEventId}`"
                                 class="btn btn-outline-secondary">
                                 <i class="bx bx-list-ul me-1"></i> View in Event Manager
                             </a>
