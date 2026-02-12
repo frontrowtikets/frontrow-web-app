@@ -81,10 +81,13 @@
     @endif
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="/small.png">
-        <link rel="apple-touch-icon" href="/small.png">
-        <!-- Favicon -->
-        <link rel="icon" type="image/png" href="/small.png">
-        <link rel="apple-touch-icon" href="/small.png">
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+        <!-- PWA -->
+        <link rel="manifest" href="/manifest.json">
+        <meta name="theme-color" content="#013F43">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
