@@ -52,9 +52,11 @@ const endTime = computed(() => {
 <template>
     <div class="p-5 d-flex align-items-center justify-content-center" id="eventticket">
         <div class="ticket-outer p-4" style="width: 95%; border: 3px solid #3498db; border-radius: 10px; position: relative; overflow: hidden;">
-            <!-- Category watermark -->
+            <!-- Category watermark (repeating) -->
             <div v-if="props.ticketCategory" class="ticket-watermark" aria-hidden="true">
-                {{ props.ticketCategory }}
+                <div v-for="row in 8" :key="row" class="watermark-row">
+                    <span v-for="col in 5" :key="col">{{ props.ticketCategory }}</span>
+                </div>
             </div>
             <div class="mb-5 d-flex justify-content-between" style="position: relative; z-index: 2;">
                 <div class="d-flex align-items-center">
@@ -144,17 +146,35 @@ const endTime = computed(() => {
 
 .ticket-watermark {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-35deg);
-    font-size: 5.5rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    color: rgba(52, 152, 219, 0.09);
-    white-space: nowrap;
+    top: -20%;
+    left: -20%;
+    width: 140%;
+    height: 140%;
+    transform: rotate(-30deg);
     pointer-events: none;
     z-index: 1;
-    letter-spacing: 0.15em;
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.watermark-row {
+    display: flex;
+    gap: 40px;
+    white-space: nowrap;
+}
+
+.watermark-row span {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: rgba(52, 152, 219, 0.07);
+    letter-spacing: 0.12em;
+}
+
+.watermark-row:nth-child(even) {
+    margin-left: 80px;
 }
 </style>
