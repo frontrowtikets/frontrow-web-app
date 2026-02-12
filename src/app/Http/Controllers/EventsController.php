@@ -371,11 +371,18 @@ class EventsController extends Controller
             ], 409);
         }
 
-        $ticket->update([
-            'is_scanned' => true,
-            'scanned_at' => now(),
-            'scanned_by' => Auth::id(),
-        ]);
+        try {
+            $ticket->update([
+                'is_scanned' => true,
+                'scanned_at' => now(),
+                'scanned_by' => Auth::id(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Database error: ' . $e->getMessage(),
+            ], 500);
+        }
 
         return response()->json([
             'status' => 'success',
