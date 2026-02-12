@@ -452,4 +452,94 @@ class EventsController extends Controller
 
         return response()->json($ticketTypes);
     }
+
+    public function exportEventTickets(Request $request, $eventId)
+    {
+        $event = Event::select('id', 'title')->findOrFail($eventId);
+
+        $tickets = UserEventTicket::where('event_id', $eventId)
+            ->with([
+                'event:id,title,start_date,end_date,start_time,end_time',
+                'userPaymentDetail:id,full_name,user_email,user_phone_number',
+                'paymentTransaction:id,txn_ref,amount,currency,created_at',
+                'eventTicket:id,category',
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $filename = 'tickets-' . \Illuminate\Support\Str::slug($event->title) . '-' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($tickets) {
+            $file = fopen('php://output', 'w');
+
+            // UTF-8 BOM for Excel compatibility
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // Header row
+            fputcsv($file, [
+                'Event',
+                'Ticket ID',
+                'Category',
+                'Show Date',
+                'Show Time',
+                'Amount',
+                'Currency',
+                'Customer Name',
+                'Customer Email',
+                'Customer Phone',
+                'Status',
+                'Scanned',
+                'Scanned At',
+                'Purchased On',
+                'Payment Reference',
+            ]);
+
+            foreach ($tickets as $ticket) {
+                $startDate = $ticket->event?->start_date
+                    ? \Carbon\Carbon::parse($ticket->event->start_date)->format('d M Y')
+                    : '';
+                $endDate = $ticket->event?->end_date
+                    ? \Carbon\Carbon::parse($ticket->event->end_date)->format('d M Y')
+                    : '';
+                $showDate = $startDate && $endDate ? "{$startDate} - {$endDate}" : $startDate;
+
+                $startTime = $ticket->event?->start_time
+                    ? \Carbon\Carbon::parse($ticket->event->start_time)->format('g:i A')
+                    : '';
+                $endTime = $ticket->event?->end_time
+                    ? \Carbon\Carbon::parse($ticket->event->end_time)->format('g:i A')
+                    : '';
+                $showTime = $startTime && $endTime ? "{$startTime} - {$endTime}" : $startTime;
+
+                fputcsv($file, [
+                    $ticket->event?->title ?? '',
+                    $ticket->ticket_id,
+                    $ticket->eventTicket?->category ?? '',
+                    $showDate,
+                    $showTime,
+                    $ticket->total_amount,
+                    $ticket->paymentTransaction?->currency ?? 'UGX',
+                    $ticket->userPaymentDetail?->full_name ?? '',
+                    $ticket->userPaymentDetail?->user_email ?? '',
+                    $ticket->userPaymentDetail?->user_phone_number ?? '',
+                    $ticket->ticket_status,
+                    $ticket->is_scanned ? 'Yes' : 'No',
+                    $ticket->scanned_at ? $ticket->scanned_at->format('d M Y g:i A') : '',
+                    $ticket->paymentTransaction?->created_at
+                        ? \Carbon\Carbon::parse($ticket->paymentTransaction->created_at)->format('d M Y g:i A')
+                        : '',
+                    $ticket->paymentTransaction?->txn_ref ?? '',
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }
