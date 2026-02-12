@@ -277,6 +277,9 @@ function viewMovie(movie) {
 function viewEvent(event) {
     router.visit(`/event/${slugify(event.title)}/${event.id}`);
 }
+function goToTicketScanner() {
+    router.visit("/ticket-scanner");
+}
 </script>
 <template>
 
@@ -400,14 +403,27 @@ function viewEvent(event) {
             </div>
         </div>
         <!-- end row -->
-        <!-- <div class="row">
-            <div class="col-xl-8">
-                <WalletBalance />
+
+        <!-- Admin Quick Actions -->
+        <div v-if="isAdmin" class="row mb-3">
+            <div class="col-md-4 col-sm-6">
+                <div class="card" style="border-left: 4px solid #0198A1;">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 48px; height: 48px; background-color: #e6f7f8; flex-shrink: 0;">
+                            <i class="bx bx-barcode font-size-24" style="color: #0198A1;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Verify Tickets</h6>
+                            <p class="text-muted mb-0" style="font-size: 0.8rem;">Scan & verify event tickets</p>
+                        </div>
+                        <b-button variant="primary" size="sm" @click="goToTicketScanner">
+                            Open Scanner
+                        </b-button>
+                    </div>
+                </div>
             </div>
-            <div class="col-xl-4">
-                <Overview />
-            </div>
-        </div> -->
+        </div>
 
         <div class="" :class="[width < 1440 ? 'col' : 'row']">
             <div class=" d-flex align-items-stretch" :class="[width < 1440 ? 'col-12' : 'col-4']">

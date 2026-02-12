@@ -237,8 +237,9 @@ function playSound(type) {
                             </div>
                         </QrcodeStream>
                         <div v-else class="scanner-paused">
-                            <i class="bx bx-pause-circle"></i>
-                            <span>Scanner paused</span>
+                            <i v-if="isLoading" class="bx bx-loader bx-spin"></i>
+                            <i v-else class="bx bx-pause-circle"></i>
+                            <span>{{ isLoading ? 'Verifying ticket...' : 'Scanner paused' }}</span>
                         </div>
                     </div>
 
@@ -539,15 +540,18 @@ function playSound(type) {
 .manual-entry {
     padding: 12px;
     background: #1a1a1a;
+    overflow: hidden;
 }
 
 .manual-entry-input {
     display: flex;
     gap: 8px;
+    max-width: 100%;
 }
 
 .manual-entry-input input {
     flex: 1;
+    min-width: 0;
     padding: 12px 14px;
     border: 1px solid #333;
     border-radius: 8px;
@@ -566,7 +570,9 @@ function playSound(type) {
 }
 
 .manual-entry-input button {
-    padding: 12px 18px;
+    padding: 12px 16px;
+    min-width: 48px;
+    flex-shrink: 0;
     background: #3498db;
     color: #fff;
     border: none;
