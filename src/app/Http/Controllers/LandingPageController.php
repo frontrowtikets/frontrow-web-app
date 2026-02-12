@@ -41,7 +41,7 @@ class LandingPageController extends Controller
             ->latest()->take(3)->get();
 
         $upcomingmovies = Movie::where('is_active', true)
-            ->select('id', 'title', 'thumbnail_url', 'banner_image_url', 'description', 'created_at')
+            ->select('id', 'title', 'thumbnail_url', 'description', 'created_at')
             ->with(['showTimes' => function ($query) {
                 $query->where('screening_date', '>=', now())
                     ->orderBy('screening_date', 'asc')
