@@ -178,7 +178,7 @@ class EventsController extends Controller
         $eventTickets = UserEventTicket::where('event_id', $eventId)->with([
             "event:id,title",
             "userPaymentDetail:id,payment_type,full_name,user_email,user_phone_number",
-            "paymentTransaction:id,txn_ref,txn_status,txn_amount,currency,created_at",
+            "paymentTransaction:id,txn_ref,txn_status,amount,currency,created_at",
             "eventTicket:id,event_id,category,price,currency"
         ])->orderBy('created_at', 'desc')->paginate(6);
         return \Inertia\Inertia::render('Events/EventManager', [
