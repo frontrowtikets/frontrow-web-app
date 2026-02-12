@@ -132,24 +132,17 @@ async function admitTicket() {
             playSound("success");
         }
     } catch (error) {
-        const status = error.response?.status;
-        const serverMsg = error.response?.data?.message || error.response?.data?.error;
-
-        if (status === 409) {
+        if (error.response?.status === 409) {
             scanResult.value = "already_scanned";
             scanMessage.value = "This ticket was already scanned by another device.";
             playSound("warning");
-        } else if (status === 419) {
+        } else if (error.response?.status === 419) {
             scanResult.value = "error";
             scanMessage.value = "Session expired. Please refresh the page and try again.";
             playSound("error");
-        } else if (status === 500) {
-            scanResult.value = "error";
-            scanMessage.value = serverMsg || "Server error. The scan columns may not exist yet — run migrations.";
-            playSound("error");
         } else {
             scanResult.value = "error";
-            scanMessage.value = serverMsg || `Failed to mark ticket (${status || 'network error'}). Try again.`;
+            scanMessage.value = "Failed to mark ticket. Please try again.";
             playSound("error");
         }
     } finally {
