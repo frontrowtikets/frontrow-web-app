@@ -11,6 +11,10 @@ import EventTicketCard from "@/js/Components/EventTicketCard.vue";
 import EventTicketList from "@/js/Components/EventTicketList.vue";
 import { VueTelInput } from "vue3-tel-input";
 import "vue3-tel-input/dist/vue3-tel-input.css";
+import IsUserAdmin from "@/js/Composables/IsUserAdmin.js";
+
+const { isAdmin } = IsUserAdmin();
+
 const props = defineProps({
     attendanceList: {
         type: Object,
@@ -165,8 +169,8 @@ function declineRequest(userID) {
             <div class="card">
                 <div class="card-body">
                     <div class="mb-4 d-flex justify-content-end gap-2">
-                        <b-button variant="outline-primary" @click="openScanner">
-                            <i class="bx bx-qr-scan me-1"></i> Scan Tickets
+                        <b-button v-if="isAdmin" variant="outline-primary" @click="openScanner">
+                            <i class="bx bx-barcode me-1"></i> Scan Tickets
                         </b-button>
                         <b-button v-if="props.event_type != 'paid'" variant="primary" @click="showEventRegModal">
                             Register Attendee
