@@ -135,6 +135,14 @@ export default {
         toRouterActivations(){
             document.body.classList.toggle("sidebar-enable");
             router.get(route("activations"));
+        },
+        toTicketScanner(){
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("ticket_scanner"));
+        },
+        toAdminCreateTicket(){
+            document.body.classList.toggle("sidebar-enable");
+            router.get(route("admin_create_ticket_page"));
         }
     },
 };
@@ -273,6 +281,34 @@ export default {
                         "
                         @click="toRouterSettings"
                         >Settings</span
+                    >
+                </a>
+            </li>
+            <li class="" role="button" v-if="isAdmin == true">
+                <a>
+                    <i class="bx bx-qr-scan" style="color: #fff"></i>
+                    <span
+                        :class="
+                            usePage().url.startsWith('/ticket-scanner')
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toTicketScanner"
+                        >Ticket Scanner</span
+                    >
+                </a>
+            </li>
+            <li class="" role="button" v-if="isAdmin == true">
+                <a>
+                    <i class="bx bx-plus-circle" style="color: #fff"></i>
+                    <span
+                        :class="
+                            usePage().url == '/admin/create-ticket'
+                                ? 'text-white fw-bold'
+                                : 'text-grayish'
+                        "
+                        @click="toAdminCreateTicket"
+                        >Create Ticket</span
                     >
                 </a>
             </li>
