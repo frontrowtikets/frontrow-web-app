@@ -26,6 +26,7 @@ use App\Models\SeatMapConfigTable;
 use App\Models\EventTicket;
 use App\Http\Requests\AdminCreateEventTicket;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -373,14 +374,15 @@ class EventsController extends Controller
 
         try {
             $ticket->update([
-                'is_scanned' => true,
+                'is_scanned' => DB::raw('true'),
                 'scanned_at' => now(),
                 'scanned_by' => Auth::id(),
             ]);
         } catch (\Exception $e) {
+            \Log::error('Failed to mark ticket as scanned: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Database error: ' . $e->getMessage(),
+                'message' => 'Failed to update ticket. Please try again.',
             ], 500);
         }
 
