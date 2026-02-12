@@ -168,7 +168,11 @@ function slugify(title) {
 }
 
 // Submit form
+const isSubmitting = ref(false);
+
 function submitForm() {
+    if (isSubmitting.value || form.processing) return;
+
     Swal.fire({
         title: "Create Tickets?",
         html: `<p>This will create <strong>${form.quantity}</strong> ticket(s) for <strong>${form.customer_name}</strong>.</p>`,
@@ -178,9 +182,10 @@ function submitForm() {
         confirmButtonText: "Yes, Create",
     }).then((result) => {
         if (result.isConfirmed) {
+            isSubmitting.value = true;
             form.post("/admin/create-ticket", {
                 onSuccess: () => {
-                    // Success is handled by checking props.createdTickets
+                    // Success is handled by watching props.createdTickets
                 },
                 onError: (errors) => {
                     const firstError = Object.values(errors)[0];
@@ -189,6 +194,9 @@ function submitForm() {
                         text: firstError,
                         icon: "error",
                     });
+                },
+                onFinish: () => {
+                    isSubmitting.value = false;
                 },
             });
         }

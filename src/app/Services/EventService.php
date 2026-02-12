@@ -25,6 +25,7 @@ use App\Mail\EventRegistrationUserMail;
 use App\Mail\AcceptEventRegistrationUserMail;
 use App\Mail\DeclineEventRegistrationUserMail;
 use App\Mail\EventTicketPurchaseMail;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Event Service.
@@ -426,79 +427,94 @@ class EventService
     }
     public static function adminCreateTicket($data)
     {
-        $isNewUser = false;
+        // Prevent duplicate submissions: check if this payment reference was already used
+        $existingTxn = PaymentTransaction::where('txn_ref', $data['payment_reference'])->first();
+        if ($existingTxn) {
+            $existingTickets = UserEventTicket::where('payment_transaction_id', $existingTxn->id)->get();
+            $user = User::find($existingTxn->user_id);
+            return [
+                'user' => $user,
+                'tickets' => $existingTickets->all(),
+                'transaction' => $existingTxn,
+                'is_new_user' => false,
+            ];
+        }
 
-        // Find or create user
-        $currentUser = User::where('email', $data['customer_email'])->first();
-        if (is_null($currentUser)) {
-            $isNewUser = true;
-            $randomPassword = Str::random(12);
-            $currentUser = User::create([
-                'name' => $data['customer_name'],
-                'email' => $data['customer_email'],
-                'phone_number' => $data['customer_phone'],
-                'user_type' => 'ticket_buyer',
-                'password' => Hash::make($randomPassword),
-            ]);
-            try {
-                $message = (new NewUserTempPasswordMail($currentUser->name, $randomPassword))
-                    ->onQueue('emails');
-                Mail::to($currentUser->email)->queue($message);
-            } catch (\Throwable $th) {
-                Log::error('Failed to send temp password email: ' . $th->getMessage());
+        return DB::transaction(function () use ($data) {
+            $isNewUser = false;
+
+            // Find or create user
+            $currentUser = User::where('email', $data['customer_email'])->first();
+            if (is_null($currentUser)) {
+                $isNewUser = true;
+                $randomPassword = Str::random(12);
+                $currentUser = User::create([
+                    'name' => $data['customer_name'],
+                    'email' => $data['customer_email'],
+                    'phone_number' => $data['customer_phone'],
+                    'user_type' => 'ticket_buyer',
+                    'password' => Hash::make($randomPassword),
+                ]);
+                try {
+                    $message = (new NewUserTempPasswordMail($currentUser->name, $randomPassword))
+                        ->onQueue('emails');
+                    Mail::to($currentUser->email)->queue($message);
+                } catch (\Throwable $th) {
+                    Log::error('Failed to send temp password email: ' . $th->getMessage());
+                }
             }
-        }
 
-        // Create payment detail
-        $userPaymentDetails = UserPaymentDetail::create([
-            'user_id' => $currentUser->id,
-            'full_name' => $data['customer_name'],
-            'user_email' => $data['customer_email'],
-            'user_phone_number' => $data['customer_phone'],
-            'payment_type' => $data['payment_method'],
-        ]);
-
-        // Create payment transaction
-        $paymentTransaction = PaymentTransaction::create([
-            'txn_ref' => $data['payment_reference'],
-            'mfscode' => $data['payment_reference'],
-            'txn_type' => 'event_ticket',
-            'txn_channel' => 'admin',
-            'txn_status' => 'paid',
-            'amount' => $data['amount'],
-            'currency' => 'UGX',
-            'reason' => 'Admin-created event ticket',
-            'phone_number' => $data['customer_phone'],
-            'user_id' => $currentUser->id,
-            'txn_hash' => $data['payment_reference'],
-        ]);
-
-        // Create ticket records
-        $tickets = [];
-        $quantity = (int) $data['quantity'];
-        for ($i = 0; $i < $quantity; $i++) {
-            $ticket = UserEventTicket::create([
+            // Create payment detail
+            $userPaymentDetails = UserPaymentDetail::create([
                 'user_id' => $currentUser->id,
-                'event_id' => $data['event_id'],
-                'quantity' => 1,
-                'total_amount' => $data['amount'] / $quantity,
-                'ticket_status' => 'paid',
-                'booking_date' => now(),
+                'full_name' => $data['customer_name'],
                 'user_email' => $data['customer_email'],
-                'ticket_id' => self::generateRandomEventTicketId(),
-                'event_ticket_id' => $data['event_ticket_id'],
-                'user_payment_detail_id' => $userPaymentDetails->id,
-                'payment_transaction_id' => $paymentTransaction->id,
+                'user_phone_number' => $data['customer_phone'],
+                'payment_type' => $data['payment_method'],
             ]);
-            $tickets[] = $ticket;
-        }
 
-        return [
-            'user' => $currentUser,
-            'tickets' => $tickets,
-            'transaction' => $paymentTransaction,
-            'is_new_user' => $isNewUser,
-        ];
+            // Create payment transaction
+            $paymentTransaction = PaymentTransaction::create([
+                'txn_ref' => $data['payment_reference'],
+                'mfscode' => $data['payment_reference'],
+                'txn_type' => 'event_ticket',
+                'txn_channel' => 'admin',
+                'txn_status' => 'paid',
+                'amount' => $data['amount'],
+                'currency' => 'UGX',
+                'reason' => 'Admin-created event ticket',
+                'phone_number' => $data['customer_phone'],
+                'user_id' => $currentUser->id,
+                'txn_hash' => $data['payment_reference'],
+            ]);
+
+            // Create ticket records
+            $tickets = [];
+            $quantity = (int) $data['quantity'];
+            for ($i = 0; $i < $quantity; $i++) {
+                $ticket = UserEventTicket::create([
+                    'user_id' => $currentUser->id,
+                    'event_id' => $data['event_id'],
+                    'quantity' => 1,
+                    'total_amount' => $data['amount'] / $quantity,
+                    'ticket_status' => 'paid',
+                    'booking_date' => now(),
+                    'user_email' => $data['customer_email'],
+                    'ticket_id' => self::generateRandomEventTicketId(),
+                    'event_ticket_id' => $data['event_ticket_id'],
+                    'user_payment_detail_id' => $userPaymentDetails->id,
+                    'payment_transaction_id' => $paymentTransaction->id,
+                ]);
+                $tickets[] = $ticket;
+            }
+
+            return [
+                'user' => $currentUser,
+                'tickets' => $tickets,
+                'transaction' => $paymentTransaction,
+                'is_new_user' => $isNewUser,
+            ];
+        });
     }
 
     private static  function generateRandomEventTicketId()

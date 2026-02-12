@@ -176,7 +176,7 @@ class EventsController extends Controller
         $declinedRequests = EventAttendee::where('event_id', $eventId)->where('reg_status', 'declined')->with(['user:id,name,email'])->paginate(15);
         $eventDetails = Event::select('id', 'access_type', 'title')->where('id', $eventId)->first();
         $eventTickets = UserEventTicket::where('event_id', $eventId)->with([
-            "event:id,title",
+            "event:id,title,banner_image_url,location_name,start_date,end_date,start_time,end_time",
             "userPaymentDetail:id,payment_type,full_name,user_email,user_phone_number",
             "paymentTransaction:id,txn_ref,txn_status,amount,currency,created_at",
             "eventTicket:id,event_id,category,price,currency"
