@@ -286,7 +286,7 @@ export default {
             </li>
             <li class="" role="button" v-if="isAdmin == true">
                 <a>
-                    <i class="bx bx-qr-scan" style="color: #fff"></i>
+                    <i class="bx bx-barcode" style="color: #fff"></i>
                     <span
                         :class="
                             usePage().url.startsWith('/ticket-scanner')
