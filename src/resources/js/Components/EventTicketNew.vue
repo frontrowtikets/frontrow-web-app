@@ -10,7 +10,8 @@ const props = defineProps([
     "userDetails",
     "transactionDetails",
     "ticketId",
-    "ticketAmount"
+    "ticketAmount",
+    "ticketCategory"
 ]);
 
 
@@ -50,8 +51,12 @@ const endTime = computed(() => {
 
 <template>
     <div class="p-5 d-flex align-items-center justify-content-center" id="eventticket">
-        <div class="p-4" style="width: 95%; border: 3px solid #3498db; border-radius: 10px">
-            <div class="mb-5 d-flex justify-content-between">
+        <div class="ticket-outer p-4" style="width: 95%; border: 3px solid #3498db; border-radius: 10px; position: relative; overflow: hidden;">
+            <!-- Category watermark -->
+            <div v-if="props.ticketCategory" class="ticket-watermark" aria-hidden="true">
+                {{ props.ticketCategory }}
+            </div>
+            <div class="mb-5 d-flex justify-content-between" style="position: relative; z-index: 2;">
                 <div class="d-flex align-items-center">
                     <div><img :src="smallImageUrl" height="90" /></div>
                     <div>
@@ -59,24 +64,11 @@ const endTime = computed(() => {
                         <h5 style="color: #70aad1">EVENT TICKET</h5>
                     </div>
                 </div>
-                <div class="" style="border: 1.5px solid #3498db; border-radius: 4px">
+                <div class="" style="border: 1.5px solid #3498db; border-radius: 4px; background: #fff;">
                     <img :src="qrcode" alt="QR Code" />
                 </div>
             </div>
-            <div class="p-4 mb-5 d-flex" style="background-color: #79bbe8; border-radius: 15px">
-                <!-- <div class="me-4">
-                    <div
-                        class=""
-                        style="
-                            background-color: gray;
-                            width: 100px;
-                            height: 150px;
-                            border-radius: 15px;
-                        "
-                    >
-                        <img :src="props.event?.thumbnail_url" style="object-fit: cover;"/>
-                    </div>
-                </div> -->
+            <div class="p-4 mb-5 d-flex" style="background-color: #79bbe8; border-radius: 15px; position: relative; z-index: 2;">
                 <div class="flex-grow-1">
                     <div class="" style="font-size: medium">
                         <h3 class="mb-4 fw-bold text-dark">
@@ -103,7 +95,7 @@ const endTime = computed(() => {
                 </div>
             </div>
 
-            <div class="mb-5" style="border-top: 2px dashed #3498db;">
+            <div class="mb-5" style="border-top: 2px dashed #3498db; position: relative; z-index: 2;">
                 <div class="p-4" style="font-size: medium;border: 1px solid #3498db; border-radius: 10px">
                     <div class="" style="width: 70%;">
                         <p class="d-flex justify-content-between">
@@ -125,7 +117,7 @@ const endTime = computed(() => {
 
                 </div>
             </div>
-            <div class="mb-5">
+            <div class="mb-5" style="position: relative; z-index: 2;">
                 <p class="fw-bold " style="font-size: medium; color: #47a2de">Terms & Conditions:</p>
                 <ul class="text-muted small ps-3">
                     <li>
@@ -148,5 +140,21 @@ const endTime = computed(() => {
 <style scoped>
 .barcode {
     background-color: aqua;
+}
+
+.ticket-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-35deg);
+    font-size: 5.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: rgba(52, 152, 219, 0.09);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: 0.15em;
+    user-select: none;
 }
 </style>

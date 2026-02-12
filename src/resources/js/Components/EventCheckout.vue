@@ -10,6 +10,8 @@ import { usePage, router } from "@inertiajs/vue3";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useStore } from "vuex";
+import { VueTelInput } from "vue3-tel-input";
+import "vue3-tel-input/dist/vue3-tel-input.css";
 
 const props = defineProps(["selectedTickets", "quantity", "myWallet"]);
 const store = useStore();
@@ -53,6 +55,16 @@ const totalAmount = computed(() => {
     return total;
 });
 
+const totalQuantity = computed(() => {
+    let qty = 0;
+    props.selectedTickets.forEach((ticket) => {
+        qty += Number(ticket.selectedQuantity);
+    });
+    return qty;
+});
+
+const serviceFee = computed(() => 500 * totalQuantity.value);
+
 const checkoutDisabled = computed(() => {
     if (
         buyerEmail.value &&
@@ -93,7 +105,7 @@ const paymentDetailsCleaned = computed(() => {
         expiryDate: expiryDate.value,
         cvv: cvv.value,
         selectedTicket: props.selectedTickets,
-        amount: totalAmount.value + 500,
+        amount: totalAmount.value + serviceFee.value,
         quantity: props.quantity,
         description: "Ticket Payment",
     };
@@ -214,7 +226,7 @@ function payTicketWithWallet() {
 
                         </div>
                         <div class="">
-                            <span class="fw-bold me-3">Service Fee:</span>UGX 500
+                            <span class="fw-bold me-3">Service Fee:</span>UGX 500 x {{ totalQuantity }} = UGX {{ useCurrencyFormat(serviceFee) }}
                         </div>
 
                         <div class="mb-4 text-end">
@@ -226,7 +238,7 @@ function payTicketWithWallet() {
                                         props.selectedTickets[0].currency ||
                                         "UGX"
                                     }}
-                                    {{ useCurrencyFormat(totalAmount + 500) }}
+                                    {{ useCurrencyFormat(totalAmount + serviceFee) }}
                                 </h4>
                             </div>
                         </div>

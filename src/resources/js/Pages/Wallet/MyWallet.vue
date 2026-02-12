@@ -9,6 +9,7 @@ import { Money3Component } from "v-money3";
 import axios from "axios";
 import moment from "moment";
 import { useWindowSize } from "@vueuse/core";
+import apexchart from "vue3-apexcharts";
 
 const props = defineProps({
     transactions: {

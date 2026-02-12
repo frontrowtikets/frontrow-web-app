@@ -16,24 +16,36 @@ class SearchController extends Controller
         $searchItem = $request->searchVal;
         $events = Event::where('is_active', true)
             ->where('end_date', '>=', now())
-            ->where('title', 'ILIKE', "%{$searchItem}%")
-            ->orWhere('description', 'ILIKE', "%{$searchItem}%")
-            ->orWhere('location_name', 'ILIKE', "%{$searchItem}%")
-            ->with(["eventTickets"])->orderBy('created_at', 'desc')->get();
+            ->where(function ($query) use ($searchItem) {
+                $query->where('title', 'ILIKE', "%{$searchItem}%")
+                    ->orWhere('description', 'ILIKE', "%{$searchItem}%")
+                    ->orWhere('location_name', 'ILIKE', "%{$searchItem}%");
+            })
+            ->select('id', 'title', 'thumbnail_url', 'start_date', 'end_date', 'location_name', 'access_type', 'created_at')
+            ->with(["eventTickets:id,event_id,category,price,currency"])
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get();
 
         $movies = Movie::where('is_active', true)
-            ->where('title', 'ILIKE', "%{$searchItem}%")
-            ->orWhere('description', 'ILIKE', "%{$searchItem}%")
-            ->orWhere('director', 'ILIKE', "%{$searchItem}%")
-            ->orWhere('writer', 'ILIKE', "%{$searchItem}%")
-            ->orWhere('producer', 'ILIKE', "%{$searchItem}%")
+            ->where(function ($query) use ($searchItem) {
+                $query->where('title', 'ILIKE', "%{$searchItem}%")
+                    ->orWhere('description', 'ILIKE', "%{$searchItem}%")
+                    ->orWhere('director', 'ILIKE', "%{$searchItem}%")
+                    ->orWhere('writer', 'ILIKE', "%{$searchItem}%")
+                    ->orWhere('producer', 'ILIKE', "%{$searchItem}%");
+            })
+            ->select('id', 'title', 'thumbnail_url', 'description', 'created_at')
             ->with(["showTimes" => function ($query) {
-                $query->where('screening_date', '>=', Carbon::now());
+                $query->where('screening_date', '>=', Carbon::now())
+                    ->select('id', 'movie_id', 'screening_date', 'screening_time');
             }])
             ->whereHas('showTimes', function ($query) {
                 $query->where('screening_date', '>=', Carbon::now());
             })
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get();
 
         $searchResults = [
             'events' => $events,

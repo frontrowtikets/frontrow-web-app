@@ -23,11 +23,16 @@ class UserEventTicket extends Model
         'event_ticket_id',
         'user_payment_detail_id',
         'payment_transaction_id',
-        'beneficiary_credited'
+        'beneficiary_credited',
+        'is_scanned',
+        'scanned_at',
+        'scanned_by',
     ];
 
     protected $casts = [
         'beneficiary_credited' => 'boolean',
+        'is_scanned' => 'boolean',
+        'scanned_at' => 'datetime',
     ];
 
     public function event()
@@ -41,5 +46,13 @@ class UserEventTicket extends Model
     public function paymentTransaction()
     {
         return $this->belongsTo(PaymentTransaction::class);
+    }
+    public function eventTicket()
+    {
+        return $this->belongsTo(EventTicket::class);
+    }
+    public function scannedByUser()
+    {
+        return $this->belongsTo(User::class, 'scanned_by');
     }
 }

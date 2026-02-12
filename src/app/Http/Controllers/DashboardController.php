@@ -21,11 +21,11 @@ class DashboardController extends Controller
 
         //setting api token
         $user = Auth::user();
-        $userApiToken = PersonalAccessToken::where('tokenable_id', $user->id)->first();
-        $userApiToken = $user->createToken($user->name)->plainTextToken;
-        $currentUser = User::where('id', $user->id)->first();
-        $currentUser->api_token =  $userApiToken;
-        $currentUser->save();
+        if (!$user->api_token) {
+            $userApiToken = $user->createToken($user->name)->plainTextToken;
+            $user->api_token = $userApiToken;
+            $user->save();
+        }
         $myWallet = UserWallet::where('user_id', $user->id)->first();
 
         //charts data
@@ -38,7 +38,7 @@ class DashboardController extends Controller
             $allTransactions,
             $successTransactions,
             $failedTransactions
-        ) = $this->getChartData($currentUser);
+        ) = $this->getChartData($user);
 
 
         return Inertia::render('Dashboards/Dashboard', [
@@ -85,43 +85,36 @@ class DashboardController extends Controller
 
         if ($isAdmin) {
 
-            //movies
-            $movies = Movie::where('is_active', true)->latest()->take(5)->get();
-            $events = Event::where('is_active', true)->latest()->take(5)->get();
-            $allTransactions = PaymentTransaction::with(['user'])->latest()->take(7)->get();
-            $successTransactions = PaymentTransaction::with(['user'])->where('txn_status', 'paid')->latest()->take(7)->get();
-            $failedTransactions = PaymentTransaction::with(['user'])->where('txn_status', 'failed')->latest()->take(7)->get();
+            //movies & events (select only needed columns)
+            $movies = Movie::where('is_active', true)->select('id', 'title', 'thumbnail_url', 'created_at')->latest()->take(5)->get();
+            $events = Event::where('is_active', true)->select('id', 'title', 'thumbnail_url', 'start_date', 'created_at')->latest()->take(5)->get();
 
+            // Single transaction query instead of 3 separate ones
+            $recentTransactions = PaymentTransaction::with(['user:id,name,email'])->latest()->take(15)->get();
+            $allTransactions = $recentTransactions->take(7)->values();
+            $successTransactions = $recentTransactions->where('txn_status', 'paid')->take(7)->values();
+            $failedTransactions = $recentTransactions->where('txn_status', 'failed')->take(7)->values();
 
+            // Use DB-level aggregation instead of loading all records into PHP
             $eventRecords = Event::whereBetween('created_at', [$startDate, $endDate])
                 ->where('is_active', true)
-                ->get()
-                ->groupBy(function ($theEvent) {
-                    return Carbon::parse($theEvent->created_at)->format('F');
-                })
-                ->map(function ($theEvents) {
-                    return count($theEvents);
-                });
+                ->selectRaw("TO_CHAR(created_at, 'FMMonth') as month, count(*) as count")
+                ->groupByRaw("TO_CHAR(created_at, 'FMMonth'), EXTRACT(MONTH FROM created_at)")
+                ->orderByRaw("EXTRACT(MONTH FROM created_at)")
+                ->pluck('count', 'month');
 
             $movieRecords = Movie::whereBetween('created_at', [$startDate, $endDate])
                 ->where('is_active', true)
-                ->get()
-                ->groupBy(function ($theMovie) {
-                    return Carbon::parse($theMovie->created_at)->format('F');
-                })
-                ->map(function ($theMovies) {
-                    return count($theMovies);
-                });
+                ->selectRaw("TO_CHAR(created_at, 'FMMonth') as month, count(*) as count")
+                ->groupByRaw("TO_CHAR(created_at, 'FMMonth'), EXTRACT(MONTH FROM created_at)")
+                ->orderByRaw("EXTRACT(MONTH FROM created_at)")
+                ->pluck('count', 'month');
 
             $paymentRecords = PaymentTransaction::whereBetween('created_at', [$startDate, $endDate])
-
-                ->get()
-                ->groupBy(function ($thetransaction) {
-                    return Carbon::parse($thetransaction->created_at)->format('F');
-                })
-                ->map(function ($thetransactions) {
-                    return count($thetransactions);
-                });
+                ->selectRaw("TO_CHAR(created_at, 'FMMonth') as month, count(*) as count")
+                ->groupByRaw("TO_CHAR(created_at, 'FMMonth'), EXTRACT(MONTH FROM created_at)")
+                ->orderByRaw("EXTRACT(MONTH FROM created_at)")
+                ->pluck('count', 'month');
 
             $eventsChart = $months->map(function ($month) use ($eventRecords) {
                 return [
@@ -145,44 +138,39 @@ class DashboardController extends Controller
                     ];
                 })->values()->toArray();
         } else {
-            //movies
-            $movies = Movie::where('beneficiary_id', $currentUser->id)->where('is_active', true)->latest()->take(5)->get();
-            $events = Event::where('beneficiary_id', $currentUser->id)->where('is_active', true)->latest()->take(5)->get();
-            $allTransactions = PaymentTransaction::with(['user'])->where('user_id', $currentUser->id)->latest()->take(7)->get();
-            $successTransactions = PaymentTransaction::with(['user'])->where('user_id', $currentUser->id)->where('txn_status', 'paid')->latest()->take(7)->get();
-            $failedTransactions = PaymentTransaction::with(['user'])->where('user_id', $currentUser->id)->where('txn_status', 'failed')->latest()->take(7)->get();
+            //movies & events (select only needed columns)
+            $movies = Movie::where('beneficiary_id', $currentUser->id)->where('is_active', true)->select('id', 'title', 'thumbnail_url', 'created_at')->latest()->take(5)->get();
+            $events = Event::where('beneficiary_id', $currentUser->id)->where('is_active', true)->select('id', 'title', 'thumbnail_url', 'start_date', 'created_at')->latest()->take(5)->get();
 
+            // Single transaction query instead of 3 separate ones
+            $recentTransactions = PaymentTransaction::with(['user:id,name,email'])->where('user_id', $currentUser->id)->latest()->take(15)->get();
+            $allTransactions = $recentTransactions->take(7)->values();
+            $successTransactions = $recentTransactions->where('txn_status', 'paid')->take(7)->values();
+            $failedTransactions = $recentTransactions->where('txn_status', 'failed')->take(7)->values();
+
+            // Use DB-level aggregation instead of loading all records into PHP
             $eventRecords = Event::whereBetween('created_at', [$startDate, $endDate])
                 ->where('beneficiary_id', $currentUser->id)
                 ->where('is_active', true)
-                ->get()
-                ->groupBy(function ($theEvent) {
-                    return Carbon::parse($theEvent->created_at)->format('F');
-                })
-                ->map(function ($theEvents) {
-                    return count($theEvents);
-                });
+                ->selectRaw("TO_CHAR(created_at, 'FMMonth') as month, count(*) as count")
+                ->groupByRaw("TO_CHAR(created_at, 'FMMonth'), EXTRACT(MONTH FROM created_at)")
+                ->orderByRaw("EXTRACT(MONTH FROM created_at)")
+                ->pluck('count', 'month');
 
             $movieRecords = Movie::whereBetween('created_at', [$startDate, $endDate])
                 ->where('beneficiary_id', $currentUser->id)
                 ->where('is_active', true)
-                ->get()
-                ->groupBy(function ($theMovie) {
-                    return Carbon::parse($theMovie->created_at)->format('F');
-                })
-                ->map(function ($theMovies) {
-                    return count($theMovies);
-                });
+                ->selectRaw("TO_CHAR(created_at, 'FMMonth') as month, count(*) as count")
+                ->groupByRaw("TO_CHAR(created_at, 'FMMonth'), EXTRACT(MONTH FROM created_at)")
+                ->orderByRaw("EXTRACT(MONTH FROM created_at)")
+                ->pluck('count', 'month');
 
             $paymentRecords = PaymentTransaction::whereBetween('created_at', [$startDate, $endDate])
                 ->where('user_id', $currentUser->id)
-                ->get()
-                ->groupBy(function ($thetransaction) {
-                    return Carbon::parse($thetransaction->created_at)->format('F');
-                })
-                ->map(function ($thetransactions) {
-                    return count($thetransactions);
-                });
+                ->selectRaw("TO_CHAR(created_at, 'FMMonth') as month, count(*) as count")
+                ->groupByRaw("TO_CHAR(created_at, 'FMMonth'), EXTRACT(MONTH FROM created_at)")
+                ->orderByRaw("EXTRACT(MONTH FROM created_at)")
+                ->pluck('count', 'month');
 
             $eventsChart = $months->map(function ($month) use ($eventRecords) {
                 return [

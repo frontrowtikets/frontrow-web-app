@@ -3,3 +3,4 @@ budde-db
 .vscode
 .htaccess
 /public/qrCodes
+.claude

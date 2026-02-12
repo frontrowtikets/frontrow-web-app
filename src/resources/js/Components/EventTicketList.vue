@@ -13,7 +13,9 @@ const props = defineProps([
     "event",
     "userDetails",
     "transactionDetails",
-    "ticketAmount"
+    "ticketAmount",
+    "ticketCategory",
+    "isScanned"
 ]);
 
 const showEndDateTime = computed(() => {
@@ -171,6 +173,12 @@ onMounted(() => {
             <span v-else class="badge badge-pending">{{ props.status }}</span>
         </td>
 
+        <!-- Scan Status -->
+        <td class="status-cell">
+            <span v-if="props.isScanned" class="badge badge-active">Scanned</span>
+            <span v-else class="badge badge-pending">Not Scanned</span>
+        </td>
+
         <!-- Transaction Date -->
         <td class="ticket-id-cell">
             <span class="ticket-id">{{ formatDate(props.transactionDetails?.created_at) }}</span>
@@ -221,7 +229,8 @@ onMounted(() => {
         </td>
         <td class="d-none">
             <EventTicketNew :ticketId="props.ticketId" :event="props.event" :userDetails="props.userDetails"
-                :transactionDetails="props.transactionDetails" :ticketAmount="props.ticketAmount" />
+                :transactionDetails="props.transactionDetails" :ticketAmount="props.ticketAmount"
+                :ticketCategory="props.ticketCategory" />
         </td>
     </tr>
 </template>

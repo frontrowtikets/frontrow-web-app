@@ -14,7 +14,9 @@ const props = defineProps([
     "event",
     "userDetails",
     "transactionDetails",
-    "ticketAmount"
+    "ticketAmount",
+    "ticketCategory",
+    "isScanned"
 ]);
 
 
@@ -123,6 +125,7 @@ function downloadTicket(ticketId = null) {
         <div class="overlay">
             <div class="text">
                 <div class="text-end">
+                    <span v-if="props.isScanned" class="badge text-bg-info font-size-11 me-1">Scanned</span>
                     <span v-if="hasEnded" class="badge text-bg-danger font-size-11">Expired</span>
                     <span v-else-if="(props.status = 'paid')" class="badge text-bg-success font-size-11">Active</span>
                 </div>
@@ -194,7 +197,8 @@ function downloadTicket(ticketId = null) {
         </div>
         <div class="d-none">
             <EventTicketNew :ticketId="props.ticketId" :event="props.event" :userDetails="props.userDetails"
-                :transactionDetails="props.transactionDetails" :ticketAmount="props.ticketAmount" />
+                :transactionDetails="props.transactionDetails" :ticketAmount="props.ticketAmount"
+                :ticketCategory="props.ticketCategory" />
         </div>
     </div>
 </template>

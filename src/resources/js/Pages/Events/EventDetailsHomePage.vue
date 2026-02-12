@@ -13,6 +13,8 @@ import YouTube from "vue3-youtube";
 import moment from "moment";
 import Swal from "sweetalert2";
 import vSelect from "vue-select";
+import { VueTelInput } from "vue3-tel-input";
+import "vue3-tel-input/dist/vue3-tel-input.css";
 import "vue-select/dist/vue-select.css";
 
 const props = defineProps(["eventDetails"]);
@@ -351,7 +353,7 @@ function getEventTicket() {
                                             </div>
                                             <div class="d-block d-md-none">
                                                 <b-button variant="primary" href="#eventsdetailsfrom">{{ buttonText
-                                                    }}</b-button>
+                                                }}</b-button>
                                             </div>
                                         </div>
                                         <div class="flex-row mb-3 d-flex col-12 justify-content-between">
@@ -379,7 +381,7 @@ function getEventTicket() {
                                                         <td scope="col">
                                                             {{ moment(props.eventDetails.end_date).format("MMM Do YY")
                                                             }} at
-                                                            {{ props.eventDetails.start_time }}
+                                                            {{ props.eventDetails.end_time }}
                                                         </td>
                                                     </tr>
                                                     <tr>

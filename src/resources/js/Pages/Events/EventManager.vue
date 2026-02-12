@@ -9,6 +9,8 @@ import icondata from "@/images/icondata.png";
 import useInertiaFormSubmit from "@/js/Composables/useInertiaFormSubmit.js";
 import EventTicketCard from "@/js/Components/EventTicketCard.vue";
 import EventTicketList from "@/js/Components/EventTicketList.vue";
+import { VueTelInput } from "vue3-tel-input";
+import "vue3-tel-input/dist/vue3-tel-input.css";
 const props = defineProps({
     attendanceList: {
         type: Object,
@@ -118,6 +120,10 @@ function showEventRegModal() {
     registerForEventModal.value = true;
 }
 
+function openScanner() {
+    router.visit(`/ticket-scanner/${props.event_id}`);
+}
+
 function slugify(title) {
     return title
         .toLowerCase()
@@ -158,9 +164,13 @@ function declineRequest(userID) {
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                    <div class="mb-4 d-flex justify-content-end" v-if="props.event_type != 'paid'">
-                        <div><b-button variant="primary" class="" @click="showEventRegModal">Register
-                                Attendee</b-button></div>
+                    <div class="mb-4 d-flex justify-content-end gap-2">
+                        <b-button variant="outline-primary" @click="openScanner">
+                            <i class="bx bx-qr-scan me-1"></i> Scan Tickets
+                        </b-button>
+                        <b-button v-if="props.event_type != 'paid'" variant="primary" @click="showEventRegModal">
+                            Register Attendee
+                        </b-button>
                     </div>
                     <b-tabs>
                         <b-tab title="Ticket Sales - Grid" active>
@@ -171,7 +181,9 @@ function declineRequest(userID) {
                                         :status="ticket.ticket_status" :event="ticket?.event"
                                         :userDetails="ticket?.user_payment_detail"
                                         :transactionDetails="ticket?.payment_transaction"
-                                        :ticketAmount="ticket?.total_amount" />
+                                        :ticketAmount="ticket?.total_amount"
+                                        :ticketCategory="ticket?.event_ticket?.category"
+                                        :isScanned="ticket?.is_scanned" />
                                 </div>
                                 <div>
                                     <div ref="movieEventsBottom"></div>
@@ -199,6 +211,7 @@ function declineRequest(userID) {
                                             <th class="text-center">Amount</th>
                                             <th class="text-center">Customer</th>
                                             <th class="text-center">Status</th>
+                                            <th class="text-center">Scanned</th>
                                             <th class="text-center">Purchased On</th>
                                             <th class="text-end">Action</th>
                                         </tr>
@@ -209,7 +222,9 @@ function declineRequest(userID) {
                                             :status="ticket.ticket_status" :event="ticket?.event"
                                             :userDetails="ticket?.user_payment_detail"
                                             :transactionDetails="ticket?.payment_transaction"
-                                            :ticketAmount="ticket?.total_amount" />
+                                            :ticketAmount="ticket?.total_amount"
+                                            :ticketCategory="ticket?.event_ticket?.category"
+                                            :isScanned="ticket?.is_scanned" />
                                     </tbody>
                                 </table>
                                 <div>

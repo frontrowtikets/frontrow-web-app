@@ -2,6 +2,8 @@
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import Layout from "@/js/Layouts/auth.vue";
 import { onMounted, reactive, ref, computed } from "vue";
+import { VueTelInput } from "vue3-tel-input";
+import "vue3-tel-input/dist/vue3-tel-input.css";
 
 //data
 const isPhoneNumberValid = ref(false);

@@ -29,6 +29,8 @@ Route::group(['namespace' => 'Api'], function () {
     Route::post('/v1/event/sendTicketEmail', [TicketEmailController::class, 'sendEventTicketEmail']);
     Route::post("/search", [SearchController::class, 'searchItem'])->name('searchItem');
 
+    // Pesapal IPN callback (server-to-server, no auth required)
+    Route::get('/payments/ipn', [PaymentController::class, 'handleIPN']);
 
     Route::post('/testthismail', [PaymentController::class, 'testMail']);
     Route::post('/testthismail2', [PaymentController::class, 'testMail2']);
