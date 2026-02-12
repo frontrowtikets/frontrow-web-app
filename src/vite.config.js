@@ -28,7 +28,7 @@ export default defineConfig({
             injectRegister: null,
             manifest: false,
             workbox: {
-                globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2}"],
+                globPatterns: ["**/*.{js,css,html,ico,woff,woff2}"],
                 navigateFallback: null,
                 runtimeCaching: [
                     {
