@@ -95,6 +95,7 @@ Route::middleware([
     Route::post("/event/acceptinvitation", [EventsController::class, 'acceptInvitation'])->name('accept_invitation');
     Route::post("/event/declineinvitation", [EventsController::class, 'declineInvitation'])->name('decline_invitation');
     Route::get("/eventmanager/{title}/{id}", [EventsController::class, 'eventManager'])->name('event_manager');
+    Route::get('/export-tickets/{eventId}', [EventsController::class, 'exportEventTickets'])->name('export_tickets');
     Route::get("/allevents", [EventsController::class, 'allEvents'])->name('all_events');
     Route::get("/allmovies", [MoviesController::class, 'allMovies'])->name('all_Movies');
     Route::get('/mytransactions', [TransactionsController::class, 'myTransactions'])->name('my_transactions');

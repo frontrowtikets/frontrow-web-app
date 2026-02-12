@@ -128,6 +128,10 @@ function openScanner() {
     router.visit(`/ticket-scanner/${props.event_id}`);
 }
 
+function exportTickets() {
+    window.location.href = `/export-tickets/${props.event_id}`;
+}
+
 function slugify(title) {
     return title
         .toLowerCase()
@@ -169,6 +173,9 @@ function declineRequest(userID) {
             <div class="card">
                 <div class="card-body">
                     <div class="mb-4 d-flex justify-content-end gap-2">
+                        <b-button variant="outline-success" @click="exportTickets">
+                            <i class="bx bx-download me-1"></i> Export Tickets
+                        </b-button>
                         <b-button v-if="isAdmin" variant="outline-primary" @click="openScanner">
                             <i class="bx bx-barcode me-1"></i> Scan Tickets
                         </b-button>
