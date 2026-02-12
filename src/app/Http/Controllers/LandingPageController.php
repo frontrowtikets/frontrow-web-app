@@ -25,7 +25,7 @@ class LandingPageController extends Controller
 
         // Select only needed columns and limit eager-loaded ticket fields
         $last3Movies = Movie::where('is_active', true)
-            ->select('id', 'title', 'thumbnail_url', 'banner_image_url', 'description', 'created_at')
+            ->select('id', 'title', 'thumbnail_url', 'description', 'created_at')
             ->with(["showTimes" => function ($query) {
                 $query->where('screening_date', '>=', Carbon::now())
                     ->select('id', 'movie_id', 'screening_date', 'screening_time');
