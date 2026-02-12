@@ -8,6 +8,8 @@ import helper from "./mixins/layouts.mixin";
 import vSelect from "vue-select";
 import { MotionPlugin } from "@vueuse/motion";
 
+import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
+
 //importing the vuex store
 import store from "./state/store.js";
 
